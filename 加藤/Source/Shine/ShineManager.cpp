@@ -260,10 +260,13 @@ void ShineManager::CheckLightGrid()
         
         // TODO:_ ここか次のfor変えた方が良い気がする
         // 光源から見て左側の光領域から順番に処理する
-        for (int shineDirectionsIndex = 0; shineDirectionsIndex < static_cast<int>(shineDirections.size()); ++shineDirectionsIndex)
+        for (int shineDirectionsIndex = 0; (shineDirectionsIndex < static_cast<int>(shineDirections.size())) && 
+                                            (0 < nowCheckShinePos.size()); ++shineDirectionsIndex)
         {
+            std::vector<Vector2_Int> lightGridPositions = GetLightGridPositions(nowCheckShinePos.front());
+
             // 現在の光領域を左端から右端へ走査
-            for (const Vector2_Int& checkPos : GetLightGridPositions(nowCheckShinePos))
+            for (const Vector2_Int& checkPos : lightGridPositions)
             {
                 // マップ外なら除外
                 if (IsOutsideLightStage(checkPos))
@@ -278,6 +281,7 @@ void ShineManager::CheckLightGrid()
                 }
 
                 // すでに光が届いているなら除外
+                // TODO:_ 多分届いても複数考えられる場合は戻らない気がする
                 if (mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
                 {
                     continue;
@@ -314,6 +318,7 @@ void ShineManager::CheckLightGrid()
                 }
                 }
             }
+            nowCheckShinePos.pop();
         }
 
         // 光を遮る物の処理
@@ -890,44 +895,38 @@ std::vector<Vector2_Int> ShineManager::GetLightGridPositions(const Vector2_Int& 
     const Vector2 leftDirection =
         mpShineObject->GetShineDirection().shineDirectionLeft;
 
-    std::queue<Vector2_Int> checkPos = nowCheckShinePos;
 
-    while (!checkPos.empty())
+    // 光方向のみ取得する
+    for (int y = -1; y <= 1; ++y)
     {
-        const Vector2_Int nowPos = checkPos.front();
-        checkPos.pop();
-
-        for (int y = -1; y <= 1; ++y)
+        for (int x = -1; x <= 1; ++x)
         {
-            for (int x = -1; x <= 1; ++x)
+            if (x == 0 && y == 0)
             {
-                if (x == 0 && y == 0)
+                continue;
+            }
+
+            Vector2_Int nextPos =
+            {
+                nowCheckShinePos.x + x,
+                nowCheckShinePos.y + y
+            };
+
+            bool isAlreadyAdded = false;
+
+            for (const Vector2_Int& addedPos : lightGridPositions)
+            {
+                if (addedPos.x == nextPos.x &&
+                    addedPos.y == nextPos.y)
                 {
-                    continue;
+                    isAlreadyAdded = true;
+                    break;
                 }
+            }
 
-                Vector2_Int nextPos =
-                {
-                    nowPos.x + x,
-                    nowPos.y + y
-                };
-
-                bool isAlreadyAdded = false;
-
-                for (const Vector2_Int& addedPos : lightGridPositions)
-                {
-                    if (addedPos.x == nextPos.x &&
-                        addedPos.y == nextPos.y)
-                    {
-                        isAlreadyAdded = true;
-                        break;
-                    }
-                }
-
-                if (!isAlreadyAdded)
-                {
-                    lightGridPositions.push_back(nextPos);
-                }
+            if (!isAlreadyAdded)
+            {
+                lightGridPositions.push_back(nextPos);
             }
         }
     }
