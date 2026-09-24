@@ -68,7 +68,7 @@ public:
 	void Draw();
 private:
 	// 光領域の作成
-	void CreateLightArea();
+	void CreateShineArea();
 
 	// グリッドの探索
     void CheckLightGrid(std::queue<Vector2_Int>& nextCheckShinePos);
@@ -77,10 +77,10 @@ private:
     SHINE_GRID_TYPE JudgeGrid(const Vector2_Int& gridPos, const std::vector<SHINE_DIRECTION>& shineDirections, int shineDirectionsIndex);
 
     // 光を遮るものを確認し、それに応じた処理を行う
-    void LightBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std::queue<Vector2_Int>& nextCheckShinePos, std::vector<SHINE_DIRECTION>& shineDirections);
+    void ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std::queue<Vector2_Int>& nextCheckShinePos, std::vector<SHINE_DIRECTION>& shineDirections);
 
     // マップ外判定
-    bool IsOutsideLightStage(const Vector2_Int& gridPos);
+    bool IsOutsideShineStage(const Vector2_Int& gridPos);
 
 	// 光領域を左端から右端へ走査するグリッドを取得
 	std::vector<Vector2_Int> GetLightGridPositions(const std::queue<Vector2_Int>& nowCheckShinePos);

@@ -4,6 +4,7 @@
 class WallObject : public TestObjectBase
 {
 private:
+	bool mbMoveFlag;
 
 public:
     WallObject();
@@ -15,4 +16,11 @@ public:
 	void Update() override;
 
 	void Draw() override;
+
+private:
+	// 全辺を光マップに設定
+	void SetAllEdges_ShineMap();
+
+	// 動いた辺情報を光マップ反映
+	void ChangeMoveEdges_ShineMap();
 };

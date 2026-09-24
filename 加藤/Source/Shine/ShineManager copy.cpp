@@ -85,7 +85,7 @@ void ShineManager::Update()
     mpShineObject->Update();
 
     // 光領域作成
-    CreateLightArea();
+    CreateShineArea();
 
     Master::mpImguiManager->AddDrawImgui(IMGUI_INT_DATA::GetImguiData(
         {&mnDrawMode},
@@ -177,7 +177,7 @@ void ShineManager::Draw()
     mpShineObject->Draw();
 }
 // 光領域の作成
-void ShineManager::CreateLightArea()
+void ShineManager::CreateShineArea()
 {
     mstSheineTriangles.clear();
 
@@ -200,7 +200,7 @@ void ShineManager::CreateLightArea()
     );
 
     // マップ外なら処理しない
-    if (IsOutsideLightStage(shineGridPos))
+    if (IsOutsideShineStage(shineGridPos))
     {
         return;
     }
@@ -215,7 +215,7 @@ void ShineManager::CreateLightArea()
     mstMapObjectGridData[shineGridPos.y][shineGridPos.x].LitFlag = true;
 
     // グリッドの探索
-    CheckLightGrid(nextCheckShinePos);
+    CheckShineGrid(nextCheckShinePos);
 }
 
 
@@ -566,7 +566,7 @@ SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::v
 //     }
 // }
 // 光を遮るものを確認し、それに応じた処理を行う
-void ShineManager::LightBlockProcess(
+void ShineManager::ShineBlockProcess(
     std::stack<BLOCK_POS_DATA>& blockPoss,
     std::queue<Vector2_Int>& nextCheckShinePos,
     std::vector<SHINE_DIRECTION>& shineDirections)
@@ -751,7 +751,7 @@ void ShineManager::LightBlockProcess(
 
 
 // マップ外判定
-bool ShineManager::IsOutsideLightStage(const Vector2_Int& gridPos)
+bool ShineManager::IsOutsideShineStage(const Vector2_Int& gridPos)
 {
     if (gridPos.x < 0 || gridPos.x >= MAP_ARRAY_SIZE_X ||
         gridPos.y < 0 || gridPos.y >= MAP_ARRAY_SIZE_Y)

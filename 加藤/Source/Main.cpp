@@ -30,7 +30,7 @@ LoadingManager* Master::mpLoadingManager = new LoadingManager();
 ResourceManager* Master::mpResourceManager = new ResourceManager();
 StopManager* Master::mpStopManager = new StopManager();
 ThreadManager* Master::mpThreadManager = new ThreadManager();
-TimeManager* Master::mpTimeManager = new TimeManager(/*/1/*/17/**/);
+TimeManager* Master::mpTimeManager = new TimeManager(/**/1/*/17/**/);
 ShineManager* Master::mpShineManager = new ShineManager();
 
 /// <summary>
@@ -83,6 +83,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		/**/
 		DEBUG::DebugCreateLogFileName(DEBUG::DEBUG_MAP_TYPE::DEBUG_TIME, { "_Time" });
 		DEBUG::DebugLogAddData(DEBUG::DEBUG_PROCESS_TYPE::TIME, DEBUG::DEBUG_MAP_TYPE::DEBUG_TIME);//*/
+
+		/**/
+		DEBUG::DebugCreateLogFileName(DEBUG::DEBUG_MAP_TYPE::DEBUG_SHINE_POS, { "_ShinePos" });
+		DEBUG::DebugLogAddData(DEBUG::DEBUG_PROCESS_TYPE::TIME, DEBUG::DEBUG_MAP_TYPE::DEBUG_SHINE_POS);//*/
 
 /*/
 		DEBUG::DebugCreateLogFileName(DEBUG::DEBUG_MAP_TYPE::DEBUG_GAME_MANAGER_WND_PROC, "_GameManager");//*/

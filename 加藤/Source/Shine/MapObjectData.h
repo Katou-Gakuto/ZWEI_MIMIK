@@ -16,6 +16,10 @@ public:
 	std::vector<LINE_POS> LinePoss;
 
 	bool LitFlag;
+
+	int LitLoopNumber;
+
+	int SetLitNumber;
 };
 
 // ‹ŠE‚ğÕ‚éî•ñ
@@ -32,4 +36,8 @@ struct SHINE_DIRECTION
 {
 	Vector2 shineDirectionLeft;
 	Vector2 shineDirectionRight;
+
+	float angle;
+	float leftAngle;
+	float rightAngle;
 };

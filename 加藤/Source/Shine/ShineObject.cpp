@@ -62,13 +62,13 @@ void ShineObject::Update()
         mfVisionAngle -= 3;
         if (mfVisionAngle < 0)
         {
-            mfVisionAngle = 360.0f;
+            mfVisionAngle = 170.0f;
         }
     }
     if (Master::mpKeyState->GetWordKey_Board(KEY_BOARD_WORD::ARROW_RIGHT))
     {
         mfVisionAngle += 3;
-        if (mfVisionAngle > 360.0f)
+        if (mfVisionAngle > 170.0f)
         {
             mfVisionAngle = 0.0f;
         }
@@ -115,7 +115,7 @@ void ShineObject::Update()
     Master::mpImguiManager->AddDrawImgui(setImguiData);
     setImguiData.SetLabel("_VISION_ANGLE");
     setImguiData.SetMin(0.0f);
-    setImguiData.SetMax(360.0f);
+    setImguiData.SetMax(170.0f);
     setImguiData.ReSetVariable();
     setImguiData.AddVariable(&mfVisionAngle);
     Master::mpImguiManager->AddDrawImgui(setImguiData);
@@ -126,26 +126,30 @@ void ShineObject::Update()
     // 視界の半分の角度
     const float halfVisionAngle = mfVisionAngle * 0.5f;
 
+    // 視界の中央
+    mstShineDirection.angle =
+        mfAngle * DEG_TO_RAD;
+
     // 視界の左端
-    const float leftAngle =
+    mstShineDirection.leftAngle =
         (mfAngle - halfVisionAngle) * DEG_TO_RAD;
 
     // 視界の右端
-    const float rightAngle =
+    mstShineDirection.rightAngle =
         (mfAngle + halfVisionAngle) * DEG_TO_RAD;
 
     // 視界の左端ベクトル
     mstShineDirection.shineDirectionLeft =
     {
-        std::cos(leftAngle),
-        std::sin(leftAngle)
+        std::cos(mstShineDirection.leftAngle),
+        std::sin(mstShineDirection.leftAngle)
     };
 
     // 視界の右端ベクトル
     mstShineDirection.shineDirectionRight =
     {
-        std::cos(rightAngle),
-        std::sin(rightAngle)
+        std::cos(mstShineDirection.rightAngle),
+        std::sin(mstShineDirection.rightAngle)
     };
 }
 
