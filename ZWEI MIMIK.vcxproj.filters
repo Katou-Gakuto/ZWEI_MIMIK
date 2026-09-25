@@ -313,6 +313,21 @@
     <ClCompile Include="Source\H_Katou\Struct\ResourceData.cpp">
       <Filter>Source\H_Katou\Struct</Filter>
     </ClCompile>
+    <ClCompile Include="Source\E_Scene\OptionScene.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\StageSelectScene.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\BasePuzzleScene.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\PuzzleScene.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Z_Except\CursorMoveSupporter.cpp">
+      <Filter>Source\Z_Except</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -564,7 +579,7 @@
     <ClInclude Include="Source\E_Scene\StageSelectScene.h">
       <Filter>Source\E_Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\E_Scene\PazzleScene.h">
+    <ClInclude Include="Source\E_Scene\BasePuzzleScene.h">
       <Filter>Source\E_Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\H_Katou\Enum\DrawEnum.h">
@@ -608,6 +623,15 @@
     </ClInclude>
     <ClInclude Include="Source\H_Katou\Struct\Vector2.h">
       <Filter>Source\H_Katou\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Scene\OptionScene.h">
+      <Filter>Source\E_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Scene\PuzzleScene.h">
+      <Filter>Source\E_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Z_Except\CursorMoveSupporter.h">
+      <Filter>Source\Z_Except</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

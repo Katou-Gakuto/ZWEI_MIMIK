@@ -20,6 +20,7 @@ Player* Master::mpPlayerLight = nullptr;
 Player* Master::mpPlayerShadow = nullptr;
 LightAreaManager* Master::mpLightManager = nullptr;
 
+CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
 
 // Master‚ÌŠeƒƒ“ƒo‚ğnew‚·‚éŠÖ”
 int Master::Initialize()

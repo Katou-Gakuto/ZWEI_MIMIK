@@ -38,11 +38,11 @@ public:
     int Draw() override;
 
 private:
+
+    int UpdateModeSelect();
+
     // 「ボタンを押してください！」のフェーズか
     bool mbLogoPhase;
-
-    // 現在のモード
-    TitleSelectMode mnNowMode;
 
     // カーソルで選択しているモード
     TitleSelectMode mnCurrentMode;

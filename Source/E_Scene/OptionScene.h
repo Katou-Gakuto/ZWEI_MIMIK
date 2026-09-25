@@ -2,18 +2,27 @@
 
 #include "BaseScene.h"
 
-class Player;
-class LightAreaManager;
-
-class PuzzleScene : public BaseScene
+// 
+class OptionScene : public BaseScene
 {
 public:
-    PuzzleScene();
-    ~PuzzleScene();
+    // 
+    OptionScene();
+
+    // 
+    ~OptionScene();
 
     int Create() override;
     int Initialize() override;
     int Finalize() override;
     int Update() override;
     int Draw() override;
+
+private:
+    // 0Å`255
+    int mnVolumeBGM;
+
+    // 0Å`255
+    int mnVolumeSE;
+
 };

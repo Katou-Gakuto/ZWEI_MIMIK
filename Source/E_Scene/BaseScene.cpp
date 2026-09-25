@@ -5,11 +5,11 @@
 BaseScene::BaseScene(SceneTag tag) :
     mnST(tag),
     mbCreateFlag(true),
+    mbResetFlag(true),
     mpGameObjectManager(nullptr),
     mpBaseCollision2DManager(nullptr),
     mpBaseCollision3DManager(nullptr)
 {
-
 }
 
 BaseScene::~BaseScene()
@@ -21,16 +21,43 @@ BaseScene::~BaseScene()
     }
 }
 
-int BaseScene::BaseInitalize()
+int BaseScene::BaseInitialize()
 {
+    // 
     if (this->mbCreateFlag)
     {
+        // 
         this->mpGameObjectManager = new GameObjectManager;
+
+        // 
         this->Create();
+
+        // 
         this->mbCreateFlag = false;
     }
 
-    this->Initialize();
+    // 
+    if (this->mbResetFlag)
+    {
+        // 
+        this->Initialize();
 
+        // 
+        this->mbResetFlag = false;
+    }
+
+    return 0;
+}
+
+int BaseScene::BaseFinalize()
+{
+    // 
+    if (this->mbResetFlag)
+    {
+        // 
+        this->Finalize();
+    }
+
+    // 
     return 0;
 }

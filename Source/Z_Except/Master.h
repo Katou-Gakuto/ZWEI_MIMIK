@@ -15,6 +15,9 @@ class LightAreaManager;
 class Player;
 
 // 
+class CursorMoveSupporter;
+
+// 
 class Master
 {
 public:
@@ -37,6 +40,9 @@ public:
 
     // Manager
     static LightAreaManager *mpLightManager;
+
+    // 
+    static CursorMoveSupporter *mpCursorMoveSupporter;
 
     // Master‚ÌŠeƒƒ“ƒo‚ğnew‚·‚éŠÖ”
     static int Initialize();

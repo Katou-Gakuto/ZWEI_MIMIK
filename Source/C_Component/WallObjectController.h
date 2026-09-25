@@ -2,6 +2,8 @@
 
 #include "BaseComponent.h"
 
+#include "../S_Collision/CollisionHandle.h"
+
 #include "../Y_Tool/VECTOR.h"
 
 // 

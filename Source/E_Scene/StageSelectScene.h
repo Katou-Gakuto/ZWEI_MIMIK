@@ -2,6 +2,8 @@
 
 #include "BaseScene.h"
 
+#include "../Z_Except/CursorMoveSupporter.h"
+
 class StageSelectScene : public BaseScene
 {
 public:
@@ -32,4 +34,7 @@ private:
 
     // 
     unsigned long  mnUnlockStageCount;
+
+    // 
+    CursorMoveData mdMoveData;
 };

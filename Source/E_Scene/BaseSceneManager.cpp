@@ -1,6 +1,10 @@
 #include "BaseSceneManager.h"
 
 #include "BaseScene.h"
+#include "TitleScene.h"
+#include "OptionScene.h"
+#include "StageSelectScene.h"
+#include "PuzzleScene.h"
 #include "TestScene.h"
 
 #include "../Y_Tool/MyTimer.h"
@@ -24,7 +28,7 @@ BaseSceneManager::BaseSceneManager() :
     mpSceneBox(),
     mnSceneOld(SceneTag::ST_Max),
     mnSceneNow(SceneTag::ST_Max),
-    mnChangeScene(SceneTag::ST_Test),
+    mnChangeScene(SceneTag::ST_Title),
     mnResreveScene(SceneTag::ST_Max),
     mbFlag()
 {
@@ -56,18 +60,17 @@ int BaseSceneManager::Create()
 {
     if (this->mbFlag.GetFlag())
     {
+        this->mpSceneBox[SceneTag::ST_Title] = new TitleScene();
+        this->mpSceneBox[SceneTag::ST_StageSelect] = new StageSelectScene();
+        this->mpSceneBox[SceneTag::ST_Option] = new OptionScene();
         this->mpSceneBox[SceneTag::ST_Test] = new TestScene();
-        //this->mpSceneBox[SceneTag::ST_Network] = new NetworkScene();
-        //this->mpSceneBox[SceneTag::ST_SoloBattle] = new SoloBattleScene();
-        //this->mpSceneBox[SceneTag::ST_MultiBattle] = new MultiBattleScene();
-        //this->mpSceneBox[SceneTag::ST_Result] = new ResultScene();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_1] = new PuzzleScene1_1();
 
         // シーンで共有するデータ
         this->mlUniqueDataList.Add(new SceneTag, CSDN::CSDN_SceneTag_BattleMode);
         this->mlUniqueDataList.Add(new bool, CSDN::CSDN_bool_PlayerWin);
         this->mlUniqueDataList.Add(new TimeParam, CSDN::CSDN_TimeParam_GameStartTime);
         this->mlUniqueDataList.Add(new unsigned long, CSDN::CSDN_unsignedLong_OtherPlayerNum);
-
 
         this->mbFlag.CreateComplate();
     }
@@ -108,7 +111,7 @@ int BaseSceneManager::Update()
         // シーンが変わったタイミングなら今回のシーンにInitializeをかける
         if (sceneChangeFlag)
         {
-            sceneNow->BaseInitalize();
+            sceneNow->BaseInitialize();
         }
 
         // 今回のシーンに更新をかける
@@ -124,7 +127,7 @@ int BaseSceneManager::Update()
         // 現在のシーンもnullptrではなく、さらにsceneOldとも違っていた場合
         if (sceneNow != nullptr && sceneNow!= sceneOld)
         {
-            sceneOld->Finalize();
+            sceneOld->BaseFinalize();
         }
     }
 
@@ -148,7 +151,8 @@ BaseScene *BaseSceneManager::SearchSceneNow()
     BaseScene *temp = nullptr;
     for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
     {
-        if (this->mpSceneBox[i]->GetTag() == this->mnSceneNow)
+        if (this->mpSceneBox[i] != nullptr &&
+            this->mpSceneBox[i]->GetTag() == this->mnSceneNow)
         {
             temp = this->mpSceneBox[i];
             break;
