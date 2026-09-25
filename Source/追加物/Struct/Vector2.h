@@ -369,3 +369,25 @@ inline Vector2 operator/(float lhs, const Vector2& rhs)
 		lhs / rhs.y
 	);
 }
+
+
+
+
+
+inline bool operator==(const Vector2_Int& lhs, const Vector2_Int& rhs)
+{
+	return (lhs.x == rhs.x) && (lhs.x == rhs.x);
+}
+inline bool operator==(int lhs, const Vector2_Int& rhs)
+{
+	return (lhs == rhs.x) && (lhs == rhs.x);
+}
+
+inline bool operator!=(const Vector2_Int& lhs, const Vector2_Int& rhs)
+{
+	return (lhs.x != rhs.x) || (lhs.x != rhs.x);
+}
+inline bool operator!=(int lhs, const Vector2_Int& rhs)
+{
+	return (lhs != rhs.x) || (lhs != rhs.x);
+}

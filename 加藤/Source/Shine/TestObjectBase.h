@@ -1,5 +1,8 @@
 #pragma once
 #include "Vector2.h"
+
+#include "Master.h"
+
 #include "ShineManager.h"
 
 class TestObjectBase
@@ -16,6 +19,7 @@ public:
 	TestObjectBase()
 	: mv2Position(Vector2(1.0f, 1.0f))
 	, mv2Size(Vector2(10.0f, 10.0f))
+	, mpShineManager(Master::mpShineManager)
 	{
 	}
 
