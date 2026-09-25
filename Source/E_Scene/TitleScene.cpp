@@ -25,6 +25,19 @@ TitleScene::~TitleScene()
 int TitleScene::Create()
 {
     // 
+    CursorMoveElement newElement;
+
+    // 
+    newElement.mnTargetKey = KEY_SHADOW_GAME_TYPE::UP;
+    newElement.mnMoveVec = -1;
+    this->mdMoveData.Add(newElement);
+
+    // 
+    newElement.mnTargetKey = KEY_SHADOW_GAME_TYPE::DOWN;
+    newElement.mnMoveVec = +1;
+    this->mdMoveData.Add(newElement);
+
+    // 
     return 0;
 }
 
@@ -182,14 +195,21 @@ int TitleScene::UpdateModeSelect()
     }
     else
     {
-        // ª•ûŒü‚Ì“ü—Í‚ª‚³‚ê‚Ä‚¢‚é‚©
-        bool currentUp = Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::UP, 0);
+        // 
+        int modeSelect = 0;
+
+        Master::mpCursorMoveSupporter->Move(this->mdMoveData, modeSelect);
 
         // ª•ûŒü‚Ì“ü—Í‚ª‚³‚ê‚Ä‚¢‚é‚©
-        bool currentDown = Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::DOWN, 0);
+        bool currentUp = modeSelect < 0;
+
+        // ª•ûŒü‚Ì“ü—Í‚ª‚³‚ê‚Ä‚¢‚é‚©
+        bool currentDown = 0 < modeSelect;
 
         // Œˆ’èƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
-        bool sceneMove = Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0);
+        bool sceneMove = 
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1);
 
         // 
         switch (this->mnCurrentMode)

@@ -129,10 +129,3 @@ bool CursorMoveSupporter::Move(CursorMoveData &moveData, int &moveVec)
     // 
     return true;
 }
-
-// 
-bool CursorMoveSupporter::CheckMove()
-{
-    // 
-    return true;
-}

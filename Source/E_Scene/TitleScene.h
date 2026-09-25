@@ -2,6 +2,8 @@
 
 #include "BaseScene.h"
 
+#include "../Z_Except/CursorMoveSupporter.h"
+
 // 
 enum TitleSelectMode
 {
@@ -46,4 +48,7 @@ private:
 
     // カーソルで選択しているモード
     TitleSelectMode mnCurrentMode;
+
+    // 
+    CursorMoveData mdMoveData;
 };

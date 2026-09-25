@@ -73,9 +73,6 @@ public:
 
     // 
     bool Move(CursorMoveData &moveData, int &moveVec);
-    
-    // 
-    bool CheckMove();
 
 private:
     const int mnBaseCount;
