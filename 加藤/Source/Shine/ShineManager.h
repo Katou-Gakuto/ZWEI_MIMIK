@@ -143,7 +143,7 @@ private:
     void ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std::queue<Vector2_Int>& nextCheckShinePos, std::vector<SHINE_DIRECTION>& shineDirections);
 
 	// 光を遮る物の影響を与える処理
-	int ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DATA& bloakPoss, std::vector<SHINE_DIRECTION>& shineDirections);
+	void ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DATA& bloakPoss, std::vector<SHINE_DIRECTION>& shineDirections);
 
     // マップ外判定
     bool IsOutsideShineStage(const Vector2_Int& gridPos);
@@ -153,4 +153,10 @@ private:
 
 	// 描画三角追加
 	void AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2);
+
+	// 障害物との交点を取得
+	void GetShineBlockingIntersection(const Vector2& edgePos1, const Vector2& edgePos2, const SHINE_DIRECTION& shineDirection, const Vector2_Int& blockPos, Vector2& intersection1, Vector2& intersection2);
+
+	// グリッドの光状態を更新
+	void UpdateGridLightState(const BLOCK_POS_DATA& blockPos, const std::vector<SHINE_DIRECTION>& shineDirections);
 };

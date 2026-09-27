@@ -1075,130 +1075,170 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
             }
 
             // 画面端の2点
-            Vector2 edgePos1;
-            Vector2 edgePos2;
+            std::vector<Vector2> edgePoss1;
+            std::vector<Vector2> edgePoss2;
 
-            // TODO:_角追加白
-            // 左端
-            if (blockPos.BlockPos.x < 0)
+            
+            // 左上
+            if ((blockPos.BlockPos.x < 0) && (blockPos.BlockPos.y < 0))
             {
-                edgePos1 = Vector2(0.0f, 0.0f);
-                edgePos2 = Vector2(0.0f, static_cast<float>(MAP_SIZE_Y));
+                // 左
+                edgePoss1.push_back(Vector2(0.0f, 0.0f));
+                edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+                // 上
+                edgePoss1.push_back(Vector2(0.0f, 0.0f));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+            }
+            // 左下
+            if ((blockPos.BlockPos.x < 0) && (blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y))
+            {
+                // 左
+                edgePoss1.push_back(Vector2(0.0f, 0.0f));
+                edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+                // 下
+                edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+            }
+            // 右上
+            if ((blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X) && (blockPos.BlockPos.y < 0))
+            {
+                // 右
+                edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+                // 上
+                edgePoss1.push_back(Vector2(0.0f, 0.0f));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+            }
+            // 右下
+            if ((blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X) && (blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y))
+            {
+                // 右
+                edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+                // 下
+                edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+            }
+            // 左端
+            else if (blockPos.BlockPos.x < 0)
+            {
+                edgePoss1.push_back(Vector2(0.0f, 0.0f));
+                edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
             }
             // 右端
             else if (blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X)
             {
-                edgePos1 = Vector2(static_cast<float>(MAP_SIZE_X), 0.0f);
-
-                edgePos2 = Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y));
+                edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
             }
             // 上端
             else if (blockPos.BlockPos.y < 0)
             {
-                edgePos1 = Vector2(0.0f, 0.0f);
-                edgePos2 = Vector2(static_cast<float>(MAP_SIZE_X), 0.0f);
+                edgePoss1.push_back(Vector2(0.0f, 0.0f));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
             }
             // 下端
             else
             {
-                edgePos1 = Vector2(0.0f, static_cast<float>(MAP_SIZE_Y));
-
-                edgePos2 = Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y));
+                edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
             }
 
-            const Vector2 edge =
-                edgePos2 - edgePos1;
-
-            Vector2 intersection1;
-            Vector2 intersection2;
-
-            // 光方向1との交点
-            const float cross1 =
-                shineDirection.shineDirectionLeft.x * edge.y -
-                shineDirection.shineDirectionLeft.y * edge.x;
-
-            if (cross1 != 0.0f)
+            for(int edgeIterator = 0; (edgeIterator < edgePoss1.size()) && (edgeIterator < edgePoss2.size()); +edgeIterator)
             {
-                const Vector2 toEdge =
-                    edgePos1 - mstShinePos;
+                const Vector2 edge = edgePoss2[edgeIterator] - edgePoss1[edgeIterator];
 
-                const float t =
-                    (toEdge.x * edge.y -
-                     toEdge.y * edge.x) / cross1;
+                Vector2 intersection1;
+                Vector2 intersection2;
 
-                intersection1 =
-                    mstShinePos +
-                    shineDirection.shineDirectionLeft * t;
+                // 光方向1との交点
+                const float cross1 =
+                    shineDirection.shineDirectionLeft.x * edge.y -
+                    shineDirection.shineDirectionLeft.y * edge.x;
+
+                if (cross1 != 0.0f)
+                {
+                    const Vector2 toEdge =
+                        edgePoss1[edgeIterator] - mstShinePos;
+
+                    const float t =
+                        (toEdge.x * edge.y -
+                        toEdge.y * edge.x) / cross1;
+
+                    intersection1 =
+                        mstShinePos +
+                        shineDirection.shineDirectionLeft * t;
+                }
+
+                // 光方向2との交点
+                const float cross2 =
+                    shineDirection.shineDirectionRight.x * edge.y -
+                    shineDirection.shineDirectionRight.y * edge.x;
+
+                if (cross2 != 0.0f)
+                {
+                    const Vector2 toEdge =
+                        edgePoss1[edgeIterator] - mstShinePos;
+
+                    const float t =
+                        (toEdge.x * edge.y -
+                        toEdge.y * edge.x) / cross2;
+
+                    intersection2 =
+                        mstShinePos +
+                        shineDirection.shineDirectionRight * t;
+                }
+
+                {
+                    // グリッド内に補正
+                    AdjustPositionToGrid(blockPos.BlockPos, intersection1);
+                    AdjustPositionToGrid(blockPos.BlockPos, intersection2);
+                    // {// intersection1
+                    //     if (intersection1.x < ((blockPos.BlockPos.x) * ONE_GRID_SIZE_X))
+                    //     {
+                    //         intersection1.x = (blockPos.BlockPos.x * ONE_GRID_SIZE_X);
+                    //     }
+                    //     else if (intersection1.x > ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X))
+                    //     {
+                    //         intersection1.x = ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X);
+                    //     }
+                        
+                    //     if (intersection1.y < (blockPos.BlockPos.y * ONE_GRID_SIZE_Y))
+                    //     {
+                    //         intersection1.y = (blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
+                    //     }
+                    //     else if (intersection1.y > ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y))
+                    //     {
+                    //         intersection1.y = ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y);
+                    //     }
+                    // }
+                    // {// intersection2
+                    //     if (intersection2.x < (blockPos.BlockPos.x * ONE_GRID_SIZE_X))
+                    //     {
+                    //         intersection2.x = (blockPos.BlockPos.x * ONE_GRID_SIZE_X);
+                    //     }
+                    //     else if (intersection2.x > ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X))
+                    //     {
+                    //         intersection2.x = ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X);
+                    //     }
+                        
+                    //     if (intersection2.y < (blockPos.BlockPos.y * ONE_GRID_SIZE_Y))
+                    //     {
+                    //         intersection2.y = (blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
+                    //     }
+                    //     else if (intersection2.y > ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y))
+                    //     {
+                    //         intersection2.y = ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y);
+                    //     }
+                    // }
+                }
+
+                LINE_POS checkLine = {intersection1, intersection2};
+                ShineBlockingProcess(checkLine, blockPos, shineDirections);
             }
 
-            // 光方向2との交点
-            const float cross2 =
-                shineDirection.shineDirectionRight.x * edge.y -
-                shineDirection.shineDirectionRight.y * edge.x;
-
-            if (cross2 != 0.0f)
-            {
-                const Vector2 toEdge =
-                    edgePos1 - mstShinePos;
-
-                const float t =
-                    (toEdge.x * edge.y -
-                     toEdge.y * edge.x) / cross2;
-
-                intersection2 =
-                    mstShinePos +
-                    shineDirection.shineDirectionRight * t;
-            }
-
-            {
-                // グリッド内に補正
-                AdjustPositionToGrid(blockPos.BlockPos, intersection1);
-                AdjustPositionToGrid(blockPos.BlockPos, intersection2);
-                // {// intersection1
-                //     if (intersection1.x < ((blockPos.BlockPos.x) * ONE_GRID_SIZE_X))
-                //     {
-                //         intersection1.x = (blockPos.BlockPos.x * ONE_GRID_SIZE_X);
-                //     }
-                //     else if (intersection1.x > ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X))
-                //     {
-                //         intersection1.x = ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X);
-                //     }
-                    
-                //     if (intersection1.y < (blockPos.BlockPos.y * ONE_GRID_SIZE_Y))
-                //     {
-                //         intersection1.y = (blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
-                //     }
-                //     else if (intersection1.y > ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y))
-                //     {
-                //         intersection1.y = ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y);
-                //     }
-                // }
-                // {// intersection2
-                //     if (intersection2.x < (blockPos.BlockPos.x * ONE_GRID_SIZE_X))
-                //     {
-                //         intersection2.x = (blockPos.BlockPos.x * ONE_GRID_SIZE_X);
-                //     }
-                //     else if (intersection2.x > ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X))
-                //     {
-                //         intersection2.x = ((blockPos.BlockPos.x + 1) * ONE_GRID_SIZE_X);
-                //     }
-                    
-                //     if (intersection2.y < (blockPos.BlockPos.y * ONE_GRID_SIZE_Y))
-                //     {
-                //         intersection2.y = (blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
-                //     }
-                //     else if (intersection2.y > ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y))
-                //     {
-                //         intersection2.y = ((blockPos.BlockPos.y + 1) * ONE_GRID_SIZE_Y);
-                //     }
-                // }
-            }
-
-            LINE_POS checkLine = {intersection1, intersection2};
-            if (ShineBlockingProcess(checkLine, blockPos, shineDirections) != 0x2)
-            {
-                continue;
-            }
+            // グリッドに光が残っているか判定してフラグ更新
+            UpdateGridLightState(blockPos, shineDirections);
 
             // // 光源と画面端との交点2つで三角形を作成
             // SHINE_TRIANGLE shineTriangle;
@@ -1300,55 +1340,57 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
 
             for (LINE_POS checkLine :  linePoss)
             {
-                int debugVariable = ShineBlockingProcess(checkLine, blockPos, shineDirections);
+                ShineBlockingProcess(checkLine, blockPos, shineDirections);
             }
+            // グリッドに光が残っているか判定してフラグ更新
+            UpdateGridLightState(blockPos, shineDirections);
 
-            // -------------------------------------------------------------------
-            // 遮蔽処理後、光領域が該当グリッド内に残っているか判定して queue に追加
-            // -------------------------------------------------------------------
-            bool isStillLit = false;
+            // // -------------------------------------------------------------------
+            // // 遮蔽処理後、光領域が該当グリッド内に残っているか判定して queue に追加
+            // // -------------------------------------------------------------------
+            // bool isStillLit = false;
 
-            // 四隅の頂点座標を算出
-            const float gridLeft   = static_cast<float>(blockPos.BlockPos.x * ONE_GRID_SIZE_X);
-            const float gridRight  = gridLeft + static_cast<float>(ONE_GRID_SIZE_X);
-            const float gridTop    = static_cast<float>(blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
-            const float gridBottom = gridTop + static_cast<float>(ONE_GRID_SIZE_Y);
+            // // 四隅の頂点座標を算出
+            // const float gridLeft   = static_cast<float>(blockPos.BlockPos.x * ONE_GRID_SIZE_X);
+            // const float gridRight  = gridLeft + static_cast<float>(ONE_GRID_SIZE_X);
+            // const float gridTop    = static_cast<float>(blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
+            // const float gridBottom = gridTop + static_cast<float>(ONE_GRID_SIZE_Y);
 
-            const Vector2 corners[4] = {
-                { gridLeft,  gridTop },
-                { gridRight, gridTop },
-                { gridLeft,  gridBottom },
-                { gridRight, gridBottom }
-            };
+            // const Vector2 corners[4] = {
+            //     { gridLeft,  gridTop },
+            //     { gridRight, gridTop },
+            //     { gridLeft,  gridBottom },
+            //     { gridRight, gridBottom }
+            // };
 
-            // 分割・調整されたすべての光方向データ（shineDirections）に対して判定
-            for (const SHINE_DIRECTION& shineDir : shineDirections)
-            {
-                for (const Vector2& corner : corners)
-                {
-                    const Vector2 dirToCorner = {
-                        corner.x - mstShinePos.x,
-                        corner.y - mstShinePos.y
-                    };
+            // // 分割・調整されたすべての光方向データ（shineDirections）に対して判定
+            // for (const SHINE_DIRECTION& shineDir : shineDirections)
+            // {
+            //     for (const Vector2& corner : corners)
+            //     {
+            //         const Vector2 dirToCorner = {
+            //             corner.x - mstShinePos.x,
+            //             corner.y - mstShinePos.y
+            //         };
 
-                    const float cornerAngle = std::atan2f(dirToCorner.y, dirToCorner.x);
+            //         const float cornerAngle = std::atan2f(dirToCorner.y, dirToCorner.x);
 
-                    // 頂点が残っている光の照射領域内（leftAngle ～ rightAngle）に入っているか
-                    if (IsAngleBetween(cornerAngle, shineDir.leftAngle, shineDir.rightAngle))
-                    {
-                        isStillLit = true;
-                        break;
-                    }
-                }
+            //         // 頂点が残っている光の照射領域内（leftAngle ～ rightAngle）に入っているか
+            //         if (IsAngleBetween(cornerAngle, shineDir.leftAngle, shineDir.rightAngle))
+            //         {
+            //             isStillLit = true;
+            //             break;
+            //         }
+            //     }
 
-                if (isStillLit) break;
-            }
+            //     if (isStillLit) break;
+            // }
 
-            // 光領域が残っている場合はフラグを更新して次の探索キューに追加
-            if (!isStillLit && mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag)
-            {
-                mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag = false;
-            }
+            // // 光領域が残っている場合はフラグを更新して次の探索キューに追加
+            // if (!isStillLit && mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag)
+            // {
+            //     mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag = false;
+            // }
         }
     }
 }
@@ -1363,11 +1405,16 @@ static float GetClockwiseAngleFromLeft(float angle, float baseLeft)
 }
 
 // 光を遮る物の影響を与える処理
-int ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DATA& bloakPoss, std::vector<SHINE_DIRECTION>& shineDirections)
+void ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DATA& bloakPoss, std::vector<SHINE_DIRECTION>& shineDirections)
 {
     // 対象の光方向データを参照取得
     SHINE_DIRECTION& currentShineDir = shineDirections[bloakPoss.ArrayIndex];
 
+    // 障害物と光方向の交点を取得
+    Vector2 intersection1;
+    Vector2 intersection2;
+    GetShineBlockingIntersection(bloakLinePos.linePos1, bloakLinePos.linePos2, currentShineDir, bloakPoss.BlockPos, intersection1, intersection2);
+    
     const Vector2 shinePos = mpShineObject->GetPosition();
     const float leftAngle  = currentShineDir.leftAngle;   // 光の左端角度 (ラジアン)
     const float rightAngle = currentShineDir.rightAngle;  // 光の右端角度 (ラジアン)
@@ -1403,7 +1450,7 @@ int ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DA
         // ※「障害物の開き角度」が光の裏側や範囲外にあるケースの除外
         if (blockRightRel - blockLeftRel < 3.14159265f) 
         {
-            return 0x1; // 何もしないで終了
+            return; // 何もしないで終了
         }
     }
 
@@ -1417,14 +1464,15 @@ int ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DA
     // 右境界 (totalShineWidth) を障害物が跨いでいるか（＝右端を遮っているか）
     // （障害物の右端が照射範囲の外側へ飛び出している状態）
     bool crossesRightEdge = (blockRightRel > totalShineWidth);
+    
+    // 描画三角追加
+    AddDrawTriangleData(intersection1, intersection2);
 
     // -------------------------------------------------------------------
     // 3パターン分岐処理
     // -------------------------------------------------------------------
     if (crossesLeftEdge || crossesRightEdge)
     {
-        // 描画三角追加
-        AddDrawTriangleData(bloakLinePos.linePos1, bloakLinePos.linePos2);
         if (crossesLeftEdge && crossesRightEdge)
         {
             // 【パターンA-1】光の左右両端とも跨いで完全に覆い隠している（光の全消滅）
@@ -1445,13 +1493,9 @@ int ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DA
             currentShineDir.shineDirectionRight = { std::cos(blockLeftAngle), std::sin(blockLeftAngle) };
         }
 
-        return 0x2;
     }
     else
     {
-        // 描画三角追加
-        AddDrawTriangleData(bloakLinePos.linePos1, bloakLinePos.linePos2);
-
         // ---------------------------------------------------------------
         // 【パターンB】左右の端どちらも遮っていない（光の中に完全にある障害物）
         // ---------------------------------------------------------------
@@ -1473,7 +1517,6 @@ int ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DA
         // 分割した光を追加
         shineDirections.insert(shineDirections.begin() + bloakPoss.ArrayIndex + 1, newRightShine);
 
-        return 0x4;
     }
 }
 
@@ -1841,4 +1884,147 @@ void ShineManager::AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2)
         static_cast<int>(vertex2.y)
     };
     mstSheineTriangles.push_back(shineTriangle);
+}
+
+
+// 障害物との交点を取得
+void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const Vector2& edgePos2, const SHINE_DIRECTION& shineDirection, const Vector2_Int& blockPos, Vector2& intersection1, Vector2& intersection2)
+{
+    const Vector2 edge = edgePos2 - edgePos1;
+
+    // 光方向1との交点
+    const float cross1 =
+        shineDirection.shineDirectionLeft.x * edge.y -
+        shineDirection.shineDirectionLeft.y * edge.x;
+
+    if (cross1 != 0.0f)
+    {
+        const Vector2 toEdge =
+            edgePos1 - mstShinePos;
+
+        const float t =
+            (toEdge.x * edge.y -
+            toEdge.y * edge.x) / cross1;
+
+        intersection1 =
+            mstShinePos +
+            shineDirection.shineDirectionLeft * t;
+
+        // 交点が線分の外側なら、近い端点を使用
+        const float edgeLengthSquared =
+            edge.x * edge.x +
+            edge.y * edge.y;
+
+        const float intersectionT =
+            ((intersection1.x - edgePos1.x) * edge.x +
+                (intersection1.y - edgePos1.y) * edge.y)
+            / edgeLengthSquared;
+
+        if (intersectionT < 0.0f)
+        {
+            intersection1 = edgePos1;
+        }
+        else if (intersectionT > 1.0f)
+        {
+            intersection1 = edgePos2;
+        }
+    }
+
+    // 光方向2との交点
+    const float cross2 =
+        shineDirection.shineDirectionRight.x * edge.y -
+        shineDirection.shineDirectionRight.y * edge.x;
+
+    if (cross2 != 0.0f)
+    {
+        const Vector2 toEdge =
+            edgePos1 - mstShinePos;
+
+        const float t =
+            (toEdge.x * edge.y -
+            toEdge.y * edge.x) / cross2;
+
+        intersection2 =
+            mstShinePos +
+            shineDirection.shineDirectionRight * t;
+
+        // 交点が線分の外側なら、近い端点を使用
+        const float edgeLengthSquared =
+            edge.x * edge.x +
+            edge.y * edge.y;
+
+        const float intersectionT =
+            ((intersection2.x - edgePos1.x) * edge.x +
+                (intersection2.y - edgePos1.y) * edge.y)
+            / edgeLengthSquared;
+
+        if (intersectionT < 0.0f)
+        {
+            intersection2 = edgePos1;
+        }
+        else if (intersectionT > 1.0f)
+        {
+            intersection2 = edgePos2;
+        }
+    }
+
+    {
+        // グリッド内に補正
+        AdjustPositionToGrid(blockPos, intersection1);
+        AdjustPositionToGrid(blockPos, intersection2);
+    }
+}
+
+// グリッドの光状態を更新
+void ShineManager::UpdateGridLightState(const BLOCK_POS_DATA& blockPos, const std::vector<SHINE_DIRECTION>& shineDirections)
+{
+    // -------------------------------------------------------------------
+    // 遮蔽処理後、光領域が該当グリッド内に残っているか判定して queue に追加
+    // -------------------------------------------------------------------
+    bool isStillLit = false;
+
+    // 四隅の頂点座標を算出
+    const float gridLeft   = static_cast<float>(blockPos.BlockPos.x * ONE_GRID_SIZE_X);
+    const float gridRight  = gridLeft + static_cast<float>(ONE_GRID_SIZE_X);
+    const float gridTop    = static_cast<float>(blockPos.BlockPos.y * ONE_GRID_SIZE_Y);
+    const float gridBottom = gridTop + static_cast<float>(ONE_GRID_SIZE_Y);
+
+    const Vector2 corners[4] = {
+        { gridLeft,  gridTop },
+        { gridRight, gridTop },
+        { gridLeft,  gridBottom },
+        { gridRight, gridBottom }
+    };
+
+    // 分割・調整されたすべての光方向データ（shineDirections）に対して判定
+    for (const SHINE_DIRECTION& shineDir : shineDirections)
+    {
+        for (const Vector2& corner : corners)
+        {
+            const Vector2 dirToCorner = {
+                corner.x - mstShinePos.x,
+                corner.y - mstShinePos.y
+            };
+
+            const float cornerAngle = std::atan2f(dirToCorner.y, dirToCorner.x);
+
+            // 頂点が残っている光の照射領域内（leftAngle ～ rightAngle）に入っているか
+            if (IsAngleBetween(cornerAngle, shineDir.leftAngle, shineDir.rightAngle))
+            {
+                isStillLit = true;
+                break;
+            }
+        }
+
+        if (isStillLit)
+        {
+            break;
+        }
+    }
+
+    // 光領域が残っている場合はフラグを更新して次の探索キューに追加
+    if (!isStillLit && mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag)
+    {
+        mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag = false;
+    }
 }
