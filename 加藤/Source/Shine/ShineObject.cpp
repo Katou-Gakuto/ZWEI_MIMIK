@@ -130,6 +130,10 @@ void ShineObject::Update()
     mstShineDirection.angle =
         mfAngle * DEG_TO_RAD;
 
+    // éãäEÇÃó 
+    mstShineDirection.visionAngle =
+        mfVisionAngle * DEG_TO_RAD;
+
     // éãäEÇÃç∂í[
     mstShineDirection.leftAngle =
         (mfAngle - halfVisionAngle) * DEG_TO_RAD;

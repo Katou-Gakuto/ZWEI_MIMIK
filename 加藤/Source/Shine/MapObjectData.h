@@ -45,4 +45,6 @@ struct SHINE_DIRECTION
 	float angle;
 	float leftAngle;
 	float rightAngle;
+
+	float visionAngle;
 };
