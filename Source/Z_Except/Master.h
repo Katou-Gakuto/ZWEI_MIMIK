@@ -6,6 +6,9 @@ class BaseSceneManager;
 class EndManager;
 // 時間マネージャー
 class TimeManager;
+// リソースマネージャー
+class ResourceManager;
+class DXAnimModel;
 // キー情報
 class KeyState;
 // 光域の管理をするクラス
@@ -28,7 +31,10 @@ public:
     static EndManager* mpEndManager;
     // 時間の管理
     static TimeManager* mpTimeManager;
+    // リソースの管理
+	static ResourceManager *mpResourceManager;
 
+    static DXAnimModel *mpDXAnimModel;
     // キーの情報管理
     static KeyState* mpKeyState;
 
@@ -40,6 +46,7 @@ public:
 
     // そのほかManager
     static LightAreaManager *mpLightManager;
+
 
     // Masterの各メンバをnewする関数
     static int Initialize();

@@ -209,6 +209,7 @@
     <ClCompile Include="Source\Y_Tool\VECTOR_D.cpp" />
     <ClCompile Include="Source\Y_Tool\VoidList.cpp" />
     <ClCompile Include="Source\Z_Except\Master.cpp" />
+    <ClCompile Include="Source\Z_Except\ResourceManager.cpp" />
     <ClCompile Include="Source\追加物\DebugLogs\DebugLog.cpp" />
     <ClCompile Include="Source\追加物\Singleton\DrawManager.cpp" />
     <ClCompile Include="Source\追加物\Singleton\EndManager.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Source\Y_Tool\VECTOR_D.h" />
     <ClInclude Include="Source\Y_Tool\VoidList.h" />
     <ClInclude Include="Source\Z_Except\Master.h" />
+    <ClInclude Include="Source\Z_Except\ResourceManager.h" />
     <ClInclude Include="Source\追加物\DebugLogs\DebugLog.h" />
     <ClInclude Include="Source\追加物\Enum\DrawEnum.h" />
     <ClInclude Include="Source\追加物\Enum\KeyStateEnum.h" />
@@ -326,6 +328,8 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resource\Idle.png" />
+    <Image Include="Resource\Run.png" />
     <Image Include="ZWEI_MIMIK.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,7 +1,4 @@
 #include "Master.h"
-
-#include "../E_Scene/BaseSceneManager.h"
-
 #include "KeyState.h"
 #include "EndManager.h"
 #include "TimeManager.h"
@@ -9,12 +6,19 @@
 
 #include "../C_Component/Player.h"
 #include "../G_LightArea/LightAreaManager.h"
+#include "../E_Scene/BaseSceneManager.h"
+#include "../Z_Except/ResourceManager.h"
+#include "../T_Model/DXModelAnim.h"
 
-// 
+
+// Ã“Iƒƒ“ƒo[‚Ì‰Šú‰»
+
 BaseSceneManager *Master::mpBaseSceneManager = nullptr;
 
 EndManager* Master::mpEndManager = nullptr;
 TimeManager* Master::mpTimeManager = nullptr;
+ResourceManager *Master::mpResourceManager = nullptr;
+DXAnimModel *Master::mpDXAnimModel = nullptr;
 KeyState* Master::mpKeyState = nullptr;
 
 Player* Master::mpPlayerLight = nullptr;
@@ -29,6 +33,8 @@ int Master::Initialize()
     mpEndManager = new EndManager();
     mpTimeManager = new TimeManager(/*/1/*/17/**/);
     mpTimeManager->Initilize();
+	mpResourceManager = new ResourceManager();
+	// mpDXAnimModel = new DXAnimModel();
     mpKeyState = new KeyState();
     // 
 
@@ -50,6 +56,8 @@ int Master::Finalize()
     delete mpBaseSceneManager;
     delete mpEndManager;
     delete mpTimeManager;
+	delete mpResourceManager;
+	delete mpDXAnimModel;
     delete mpKeyState;
 
     return 0;
@@ -64,7 +72,7 @@ int Master::DrawGraphAnim(
 	// 
     DrawRectExtendGraphF(
         posLeftUp.GetX(), posLeftUp.GetY(), posRightDown.GetX(), posRightDown.GetY(),
-        uvLeftUp.GetX(), uvLeftUp.GetY(), uvRightDown.GetX(), uvRightDown.GetY(), graphHandle, false);
+        uvLeftUp.GetX(), uvLeftUp.GetY(), uvRightDown.GetX(), uvRightDown.GetY(), graphHandle, true);
 
 	return 0;
 }

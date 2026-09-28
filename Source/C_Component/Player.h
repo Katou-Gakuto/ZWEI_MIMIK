@@ -5,6 +5,7 @@
 #include "VECTOR.h"
 
 class HoldObjectController;
+class DXAnimModel;
 
 class Player : public BaseComponent
 {
@@ -31,6 +32,8 @@ public:
     bool CheckHoldObject(const HoldObjectController *hold) const;
 
 	VECTOR2D GetPos() const { return Pos; }
+	int GetPlayerNum() const { return PlayerNum; } // 1P‚©2P‚©‚ð•Ô‚·
+
 
 private:
 
@@ -46,4 +49,7 @@ private:
 
     // 
     bool CheckHoldNow() const;
+
+    // 
+    DXAnimModel *GetPlayerModel()const;
 };

@@ -15,6 +15,7 @@ int PlayerObject::Create()
 {
 	this->CreateObjectComponentList();
 	this->CreateObjectCollisionList();
+	this->CreateObjectModelList();
 	this->AddComponent(new Player(this, mnPlayerNumber));
 
 	return 0;
