@@ -516,14 +516,14 @@ BaseComponentList *GameObject::GetBaseComponentList()const
     return this->mpBaseComponentList;
 }
 
-int GameObject::AddModel(BaseModel *model, unsigned long number)
+int GameObject::AddModel(BaseModel *model, BaseModelHandle &out)
 {
     if (model == nullptr ||
         this->mpModelList == nullptr)
     {
         return -1;
     }
-    return this->mpModelList->Add(model, number);
+    return this->mpModelList->Add(model, out);
 }
 
 int GameObject::AddCollision(BaseCollision *collision, CollisionHandle &out)

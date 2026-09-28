@@ -25,6 +25,20 @@ int BaseModelList::DeleteAll()
     return 0;
 }
 
+unsigned long long &BaseModelList::Handle2Number(BaseModelHandle &modelHandle)
+{
+    // 
+    void *handlePtr = &modelHandle;
+    return *((unsigned long long *)(handlePtr));
+}
+
+const unsigned long long &BaseModelList::Handle2Number(const BaseModelHandle &modelHandle)
+{
+    // 
+    const void *handlePtr = &modelHandle;
+    return *((const unsigned long long *)(handlePtr));
+}
+
 BaseModelList::BaseModelList() :
     mpFirstModel(nullptr)
 {
@@ -102,7 +116,7 @@ int BaseModelList::Draw()
     return temp;
 }
 
-int BaseModelList::Add(BaseModel *model, unsigned long listNumber)
+int BaseModelList::Add(BaseModel *model, BaseModelHandle &modelHandle)
 {
     if (model == nullptr)
     {
@@ -114,13 +128,14 @@ int BaseModelList::Add(BaseModel *model, unsigned long listNumber)
         return 0;
     }
     int temp = 0;
+    unsigned long long handleNumber = 0;
     BaseModel *current = this->mpFirstModel;
     while (current->GetNext() != nullptr)
     {
-        if (current->GetModelNumber() == listNumber)
+        if (handleNumber <= current->GetModelNumber())
         {
-            temp = -1;
-            break;
+            // 
+            handleNumber = current->GetModelNumber() + 1;
         }
         current = current->GetNext();
     }
@@ -130,16 +145,20 @@ int BaseModelList::Add(BaseModel *model, unsigned long listNumber)
     }
     current->SetPrevNext(current->GetPrev(), model);
     model->SetPrevNext(current, nullptr);
-    model->SetModelNumber(listNumber);
+    model->SetModelNumber(handleNumber);
+
+    // 
+    this->Handle2Number(modelHandle) = handleNumber;
+
     return temp;
 }
 
-BaseModel *BaseModelList::SearchModelNumber(unsigned long listNumber)
+BaseModel *BaseModelList::SearchModelNumber(const BaseModelHandle &modelHandle)
 {
     BaseModel *current = this->mpFirstModel;
     while (current != nullptr)
     {
-        if (current->GetModelNumber() == listNumber)
+        if (current->GetModelNumber() == this->Handle2Number(modelHandle))
         {
             break;
         }

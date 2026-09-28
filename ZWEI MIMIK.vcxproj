@@ -196,6 +196,7 @@
     <ClCompile Include="Source\T_Model\Animation2D.cpp" />
     <ClCompile Include="Source\T_Model\Animation2DList.cpp" />
     <ClCompile Include="Source\T_Model\BaseModel.cpp" />
+    <ClCompile Include="Source\T_Model\BaseModelHandle.cpp" />
     <ClCompile Include="Source\T_Model\BaseModelList.cpp" />
     <ClCompile Include="Source\T_Model\Model2D.cpp" />
     <ClCompile Include="Source\T_Model\Model3D.cpp" />
@@ -298,6 +299,7 @@
     <ClInclude Include="Source\T_Model\Animation2D.h" />
     <ClInclude Include="Source\T_Model\Animation2DList.h" />
     <ClInclude Include="Source\T_Model\BaseModel.h" />
+    <ClInclude Include="Source\T_Model\BaseModelHandle.h" />
     <ClInclude Include="Source\T_Model\BaseModelList.h" />
     <ClInclude Include="Source\T_Model\Model2D.h" />
     <ClInclude Include="Source\T_Model\Model3D.h" />

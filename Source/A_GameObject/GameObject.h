@@ -14,6 +14,7 @@ enum GameObjectTag : unsigned long
 
 class BaseModel;
 class BaseModelList;
+class BaseModelHandle;
 class BaseCollision;
 class BaseCollisionList;
 class CollisionHandle;
@@ -110,7 +111,7 @@ public:
     BehaviorTree *GetBehaviorTree()const;
     BaseComponentList *GetBaseComponentList()const;
 
-    int AddModel(BaseModel *model, unsigned long number);
+    int AddModel(BaseModel *model, BaseModelHandle &out);
     int AddCollision(BaseCollision *collision, CollisionHandle &out);
     int AddBehaviorNode(BehaviorNode *node, unsigned long number);
     int AddMonoBehavior(MonoBehavior *mono, const BehaviorAccessData &accessData);

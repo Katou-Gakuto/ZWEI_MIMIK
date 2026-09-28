@@ -1,12 +1,21 @@
 #pragma once
 
 class BaseModel;
+class BaseModelHandle;
 class BaseModelList
 {
 private:
+    // 
     BaseModel *mpFirstModel;
 
+    // 
+    unsigned long long mnNextNumber;
+
     int DeleteAll();
+
+    // 
+    unsigned long long &Handle2Number(BaseModelHandle &modelHandle);
+    const unsigned long long &Handle2Number(const BaseModelHandle &modelHandle);
 
 public:
     BaseModelList();
@@ -16,7 +25,7 @@ public:
     int Finalize();
     int Draw();
 
-    int Add(BaseModel *model, unsigned long listNumber);
+    int Add(BaseModel *model, BaseModelHandle &modelHandle);
 
-    BaseModel *SearchModelNumber(unsigned long listNumber);
+    BaseModel *SearchModelNumber(const BaseModelHandle &modelHandle);
 };

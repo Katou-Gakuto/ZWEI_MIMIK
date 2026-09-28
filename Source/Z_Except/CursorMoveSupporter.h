@@ -79,5 +79,4 @@ private:
     const int mnPushHoldFrameMax;
     int mnLastModeFrameCount;
     int mnPlayerNumber;
-
 };
