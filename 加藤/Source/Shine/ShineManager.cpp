@@ -61,6 +61,7 @@ ShineManager::ShineManager()
 , mstShineGridPos()
 , mstCheckShineGridFlags()
 , mstShineAreaResult()
+, mstLightAreaEndPoint()
 , mnLineIdNowMax(0)
 {
     for (int i = 0; i < DRAW_MODE_NUMBER::DRAW_MODE_NUMBER_MAX; ++i)
@@ -594,7 +595,6 @@ void ShineManager::CheckShineGrid()
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].SetLitNumber = 0;
 
     std::vector<SHINE_DIRECTION> shineDirections;
-    SHINE_DIRECTION test;
     shineDirections.push_back(mpShineObject->GetShineDirection());
 
 
@@ -655,7 +655,8 @@ void ShineManager::CheckShineGrid()
                     blockPos.OutsideGridFlag = true;
                     blockPos.BlockPos = checkPos;
                     blockPos.ArrayIndex = shineDirectionsIndex;
-                    blockPoss.push(blockPos);
+                    // TODO:_ 画面外は別にやる
+                    //blockPoss.push(blockPos);
                     continue;
                 }
 
@@ -786,6 +787,41 @@ void ShineManager::CheckShineGrid()
 
         // 光領域を記録
         mstShineAreaResult.push_back(shineDirections);
+    }
+
+    // 画面の角ポジション
+    const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX] =
+    {
+        Vector2(0.0f,       0.0f),
+        Vector2(0.0f,       MAP_SIZE_Y), 
+        Vector2(MAP_SIZE_X, 0.0f), 
+        Vector2(MAP_SIZE_X, MAP_SIZE_Y)
+    };
+    // 光源から見て画面の角アングル
+    float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX] =
+    {
+        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]),
+        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]), 
+        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]), 
+        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN])
+    };
+    
+    for (int shineIterator = 0; shineIterator < shineDirections.size(); ++shineIterator)
+    {
+        float shineAnglesLeftAndRight[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX] = { shineDirections[shineIterator].leftAngle, shineDirections[shineIterator].rightAngle };
+        Vector2 shineDirectionsLeftAndRight[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX] = { shineDirections[shineIterator].shineDirectionLeft, shineDirections[shineIterator].shineDirectionRight };
+        int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX] = {0 , 0};
+
+        Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX];
+
+        // 光域左右の方向と交点を算出
+        if (!GetShineDirectionIntersection(shineDirectionsLeftAndRight, shineAnglesLeftAndRight, shineAngleNumbers, intersectionPositions, displayCornerAngles, displayCornerPosition))
+        {
+            continue;
+        }
+
+        // 角を含めるなら角も描画用三角に追加
+        AddDisplayCornerToDrawTriangle(intersectionPositions, shineAngleNumbers, displayCornerPosition);
     }
 
     
@@ -1747,5 +1783,312 @@ void ShineManager::UpdateGridLightState(const BLOCK_POS_DATA& blockPos, const st
     if (!isStillLit && mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag)
     {
         mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag = false;
+    }
+}
+
+// 2次元ベクトル同士の外積のZ成分を求める
+float ShineManager::Cross(const Vector2& src, const Vector2& dst)
+{
+    return src.x * dst.y - src.y * dst.x;
+}
+
+// 2本の線分の交点を求める
+bool ShineManager::GetIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection)
+{
+    // 線分srcABの方向ベクトルを求める
+    Vector2 srcAB =
+    {
+        srcB.x - srcA.x,
+        srcB.y - srcA.y
+    };
+
+    // 線分dstCDの方向ベクトルを求める
+    Vector2 dstCD =
+    {
+        dstD.x - dstC.x,
+        dstD.y - dstC.y
+    };
+
+    // srcABとdstCDの外積を求める
+    float denominator = Cross(srcAB, dstCD);
+
+    // 外積が0の場合、2本の線分は平行
+    // 平行な場合は交点を求められない
+    if (fabsf(denominator) < 0.000001f)
+    {
+        return false;
+    }
+
+    // 線分srcABの始点srcAから
+    // 線分dstCDの始点dstCまでのベクトルを求める
+    Vector2 srcAdstC =
+    {
+        dstC.x - srcA.x,
+        dstC.y - srcA.y
+    };
+
+    // 線分srcAB上のどの位置に交点があるかを求める
+    // 0ならsrcA、1ならsrcB、0.5ならsrcAとsrcBの中間
+    float t = Cross(srcAdstC, dstCD) / denominator;
+
+    // 線分dstCD上のどの位置に交点があるかを求める
+    // 0ならdstC、1ならdstD、0.5ならdstCとdstDの中間
+    float u = Cross(srcAdstC, srcAB) / denominator;
+
+    // tが0～1の範囲外なら、交点は線分srcABの外側
+    // uが0～1の範囲外なら、交点は線分dstCDの外側
+    if (t < 0.0f || t > 1.0f ||
+        u < 0.0f || u > 1.0f)
+    {
+        return false;
+    }
+
+    // 線分srcAB上のtの位置から交点の座標を求める
+    intersection =
+    {
+        srcA.x + srcAB.x * t,
+        srcA.y + srcAB.y * t
+    };
+
+    // 線分同士が交差している
+    return true;
+}
+
+// 線分ABの延長線と線分CDの延長線の交点を求める
+bool ShineManager::GetLineIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection)
+{
+    // 線分srcABの方向ベクトルを求める
+    Vector2 srcAB =
+    {
+        srcB.x - srcA.x,
+        srcB.y - srcA.y
+    };
+
+    // 線分dstCDの方向ベクトルを求める
+    Vector2 dstCD =
+    {
+        dstD.x - dstC.x,
+        dstD.y - dstC.y
+    };
+
+    // srcABとdstCDの外積を求める
+    float denominator = Cross(srcAB, dstCD);
+
+    // 外積が0の場合、2本の線分は平行
+    // 平行な場合は交点を求められない
+    if (denominator == 0.0f)
+    {
+        return false;
+    }
+
+    // 線分srcABの始点srcAから
+    // 線分dstCDの始点dstCまでのベクトルを求める
+    Vector2 srcAdstC =
+    {
+        dstC.x - srcA.x,
+        dstC.y - srcA.y
+    };
+
+    // 線分srcAB上のどの位置に交点があるかを求める
+    // 0ならsrcA、1ならsrcB、0.5ならsrcAとsrcBの中間
+    float t = Cross(srcAdstC, dstCD) / denominator;
+
+    // 線分dstCD上のどの位置に交点があるかを求める
+    // 0ならdstC、1ならdstD、0.5ならdstCとdstDの中間
+    float u = Cross(srcAdstC, srcAB) / denominator;
+
+    // 線分srcAB上のtの位置から交点の座標を求める
+    intersection =
+    {
+        srcA.x + srcAB.x * t,
+        srcA.y + srcAB.y * t
+    };
+
+    // 線分同士が交差している
+    return true;
+}
+
+// 2点間の角度を取得します。
+float ShineManager::GetAngleToPoint(const Vector2& from, const Vector2& to)
+{
+    const float dx = to.x - from.x;
+    const float dy = to.y - from.y;
+
+    float angle = std::atan2(dy, dx);
+
+    if (angle < 0.0f)
+    {
+        angle += DX_TWO_PI;
+    }
+
+    return angle;
+}
+
+// 光の右と左の方向と交点を算出
+bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float shineAngles[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX])
+{
+    // 算出&どの方向か取得
+    for(int i = 0; i < ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX; ++i)
+    {
+        // 0～PI*2 の間に収める
+        {
+            while (shineAngles[i] < 0.0f)
+            {
+                shineAngles[i] += (DX_TWO_PI_F * 2.0f);
+            }
+
+            while (shineAngles[i] > DX_TWO_PI_F)
+            {
+                shineAngles[i] -= (DX_TWO_PI_F * 2.0f);
+            }
+        }
+
+        shineAngleNumbers[i] = -1;
+        
+        // 左
+        if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]    >= shineAngles[i]) &&
+            (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN] <= shineAngles[i]))
+        {
+            shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT;
+            // 算出
+            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
+                                    mstShinePos, mstShinePos + shineDirections[i], 
+                                    intersectionPositions[i]))
+            {
+                return false;
+            }
+        }
+        // 右(0が右なため||)
+        else if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]   <= shineAngles[i]) ||
+                (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN] >= shineAngles[i]))
+        {
+            shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_RIGHT;
+            // 算出
+            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN],
+                                    mstShinePos, mstShinePos + shineDirections[i], 
+                                    intersectionPositions[i]))
+            {
+                return false;
+            }
+        }
+        // 上
+        else if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]  <= shineAngles[i]) &&
+                (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP] >= shineAngles[i]))
+        {
+            shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP;
+            // 算出
+            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP],
+                                    mstShinePos, mstShinePos + shineDirections[i], 
+                                    intersectionPositions[i]))
+            {
+                return false;
+            }
+        }
+        // 下
+        else if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]   <= shineAngles[i]) &&
+                (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]    >= shineAngles[i]))
+        {
+            shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_DOWN;
+            // 算出
+            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
+                                    mstShinePos, mstShinePos + shineDirections[i], 
+                                    intersectionPositions[i]))
+            {
+                return false;
+            }
+        }
+
+        if (shineAngleNumbers[i] == -1)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// 角が含まれるなら角を描画に追加
+void ShineManager::AddDisplayCornerToDrawTriangle(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], const int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX])
+{
+    switch (shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT] | shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT])
+    {
+    case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT_UP:
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
+        break;
+        
+    case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT_DOWN:
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+        break;
+        
+    case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_RIGHT_UP:
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+        break;
+        
+    case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_RIGHT_DOWN:
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+        break;
+        
+    case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT_RIGHT:
+        if (shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT] == ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT)
+        {
+            // 左上
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
+            // 右上
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+            
+            // 上
+            AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+        }
+        else
+        {
+            // 左下
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+            // 右下
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+
+            // 下
+            AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+        }
+        break;
+        
+    case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP_DOWN:
+        if (shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT] == ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP)
+        {
+            // 右上
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
+            // 右下
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+            
+            // 右
+            AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
+        }
+        else
+        {
+            // 左上
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
+            // 左下
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+            AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+            
+            // 左
+            AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
+        }
+        break;
+
+    default:
+        // 描画用三角に追加
+        AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT]);
+        break;
     }
 }

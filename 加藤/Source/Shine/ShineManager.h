@@ -65,6 +65,36 @@ enum class SHINE_GRID_TYPE
 	SHINE_AND_OBJECT_AND_OTHER_SHINE_AREA_GRID,			// 光領域内&オブジェクトがある&ほかの光領域もある
 };
 
+// 方向を数字で変換する物
+enum ANGLE_NUMBER
+{
+	ANGLE_NUMBER_SHINE_LEFT = 0,
+	ANGLE_NUMBER_SHINE_RIGHT,
+	ANGLE_NUMBER_SHINE_MAX,
+
+	ANGLE_NUMBER_DISPLAY_LEFT_UP = 0,
+	ANGLE_NUMBER_DISPLAY_LEFT_DOWN,
+	ANGLE_NUMBER_DISPLAY_RIGHT_UP,
+	ANGLE_NUMBER_DISPLAY_RIGHT_DOWN,
+	ANGLE_NUMBER_DISPLAY_MAX,
+};
+
+// 方向を数字で変換する物(BIT)
+enum ANGLE_BIT_NUMBER
+{
+	ANGLE_BIT_NUMBER_LEFT       = 0b0001,
+	ANGLE_BIT_NUMBER_RIGHT      = 0b0010,
+	ANGLE_BIT_NUMBER_UP         = 0b0100,
+	ANGLE_BIT_NUMBER_DOWN       = 0b1000,
+	ANGLE_BIT_NUMBER_LEFT_UP    = 0b0101,
+	ANGLE_BIT_NUMBER_LEFT_DOWN  = 0b1001,
+	ANGLE_BIT_NUMBER_RIGHT_UP   = 0b0110,
+	ANGLE_BIT_NUMBER_RIGHT_DOWN = 0b1010,
+
+	ANGLE_BIT_NUMBER_LEFT_RIGHT = 0b0011,
+	ANGLE_BIT_NUMBER_UP_DOWN    = 0b1100,
+};
+
 class ShineManager
 {
 public:
@@ -108,6 +138,9 @@ private:
 
 	// 光領域の偏移確認用変数
 	std::vector<std::vector<SHINE_DIRECTION>> mstShineAreaResult;
+
+	// 終わりを迎えた光域(未確定)
+	std::vector<LINE_POS> mstLightAreaEndPoint;
 
 	// ラインid現在最大値
 	int mnLineIdNowMax;
@@ -164,4 +197,22 @@ private:
 
 	// グリッドの光状態を更新
 	void UpdateGridLightState(const BLOCK_POS_DATA& blockPos, const std::vector<SHINE_DIRECTION>& shineDirections);
+
+	// 2次元ベクトル同士の外積のZ成分を求める
+	float Cross(const Vector2& a, const Vector2& b);
+
+	// 2本の線分の交点を求める
+	bool GetIntersection(const Vector2& a, const Vector2& b, const Vector2& c, const Vector2& d, Vector2& intersection);
+	
+	// 線分ABの延長線と線分CDの延長線の交点を求める
+	bool GetLineIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection);
+
+	// 2点間の角度を取得します。
+	float GetAngleToPoint(const Vector2& from, const Vector2& to);
+
+	// 光の右と左の方向と交点を算出
+	bool GetShineDirectionIntersection(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float shineAngles[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX]);
+
+	// 角が含まれるなら角を描画に追加
+	void AddDisplayCornerToDrawTriangle(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], const int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX]);
 };

@@ -51,10 +51,18 @@ void ShineObject::Update()
     if (Master::mpKeyState->GetWordKey_Board(KEY_BOARD_WORD::ARROW_DOWN))
     {
         mfAngle -= 3;
+        if (mfAngle < 0)
+        {
+            mfAngle += DX_TWO_PI_F * 57.29578f;
+        }
     }
     if (Master::mpKeyState->GetWordKey_Board(KEY_BOARD_WORD::ARROW_UP))
     {
         mfAngle += 3;
+        if (mfAngle > (DX_TWO_PI_F * 57.29578f))
+        {
+            mfAngle -= DX_TWO_PI_F * 57.29578f;
+        }
     }
     
     if (Master::mpKeyState->GetWordKey_Board(KEY_BOARD_WORD::ARROW_LEFT))
