@@ -1,4 +1,7 @@
 #include "Pose2D.h"
+#include "Player.h"
+#include "GameObjectManager.h"
+#include "GameObject2D.h"
 
 Pose2D::Pose2D() :
     mvLeftUpUV(VECTOR2D::GetZero()),

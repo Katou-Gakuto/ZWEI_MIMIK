@@ -5,6 +5,7 @@
 
 // #include "../V_Display/System.h"
 #include "../Z_Except/Master.h"
+#include "../T_Model/DXModelAnim.h"
 
 void BaseModel::SetDrawBit(bool flag)
 {
@@ -18,7 +19,7 @@ void BaseModel::SetDrawBit(bool flag)
     }
 }
 
-BaseModel::BaseModel(GameObject *up, ModelType modelType, ScreenNumber drawScreen) :
+BaseModel::BaseModel(GameObject *up, ModelType modelType, ScreenNumber drawScreen):
     mnModelType(modelType),
     mnDrawScreen(drawScreen),
     mcBitFlag(0),
@@ -58,12 +59,14 @@ int BaseModel::Draw()
 int BaseModel::BaseDraw()
 {
     int temp = 0;
-#if 0
+
+    temp = this->Draw();
+/*
     if (Master::mpSystem->ChangeDrawScreen(this->mnDrawScreen) == 0)
     {
         temp = this->Draw();
     }
-#endif
+*/
     return temp;
 }
 

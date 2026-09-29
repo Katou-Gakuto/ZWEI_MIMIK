@@ -8,9 +8,13 @@
 #include "../E_Scene/BaseScene.h"
 #include "../E_Scene/BaseSceneManager.h"
 
+#include "../T_Model/BaseModelList.h"
+#include "../T_Model/DXModelAnim.h"
+
 #include "../S_Collision/BaseCollision.h"
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Circle2D.h"
+
 
 Player::Player(GameObject* myObject, int playerNumber)
 : BaseComponent(myObject, ComponentTagAndOrder::CTAO_PlayerController)
@@ -49,6 +53,10 @@ int Player::Create()
     obj->AddCollision(body, this->mdBodyCollision);
 
     // 
+    obj->AddModel(new DXAnimModel(obj), PlayerNum - 1);
+
+   
+    // 
     return 0;
 }
 
@@ -56,7 +64,16 @@ int Player::Create()
 int Player::Initialize()
 {
     Pos = OldPos;
+    //if (Master::mpResourceManager != nullptr);
+
+    DXAnimModel *playerModel = this->GetPlayerModel();
+
+    if (PlayerNum == 1)
+        PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f);
+    else
+        PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f);
     return 0;
+
 }
 
 
@@ -144,17 +161,30 @@ int Player::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollisi
 
 int Player::LateUpdate()
 {
+    DXAnimModel *playerModel = this->GetPlayerModel();
+
+    // ↓のコードでこのフレームの描画にこのモデルを描画を行うようにできる
+    playerModel->SetDrawFlag(true);
+
     return 0;
 }
 
-
 int Player::Draw()
 {
+    //PlayerGraphHandle =
     GameObject2D *player = GetMyObject2D();
-	if (PlayerNum == 1)// プレイヤー1の場合は赤色で描画
-        DrawBox(player->GetPosition().GetX(), player->GetPosition().GetY(), player->GetPosition().GetX() + 30, player->GetPosition().GetY() + 60, 0xFF0000, true);
+    if (PlayerNum == 1)// プレイヤー1の場合は赤色で描画
+        DrawBox(player->GetPosition().GetX() - (Master::PlayerSizeXY / 2),
+            player->GetPosition().GetY() - (Master::PlayerSizeXY / 2),
+            player->GetPosition().GetX() + (Master::PlayerSizeXY / 2),
+            player->GetPosition().GetY() + (Master::PlayerSizeXY / 2),
+            0xFF0000, false);
 	else// プレイヤー2の場合は青色で描画
-        DrawBox(player->GetPosition().GetX(), player->GetPosition().GetY(), player->GetPosition().GetX() + 30, player->GetPosition().GetY() + 60, 0x0000FF, true);
+        DrawBox(player->GetPosition().GetX() - (Master::PlayerSizeXY / 2),
+            player->GetPosition().GetY() - (Master::PlayerSizeXY / 2),
+            player->GetPosition().GetX() + (Master::PlayerSizeXY / 2),
+            player->GetPosition().GetY() + (Master::PlayerSizeXY / 2),
+            0x0000FF, false);
     return 0;
 }
 
@@ -269,3 +299,14 @@ bool Player::CheckHoldNow() const
     // 
     return this->mpHold != nullptr;
 }
+
+// 
+DXAnimModel *Player::GetPlayerModel()const
+{
+    GameObject *myObject = this->GetMyObject();
+    BaseModelList *modelList = myObject->GetModelList();
+    DXAnimModel *playerModel = static_cast<DXAnimModel *>(modelList->SearchModelNumber(0));
+    // 
+    return playerModel;
+}
+

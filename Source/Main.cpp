@@ -4,6 +4,8 @@
 
 #include "E_Scene/BaseSceneManager.h"
 #include "Z_Except/Master.h"
+#include "Z_Except/ResourceManager.h"
+#include "T_Model/DXModelAnim.h"
 #include "EndManager.h"
 #include "KeyState.h"
 #include "TimeManager.h"
@@ -28,6 +30,9 @@
 
 
 */
+
+int Master::PlayerSizeXY = 120;
+
 
 /// <summary>
 /// ƒƒCƒ“
@@ -117,11 +122,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			// 
 			Master::mpBaseSceneManager->Update();
+			Master::mpResourceManager->Update();
+			
 
 			ClearDrawScreen();
 
 			// 
 			Master::mpBaseSceneManager->Draw();
+			Master::mpResourceManager->Draw();
 
 			ScreenFlip();
 		}

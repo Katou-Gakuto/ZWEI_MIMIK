@@ -198,6 +198,7 @@
     <ClCompile Include="Source\T_Model\BaseModel.cpp" />
     <ClCompile Include="Source\T_Model\BaseModelHandle.cpp" />
     <ClCompile Include="Source\T_Model\BaseModelList.cpp" />
+    <ClCompile Include="Source\T_Model\DXModelAnim.cpp" />
     <ClCompile Include="Source\T_Model\Model2D.cpp" />
     <ClCompile Include="Source\T_Model\Model3D.cpp" />
     <ClCompile Include="Source\T_Model\ModelPartsBox.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Source\T_Model\BaseModel.h" />
     <ClInclude Include="Source\T_Model\BaseModelHandle.h" />
     <ClInclude Include="Source\T_Model\BaseModelList.h" />
+    <ClInclude Include="Source\T_Model\DXModelAnim.h" />
     <ClInclude Include="Source\T_Model\Model2D.h" />
     <ClInclude Include="Source\T_Model\Model3D.h" />
     <ClInclude Include="Source\T_Model\ModelPartsBox.h" />
@@ -340,6 +342,8 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resource\Idle.png" />
+    <Image Include="Resource\Run.png" />
     <Image Include="ZWEI_MIMIK.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

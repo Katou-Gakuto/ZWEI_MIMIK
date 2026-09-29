@@ -639,6 +639,12 @@
     <ClInclude Include="Source\T_Model\BaseModelHandle.h">
       <Filter>Source\T_Model</Filter>
     </ClInclude>
+    <ClInclude Include="Source\T_Model\DXModelAnim.h">
+      <Filter>Source\T_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Z_Except\ResourceManager.h">
+      <Filter>Source\Z_Except</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -676,5 +682,11 @@
     <ClInclude Include="Source\F_PuzzleGimmick\RotateExecutor.h">
       <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
+    <Image Include="Resource\Idle.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\Run.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

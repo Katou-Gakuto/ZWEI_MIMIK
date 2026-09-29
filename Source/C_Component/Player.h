@@ -7,6 +7,7 @@
 #include "VECTOR.h"
 
 class HoldObjectController;
+class DXAnimModel;
 
 class Player : public BaseComponent
 {
@@ -36,6 +37,10 @@ public:
     // 
     bool SyncPlayerMoveVec(const VECTOR2D &vec);
 
+	VECTOR2D GetPos() const { return Pos; }
+	int GetPlayerNum() const { return PlayerNum; } // 1Pか2Pかを返す
+
+
 private:
 
     VECTOR2D Pos;
@@ -43,8 +48,10 @@ private:
     VECTOR2D moveVec;
     int PlayerNum; //P1かP2か
 
-    // 自身がつかんでいるオブジェクト
-    HoldObjectController *mpHold;
+	int PlayerGraphHandle; // プレイヤーのグラフィックハンドル
+
+    
+    HoldObjectController *mpHold; // 自身がつかんでいるオブジェクト
 
     // このプレイヤーの当たり判定
     CollisionHandle mdBodyCollision;
@@ -54,4 +61,7 @@ private:
 
     // 
     bool CheckHoldNow() const;
+
+    // 
+    DXAnimModel *GetPlayerModel()const;
 };
