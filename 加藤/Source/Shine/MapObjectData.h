@@ -33,7 +33,17 @@ struct BLOCK_POS_DATA
 public:
 	Vector2_Int BlockPos;
 	int ArrayIndex;
-	bool OutsideGridFlag;
+};
+
+// 光を遮る
+struct SHINE_AREA_END_POINT : public LINE_POS
+{
+public:
+    // 光域を遮る線分
+    LINE_POS linePos;
+
+    // 対象となる光領域のインデックス
+    int shineDirectionIndex = -1;
 };
 
 // 視界

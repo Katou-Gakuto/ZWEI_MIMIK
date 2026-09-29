@@ -180,8 +180,11 @@ private:
     // 光を遮るものを確認し、それに応じた処理を行う
     void ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std::queue<Vector2_Int>& nextCheckShinePos, std::vector<SHINE_DIRECTION>& shineDirections);
 
-	// 光を遮る物の影響を与える処理
-	void ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DATA& bloakPoss, std::vector<SHINE_DIRECTION>& shineDirections);
+	// 光域の終端候補を登録する
+	void RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, const BLOCK_POS_DATA& blockPos, std::vector<SHINE_DIRECTION>& shineDirections);
+	
+	// 登録された光域終端候補を使用して、光域を削り、削った部分を描画用三角形に登録する
+	void ProcessShineAreaEndPointCandidates(std::vector<SHINE_DIRECTION>& shineDirections);
 
     // マップ外判定
     bool IsOutsideShineStage(const Vector2_Int& gridPos);

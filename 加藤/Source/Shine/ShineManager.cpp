@@ -650,13 +650,6 @@ void ShineManager::CheckShineGrid()
                 // マップ外なら除外
                 if (IsOutsideShineStage(checkPos))
                 {
-                    // ここで光を遮るものを追加
-                    BLOCK_POS_DATA blockPos;
-                    blockPos.OutsideGridFlag = true;
-                    blockPos.BlockPos = checkPos;
-                    blockPos.ArrayIndex = shineDirectionsIndex;
-                    // TODO:_ 画面外は別にやる
-                    //blockPoss.push(blockPos);
                     continue;
                 }
 
@@ -700,7 +693,6 @@ void ShineManager::CheckShineGrid()
                 {
                     // ここで光を遮るものを追加
                     BLOCK_POS_DATA blockPos;
-                    blockPos.OutsideGridFlag = false;
                     blockPos.BlockPos = checkPos;
                     blockPos.ArrayIndex = shineDirectionsIndex;
                     blockPoss.push(blockPos);
@@ -740,7 +732,6 @@ void ShineManager::CheckShineGrid()
                 {
                     // ここで光を遮るものを追加
                     BLOCK_POS_DATA blockPos;
-                    blockPos.OutsideGridFlag = false;
                     blockPos.BlockPos = checkPos;
                     blockPos.ArrayIndex = shineDirectionsIndex;
                     blockPoss.push(blockPos);
@@ -954,159 +945,160 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
             continue;
         }
 
-        // 画面外
-        if (blockPos.OutsideGridFlag)
-        {
-            // 現在の光方向を取得
-            const SHINE_DIRECTION& shineDirection =
-                shineDirections[blockPos.ArrayIndex];
+        //// 画面外
+        //if (blockPos.OutsideGridFlag)
+        //{
+        //    // 現在の光方向を取得
+        //    const SHINE_DIRECTION& shineDirection =
+        //        shineDirections[blockPos.ArrayIndex];
 
-            // X・Yの両方が範囲外なら判定しない
-            const bool outsideX =
-                blockPos.BlockPos.x < 0 ||
-                blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X;
+        //    // X・Yの両方が範囲外なら判定しない
+        //    const bool outsideX =
+        //        blockPos.BlockPos.x < 0 ||
+        //        blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X;
 
-            const bool outsideY =
-                blockPos.BlockPos.y < 0 ||
-                blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y;
+        //    const bool outsideY =
+        //        blockPos.BlockPos.y < 0 ||
+        //        blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y;
 
-            if (outsideX && outsideY)
-            {
-                continue;
-            }
+        //    if (outsideX && outsideY)
+        //    {
+        //        continue;
+        //    }
 
-            // 画面端の2点
-            std::vector<Vector2> edgePoss1;
-            std::vector<Vector2> edgePoss2;
+        //    // 画面端の2点
+        //    std::vector<Vector2> edgePoss1;
+        //    std::vector<Vector2> edgePoss2;
 
-            
-            // 左上
-            if ((blockPos.BlockPos.x < 0) && (blockPos.BlockPos.y < 0))
-            {
-                // 左
-                edgePoss1.push_back(Vector2(0.0f, 0.0f));
-                edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
-                // 上
-                edgePoss1.push_back(Vector2(0.0f, 0.0f));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
-            }
-            // 左下
-            else if ((blockPos.BlockPos.x < 0) && (blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y))
-            {
-                // 下
-                edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
-                // 左
-                edgePoss1.push_back(Vector2(0.0f, 0.0f));
-                edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
-            }
-            // 右上
-            else if ((blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X) && (blockPos.BlockPos.y < 0))
-            {
-                // 上
-                edgePoss1.push_back(Vector2(0.0f, 0.0f));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
-                // 右
-                edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
-            }
-            // 右下
-            else if ((blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X) && (blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y))
-            {
-                // 右
-                edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
-                // 下
-                edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
-            }
-            // 左端
-            else if (blockPos.BlockPos.x < 0)
-            {
-                edgePoss1.push_back(Vector2(0.0f, 0.0f));
-                edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
-            }
-            // 右端
-            else if (blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X)
-            {
-                edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
-            }
-            // 上端
-            else if (blockPos.BlockPos.y < 0)
-            {
-                edgePoss1.push_back(Vector2(0.0f, 0.0f));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
-            }
-            // 下端
-            else
-            {
-                edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
-                edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
-            }
+        //    
+        //    // 左上
+        //    if ((blockPos.BlockPos.x < 0) && (blockPos.BlockPos.y < 0))
+        //    {
+        //        // 左
+        //        edgePoss1.push_back(Vector2(0.0f, 0.0f));
+        //        edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+        //        // 上
+        //        edgePoss1.push_back(Vector2(0.0f, 0.0f));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+        //    }
+        //    // 左下
+        //    else if ((blockPos.BlockPos.x < 0) && (blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y))
+        //    {
+        //        // 下
+        //        edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+        //        // 左
+        //        edgePoss1.push_back(Vector2(0.0f, 0.0f));
+        //        edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+        //    }
+        //    // 右上
+        //    else if ((blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X) && (blockPos.BlockPos.y < 0))
+        //    {
+        //        // 上
+        //        edgePoss1.push_back(Vector2(0.0f, 0.0f));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+        //        // 右
+        //        edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+        //    }
+        //    // 右下
+        //    else if ((blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X) && (blockPos.BlockPos.y >= MAP_ARRAY_SIZE_Y))
+        //    {
+        //        // 右
+        //        edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+        //        // 下
+        //        edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+        //    }
+        //    // 左端
+        //    else if (blockPos.BlockPos.x < 0)
+        //    {
+        //        edgePoss1.push_back(Vector2(0.0f, 0.0f));
+        //        edgePoss2.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+        //    }
+        //    // 右端
+        //    else if (blockPos.BlockPos.x >= MAP_ARRAY_SIZE_X)
+        //    {
+        //        edgePoss1.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+        //    }
+        //    // 上端
+        //    else if (blockPos.BlockPos.y < 0)
+        //    {
+        //        edgePoss1.push_back(Vector2(0.0f, 0.0f));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), 0.0f));
+        //    }
+        //    // 下端
+        //    else
+        //    {
+        //        edgePoss1.push_back(Vector2(0.0f, static_cast<float>(MAP_SIZE_Y)));
+        //        edgePoss2.push_back(Vector2(static_cast<float>(MAP_SIZE_X), static_cast<float>(MAP_SIZE_Y)));
+        //    }
 
-            for(int edgeIterator = 0; (edgeIterator < edgePoss1.size()) && (edgeIterator < edgePoss2.size()); ++edgeIterator)
-            {
-                // const Vector2 edge = edgePoss2[edgeIterator] - edgePoss1[edgeIterator];
+        //    for(int edgeIterator = 0; (edgeIterator < edgePoss1.size()) && (edgeIterator < edgePoss2.size()); ++edgeIterator)
+        //    {
+        //        // const Vector2 edge = edgePoss2[edgeIterator] - edgePoss1[edgeIterator];
 
-                // Vector2 intersection1;
-                // Vector2 intersection2;
+        //        // Vector2 intersection1;
+        //        // Vector2 intersection2;
 
-                // // 光方向1との交点
-                // const float cross1 =
-                //     shineDirection.shineDirectionLeft.x * edge.y -
-                //     shineDirection.shineDirectionLeft.y * edge.x;
+        //        // // 光方向1との交点
+        //        // const float cross1 =
+        //        //     shineDirection.shineDirectionLeft.x * edge.y -
+        //        //     shineDirection.shineDirectionLeft.y * edge.x;
 
-                // if (cross1 != 0.0f)
-                // {
-                //     const Vector2 toEdge =
-                //         edgePoss1[edgeIterator] - mstShinePos;
+        //        // if (cross1 != 0.0f)
+        //        // {
+        //        //     const Vector2 toEdge =
+        //        //         edgePoss1[edgeIterator] - mstShinePos;
 
-                //     const float t =
-                //         (toEdge.x * edge.y -
-                //         toEdge.y * edge.x) / cross1;
+        //        //     const float t =
+        //        //         (toEdge.x * edge.y -
+        //        //         toEdge.y * edge.x) / cross1;
 
-                //     intersection1 =
-                //         mstShinePos +
-                //         shineDirection.shineDirectionLeft * t;
-                // }
+        //        //     intersection1 =
+        //        //         mstShinePos +
+        //        //         shineDirection.shineDirectionLeft * t;
+        //        // }
 
-                // // 光方向2との交点
-                // const float cross2 =
-                //     shineDirection.shineDirectionRight.x * edge.y -
-                //     shineDirection.shineDirectionRight.y * edge.x;
+        //        // // 光方向2との交点
+        //        // const float cross2 =
+        //        //     shineDirection.shineDirectionRight.x * edge.y -
+        //        //     shineDirection.shineDirectionRight.y * edge.x;
 
-                // if (cross2 != 0.0f)
-                // {
-                //     const Vector2 toEdge =
-                //         edgePoss1[edgeIterator] - mstShinePos;
+        //        // if (cross2 != 0.0f)
+        //        // {
+        //        //     const Vector2 toEdge =
+        //        //         edgePoss1[edgeIterator] - mstShinePos;
 
-                //     const float t =
-                //         (toEdge.x * edge.y -
-                //         toEdge.y * edge.x) / cross2;
+        //        //     const float t =
+        //        //         (toEdge.x * edge.y -
+        //        //         toEdge.y * edge.x) / cross2;
 
-                //     intersection2 =
-                //         mstShinePos +
-                //         shineDirection.shineDirectionRight * t;
-                // }
+        //        //     intersection2 =
+        //        //         mstShinePos +
+        //        //         shineDirection.shineDirectionRight * t;
+        //        // }
 
-                // {
-                //     // グリッド内に補正
-                //     intersection1 = AdjustPositionToGrid(blockPos.BlockPos, intersection1);
-                //     intersection2 = AdjustPositionToGrid(blockPos.BlockPos, intersection2);
-                // }
+        //        // {
+        //        //     // グリッド内に補正
+        //        //     intersection1 = AdjustPositionToGrid(blockPos.BlockPos, intersection1);
+        //        //     intersection2 = AdjustPositionToGrid(blockPos.BlockPos, intersection2);
+        //        // }
 
-                // 障害物と光方向の交点を取得
-                Vector2 intersection1;
-                Vector2 intersection2;
-                GetShineBlockingIntersection(edgePoss1[edgeIterator], edgePoss2[edgeIterator], shineDirection, blockPos.BlockPos, intersection1, intersection2);
+        //        // 障害物と光方向の交点を取得
+        //        Vector2 intersection1;
+        //        Vector2 intersection2;
+        //        GetShineBlockingIntersection(edgePoss1[edgeIterator], edgePoss2[edgeIterator], shineDirection, blockPos.BlockPos, intersection1, intersection2);
 
-                LINE_POS checkLine = {intersection1, intersection2};
-                ShineBlockingProcess(checkLine, blockPos, shineDirections);
-            }
-        }
-        else
-        {
+        //        LINE_POS checkLine = {intersection1, intersection2};
+        //        ShineBlockingProcess(checkLine, blockPos, shineDirections);
+        //    }
+        //}
+        //else
+        //{
+            // TODO:_ わざわざ整列指せなくても出来そうだしこれじゃほとんど今がなかった
             std::vector<LINE_POS> linePoss = mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LinePoss;
             std::sort(linePoss.begin(), linePoss.end(),
                     [this](const LINE_POS& a, const LINE_POS& b)
@@ -1182,7 +1174,7 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
 
             for (LINE_POS checkLine :  linePoss)
             {
-                ShineBlockingProcess(checkLine, blockPos, shineDirections);
+                RegisterShineAreaEndPointCandidate(checkLine, blockPos, shineDirections);
             }
             // グリッドに光が残っているか判定してフラグ更新
             //UpdateGridLightState(blockPos, shineDirections);
@@ -1233,7 +1225,7 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
              {
                  mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LitFlag = false;
              }
-        }
+        //}
     }
 }
 
@@ -1264,131 +1256,312 @@ static float GetSignedAngleFromLeft(float angle, float baseLeft)
     return diff;
 }
 
-// 光を遮る物の影響を与える処理
-void ShineManager::ShineBlockingProcess(LINE_POS bloakLinePos, const BLOCK_POS_DATA& bloakPoss, std::vector<SHINE_DIRECTION>& shineDirections)
+// 光域の終端候補を登録する
+void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, const BLOCK_POS_DATA& blockPos, std::vector<SHINE_DIRECTION>& shineDirections)
 {
-    // 対象の光方向データを参照取得
-    SHINE_DIRECTION& currentShineDir = shineDirections[bloakPoss.ArrayIndex];
-    
-    const Vector2 shinePos = mpShineObject->GetPosition();
-    const float leftAngle  = currentShineDir.leftAngle;   // 光の左端角度 (ラジアン)
-    const float rightAngle = currentShineDir.rightAngle;  // 光の右端角度 (ラジアン)
+    // 現在処理している光域に対応する光方向を取得
+    const SHINE_DIRECTION& currentShineDir =
+        shineDirections[blockPos.ArrayIndex];
 
-    // 1. 光源から障害物の2点（StartPos / EndPos）への絶対角度（-π ～ +π）を算出
-    Vector2 dirStart = { bloakLinePos.linePos1.x - shinePos.x, bloakLinePos.linePos1.y - shinePos.y };
-    Vector2 dirEnd   = { bloakLinePos.linePos2.x - shinePos.x,   bloakLinePos.linePos2.y - shinePos.y };
+    // 障害物の左端・右端から光源への角度を求める
+    const float blockLeftAngle =
+        GetAngleToPoint(mstShinePos, blockLinePos.linePos1);
 
-    float startAngle = std::atan2f(dirStart.y, dirStart.x);
-    float endAngle   = std::atan2f(dirEnd.y,   dirEnd.x);
+    const float blockRightAngle =
+        GetAngleToPoint(mstShinePos, blockLinePos.linePos2);
 
-    // 2. 光の左端 (leftAngle) を 0 とした「相対角度」に変換 (0 ～ 2π)
-    float startRel = GetSignedAngleFromLeft(startAngle, leftAngle);
-    float endRel = GetSignedAngleFromLeft(endAngle, leftAngle);
+    // 光域の左端を基準とした相対角度を求める
+    const float blockLeftRel =
+        GetSignedAngleFromLeft(
+            blockLeftAngle,
+            currentShineDir.leftAngle);
 
-    // 光全体の照射範囲の幅 (0 ～ 2π)
-    float totalShineWidth = GetClockwiseAngleFromLeft(rightAngle, leftAngle);
+    const float blockRightRel =
+        GetSignedAngleFromLeft(
+            blockRightAngle,
+            currentShineDir.leftAngle);
 
-    // 障害物の2点のうち、時計回り順で「より左側（数値が小さい方）」と「より右側（数値が大きい方）」を整理
-    float blockLeftRel   = (startRel < endRel ? startRel : endRel);
-    float blockRightRel  = (startRel > endRel ? startRel : endRel);
-    
-    float blockLeftAngle  = (startRel < endRel) ? startAngle : endAngle;
-    float blockRightAngle = (startRel < endRel) ? endAngle   : startAngle;
+    // 現在の光域の角度幅
+    const float totalShineWidth =
+        GetSignedAngleFromLeft(
+            currentShineDir.rightAngle,
+            currentShineDir.leftAngle);
 
-    // -------------------------------------------------------------------
-    // 判定 1: 遮っているか判定
-    // -------------------------------------------------------------------
-    // 障害物の2点ともが光の範囲外（右側外側）にあり、かつ光をまたぎ越していない場合
-    if (blockLeftRel > totalShineWidth && blockRightRel > totalShineWidth)
+    // 障害物が現在の光域の外側にある場合は、
+    // この光域の終端候補にはならないため処理しない
+    if (blockLeftRel > totalShineWidth &&
+        blockRightRel > totalShineWidth &&
+        blockRightRel - blockLeftRel < DX_PI_F)
     {
-        // 障害物の角度幅自体も光にかかっていない場合、完全に光の外側なので終了
-        // ※「障害物の開き角度」が光の裏側や範囲外にあるケースの除外
-        if (blockRightRel - blockLeftRel < 3.14159265f) 
-        {
-            return; // 何もしないで終了
-        }
+        return;
     }
 
-    // -------------------------------------------------------------------
-    // 判定 2: 左右の端（光の左境界・右境界）のどちらかを遮っているか
-    // -------------------------------------------------------------------
-    // 左境界 (0.0) を障害物が跨いでいるか（＝左端を遮っているか）
-    // （障害物の左端は照射範囲外で、右端は照射範囲内にある状態）
-    bool crossesLeftEdge =
-        blockLeftRel < 0.0f &&
+    // 障害物が光域の左端を遮っているか判定
+    const bool crossesLeftEdge =
+        blockLeftRel <= 0.0f &&
         blockRightRel >= 0.0f;
-    //bool crossesLeftEdge  = (blockLeftRel > totalShineWidth && blockRightRel <= totalShineWidth);
 
-    // 右境界 (totalShineWidth) を障害物が跨いでいるか（＝右端を遮っているか）
-    // （障害物の右端が照射範囲の外側へ飛び出している状態）
-    bool crossesRightEdge =
+    // 障害物が光域の右端を遮っているか判定
+    const bool crossesRightEdge =
         blockLeftRel <= totalShineWidth &&
-        blockRightRel > totalShineWidth;
-    //bool crossesRightEdge = (blockRightRel > totalShineWidth);
+        blockRightRel >= totalShineWidth;
 
-    // 障害物と光方向の交点を取得
-    Vector2 intersection1 = bloakLinePos.linePos1;
-    Vector2 intersection2 = bloakLinePos.linePos2;
-    GetShineBlockingIntersection(bloakLinePos.linePos1, bloakLinePos.linePos2, currentShineDir, bloakPoss.BlockPos, intersection1, intersection2);
-
-    // -------------------------------------------------------------------
-    // 3パターン分岐処理
-    // -------------------------------------------------------------------
+    // 光域の左右端を遮っている場合
     if (crossesLeftEdge || crossesRightEdge)
     {
-        // 描画三角追加
-        AddDrawTriangleData(bloakLinePos.linePos1, bloakLinePos.linePos2);
+        // 光域の左端を遮っている場合
+        if (crossesLeftEdge)
+        {
+            Vector2 intersection;
 
-        if (crossesLeftEdge && crossesRightEdge)
-        {
-            // 【パターンA-1】光の左右両端とも跨いで完全に覆い隠している（光の全消滅）
-            shineDirections.erase(shineDirections.begin() + bloakPoss.ArrayIndex);
+            // 光域左端の光線と障害物の線分との交点を求める
+            if (GetIntersection(mstShinePos, mstShinePos + currentShineDir.shineDirectionLeft, blockLinePos.linePos1, blockLinePos.linePos2, intersection))
+            {
+                // 光源から見て角度が小さい方を
+                // 光域の左側にある点として交点に置き換える
+                if (blockLeftRel < blockRightRel)
+                {
+                    blockLinePos.linePos1 = intersection;
+                }
+                else
+                {
+                    blockLinePos.linePos2 = intersection;
+                }
+            }
         }
-        else if (crossesLeftEdge)
+        // 光域の右端を遮っている場合
+        if (crossesRightEdge)
         {
-            // 【パターンA-2】左端のみを遮っている（光の左側が削れる）
-            // -> 光の左端角度を「障害物の右端角度」に変更
-            currentShineDir.leftAngle = blockRightAngle;
-            currentShineDir.shineDirectionLeft = { std::cos(blockRightAngle), std::sin(blockRightAngle) };
-        }
-        else if (crossesRightEdge)
-        {
-            // 【パターンA-3】右端のみを遮っている（光の右側が削れる）
-            // -> 光の右端角度を「障害物の左端角度」に変更
-            currentShineDir.rightAngle = blockLeftAngle;
-            currentShineDir.shineDirectionRight = { std::cos(blockLeftAngle), std::sin(blockLeftAngle) };
-        }
-        return;
+            Vector2 intersection;
 
+            // 光域左端の光線と障害物の線分との交点を求める
+            if (GetIntersection(mstShinePos, mstShinePos + currentShineDir.shineDirectionRight, blockLinePos.linePos1, blockLinePos.linePos2, intersection))
+            {
+                // 光源から見て角度が小さい方を
+                // 光域の左側にある点として交点に置き換える
+                if (blockLeftRel < blockRightRel)
+                {
+                    blockLinePos.linePos1 = intersection;
+                }
+                else
+                {
+                    blockLinePos.linePos2 = intersection;
+                }
+            }
+        }
+
+        // 光域をその場では変更せず、
+        // 交点によって調整した障害物を
+        // 光域の終端候補として登録する
+        mstLightAreaEndPoint.push_back(blockLinePos);
     }
+    // 左右どちらの端も遮っていない場合
     else
     {
-        // 描画三角追加
-        AddDrawTriangleData(bloakLinePos.linePos1, bloakLinePos.linePos2);
-
-        // ---------------------------------------------------------------
-        // 【パターンB】左右の端どちらも遮っていない（光の中に完全にある障害物）
-        // ---------------------------------------------------------------
-        // 光を2つに分割する
-
-        float origRightAngle = currentShineDir.rightAngle;
-
-        // 1. 元の光（左側）の右端を「障害物の左端角度」に縮める
-        currentShineDir.rightAngle = blockLeftAngle;
-        currentShineDir.shineDirectionRight = { std::cos(blockLeftAngle), std::sin(blockLeftAngle) };
-
-        // 2. 新しい光（右側）を「障害物の右端角度 ～ 元の右端角度」として作成
-        SHINE_DIRECTION newRightShine;
-        newRightShine.leftAngle  = blockRightAngle;
-        newRightShine.rightAngle = origRightAngle;
-        newRightShine.shineDirectionLeft  = { std::cos(blockRightAngle), std::sin(blockRightAngle) };
-        newRightShine.shineDirectionRight = { std::cos(origRightAngle),   std::sin(origRightAngle) };
-
-        // 分割した光を追加
-        shineDirections.insert(shineDirections.begin() + bloakPoss.ArrayIndex + 1, newRightShine);
-
-        return;
+        // 光域の内部で障害物に遮られている状態。
+        // 後で光域の終端を決定するための候補として登録する。
+        mstLightAreaEndPoint.push_back(blockLinePos);
     }
+    // // 対象の光方向データを参照取得
+    // SHINE_DIRECTION& currentShineDir = shineDirections[bloakPoss.ArrayIndex];
+    
+    // const Vector2 shinePos = mpShineObject->GetPosition();
+    // const float leftAngle  = currentShineDir.leftAngle;   // 光の左端角度 (ラジアン)
+    // const float rightAngle = currentShineDir.rightAngle;  // 光の右端角度 (ラジアン)
+
+    // // 1. 光源から障害物の2点（StartPos / EndPos）への絶対角度（-π ～ +π）を算出
+    // Vector2 dirStart = { bloakLinePos.linePos1.x - shinePos.x, bloakLinePos.linePos1.y - shinePos.y };
+    // Vector2 dirEnd   = { bloakLinePos.linePos2.x - shinePos.x,   bloakLinePos.linePos2.y - shinePos.y };
+
+    // float startAngle = std::atan2f(dirStart.y, dirStart.x);
+    // float endAngle   = std::atan2f(dirEnd.y,   dirEnd.x);
+
+    // // 2. 光の左端 (leftAngle) を 0 とした「相対角度」に変換 (0 ～ 2π)
+    // float startRel = GetSignedAngleFromLeft(startAngle, leftAngle);
+    // float endRel = GetSignedAngleFromLeft(endAngle, leftAngle);
+
+    // // 光全体の照射範囲の幅 (0 ～ 2π)
+    // float totalShineWidth = GetClockwiseAngleFromLeft(rightAngle, leftAngle);
+
+    // // 障害物の2点のうち、時計回り順で「より左側（数値が小さい方）」と「より右側（数値が大きい方）」を整理
+    // float blockLeftRel   = (startRel < endRel ? startRel : endRel);
+    // float blockRightRel  = (startRel > endRel ? startRel : endRel);
+    
+    // float blockLeftAngle  = (startRel < endRel) ? startAngle : endAngle;
+    // float blockRightAngle = (startRel < endRel) ? endAngle   : startAngle;
+
+    // // -------------------------------------------------------------------
+    // // 判定 1: 遮っているか判定
+    // // -------------------------------------------------------------------
+    // // 障害物の2点ともが光の範囲外（右側外側）にあり、かつ光をまたぎ越していない場合
+    // if (blockLeftRel > totalShineWidth && blockRightRel > totalShineWidth)
+    // {
+    //     // 障害物の角度幅自体も光にかかっていない場合、完全に光の外側なので終了
+    //     // ※「障害物の開き角度」が光の裏側や範囲外にあるケースの除外
+    //     if (blockRightRel - blockLeftRel < 3.14159265f) 
+    //     {
+    //         return; // 何もしないで終了
+    //     }
+    // }
+
+    // // -------------------------------------------------------------------
+    // // 判定 2: 左右の端（光の左境界・右境界）のどちらかを遮っているか
+    // // -------------------------------------------------------------------
+    // // 左境界 (0.0) を障害物が跨いでいるか（＝左端を遮っているか）
+    // // （障害物の左端は照射範囲外で、右端は照射範囲内にある状態）
+    // bool crossesLeftEdge =
+    //     blockLeftRel < 0.0f &&
+    //     blockRightRel >= 0.0f;
+    // //bool crossesLeftEdge  = (blockLeftRel > totalShineWidth && blockRightRel <= totalShineWidth);
+
+    // // 右境界 (totalShineWidth) を障害物が跨いでいるか（＝右端を遮っているか）
+    // // （障害物の右端が照射範囲の外側へ飛び出している状態）
+    // bool crossesRightEdge =
+    //     blockLeftRel <= totalShineWidth &&
+    //     blockRightRel > totalShineWidth;
+    // //bool crossesRightEdge = (blockRightRel > totalShineWidth);
+
+    // // -------------------------------------------------------------------
+    // // 3パターン分岐処理
+    // // -------------------------------------------------------------------
+    // if (crossesLeftEdge || crossesRightEdge)
+    // {
+    //     // 描画三角追加
+    //     AddDrawTriangleData(bloakLinePos.linePos1, bloakLinePos.linePos2);
+
+    //     if (crossesLeftEdge && crossesRightEdge)
+    //     {
+    //         // 【パターンA-1】光の左右両端とも跨いで完全に覆い隠している（光の全消滅）
+    //         //shineDirections.erase(shineDirections.begin() + bloakPoss.ArrayIndex);
+
+    //     }
+    //     else if (crossesLeftEdge)
+    //     {
+    //         // 【パターンA-2】左端のみを遮っている（光の左側が削れる）
+    //         // -> 光の左端角度を「障害物の右端角度」に変更
+    //         currentShineDir.leftAngle = blockRightAngle;
+    //         currentShineDir.shineDirectionLeft = { std::cos(blockRightAngle), std::sin(blockRightAngle) };
+    //     }
+    //     else if (crossesRightEdge)
+    //     {
+    //         // 【パターンA-3】右端のみを遮っている（光の右側が削れる）
+    //         // -> 光の右端角度を「障害物の左端角度」に変更
+    //         currentShineDir.rightAngle = blockLeftAngle;
+    //         currentShineDir.shineDirectionRight = { std::cos(blockLeftAngle), std::sin(blockLeftAngle) };
+    //     }
+    //     return;
+
+    // }
+    // else
+    // {
+    //     // 描画三角追加
+    //     AddDrawTriangleData(bloakLinePos.linePos1, bloakLinePos.linePos2);
+
+    //     // ---------------------------------------------------------------
+    //     // 【パターンB】左右の端どちらも遮っていない（光の中に完全にある障害物）
+    //     // ---------------------------------------------------------------
+    //     // 光を2つに分割する
+
+    //     float origRightAngle = currentShineDir.rightAngle;
+
+    //     // 1. 元の光（左側）の右端を「障害物の左端角度」に縮める
+    //     currentShineDir.rightAngle = blockLeftAngle;
+    //     currentShineDir.shineDirectionRight = { std::cos(blockLeftAngle), std::sin(blockLeftAngle) };
+
+    //     // 2. 新しい光（右側）を「障害物の右端角度 ～ 元の右端角度」として作成
+    //     SHINE_DIRECTION newRightShine;
+    //     newRightShine.leftAngle  = blockRightAngle;
+    //     newRightShine.rightAngle = origRightAngle;
+    //     newRightShine.shineDirectionLeft  = { std::cos(blockRightAngle), std::sin(blockRightAngle) };
+    //     newRightShine.shineDirectionRight = { std::cos(origRightAngle),   std::sin(origRightAngle) };
+
+    //     // 分割した光を追加
+    //     shineDirections.insert(shineDirections.begin() + bloakPoss.ArrayIndex + 1, newRightShine);
+
+    //     return;
+    // }
+}
+
+// 登録された光域終端候補を使用して、光域を削り、削った部分を描画用三角形に登録する
+void ShineManager::ProcessShineAreaEndPointCandidates(std::vector<SHINE_DIRECTION>& shineDirections)
+{
+    // 登録された光域終端候補を1つずつ処理する
+    for (const LINE_POS& endPoint : mstLightAreaEndPoint)
+    {
+        // 障害物の両端から光源への角度を求める
+        const float lineAngle1 =
+            GetAngleToPoint(mstShinePos, endPoint.linePos1);
+
+        const float lineAngle2 =
+            GetAngleToPoint(mstShinePos, endPoint.linePos2);
+
+        // 光源から見た障害物の角度範囲を求める
+        float leftAngle = lineAngle1;
+        float rightAngle = lineAngle2;
+
+        // 2点の角度を比較し、
+        // 光域を走査する方向に合わせて左右を決定する
+        const float angle1 =
+            GetSignedAngleFromLeft(lineAngle1, shineDirections.front().leftAngle);
+
+        const float angle2 =
+            GetSignedAngleFromLeft(lineAngle2, shineDirections.front().leftAngle);
+
+        if (angle1 > angle2)
+        {
+            leftAngle = lineAngle2;
+            rightAngle = lineAngle1;
+        }
+
+        // 現在存在する光域を確認する
+        for (int i = 0; i < static_cast<int>(shineDirections.size()); ++i)
+        {
+            SHINE_DIRECTION& shineDirection = shineDirections[i];
+
+            // 障害物の角度を現在の光域の基準で取得
+            const float blockLeftAngle =
+                GetSignedAngleFromLeft(
+                    leftAngle,
+                    shineDirection.leftAngle);
+
+            const float blockRightAngle =
+                GetSignedAngleFromLeft(
+                    rightAngle,
+                    shineDirection.leftAngle);
+
+            // 現在の光域の角度幅
+            const float shineWidth =
+                GetSignedAngleFromLeft(
+                    shineDirection.rightAngle,
+                    shineDirection.leftAngle);
+
+            // 障害物が現在の光域に存在しない場合は処理しない
+            if (blockLeftAngle > shineWidth &&
+                blockRightAngle > shineWidth)
+            {
+                continue;
+            }
+
+            // TODO:
+            // ここで障害物によって遮られる光域を削る。
+            //
+            // ・障害物が光域の左側だけを遮る
+            // ・障害物が光域の右側だけを遮る
+            // ・障害物が光域の内部を遮る
+            // ・障害物が光域全体を遮る
+            //
+            // それぞれで残す光域と削る光域を決定する。
+
+            // TODO:
+            // 削った光域を描画用三角形として登録する。
+            //
+            // AddDrawTriangleData() を使用して、
+            // 光源から障害物までの遮られた範囲を登録する。
+        }
+    }
+
+    // 処理済みの終端候補をクリア
+    mstLightAreaEndPoint.clear();
 }
 
 // マップ外判定
