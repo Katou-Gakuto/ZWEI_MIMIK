@@ -37,7 +37,6 @@ public:
     // リソースの管理
 	static ResourceManager *mpResourceManager;
 
-    static DXAnimModel *mpDXAnimModel;
     // キーの情報管理
     static KeyState* mpKeyState;
 

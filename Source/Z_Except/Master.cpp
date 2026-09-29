@@ -18,7 +18,6 @@ BaseSceneManager *Master::mpBaseSceneManager = nullptr;
 EndManager* Master::mpEndManager = nullptr;
 TimeManager* Master::mpTimeManager = nullptr;
 ResourceManager *Master::mpResourceManager = nullptr;
-DXAnimModel *Master::mpDXAnimModel = nullptr;
 KeyState* Master::mpKeyState = nullptr;
 
 Player* Master::mpPlayerLight = nullptr;
@@ -35,7 +34,9 @@ int Master::Initialize()
     mpTimeManager = new TimeManager(/*/1/*/17/**/);
     mpTimeManager->Initilize();
 	mpResourceManager = new ResourceManager();
-	// mpDXAnimModel = new DXAnimModel();
+
+    // mpDXAnimModel = new DXAnimModel();
+
     mpKeyState = new KeyState();
     // 
 
@@ -58,7 +59,6 @@ int Master::Finalize()
     delete mpEndManager;
     delete mpTimeManager;
 	delete mpResourceManager;
-	delete mpDXAnimModel;
     delete mpKeyState;
 
     return 0;

@@ -53,7 +53,7 @@ int Player::Create()
     obj->AddCollision(body, this->mdBodyCollision);
 
     // 
-    obj->AddModel(new DXAnimModel(obj), PlayerNum - 1);
+    obj->AddModel(new DXAnimModel(obj), this->mdModelHandle);
 
    
     // 
@@ -305,7 +305,7 @@ DXAnimModel *Player::GetPlayerModel()const
 {
     GameObject *myObject = this->GetMyObject();
     BaseModelList *modelList = myObject->GetModelList();
-    DXAnimModel *playerModel = static_cast<DXAnimModel *>(modelList->SearchModelNumber(0));
+    DXAnimModel *playerModel = static_cast<DXAnimModel *>(modelList->SearchModelNumber(this->mdModelHandle));
     // 
     return playerModel;
 }

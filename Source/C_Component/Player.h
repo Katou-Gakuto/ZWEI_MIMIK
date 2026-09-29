@@ -3,6 +3,7 @@
 #include "BaseComponent.h"
 
 #include "../S_Collision/CollisionHandle.h"
+#include "../T_Model/BaseModelHandle.h"
 
 #include "VECTOR.h"
 
@@ -55,6 +56,9 @@ private:
 
     // このプレイヤーの当たり判定
     CollisionHandle mdBodyCollision;
+
+    // このプレイヤーのDXAnimModelをBaseModelListから取得するためのハンドル
+    BaseModelHandle mdModelHandle;
 
     // 
     bool mbHoldFlag;
