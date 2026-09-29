@@ -14,8 +14,8 @@ private:
     int DeleteAll();
 
     // 
-    unsigned long long &Handle2Number(BaseModelHandle &modelHandle);
-    const unsigned long long &Handle2Number(const BaseModelHandle &modelHandle);
+    static unsigned long long &Handle2Number(BaseModelHandle &modelHandle);
+    static const unsigned long long &Handle2Number(const BaseModelHandle &modelHandle);
 
 public:
     BaseModelList();
@@ -27,5 +27,5 @@ public:
 
     int Add(BaseModel *model, BaseModelHandle &modelHandle);
 
-    BaseModel *SearchModelNumber(const BaseModelHandle &modelHandle);
+    BaseModel *SearchModelNumber(const BaseModelHandle &modelHandle) const;
 };

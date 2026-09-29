@@ -148,17 +148,17 @@ int BaseModelList::Add(BaseModel *model, BaseModelHandle &modelHandle)
     model->SetModelNumber(handleNumber);
 
     // 
-    this->Handle2Number(modelHandle) = handleNumber;
+    BaseModelList::Handle2Number(modelHandle) = handleNumber;
 
     return temp;
 }
 
-BaseModel *BaseModelList::SearchModelNumber(const BaseModelHandle &modelHandle)
+BaseModel *BaseModelList::SearchModelNumber(const BaseModelHandle &modelHandle) const
 {
     BaseModel *current = this->mpFirstModel;
     while (current != nullptr)
     {
-        if (current->GetModelNumber() == this->Handle2Number(modelHandle))
+        if (current->GetModelNumber() == BaseModelList::Handle2Number(modelHandle))
         {
             break;
         }
