@@ -223,6 +223,7 @@
     <ClCompile Include="Source\Y_Tool\VoidList.cpp" />
     <ClCompile Include="Source\Z_Except\CursorMoveSupporter.cpp" />
     <ClCompile Include="Source\Z_Except\Master.cpp" />
+    <ClCompile Include="Source\Z_Except\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -337,6 +338,7 @@
     <ClInclude Include="Source\Y_Tool\VoidList.h" />
     <ClInclude Include="Source\Z_Except\CursorMoveSupporter.h" />
     <ClInclude Include="Source\Z_Except\Master.h" />
+    <ClInclude Include="Source\Z_Except\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

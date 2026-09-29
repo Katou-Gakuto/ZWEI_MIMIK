@@ -26,9 +26,6 @@
     <Filter Include="Source\Y_Tool">
       <UniqueIdentifier>{d9ecc22c-6623-4d06-a89b-88c0227c31d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Z_Except">
-      <UniqueIdentifier>{6b2da2ba-8810-4bdb-9d34-d8fa3a2e48d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\E_Scene">
       <UniqueIdentifier>{c027b35c-c1b0-44cd-93f7-789458e0130d}</UniqueIdentifier>
     </Filter>
@@ -55,6 +52,9 @@
     </Filter>
     <Filter Include="Source\H_Katou\TemplateTypeRestriction">
       <UniqueIdentifier>{61ca18c8-6200-4866-801f-048775086cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Z_Except">
+      <UniqueIdentifier>{388da026-9ef7-4495-8ae7-084202acadcb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,9 +235,6 @@
     <ClCompile Include="Source\E_Scene\BaseSceneManager.cpp">
       <Filter>Source\E_Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Z_Except\Master.cpp">
-      <Filter>Source\Z_Except</Filter>
-    </ClCompile>
     <ClCompile Include="Source\E_Scene\TestScene.cpp">
       <Filter>Source\E_Scene</Filter>
     </ClCompile>
@@ -325,14 +322,20 @@
     <ClCompile Include="Source\E_Scene\PuzzleScene.cpp">
       <Filter>Source\E_Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Z_Except\CursorMoveSupporter.cpp">
-      <Filter>Source\Z_Except</Filter>
-    </ClCompile>
     <ClCompile Include="Source\T_Model\BaseModelHandle.cpp">
       <Filter>Source\T_Model</Filter>
     </ClCompile>
     <ClCompile Include="Source\T_Model\DXModelAnim.cpp">
       <Filter>Source\T_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Z_Except\CursorMoveSupporter.cpp">
+      <Filter>Source\Z_Except</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Z_Except\Master.cpp">
+      <Filter>Source\Z_Except</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Z_Except\ResourceManager.cpp">
+      <Filter>Source\Z_Except</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -549,9 +552,6 @@
     <ClInclude Include="Source\E_Scene\BaseSceneManager.h">
       <Filter>Source\E_Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Z_Except\Master.h">
-      <Filter>Source\Z_Except</Filter>
-    </ClInclude>
     <ClInclude Include="Source\F_PuzzleGimmick\RouteMoveExecutor.h">
       <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
@@ -636,14 +636,20 @@
     <ClInclude Include="Source\E_Scene\PuzzleScene.h">
       <Filter>Source\E_Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Z_Except\CursorMoveSupporter.h">
-      <Filter>Source\Z_Except</Filter>
-    </ClInclude>
     <ClInclude Include="Source\T_Model\BaseModelHandle.h">
       <Filter>Source\T_Model</Filter>
     </ClInclude>
     <ClInclude Include="Source\T_Model\DXModelAnim.h">
       <Filter>Source\T_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Z_Except\CursorMoveSupporter.h">
+      <Filter>Source\Z_Except</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Z_Except\Master.h">
+      <Filter>Source\Z_Except</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Z_Except\ResourceManager.h">
+      <Filter>Source\Z_Except</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
