@@ -30,6 +30,8 @@ enum DRAW_MODE_NUMBER
 	DRAW_MODE_NUMBER_3,
 	DRAW_MODE_NUMBER_4,
 	DRAW_MODE_NUMBER_5,
+	DRAW_MODE_NUMBER_6,
+	DRAW_MODE_NUMBER_7,
 	DRAW_MODE_NUMBER_MAX
 };
 
@@ -42,14 +44,17 @@ enum SHINE_DRAW_MODE
 	TRIANGLE_SHINE_DRAW_MODE_TRUE,				// 光の三角を塗りつぶし描画
 	TRIANGLE_SHINE_SINGLE_DRAW_MODE_TRUE,		// 光の三角を一つだけ塗りつぶし描画
 	TRIANGLE_LINE_SHINE_SINGLE_DRAW_MODE_TRUE,	// 光の三角を一つだけフレーム描画
+	ALL_GRID_SHINE_DRAW_MODE,					// 全グリッド描画
+	GRID_SHINE_LOOP_COUNT_DRAW_MODE,			// 光のグリッドを処理したループ数を選択して描画
 	GRID_SHINE_DRAW_MODE,						// 光のグリッド描画
-	GRID_SHINE_LOOP_NUMBER_DRAW_MODE,			// 光のグリッドを処理したループと同時に描画
-	GRID_SHINE_NUMBER_DRAW_MODE,				// 光のグリッドを設定した順と同時に描画
+	GRID_SHINE_LOOP_NUMBER_DRAW_MODE,			// 光のグリッドを処理したループ数と同時に描画
+	GRID_DEBUG_SHINE_LOOP_NUMBER_DRAW_MODE,		// デバッグ光のグリッドを処理したループ数と同時に描画
+	GRID_SHINE_NUMBER_DRAW_MODE,				// 光のグリッドを設定した順数と同時に描画
+	GRID_DEBUG_SHINE_NUMBER_DRAW_MODE,			// デバッグ光のグリッドを設定した順数と同時に描画
 	TEST_ANGLE_DRAW_MODE,						// 光のアングル描画
-	TEST_ANGLE_DRAW_MODE_TRUE,						// 光のアングル塗りつぶし描画
+	TEST_ANGLE_DRAW_MODE_TRUE,					// 光のアングル塗りつぶし描画
 	TEST_ANGLE_LEFT_DRAW_MODE,					// 光のアングル左直線描画
 	TEST_ANGLE_RIGHT_DRAW_MODE,					// 光のアングル右直線描画
-	ALL_GRID_SHINE_DRAW_MODE,					// 全グリッド描画
 	ALL_SHINE_RESULT_DRAW_MODE,					// 光のアングルの偏移をループを選択して描画
 	ALL_SHINE_RESULT_SINGLE_DRAW_MODE,			// 光のアングルの偏移をループと個数目を選択して描画
 	SHINE_DRAW_MODE_MAX// 最大
@@ -60,9 +65,6 @@ enum class SHINE_GRID_TYPE
 	NOT_SHINE_GRID = 0,									// 光領域外
 	SHINE_GRID,											// 光領域内
 	SHINE_AND_OBJECT_GRID,								// 光領域内&オブジェクトがある
-
-	SHINE_AND_OTHER_SHINE_AREA_GRID,					// 光領域内                 &ほかの光領域もある
-	SHINE_AND_OBJECT_AND_OTHER_SHINE_AREA_GRID,			// 光領域内&オブジェクトがある&ほかの光領域もある
 };
 
 // 方向を数字で変換する物
@@ -139,8 +141,11 @@ private:
 	// 光領域の偏移確認用変数
 	std::vector<std::vector<SHINE_DIRECTION>> mstShineAreaResult;
 
-	// 終わりを迎えた光域(未確定)
-	std::vector<LINE_POS> mstLightAreaEndPoint;
+	// 終わりを迎えた光域(未確定情報保存用)
+	std::vector<SHINE_AREA_END_POSITION> mstLightAreaEndPoint;
+
+	// 確認するグリッド確認用変数
+	std::vector<std::vector<Vector2_Int>> mstCheckGridPos;
 
 	// ラインid現在最大値
 	int mnLineIdNowMax;
@@ -177,6 +182,9 @@ private:
     // グリッドの状態を判定
     SHINE_GRID_TYPE JudgeGrid(const Vector2_Int& gridPos, const std::vector<SHINE_DIRECTION>& shineDirections, int shineDirectionsIndex);
 
+	// グリッド内に現在の光領域以外の光領域があるか判定
+	bool HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std::vector<SHINE_DIRECTION>& shineDirections, int shineDirectionsIndex);
+
     // 光を遮るものを確認し、それに応じた処理を行う
     void ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std::queue<Vector2_Int>& nextCheckShinePos, std::vector<SHINE_DIRECTION>& shineDirections);
 
@@ -184,7 +192,7 @@ private:
 	void RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, const BLOCK_POS_DATA& blockPos, std::vector<SHINE_DIRECTION>& shineDirections);
 	
 	// 登録された光域終端候補を使用して、光域を削り、削った部分を描画用三角形に登録する
-	void ProcessShineAreaEndPointCandidates(std::vector<SHINE_DIRECTION>& shineDirections);
+	std::vector<SHINE_DIRECTION> ProcessShineAreaEndPointCandidates(int shineIndex, const SHINE_DIRECTION& shineDirections);
 
     // マップ外判定
     bool IsOutsideShineStage(const Vector2_Int& gridPos);
@@ -194,10 +202,14 @@ private:
 
 	// 描画三角追加
 	void AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2);
+	// 描画三角追加
+	inline void AddDrawTriangleData(SHINE_TRIANGLE shineTriangle) { mstSheineTriangles.push_back(shineTriangle); }
 
+	// DELETE:_ 使用してない関数化してるだけだから使う可能性はある
 	// 障害物との交点を取得
 	void GetShineBlockingIntersection(const Vector2& edgePos1, const Vector2& edgePos2, const SHINE_DIRECTION& shineDirection, const Vector2_Int& blockPos, Vector2& intersection1, Vector2& intersection2);
 
+	// DELETE:_ 使用してない関数化してるだけだから使う可能性はある
 	// グリッドの光状態を更新
 	void UpdateGridLightState(const BLOCK_POS_DATA& blockPos, const std::vector<SHINE_DIRECTION>& shineDirections);
 

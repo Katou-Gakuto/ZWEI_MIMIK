@@ -20,6 +20,9 @@ public:
 	// 光フラグ
 	bool LitFlag;
 
+	// デバッグ光フラグ描画用
+	bool DebugDrawLiteFlag;
+
 	// 設定したループ数
 	int LitLoopNumber;
 
@@ -35,12 +38,20 @@ public:
 	int ArrayIndex;
 };
 
-// 光を遮る
-struct SHINE_AREA_END_POINT : public LINE_POS
+// 光領域終了ポジション候補
+struct SHINE_AREA_END_POSITION : public LINE_POS
 {
 public:
-    // 光域を遮る線分
-    LINE_POS linePos;
+	SHINE_AREA_END_POSITION()
+	: LINE_POS()
+	, shineDirectionIndex(-1)
+	{
+	}
+	SHINE_AREA_END_POSITION(LINE_POS linePos, int index)
+	: LINE_POS(linePos)
+	, shineDirectionIndex(index)
+	{
+	}
 
     // 対象となる光領域のインデックス
     int shineDirectionIndex = -1;
