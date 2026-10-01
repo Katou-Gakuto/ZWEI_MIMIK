@@ -67,7 +67,6 @@ ShineManager::ShineManager()
 , mpShineObject(nullptr)
 , mstShinePos()
 , mstShineGridPos()
-, mstCheckShineGridFlags()
 , mstShineAreaResult()
 , mstLightAreaEndPoint()
 , mnLineIdNowMax(0)
@@ -938,6 +937,7 @@ void ShineManager::CheckShineGrid()
     int setLitNumber = 0;
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].SetLitNumber = 0;
 
+    // INPROGRESS:_ これを二つに分けて実験
     std::vector<SHINE_DIRECTION> shineDirections;
     shineDirections.push_back(mpShineObject->GetShineDirection());
 
@@ -977,9 +977,6 @@ void ShineManager::CheckShineGrid()
 #endif
         }
 
-        // フラグデータ初期化
-        mstCheckShineGridFlags.Init();
-
         // 今回調べるグリッドを取り出す
         std::queue<Vector2_Int> nowCheckShinePos;
         nowCheckShinePos.swap(nextCheckShinePos);
@@ -997,6 +994,8 @@ void ShineManager::CheckShineGrid()
         while ((shineDirectionsIndex < static_cast<int>(shineDirections.size())) &&
                 (0 < nowCheckShinePos.size()))
         {
+            bool needNextShineArea = false;
+
             Vector2_Int checkShinePos = nowCheckShinePos.front();
             if (!mstMapObjectGridData[checkShinePos.y][checkShinePos.x].LitFlag)
             {
@@ -1014,8 +1013,7 @@ void ShineManager::CheckShineGrid()
                 setShineChangeData.ShineAreaIndex = shineDirectionsIndex;
                 setShineChangeData.CheckGridPos = Vector2_Int(-1, -1);
                 mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineChangeDatas.push_back(setShineChangeData);
-                // 次の光領域を調べる対象にするフラグ設定
-                mstCheckShineGridFlags.EnableFlag(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
+                needNextShineArea = true;
             }
 
             // 現在の光領域を左端から右端へ走査
@@ -1052,8 +1050,7 @@ void ShineManager::CheckShineGrid()
                 // 光領域外なため次を調べる
                 case SHINE_GRID_TYPE::NOT_SHINE_GRID:
                 {
-                    // 次の光領域を調べる対象にするフラグ設定
-                    mstCheckShineGridFlags.EnableFlag(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
+                    needNextShineArea = true;
                 }
                     break;
 
@@ -1073,9 +1070,6 @@ void ShineManager::CheckShineGrid()
                         ++setLitNumber;
                         mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
                     }
-                    
-                    // 他の光領域が同グリッド内にあるなら次の光領域を調べる対象にするフラグ設定
-                    mstCheckShineGridFlags.SetFlag(HasOtherShineAreaInGrid(checkPos, shineDirections, shineDirectionsIndex), CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
                 }
                     break;
 
@@ -1101,14 +1095,18 @@ void ShineManager::CheckShineGrid()
                         ++setLitNumber;
                         mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
                     }
-                    
-                    // 他の光領域が同グリッド内にあるなら次の光領域を調べる対象にするフラグ設定
-                    mstCheckShineGridFlags.SetFlag(HasOtherShineAreaInGrid(checkPos, shineDirections, shineDirectionsIndex), CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
                 }
                     break;
                 }
 
-                if (mstCheckShineGridFlags.GetFlag_BitShift(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA))
+                // セクターの境界でのみ次の光領域へ遷移させる。
+                // ここで毎セルで判定すると、後続の光領域が接触しているだけで一瞬で切り替わってしまう。
+                if ((checkPos == ShineGridPositions.back()) && !needNextShineArea)
+                {
+                    needNextShineArea = HasOtherShineAreaInGrid(checkPos, shineDirections, shineDirectionsIndex);
+                }
+
+                if (needNextShineArea)
                 {
                     SHINE_AREA_CHECK_DATA setShineChangeData;
                     setShineChangeData.ShineAreaIndex = shineDirectionsIndex;
@@ -1117,11 +1115,10 @@ void ShineManager::CheckShineGrid()
                     break;
                 }
             }
-        
-            if (mstCheckShineGridFlags.GetFlag_BitShift(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA))
+
+            if (needNextShineArea)
             {
-                shineDirectionsIndex++;
-                mstCheckShineGridFlags.DisableFlag(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
+                ++shineDirectionsIndex;
                 continue;
             }
             nowCheckShinePos.pop();
@@ -2237,9 +2234,10 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
 }
 
 // グリッドの光状態を更新
-void ShineManager::UpdateGridLightState(const std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections)
+void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections)
 {
     std::queue<Vector2_Int> checkGridPoss = nextCheckShinePos;
+    std::queue<Vector2_Int> nextGridPoss;
 
     while (!checkGridPoss.empty())
     {
@@ -2258,11 +2256,20 @@ void ShineManager::UpdateGridLightState(const std::queue<Vector2_Int>& nextCheck
         }
 
         // 光領域外になった場合はフラグを解除
-        if (!isStillLit && mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
+        if (!isStillLit)
         {
-            mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = false;
+            if (mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
+            {
+                mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = false;
+            }
+            mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.clear();
+            continue;
         }
+
+        nextGridPoss.push(checkPos);
     }
+
+    nextCheckShinePos.swap(nextGridPoss);
 
     //     // グリッドの矩形座標
     //     const float gridLeft =

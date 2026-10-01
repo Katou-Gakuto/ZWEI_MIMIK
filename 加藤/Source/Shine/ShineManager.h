@@ -144,9 +144,6 @@ private:
 	// 描画モード
 	int mnDrawMode[DRAW_MODE_NUMBER::DRAW_MODE_NUMBER_MAX];
 
-	// フラグ
-	BIT_FLAG<unsigned short> mstCheckShineGridFlags;
-
 	// 光領域の偏移確認用変数
 	std::vector<std::vector<SHINE_DIRECTION>> mstShineAreaResult;
 
@@ -227,7 +224,7 @@ private:
 	void GetShineBlockingIntersection(const Vector2& edgePos1, const Vector2& edgePos2, const SHINE_DIRECTION& shineDirection, const Vector2_Int& blockPos, Vector2& intersection1, Vector2& intersection2);
 
 	// グリッドの光状態を更新
-	void UpdateGridLightState(const std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections);
+	void UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections);
 
 	// 2次元ベクトル同士の外積のZ成分を求める
 	float Cross(const Vector2& a, const Vector2& b);
