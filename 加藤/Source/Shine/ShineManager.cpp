@@ -31,6 +31,9 @@ enum TEST_INDEX_NUMBERS
     TEST_SHINE_RESULT_SINGLE_DRAW_INDEX,
     TEST_SHINE_TRIANGLE_SINGLE_DRAW_INDEX,
     TEST_SHINE_GRID_LOOP_COUNT_INDEX,
+    TEST_SHINE_WALL_LOOP_INDEX,
+    TEST_SHINE_WALL_NUMBER_INDEX,
+    TEST_SHINE_GRID_SHINE_AREA_INDEX,
 };
 
 enum TEST_INDEX_NUMBERS_VALUE
@@ -46,6 +49,9 @@ enum TEST_INDEX_NUMBERS_BUTTON
     TEST_BUTTON_SHINE_RESULT_SINGLE_DRAW_INDEX,
     TEST_BUTTON_SHINE_TRIANGLE_SINGLE_DRAW_INDEX,
     TEST_BUTTON_SHINE_GRID_LOOP_COUNT_INDEX,
+    TEST_BUTTON_SHINE_WALL_LOOP_INDEX,
+    TEST_BUTTON_SHINE_WALL_NUMBER_INDEX,
+    TEST_BUTTON_SHINE_GRID_SHINE_AREA_INDEX,
     TEST_BUTTON_MAX_NUMBER
 };
 
@@ -456,6 +462,199 @@ void ShineManager::Draw()
             }
             break;
         
+        case SHINE_DRAW_MODE::GRID_WALL_GRID_SHINE_INDEX_DRAW_MODE:
+            for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+            {
+                for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+                {
+                    if (mstMapObjectGridData[y][x].ShineAreaIndex.size() > 0)
+                    {
+                        DrawBox(ONE_GRID_SIZE_X * x,       ONE_GRID_SIZE_Y * y,
+                                ONE_GRID_SIZE_X * (x + 1), ONE_GRID_SIZE_Y * (y + 1),
+                                GetDebugColor(mnDrawMode[drawModeIndex]),
+                                FALSE);
+                        std::string shineAreaIndexNumber;
+                        for (int i = 0; i < mstMapObjectGridData[y][x].ShineAreaIndex.size(); ++i)
+                        {
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaIndex[i]) + ":";
+                        }
+                        DrawString(ONE_GRID_SIZE_X * x, ONE_GRID_SIZE_Y * y, shineAreaIndexNumber.c_str(), GetDebugColor(mnDrawMode[drawModeIndex]));
+                    }
+                }
+            }
+            break;
+        
+        case SHINE_DRAW_MODE::SHINE_CHECK_GRID_DRAW_MODE:
+            for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+            {
+                for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+                {
+                    if (mstMapObjectGridData[y][x].ShineAreaCheckDatas.size() > 0)
+                    {
+   
+
+                        std::string shineAreaIndexNumber = std::to_string(x) + ", " + std::to_string(y) + "\n";
+                        for (int i = 0; i < mstMapObjectGridData[y][x].ShineAreaCheckDatas.size(); ++i)
+                        {
+                            const Vector2_Int centerAdjustment = Vector2_Int((ONE_GRID_SIZE_X * 0.5f), (ONE_GRID_SIZE_Y * 0.5f));
+                            DrawLine(
+                                (ONE_GRID_SIZE_X * x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * y) + centerAdjustment.y + i,
+                                (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
+                                GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
+
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "⇒(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
+                        }
+                        DrawBox(ONE_GRID_SIZE_X * x,       ONE_GRID_SIZE_Y * y,
+                                ONE_GRID_SIZE_X * (x + 1), ONE_GRID_SIZE_Y * (y + 1),
+                                GetDebugColor(mnDrawMode[drawModeIndex]),
+                                FALSE);
+                        DrawString(ONE_GRID_SIZE_X * x, ONE_GRID_SIZE_Y * y, shineAreaIndexNumber.c_str(), GetDebugColor(mnDrawMode[drawModeIndex]));
+                    }
+                }
+            }
+            break;
+        
+        case SHINE_DRAW_MODE::SHINE_AREA_SELECT_CHECK_GRID_DRAW_MODE:
+        {
+            int maxShineAreaIndex = 0;
+            for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+            {
+                for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+                {
+                    if (mstMapObjectGridData[y][x].ShineAreaCheckDatas.size() > 0)
+                    {
+                        std::string shineAreaIndexNumber = std::to_string(x) + ", " + std::to_string(y) + "\n";
+                        for (int i = 0; i < mstMapObjectGridData[y][x].ShineAreaCheckDatas.size(); ++i)
+                        {
+                            if (maxShineAreaIndex < mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex)
+                            {
+                                maxShineAreaIndex = mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex;
+                            }
+                            if (testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_SHINE_AREA_INDEX] != mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex)
+                            {
+                                continue;
+                            }
+                            const Vector2_Int centerAdjustment = Vector2_Int((ONE_GRID_SIZE_X * 0.5f), (ONE_GRID_SIZE_Y * 0.5f));
+                            DrawLine(
+                                (ONE_GRID_SIZE_X * x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * y) + centerAdjustment.y + i,
+                                (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
+                                GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
+
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "⇒(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
+                        }
+                        if (shineAreaIndexNumber == (std::to_string(x) + ", " + std::to_string(y) + "\n"))
+                        {
+                            continue;
+                        }
+                        DrawBox(ONE_GRID_SIZE_X * x,       ONE_GRID_SIZE_Y * y,
+                                ONE_GRID_SIZE_X * (x + 1), ONE_GRID_SIZE_Y * (y + 1),
+                                GetDebugColor(mnDrawMode[drawModeIndex]),
+                                FALSE);
+                        DrawString(ONE_GRID_SIZE_X * x, ONE_GRID_SIZE_Y * y, shineAreaIndexNumber.c_str(), GetDebugColor(mnDrawMode[drawModeIndex]));
+                    }
+                }
+            }
+            if (maxShineAreaIndex < testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_SHINE_AREA_INDEX])
+            {
+                testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_SHINE_AREA_INDEX] = maxShineAreaIndex;
+            }
+        }
+            break;
+        
+        case SHINE_DRAW_MODE::SHINE_AREA_SELECT_LOOP_CHECK_GRID_DRAW_MODE:
+        {
+            if (mstCheckGridPos.size() <= 0)
+            {
+                break;
+            }
+            if (mstCheckGridPos.size() <= testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX])
+            {
+                testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX] = mstCheckGridPos.size() - 1;
+            }
+            for (int i = 0; i < mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]].size(); ++i)
+            {
+                int y = mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]][i].y;
+                int x = mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]][i].x;
+                if (mstMapObjectGridData[y][x].ShineAreaCheckDatas.size() > 0)
+                {
+                    std::string shineAreaIndexNumber = std::to_string(x) + ", " + std::to_string(y) + "\n";
+                    for (int i = 0; i < mstMapObjectGridData[y][x].ShineAreaCheckDatas.size(); ++i)
+                    {
+                        if (testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_SHINE_AREA_INDEX] != mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex)
+                        {
+                            continue;
+                        }
+                        shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "⇒(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
+                    }
+                    if (shineAreaIndexNumber == (std::to_string(x) + ", " + std::to_string(y) + "\n"))
+                    {
+                        continue;
+                    }
+                    const Vector2_Int centerAdjustment = Vector2_Int((ONE_GRID_SIZE_X * 0.5f), (ONE_GRID_SIZE_Y * 0.5f));
+                    DrawLine(
+                        (ONE_GRID_SIZE_X * x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * y) + centerAdjustment.y + i,
+                        (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
+                        GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
+                        
+                    DrawBox(ONE_GRID_SIZE_X * mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]][i].x,       ONE_GRID_SIZE_Y * mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]][i].y,
+                            ONE_GRID_SIZE_X * (mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]][i].x + 1), ONE_GRID_SIZE_Y * (mstCheckGridPos[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_LOOP_COUNT_INDEX]][i].y + 1),
+                            GetDebugColor(mnDrawMode[drawModeIndex]),
+                            FALSE);
+                    DrawString(ONE_GRID_SIZE_X * x, ONE_GRID_SIZE_Y * y, shineAreaIndexNumber.c_str(), GetDebugColor(mnDrawMode[drawModeIndex]));
+                }
+            }
+            int maxShineAreaIndex = 0;
+            for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+            {
+                for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+                {
+                    if (mstMapObjectGridData[y][x].ShineAreaCheckDatas.size() > 0)
+                    {
+                        for (int i = 0; i < mstMapObjectGridData[y][x].ShineAreaCheckDatas.size(); ++i)
+                        {
+                            if (maxShineAreaIndex < mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex)
+                            {
+                                maxShineAreaIndex = mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex;
+                            }
+                        }
+                    }
+                }
+            }
+            if (maxShineAreaIndex < testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_SHINE_AREA_INDEX])
+            {
+                testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_GRID_SHINE_AREA_INDEX] = maxShineAreaIndex;
+            }
+        }
+            break;
+        
+        case SHINE_DRAW_MODE::OTHER_SHINE_AREA_CHECK_GRID_DRAW_MODE:
+            for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+            {
+                for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+                {
+                    if (mstMapObjectGridData[y][x].ShineChangeDatas.size() > 0)
+                    {
+                        std::string shineAreaIndexNumber = std::to_string(x) + ", " + std::to_string(y) + "\n";
+                        for (int i = 0; i < mstMapObjectGridData[y][x].ShineChangeDatas.size(); ++i)
+                        {
+                            const Vector2_Int centerAdjustment = Vector2_Int((ONE_GRID_SIZE_X * 0.5f), (ONE_GRID_SIZE_Y * 0.5f));
+                            DrawLine(
+                                (ONE_GRID_SIZE_X * x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * y) + centerAdjustment.y + i,
+                                (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
+                                GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineChangeDatas[i].ShineAreaIndex));
+                                
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].ShineAreaIndex) + "⇒(" + std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.y) + ")\n";
+                        }
+                        DrawBox(ONE_GRID_SIZE_X * x,       ONE_GRID_SIZE_Y * y,
+                                ONE_GRID_SIZE_X * (x + 1), ONE_GRID_SIZE_Y * (y + 1),
+                                GetDebugColor(mnDrawMode[drawModeIndex]),
+                                FALSE);
+                        DrawString(ONE_GRID_SIZE_X * x, ONE_GRID_SIZE_Y * y, shineAreaIndexNumber.c_str(), GetDebugColor(mnDrawMode[drawModeIndex]));
+                    }
+                }
+            }
+            break;
+        
         case SHINE_DRAW_MODE::ALL_GRID_SHINE_DRAW_MODE:
             for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
             {
@@ -554,6 +753,93 @@ void ShineManager::Draw()
                 TRUE
             );
             break;
+        
+        case SHINE_DRAW_MODE::WALL_LINE_DRAW_MODE:
+            for (const std::vector<SHINE_AREA_END_POSITION>& wallLinePointDatas : mstDebugWallLinePointDrawData)
+            {
+                for (const SHINE_AREA_END_POSITION& wallLinePointData : wallLinePointDatas)
+                {
+                    DrawLine(
+                        wallLinePointData.linePos1.x, wallLinePointData.linePos1.y,
+                        wallLinePointData.linePos2.x, wallLinePointData.linePos2.y,
+                        GetDebugColor(mnDrawMode[drawModeIndex]),
+                        TRUE
+                    );
+                }
+            }
+            break;
+        
+        case SHINE_DRAW_MODE::WALL_LINE_SINGLE_LOOP_DRAW_MODE:
+            if (mstDebugWallLinePointDrawData.size() <= 0)
+            {
+                break;
+            }
+            if (mstDebugWallLinePointDrawData.size() <= testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX])
+            {
+                testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX] = mstDebugWallLinePointDrawData.size() - 1;
+            }
+            for (const SHINE_AREA_END_POSITION& wallLinePointData : mstDebugWallLinePointDrawData[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX]])
+            {
+                DrawLine(
+                    wallLinePointData.linePos1.x, wallLinePointData.linePos1.y,
+                    wallLinePointData.linePos2.x, wallLinePointData.linePos2.y,
+                    GetDebugColor(mnDrawMode[drawModeIndex]),
+                    TRUE
+                );
+            }
+            break;
+        
+        case SHINE_DRAW_MODE::WALL_LINE_SINGLE_AND_INDEX_NUMBER_DRAW_MODE:
+        {
+            if (mstDebugWallLinePointDrawData.size() <= 0)
+            {
+                break;
+            }
+            if (mstDebugWallLinePointDrawData.size() <= testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX])
+            {
+                testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX] = mstDebugWallLinePointDrawData.size() - 1;
+            }
+            if (mstDebugWallLinePointDrawData[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX]].size() <= 0)
+            {
+                break;
+            }
+            if (mstDebugWallLinePointDrawData[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX]].size() <= testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_NUMBER_INDEX])
+            {
+                testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_NUMBER_INDEX] = mstDebugWallLinePointDrawData[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX]].size() - 1;
+            }
+            const SHINE_AREA_END_POSITION& wallLinePointData = mstDebugWallLinePointDrawData[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_LOOP_INDEX]][testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_WALL_NUMBER_INDEX]];
+            {
+                DrawLine(
+                    wallLinePointData.linePos1.x, wallLinePointData.linePos1.y,
+                    wallLinePointData.linePos2.x, wallLinePointData.linePos2.y,
+                    GetDebugColor(mnDrawMode[drawModeIndex]),
+                    TRUE
+                );
+                DrawString(wallLinePointData.linePos1.x, wallLinePointData.linePos1.y, std::to_string(wallLinePointData.shineDirectionIndex).c_str(), GetDebugColor(mnDrawMode[drawModeIndex]));
+            }
+        }
+        
+        case SHINE_DRAW_MODE::SHINE_CHECK_DATA_LINE_DRAW_MODE:
+        {
+            for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+            {
+                for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+                {
+                    if (mstMapObjectGridData[y][x].ShineAreaCheckDatas.size() > 0)
+                    {
+                        for (int i = 0; i < mstMapObjectGridData[y][x].ShineAreaCheckDatas.size(); ++i)
+                        {
+                            const Vector2_Int centerAdjustment = Vector2_Int((ONE_GRID_SIZE_X * 0.5f), (ONE_GRID_SIZE_Y * 0.5f));
+                            DrawLine(
+                                (ONE_GRID_SIZE_X * x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * y) + centerAdjustment.y + i,
+                                (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
+                                GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
+                        }
+                    }
+                }
+            }
+        }
+            break;
         }
     }
 
@@ -596,6 +882,10 @@ void ShineManager::CreateShineArea()
         {
             mstMapObjectGridData[y][x].LitFlag = false;
             mstMapObjectGridData[y][x].DebugDrawLiteFlag = false;
+            mstMapObjectGridData[y][x].ConfiguredShineAreaIndex.clear();
+            mstMapObjectGridData[y][x].ShineAreaIndex.clear();
+            mstMapObjectGridData[y][x].ShineChangeDatas.clear();
+            mstMapObjectGridData[y][x].ShineAreaCheckDatas.clear();
         }
     }
 
@@ -619,12 +909,6 @@ void ShineManager::CreateShineArea()
         DEBUG::SaveText(debugTextStart + "\n\nSTART\n\n", DEBUG::DEBUG_MAP_TYPE::DEBUG_SHINE_POS);
 #endif
 
-    // 調査するグリッド
-    std::queue<Vector2_Int> nextCheckShinePos;
-
-    // 光源のグリッドから開始
-    nextCheckShinePos.push(mstShineGridPos);
-
     // グリッドの探索
     CheckShineGrid();
 }
@@ -637,7 +921,7 @@ void ShineManager::CheckShineGrid()
     std::queue<Vector2_Int> nextCheckShinePos;
 
     // 光源のグリッドから開始
-    nextCheckShinePos.push(Vector2_Int(static_cast<int>(mstShinePos.x / ONE_GRID_SIZE_X), static_cast<int>(mstShinePos.y / ONE_GRID_SIZE_Y)));
+    nextCheckShinePos.push(mstShineGridPos);
     
     // 光源のグリッドは必ず光領域に含める
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].LitFlag = true;
@@ -659,8 +943,11 @@ void ShineManager::CheckShineGrid()
     mstShineAreaResult.clear();
     mstShineAreaResult.push_back(shineDirections);
 
-    // 確認するグリッド保存
+    // 確認するグリッド初期化
     mstCheckGridPos.clear();
+
+    // 壁となるライン情報初期化
+    mstDebugWallLinePointDrawData.clear();
 
     while (!nextCheckShinePos.empty())
     {
@@ -713,25 +1000,43 @@ void ShineManager::CheckShineGrid()
                 nowCheckShinePos.pop();
                 continue;
             }
-            // INPROGRESS:_ 障害物に当たった後にこれだと判定するときに左から見て光が無いから飛ばしてるから光の方向を現在の光領域に変更
-            std::vector<Vector2_Int> ShineGridPositions = GetShineGridPositions(checkShinePos);
+
+            std::vector<Vector2_Int> ShineGridPositions = GetShineGridPositions(checkShinePos, shineDirections[shineDirectionsIndex]);
+
+            // 参照している光領域内のグリッドがない場合次の光領域に
+            if (ShineGridPositions.size() <= 0)
+            {
+                // 次の光領域を調べる対象にするフラグ設定
+                mstCheckShineGridFlags.EnableFlag(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
+            }
 
             // 現在の光領域を左端から右端へ走査
             for (const Vector2_Int& checkPos : ShineGridPositions)
             {
+                SHINE_AREA_CHECK_DATA setShineAreaCheckData;
+                setShineAreaCheckData.ShineAreaIndex = shineDirectionsIndex;
+                setShineAreaCheckData.CheckGridPos = checkPos;
+                mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineAreaCheckDatas.push_back(setShineAreaCheckData);
+                
                 // マップ外なら除外
                 if (IsOutsideShineStage(checkPos))
                 {
                     continue;
                 }
 
-                // すでに光が届いているなら除外
-                // DELETE:_ 多分届いても複数考えられる場合は戻らない気がする
-                // それと斜め方向バグるかもしれないからなくしたけどそれが原因でバグる可能性もある少ないけど
-                // if (mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
-                // {
-                //     continue;
-                // }
+                bool checkConfiguredContinueFlag = false;
+                for (const int& checkConfigured : mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex)
+                {
+                    if (checkConfigured == shineDirectionsIndex)
+                    {
+                        checkConfiguredContinueFlag = true;
+                        break;
+                    }
+                }
+                if (checkConfiguredContinueFlag)
+                {
+                    continue;
+                }
 
                 // グリッドの状況によって処理
                 switch (JudgeGrid(checkPos, shineDirections, shineDirectionsIndex))
@@ -740,25 +1045,26 @@ void ShineManager::CheckShineGrid()
                 case SHINE_GRID_TYPE::NOT_SHINE_GRID:
                 {
                     // 次の光領域を調べる対象にするフラグ設定
-                    mstCheckShineGridFlags.SetFlag(true, CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
+                    mstCheckShineGridFlags.EnableFlag(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
                 }
                     break;
 
                 // 光領域内で他に情報がない
                 case SHINE_GRID_TYPE::SHINE_GRID:
                 {
+                    mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.push_back(shineDirectionsIndex);
                     // 光領域として登録されていなければ調べるグリッドとして追加
                     if (!mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
                     {
                         // 次に調べるグリッドへ追加
                         nextCheckShinePos.push(checkPos);
+                        // 光範囲内として登録
+                        mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
+                        mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
+                        mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
+                        ++setLitNumber;
+                        mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
                     }
-                    // 光範囲内として登録
-                    mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
-                    mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
-                    mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
-                    ++setLitNumber;
-                    mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
                     
                     // 他の光領域が同グリッド内にあるなら次の光領域を調べる対象にするフラグ設定
                     mstCheckShineGridFlags.SetFlag(HasOtherShineAreaInGrid(checkPos, shineDirections, shineDirectionsIndex), CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
@@ -772,19 +1078,21 @@ void ShineManager::CheckShineGrid()
                     blockPos.BlockPos = checkPos;
                     blockPos.ArrayIndex = shineDirectionsIndex;
                     blockPoss.push(blockPos);
+                    mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.push_back(shineDirectionsIndex);
+                    mstMapObjectGridData[checkPos.y][checkPos.x].ShineAreaIndex.push_back(shineDirectionsIndex);
 
                     // 光領域として登録されていなければ調べるグリッドとして追加
                     if (!mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
                     {
                         // 次に調べるグリッドへ追加
                         nextCheckShinePos.push(checkPos);
+                        // 光範囲内として登録
+                        mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
+                        mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
+                        mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
+                        ++setLitNumber;
+                        mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
                     }
-                    // 光範囲内として登録
-                    mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
-                    mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
-                    mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
-                    ++setLitNumber;
-                    mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
                     
                     // 他の光領域が同グリッド内にあるなら次の光領域を調べる対象にするフラグ設定
                     mstCheckShineGridFlags.SetFlag(HasOtherShineAreaInGrid(checkPos, shineDirections, shineDirectionsIndex), CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA);
@@ -794,6 +1102,10 @@ void ShineManager::CheckShineGrid()
 
                 if (mstCheckShineGridFlags.GetFlag_BitShift(CHECK_SHINE_GRID_FLAGS::NAXT_SHINE_AREA))
                 {
+                    SHINE_AREA_CHECK_DATA setShineChangeData;
+                    setShineChangeData.ShineAreaIndex = shineDirectionsIndex;
+                    setShineChangeData.CheckGridPos = checkPos;
+                    mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineChangeDatas.push_back(setShineChangeData);
                     break;
                 }
             }
@@ -1207,6 +1519,7 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
         }
     }
 
+    mstSettingDebugWallLineResult.clear();
     for (int i = (shineDirections.size() - 1); i >= 0; --i)
     {
         std::vector<SHINE_DIRECTION> newShineDirections = ProcessShineAreaEndPointCandidates(i, shineDirections[i]);
@@ -1224,6 +1537,8 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
         }
     }
     mstLightAreaEndPoint.clear();
+
+    mstDebugWallLinePointDrawData.push_back(mstSettingDebugWallLineResult);
 }
 
 // leftAngle（光の左端）を基準「0.0」とした時計回り方向への相対角度（0 ～ 2π）を算出する
@@ -1374,13 +1689,15 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
     // 対象となる終端候補を処理
     for (int lightIterator = (mstLightAreaEndPoint.size() - 1); lightIterator >= 0; --lightIterator)
     {
-        const SHINE_AREA_END_POSITION& endPoint = mstLightAreaEndPoint[lightIterator];
+        const SHINE_AREA_END_POSITION endPoint = mstLightAreaEndPoint[lightIterator];
         if (endPoint.shineDirectionIndex != shineIndex)
         {
             continue;
         }
         // 処理する終端候補を削除
         mstLightAreaEndPoint.erase(mstLightAreaEndPoint.begin() + lightIterator);
+
+        mstSettingDebugWallLineResult.push_back(endPoint);
         
         // 三角に登録
         {
@@ -1431,6 +1748,7 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
         /*③ 遮られる部分をnewShineDirections から削除・分割*/
         std::vector<SHINE_DIRECTION> splitShineDirections;
 
+        // TODO:_ プッシュバックじゃなくてインサートかな
         for (const SHINE_DIRECTION& currentShineDirection : newShineDirections)
         {
             const float currentLeftAngle =
@@ -1632,94 +1950,78 @@ static bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirec
     return tMax >= 0.0f;
 }
 
-std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& nowCheckShinePos)
+std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& nowCheckShinePos, const SHINE_DIRECTION& shineDirection)
 {
     std::vector<Vector2_Int> shineGridPositions;
 
     // 光源のワールド位置および照射方向（左右の限界角度）を取得
     const Vector2 shinePos = mpShineObject->GetPosition();
-    const SHINE_DIRECTION shineDir = mpShineObject->GetShineDirection();
+    const SHINE_DIRECTION shineDir = shineDirection;
 
     // 左右の方向ベクトルから std::atan2f で照射角度（ラジアン: -π?+π）を計算
     const float leftAngle  = std::atan2f(shineDir.shineDirectionLeft.y, shineDir.shineDirectionLeft.x);
     const float rightAngle = std::atan2f(shineDir.shineDirectionRight.y, shineDir.shineDirectionRight.x);
 
-    // // 周囲8方向の隣接グリッドを調べる
-    // for (int y = -1; y <= 1; ++y)
-    // {
-    //     for (int x = -1; x <= 1; ++x)
-    //     {
-    //         if (x == 0 && y == 0) continue;
-
-    //         const Vector2_Int nextPos =
-    //         {
-    //             nowCheckShinePos.x + x,
-    //             nowCheckShinePos.y + y
-    //         };
-
-    // 上下左右の4方向の隣接グリッドを調べる
-    const int checkDirections[4][2] =
+    // 周囲8方向の隣接グリッドを調べる
+    for (int y = -1; y <= 1; ++y)
     {
-        {  0, -1 }, // 上
-        {  1,  0 }, // 右
-        {  0,  1 }, // 下
-        { -1,  0 }  // 左
-    };
-
-    for (const auto& direction : checkDirections)
-    {
-        const Vector2_Int nextPos =
+        for (int x = -1; x <= 1; ++x)
         {
-            nowCheckShinePos.x + direction[0],
-            nowCheckShinePos.y + direction[1]
-        };
+            if (x == 0 && y == 0) continue;
 
-        // グリッドの四隅（左上、右上、左下、右下）の座標を算出
-        const float left   = static_cast<float>(nextPos.x * ONE_GRID_SIZE_X);
-        const float right  = left + static_cast<float>(ONE_GRID_SIZE_X);
-        const float top    = static_cast<float>(nextPos.y * ONE_GRID_SIZE_Y);
-        const float bottom = top + static_cast<float>(ONE_GRID_SIZE_Y);
-
-        const Vector2 corners[4] =
-        {
-            { left,  top },
-            { right, top },
-            { left,  bottom },
-            { right, bottom }
-        };
-
-        bool isInsideShine = false;
-
-        // 四隅の頂点のうち、どれか1つでも光の角度範囲内に入っているか確認
-        for (const Vector2& corner : corners)
-        {
-            const Vector2 dirToCorner =
+            const Vector2_Int nextPos =
             {
-                corner.x - shinePos.x,
-                corner.y - shinePos.y
+                nowCheckShinePos.x + x,
+                nowCheckShinePos.y + y
             };
 
-            // 頂点への方向角度（ラジアン）
-            const float cornerAngle = std::atan2f(dirToCorner.y, dirToCorner.x);
+            // グリッドの四隅（左上、右上、左下、右下）の座標を算出
+            const float left   = static_cast<float>(nextPos.x * ONE_GRID_SIZE_X);
+            const float right  = left + static_cast<float>(ONE_GRID_SIZE_X);
+            const float top    = static_cast<float>(nextPos.y * ONE_GRID_SIZE_Y);
+            const float bottom = top + static_cast<float>(ONE_GRID_SIZE_Y);
 
-            if (IsAngleBetween(cornerAngle, leftAngle, rightAngle))
+            const Vector2 corners[4] =
             {
-                isInsideShine = true;
-                break; // 1つでも入っていれば対象として判定確定
-            }
-        }
-        
-        // 四隅がすべて範囲外でも左右の照射境界線がグリッドを通過していれば対象
-        if (!isInsideShine)
-        {
-            isInsideShine = IsRayIntersectRect(shinePos, shineDir.shineDirectionLeft, left, right, top, bottom) || 
-                            IsRayIntersectRect(shinePos, shineDir.shineDirectionRight, left, right, top, bottom);
-        }
+                { left,  top },
+                { right, top },
+                { left,  bottom },
+                { right, bottom }
+            };
 
-        // 頂点が照射角度に入っている場合追加
-        if (isInsideShine)
-        {
-            shineGridPositions.push_back(nextPos);
+            bool isInsideShine = false;
+
+            // 四隅の頂点のうち、どれか1つでも光の角度範囲内に入っているか確認
+            for (const Vector2& corner : corners)
+            {
+                const Vector2 dirToCorner =
+                {
+                    corner.x - shinePos.x,
+                    corner.y - shinePos.y
+                };
+
+                // 頂点への方向角度（ラジアン）
+                const float cornerAngle = std::atan2f(dirToCorner.y, dirToCorner.x);
+
+                if (IsAngleBetween(cornerAngle, leftAngle, rightAngle))
+                {
+                    isInsideShine = true;
+                    break; // 1つでも入っていれば対象として判定確定
+                }
+            }
+            
+            // 四隅がすべて範囲外でも左右の照射境界線がグリッドを通過していれば対象
+            if (!isInsideShine)
+            {
+                isInsideShine = IsRayIntersectRect(shinePos, shineDir.shineDirectionLeft, left, right, top, bottom) || 
+                                IsRayIntersectRect(shinePos, shineDir.shineDirectionRight, left, right, top, bottom);
+            }
+
+            // 頂点が照射角度に入っている場合追加
+            if (isInsideShine)
+            {
+                shineGridPositions.push_back(nextPos);
+            }
         }
     }
 
@@ -1744,7 +2046,7 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
             const float rhsAngle = std::atan2f(rhsCenter.y - shinePos.y, rhsCenter.x - shinePos.x);
 
             // 光の左端の方向 (ラジアン)
-            const float leftAngle = mpShineObject->GetShineDirection().leftAngle; // ※左端角度を取得
+            const float leftAngle = shineDir.leftAngle; // ※左端角度を取得
 
             // 左端角度 (leftAngle) からの相対角度を [-π, +π] の範囲で算出する関数
             // (左端よりわずかに左にあるグリッドが 2π 近くに飛んで末尾に回るのを防ぐ)

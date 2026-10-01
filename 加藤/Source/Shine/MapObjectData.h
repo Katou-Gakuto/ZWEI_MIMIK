@@ -11,6 +11,16 @@ struct LINE_POS
 	int id = -1;
 };
 
+// 光領域調査情報
+struct SHINE_AREA_CHECK_DATA
+{
+	// 光領域番号
+    int ShineAreaIndex;
+
+	// 調べていた先のグリッド座標
+    Vector2_Int CheckGridPos;
+};
+
 // マップオブジェクト情報
 struct MAP_OBJECT_DATA
 {
@@ -20,6 +30,9 @@ public:
 	// 光フラグ
 	bool LitFlag;
 
+	// 設定済み光領域添え字
+	std::vector<int> ConfiguredShineAreaIndex;
+
 	// デバッグ光フラグ描画用
 	bool DebugDrawLiteFlag;
 
@@ -28,6 +41,15 @@ public:
 
 	// 設定した順番
 	int SetLitNumber;
+	
+	// 別の光領域に参照を変えたときの情報
+	std::vector<SHINE_AREA_CHECK_DATA> ShineChangeDatas;
+
+	// 全調査時の光領域と参照先情報
+	std::vector<SHINE_AREA_CHECK_DATA> ShineAreaCheckDatas;
+
+	// 光領域添え字
+	std::vector<int> ShineAreaIndex;
 };
 
 // 視界を遮る情報

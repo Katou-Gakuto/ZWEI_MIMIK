@@ -38,25 +38,34 @@ enum DRAW_MODE_NUMBER
 enum SHINE_DRAW_MODE
 {
 	NONE = 0,// 何もない
-	OBJECT_SHINE_DRAW_MODE,						// オブジェクト描画
-	GRID_SET_MAP_OBJECT_DRAW_MODE,				// グリッドに設定済みオブジェクト描画
-	TRIANGLE_SHINE_DRAW_MODE,					// 光の三角をフレーム描画
-	TRIANGLE_SHINE_DRAW_MODE_TRUE,				// 光の三角を塗りつぶし描画
-	TRIANGLE_SHINE_SINGLE_DRAW_MODE_TRUE,		// 光の三角を一つだけ塗りつぶし描画
-	TRIANGLE_LINE_SHINE_SINGLE_DRAW_MODE_TRUE,	// 光の三角を一つだけフレーム描画
-	ALL_GRID_SHINE_DRAW_MODE,					// 全グリッド描画
-	GRID_SHINE_LOOP_COUNT_DRAW_MODE,			// 光のグリッドを処理したループ数を選択して描画
-	GRID_SHINE_DRAW_MODE,						// 光のグリッド描画
-	GRID_SHINE_LOOP_NUMBER_DRAW_MODE,			// 光のグリッドを処理したループ数と同時に描画
-	GRID_DEBUG_SHINE_LOOP_NUMBER_DRAW_MODE,		// デバッグ光のグリッドを処理したループ数と同時に描画
-	GRID_SHINE_NUMBER_DRAW_MODE,				// 光のグリッドを設定した順数と同時に描画
-	GRID_DEBUG_SHINE_NUMBER_DRAW_MODE,			// デバッグ光のグリッドを設定した順数と同時に描画
-	TEST_ANGLE_DRAW_MODE,						// 光のアングル描画
-	TEST_ANGLE_DRAW_MODE_TRUE,					// 光のアングル塗りつぶし描画
-	TEST_ANGLE_LEFT_DRAW_MODE,					// 光のアングル左直線描画
-	TEST_ANGLE_RIGHT_DRAW_MODE,					// 光のアングル右直線描画
-	ALL_SHINE_RESULT_DRAW_MODE,					// 光のアングルの偏移をループを選択して描画
-	ALL_SHINE_RESULT_SINGLE_DRAW_MODE,			// 光のアングルの偏移をループと個数目を選択して描画
+	OBJECT_SHINE_DRAW_MODE,							// オブジェクト描画
+	GRID_SET_MAP_OBJECT_DRAW_MODE,					// グリッドに設定済みオブジェクト描画
+	TRIANGLE_SHINE_DRAW_MODE,						// 光の三角をフレーム描画
+	TRIANGLE_SHINE_DRAW_MODE_TRUE,					// 光の三角を塗りつぶし描画
+	TRIANGLE_SHINE_SINGLE_DRAW_MODE_TRUE,			// 光の三角を一つだけ塗りつぶし描画
+	TRIANGLE_LINE_SHINE_SINGLE_DRAW_MODE_TRUE,		// 光の三角を一つだけフレーム描画
+	ALL_GRID_SHINE_DRAW_MODE,						// 全グリッド描画
+	GRID_SHINE_LOOP_COUNT_DRAW_MODE,				// 光のグリッドを処理したループ数を選択して描画
+	GRID_SHINE_DRAW_MODE,							// 光のグリッド描画
+	GRID_SHINE_LOOP_NUMBER_DRAW_MODE,				// 光のグリッドを処理したループ数と同時に描画
+	GRID_DEBUG_SHINE_LOOP_NUMBER_DRAW_MODE,			// デバッグ光のグリッドを処理したループ数と同時に描画
+	GRID_SHINE_NUMBER_DRAW_MODE,					// 光のグリッドを設定した順数と同時に描画
+	GRID_DEBUG_SHINE_NUMBER_DRAW_MODE,				// デバッグ光のグリッドを設定した順数と同時に描画
+	GRID_WALL_GRID_SHINE_INDEX_DRAW_MODE,			// 壁があるグリッドを光領域の添え字と同時に描画
+	SHINE_CHECK_GRID_DRAW_MODE,						// 調べるたときの光領域とグリッドと調べていた先のグリッド描画
+	SHINE_AREA_SELECT_CHECK_GRID_DRAW_MODE,			// 光領域を選択してその光領域を参照して調べていたグリッドと調べていた先のグリッド座標を描画
+	SHINE_AREA_SELECT_LOOP_CHECK_GRID_DRAW_MODE,	// 処理順と光領域を選択してその光領域を参照して調べていたグリッドと調べていた先のグリッド座標を描画
+	OTHER_SHINE_AREA_CHECK_GRID_DRAW_MODE,			// 別の光領域があった判定をした光領域とグリッドと調べていたグリッド座標を描画
+	TEST_ANGLE_DRAW_MODE,							// 光のアングル描画
+	TEST_ANGLE_DRAW_MODE_TRUE,						// 光のアングル塗りつぶし描画
+	TEST_ANGLE_LEFT_DRAW_MODE,						// 光のアングル左直線描画
+	TEST_ANGLE_RIGHT_DRAW_MODE,						// 光のアングル右直線描画
+	ALL_SHINE_RESULT_DRAW_MODE,						// 光のアングルの偏移をループを選択して描画
+	ALL_SHINE_RESULT_SINGLE_DRAW_MODE,				// 光のアングルの偏移をループと個数目を選択して描画
+	WALL_LINE_DRAW_MODE,							// 壁となるライン全描画
+	WALL_LINE_SINGLE_LOOP_DRAW_MODE,				// 壁となるライン1ループ分描画
+	WALL_LINE_SINGLE_AND_INDEX_NUMBER_DRAW_MODE,	// 壁となるライン1個を添え字数と同時に描画
+	SHINE_CHECK_DATA_LINE_DRAW_MODE,				// 光の調べたデータを線描画
 	SHINE_DRAW_MODE_MAX// 最大
 };
 
@@ -147,6 +156,11 @@ private:
 	// 確認するグリッド確認用変数
 	std::vector<std::vector<Vector2_Int>> mstCheckGridPos;
 
+	// 壁ライン設定用
+	std::vector<SHINE_AREA_END_POSITION> mstSettingDebugWallLineResult;
+	// 壁ライン描画用
+	std::vector<std::vector<SHINE_AREA_END_POSITION>> mstDebugWallLinePointDrawData;
+
 	// ラインid現在最大値
 	int mnLineIdNowMax;
 
@@ -198,7 +212,7 @@ private:
     bool IsOutsideShineStage(const Vector2_Int& gridPos);
 
 	// 光領域を左端から右端へ走査するグリッドを取得
-	std::vector<Vector2_Int> GetShineGridPositions(const Vector2_Int& nowCheckShinePos);
+	std::vector<Vector2_Int> GetShineGridPositions(const Vector2_Int& nowCheckShinePos, const SHINE_DIRECTION& shineDirection);
 
 	// 描画三角追加
 	void AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2);
