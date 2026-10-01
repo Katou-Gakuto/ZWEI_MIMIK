@@ -211,6 +211,9 @@ private:
     // マップ外判定
     bool IsOutsideShineStage(const Vector2_Int& gridPos);
 
+	// 指定したグリッドに光が通っているか判定
+	bool IsGridInsideShine(const Vector2_Int& gridPos, const SHINE_DIRECTION& shineDirection);
+
 	// 光領域を左端から右端へ走査するグリッドを取得
 	std::vector<Vector2_Int> GetShineGridPositions(const Vector2_Int& nowCheckShinePos, const SHINE_DIRECTION& shineDirection);
 
@@ -223,15 +226,14 @@ private:
 	// 障害物との交点を取得
 	void GetShineBlockingIntersection(const Vector2& edgePos1, const Vector2& edgePos2, const SHINE_DIRECTION& shineDirection, const Vector2_Int& blockPos, Vector2& intersection1, Vector2& intersection2);
 
-	// DELETE:_ 使用してない関数化してるだけだから使う可能性はある
 	// グリッドの光状態を更新
-	void UpdateGridLightState(const BLOCK_POS_DATA& blockPos, const std::vector<SHINE_DIRECTION>& shineDirections);
+	void UpdateGridLightState(const std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections);
 
 	// 2次元ベクトル同士の外積のZ成分を求める
 	float Cross(const Vector2& a, const Vector2& b);
 
 	// 2本の線分の交点を求める
-	bool GetIntersection(const Vector2& a, const Vector2& b, const Vector2& c, const Vector2& d, Vector2& intersection);
+	bool GetIntersection(const Vector2 a, const Vector2 b, const Vector2 c, const Vector2 d, Vector2& intersection);
 	
 	// 線分ABの延長線と線分CDの延長線の交点を求める
 	bool GetLineIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection);

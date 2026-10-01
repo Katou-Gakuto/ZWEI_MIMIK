@@ -61,6 +61,11 @@ struct Vector2
 		this->x = X;
 		this->y = Y;
 	}
+	Vector2(Vector2_Int src)
+	{
+		this->x = src.x;
+		this->y = src.y;
+	}
 
 	Vector2& operator +=(Vector2& src)
 	{
