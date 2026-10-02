@@ -88,7 +88,7 @@ void ShineManager::Init()
 {
     mpObjects.clear();
 
-    // ‚±‚±‚Å¶¬
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½
     WallObject* wallObject = new WallObject();
     wallObject->SetPosition(Vector2(1280 * 0.7f, 960 * 0.7f));
     wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
@@ -111,7 +111,7 @@ void ShineManager::Init()
         }
     }
 
-    // ¶¬‚µ‚½ƒIƒuƒWƒFƒNƒg‰Šú‰»
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (auto& object : mpObjects)
     {
         object->Init();
@@ -139,7 +139,7 @@ void ShineManager::Update()
     }
     mpShineObject->Update();
 
-    // Œõ—Ìˆæì¬
+    // ï¿½ï¿½ï¿½Ìˆï¿½ì¬
     CreateShineArea();
 
     for (int i = 0; i < DRAW_MODE_NUMBER::DRAW_MODE_NUMBER_MAX; ++i)
@@ -292,7 +292,7 @@ void ShineManager::Draw()
             {
                 x += testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_TRIANGLE_DRAW_X];
                 y += testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_TRIANGLE_DRAW_Y];
-                // Œõ—Ìˆæ‚Ì•`‰æ
+                // ï¿½ï¿½ï¿½Ìˆï¿½Ì•`ï¿½ï¿½
                 DrawTriangle(
                     shineTriangle.Vertex1.x + x, shineTriangle.Vertex1.y + y,
                     shineTriangle.Vertex2.x, shineTriangle.Vertex2.y,
@@ -307,7 +307,7 @@ void ShineManager::Draw()
             {
                 x += testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_TRIANGLE_DRAW_X];
                 y += testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_TRIANGLE_DRAW_Y];
-                // Œõ—Ìˆæ‚Ì•`‰æ
+                // ï¿½ï¿½ï¿½Ìˆï¿½Ì•`ï¿½ï¿½
                 DrawTriangle(
                     shineTriangle.Vertex1.x + x, shineTriangle.Vertex1.y + y,
                     shineTriangle.Vertex2.x, shineTriangle.Vertex2.y,
@@ -328,7 +328,7 @@ void ShineManager::Draw()
             }
             {
                 SHINE_TRIANGLE drawSingleTriangleData = mstSheineTriangles[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_TRIANGLE_SINGLE_DRAW_INDEX]];
-                // Œõ—Ìˆæ‚Ì•`‰æ
+                // ï¿½ï¿½ï¿½Ìˆï¿½Ì•`ï¿½ï¿½
                 DrawTriangle(
                     drawSingleTriangleData.Vertex1.x, drawSingleTriangleData.Vertex1.y,
                     drawSingleTriangleData.Vertex2.x, drawSingleTriangleData.Vertex2.y,
@@ -349,7 +349,7 @@ void ShineManager::Draw()
             }
             {
                 SHINE_TRIANGLE drawSingleTriangleData = mstSheineTriangles[testNumber[TEST_INDEX_NUMBERS::TEST_SHINE_TRIANGLE_SINGLE_DRAW_INDEX]];
-                // Œõ—Ìˆæ‚Ì•`‰æ
+                // ï¿½ï¿½ï¿½Ìˆï¿½Ì•`ï¿½ï¿½
                 DrawLine(drawSingleTriangleData.Vertex1.x, drawSingleTriangleData.Vertex1.y,
                     drawSingleTriangleData.Vertex2.x, drawSingleTriangleData.Vertex2.y,
                     GetDebugColor(mnDrawMode[drawModeIndex])
@@ -503,7 +503,7 @@ void ShineManager::Draw()
                                 (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
                                 GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
 
-                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "Ë(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "ï¿½ï¿½(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
                         }
                         DrawBox(ONE_GRID_SIZE_X * x,       ONE_GRID_SIZE_Y * y,
                                 ONE_GRID_SIZE_X * (x + 1), ONE_GRID_SIZE_Y * (y + 1),
@@ -541,7 +541,7 @@ void ShineManager::Draw()
                                 (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
                                 GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
 
-                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "Ë(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "ï¿½ï¿½(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
                         }
                         if (shineAreaIndexNumber == (std::to_string(x) + ", " + std::to_string(y) + "\n"))
                         {
@@ -590,7 +590,7 @@ void ShineManager::Draw()
                             (ONE_GRID_SIZE_X * x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * y) + centerAdjustment.y + i,
                             (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
                             GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex));
-                        shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "Ë(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
+                        shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].ShineAreaIndex) + "ï¿½ï¿½(" + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineAreaCheckDatas[i].CheckGridPos.y) + ")\n";
                     }
                     if (shineAreaIndexNumber == (std::to_string(x) + ", " + std::to_string(y) + "\n"))
                     {
@@ -644,7 +644,7 @@ void ShineManager::Draw()
                                 (ONE_GRID_SIZE_X * mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.x) + centerAdjustment.x + i, (ONE_GRID_SIZE_Y * mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.y) + centerAdjustment.y + i,
                                 GetDebugColor(mnDrawMode[drawModeIndex] + mstMapObjectGridData[y][x].ShineChangeDatas[i].ShineAreaIndex));
                                 
-                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].ShineAreaIndex) + "Ë(" + std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.y) + ")\n";
+                            shineAreaIndexNumber += std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].ShineAreaIndex) + "ï¿½ï¿½(" + std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.x) + ", " + std::to_string(mstMapObjectGridData[y][x].ShineChangeDatas[i].CheckGridPos.y) + ")\n";
                         }
                         DrawBox(ONE_GRID_SIZE_X * x,       ONE_GRID_SIZE_Y * y,
                                 ONE_GRID_SIZE_X * (x + 1), ONE_GRID_SIZE_Y * (y + 1),
@@ -848,7 +848,7 @@ void ShineManager::Draw()
     mpShineObject->Draw();
 }
 
-// w’è‚ÌƒOƒŠƒbƒh“à‚É•â³‚µ‚½’l‚ğ•Ô‚·
+// ï¿½wï¿½ï¿½ÌƒOï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½É•â³ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½Ô‚ï¿½
 Vector2 ShineManager::AdjustPositionToGrid(const Vector2_Int gridIndex, Vector2 pos)
 {
     if (pos.x < ((gridIndex.x) * ONE_GRID_SIZE_X))
@@ -872,12 +872,12 @@ Vector2 ShineManager::AdjustPositionToGrid(const Vector2_Int gridIndex, Vector2 
     return pos;
 }
 
-// Œõ—Ìˆæ‚Ìì¬
+// ï¿½ï¿½ï¿½Ìˆï¿½Ìì¬
 void ShineManager::CreateShineArea()
 {
     mstSheineTriangles.clear();
 
-    // Œõ—Ìˆæ‚ğƒŠƒZƒbƒg
+    // ï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½g
     for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
     {
         for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
@@ -891,13 +891,13 @@ void ShineManager::CreateShineArea()
         }
     }
 
-    // ŒõŒ¹‚ÌˆÊ’u‚ğİ’è
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ÌˆÊ’uï¿½ï¿½İ’ï¿½
     mstShinePos = mpShineObject->GetPosition();
 
-    // ŒõŒ¹‚ª‘¶İ‚·‚éƒOƒŠƒbƒh
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½h
     mstShineGridPos = Vector2_Int(static_cast<int>(mstShinePos.x / ONE_GRID_SIZE_X), static_cast<int>(mstShinePos.y / ONE_GRID_SIZE_Y));
 
-    // ƒ}ƒbƒvŠO‚È‚çˆ—‚µ‚È‚¢
+    // ï¿½}ï¿½bï¿½vï¿½Oï¿½È‚çˆï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
     if (IsOutsideShineStage(mstShineGridPos))
     {
         return;
@@ -911,45 +911,45 @@ void ShineManager::CreateShineArea()
         DEBUG::SaveText(debugTextStart + "\n\nSTART\n\n", DEBUG::DEBUG_MAP_TYPE::DEBUG_SHINE_POS);
 #endif
 
-    // ƒOƒŠƒbƒh‚Ì’Tõ
+    // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ì’Tï¿½ï¿½
     CheckShineGrid();
 }
 
 
-// ƒOƒŠƒbƒh‚Ì’Tõ
+// ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ì’Tï¿½ï¿½
 void ShineManager::CheckShineGrid()
 {
-    // ’²¸‚·‚éƒOƒŠƒbƒh
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½h
     std::queue<Vector2_Int> nextCheckShinePos;
 
-    // ŒõŒ¹‚ÌƒOƒŠƒbƒh‚©‚çŠJn
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒOï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½ï¿½Jï¿½n
     nextCheckShinePos.push(mstShineGridPos);
     
-    // ŒõŒ¹‚ÌƒOƒŠƒbƒh‚Í•K‚¸Œõ—Ìˆæ‚ÉŠÜ‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒOï¿½ï¿½ï¿½bï¿½hï¿½Í•Kï¿½ï¿½ï¿½ï¿½ï¿½Ìˆï¿½ÉŠÜ‚ß‚ï¿½
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].LitFlag = true;
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].DebugDrawLiteFlag = true;
 
-    // ƒ‹[ƒv‚ğ”‚¦‚é
+    // ï¿½ï¿½ï¿½[ï¿½vï¿½ğ”‚ï¿½ï¿½ï¿½
     int loopCount = 0;
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].LitLoopNumber = 0;
 
-    // İ’è‚µ‚½ƒ‰ƒCƒg‚Ì‡”Ô‚ğİ’è‚·‚é
+    // ï¿½İ’è‚µï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½gï¿½Ìï¿½ï¿½Ô‚ï¿½İ’è‚·ï¿½ï¿½
     int setLitNumber = 0;
     mstMapObjectGridData[mstShineGridPos.y][mstShineGridPos.x].SetLitNumber = 0;
 
-    // INPROGRESS:_ ‚±‚ê‚ğ“ñ‚Â‚É•ª‚¯‚ÄÀŒ±
+    // INPROGRESS:_ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚É•ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½
     std::vector<SHINE_DIRECTION> shineDirections;
     shineDirections.push_back(mpShineObject->GetShineDirection());
 
 
-    // Œõ‚ÌƒGƒŠƒA‚ğ‹L˜^‚·‚é
+    // ï¿½ï¿½ï¿½ÌƒGï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Lï¿½^ï¿½ï¿½ï¿½ï¿½
     mstShineAreaResult.clear();
     mstShineAreaResult.push_back(shineDirections);
 
-    // Šm”F‚·‚éƒOƒŠƒbƒh‰Šú‰»
+    // ï¿½mï¿½Fï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     mstCheckGridPos.clear();
 
-    // •Ç‚Æ‚È‚éƒ‰ƒCƒ“î•ñ‰Šú‰»
+    // ï¿½Ç‚Æ‚È‚éƒ‰ï¿½Cï¿½ï¿½ï¿½ï¿½ñ‰Šï¿½ï¿½ï¿½
     mstDebugWallLinePointDrawData.clear();
 
     while (!nextCheckShinePos.empty())
@@ -977,170 +977,123 @@ void ShineManager::CheckShineGrid()
 #endif
         }
 
-        // ¡‰ñ’²‚×‚éƒOƒŠƒbƒh‚ğæ‚èo‚·
+        // ï¿½ï¿½ï¿½ñ’²‚×‚ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½
         std::queue<Vector2_Int> nowCheckShinePos;
         nowCheckShinePos.swap(nextCheckShinePos);
 
-        // ¡‰ñ‚Ì’Tõ’†‚ÉŒ©‚Â‚©‚Á‚½áŠQ•¨
+        // ï¿½ï¿½ï¿½ï¿½Ì’Tï¿½ï¿½ï¿½ï¿½ï¿½ÉŒï¿½ï¿½Â‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Qï¿½ï¿½
         std::stack<BLOCK_POS_DATA> blockPoss;
-        
-        // w‚µ‚Ä‚¢‚éŒõ‚Ì”z—ñ”
-        int shineDirectionsIndex = 0;
 
-        // ƒ‹[ƒvƒJƒEƒ“ƒg‚ğ‰ÁZ‚·‚é
         ++loopCount;
-        
-        // ŒõŒ¹‚©‚çŒ©‚Ä¶‘¤‚ÌŒõ—Ìˆæ‚©‚ç‡”Ô‚Éˆ—‚·‚é
-        while ((shineDirectionsIndex < static_cast<int>(shineDirections.size())) &&
-                (0 < nowCheckShinePos.size()))
-        {
-            bool needNextShineArea = false;
 
+        // After a shine area split, each grid must look up shineDirections by itself.
+        while (0 < nowCheckShinePos.size())
+        {
             Vector2_Int checkShinePos = nowCheckShinePos.front();
+            nowCheckShinePos.pop();
             if (!mstMapObjectGridData[checkShinePos.y][checkShinePos.x].LitFlag)
             {
                 mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ConfiguredShineAreaIndex.clear();
-                nowCheckShinePos.pop();
                 continue;
             }
 
-            std::vector<Vector2_Int> ShineGridPositions = GetShineGridPositions(checkShinePos, shineDirections[shineDirectionsIndex]);
-
-            // QÆ‚µ‚Ä‚¢‚éŒõ—Ìˆæ“à‚ÌƒOƒŠƒbƒh‚ª‚È‚¢ê‡Ÿ‚ÌŒõ—Ìˆæ‚É
-            if (ShineGridPositions.size() <= 0)
+            for (int shineDirectionsIndex = 0; shineDirectionsIndex < static_cast<int>(shineDirections.size()); ++shineDirectionsIndex)
             {
-                SHINE_AREA_CHECK_DATA setShineChangeData;
-                setShineChangeData.ShineAreaIndex = shineDirectionsIndex;
-                setShineChangeData.CheckGridPos = Vector2_Int(-1, -1);
-                mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineChangeDatas.push_back(setShineChangeData);
-                needNextShineArea = true;
-            }
+                std::vector<Vector2_Int> ShineGridPositions = GetShineGridPositions(checkShinePos, shineDirections[shineDirectionsIndex]);
 
-            // Œ»İ‚ÌŒõ—Ìˆæ‚ğ¶’[‚©‚ç‰E’[‚Ö‘–¸
-            for (const Vector2_Int& checkPos : ShineGridPositions)
-            {
-                SHINE_AREA_CHECK_DATA setShineAreaCheckData;
-                setShineAreaCheckData.ShineAreaIndex = shineDirectionsIndex;
-                setShineAreaCheckData.CheckGridPos = checkPos;
-                mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineAreaCheckDatas.push_back(setShineAreaCheckData);
-                
-                // ƒ}ƒbƒvŠO‚È‚çœŠO
-                if (IsOutsideShineStage(checkPos))
+                if (ShineGridPositions.size() <= 0)
                 {
                     continue;
                 }
 
-                bool checkConfiguredContinueFlag = false;
-                for (const int& checkConfigured : mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex)
+                for (const Vector2_Int& checkPos : ShineGridPositions)
                 {
-                    if (checkConfigured == shineDirectionsIndex)
+                    SHINE_AREA_CHECK_DATA setShineAreaCheckData;
+                    setShineAreaCheckData.ShineAreaIndex = shineDirectionsIndex;
+                    setShineAreaCheckData.CheckGridPos = checkPos;
+                    mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineAreaCheckDatas.push_back(setShineAreaCheckData);
+
+                    if (IsOutsideShineStage(checkPos))
                     {
-                        checkConfiguredContinueFlag = true;
+                        continue;
+                    }
+
+                    bool checkConfiguredContinueFlag = false;
+                    for (const int& checkConfigured : mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex)
+                    {
+                        if (checkConfigured == shineDirectionsIndex)
+                        {
+                            checkConfiguredContinueFlag = true;
+                            break;
+                        }
+                    }
+                    if (checkConfiguredContinueFlag)
+                    {
+                        continue;
+                    }
+
+                    switch (JudgeGrid(checkPos, shineDirections, shineDirectionsIndex))
+                    {
+                    case SHINE_GRID_TYPE::NOT_SHINE_GRID:
+                    {
+                        SHINE_AREA_CHECK_DATA setShineChangeData;
+                        setShineChangeData.ShineAreaIndex = shineDirectionsIndex;
+                        setShineChangeData.CheckGridPos = checkPos;
+                        mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineChangeDatas.push_back(setShineChangeData);
+                    }
+                        break;
+
+                    case SHINE_GRID_TYPE::SHINE_GRID:
+                    {
+                        mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.push_back(shineDirectionsIndex);
+                        if (!mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
+                        {
+                            nextCheckShinePos.push(checkPos);
+                            mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
+                            mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
+                            mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
+                            ++setLitNumber;
+                            mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
+                        }
+                    }
+                        break;
+
+                    case SHINE_GRID_TYPE::SHINE_AND_OBJECT_GRID:
+                    {
+                        BLOCK_POS_DATA blockPos;
+                        blockPos.BlockPos = checkPos;
+                        blockPos.ArrayIndex = shineDirectionsIndex;
+                        blockPoss.push(blockPos);
+                        mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.push_back(shineDirectionsIndex);
+                        mstMapObjectGridData[checkPos.y][checkPos.x].ShineAreaIndex.push_back(shineDirectionsIndex);
+
+                        if (!mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
+                        {
+                            nextCheckShinePos.push(checkPos);
+                            mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
+                            mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
+                            mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
+                            ++setLitNumber;
+                            mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
+                        }
+                    }
                         break;
                     }
                 }
-                if (checkConfiguredContinueFlag)
-                {
-                    continue;
-                }
-
-                // ƒOƒŠƒbƒh‚Ìó‹µ‚É‚æ‚Á‚Äˆ—
-                switch (JudgeGrid(checkPos, shineDirections, shineDirectionsIndex))
-                {
-                // Œõ—ÌˆæŠO‚È‚½‚ßŸ‚ğ’²‚×‚é
-                case SHINE_GRID_TYPE::NOT_SHINE_GRID:
-                {
-                    needNextShineArea = true;
-                }
-                    break;
-
-                // Œõ—Ìˆæ“à‚Å‘¼‚Éî•ñ‚ª‚È‚¢
-                case SHINE_GRID_TYPE::SHINE_GRID:
-                {
-                    mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.push_back(shineDirectionsIndex);
-                    // Œõ—Ìˆæ‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î’²‚×‚éƒOƒŠƒbƒh‚Æ‚µ‚Ä’Ç‰Á
-                    if (!mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
-                    {
-                        // Ÿ‚É’²‚×‚éƒOƒŠƒbƒh‚Ö’Ç‰Á
-                        nextCheckShinePos.push(checkPos);
-                        // Œõ”ÍˆÍ“à‚Æ‚µ‚Ä“o˜^
-                        mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
-                        mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
-                        mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
-                        ++setLitNumber;
-                        mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
-                    }
-                }
-                    break;
-
-                case SHINE_GRID_TYPE::SHINE_AND_OBJECT_GRID:
-                {
-                    // ‚±‚±‚ÅŒõ‚ğÕ‚é‚à‚Ì‚ğ’Ç‰Á
-                    BLOCK_POS_DATA blockPos;
-                    blockPos.BlockPos = checkPos;
-                    blockPos.ArrayIndex = shineDirectionsIndex;
-                    blockPoss.push(blockPos);
-                    mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.push_back(shineDirectionsIndex);
-                    mstMapObjectGridData[checkPos.y][checkPos.x].ShineAreaIndex.push_back(shineDirectionsIndex);
-
-                    // Œõ—Ìˆæ‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î’²‚×‚éƒOƒŠƒbƒh‚Æ‚µ‚Ä’Ç‰Á
-                    if (!mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
-                    {
-                        // Ÿ‚É’²‚×‚éƒOƒŠƒbƒh‚Ö’Ç‰Á
-                        nextCheckShinePos.push(checkPos);
-                        // Œõ”ÍˆÍ“à‚Æ‚µ‚Ä“o˜^
-                        mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag = true;
-                        mstMapObjectGridData[checkPos.y][checkPos.x].DebugDrawLiteFlag = true;
-                        mstMapObjectGridData[checkPos.y][checkPos.x].LitLoopNumber = loopCount;
-                        ++setLitNumber;
-                        mstMapObjectGridData[checkPos.y][checkPos.x].SetLitNumber = setLitNumber;
-                    }
-                }
-                    break;
-                }
-
-                // ƒZƒNƒ^[‚Ì‹«ŠE‚Å‚Ì‚İŸ‚ÌŒõ—Ìˆæ‚Ö‘JˆÚ‚³‚¹‚éB
-                // ‚±‚±‚Å–ˆƒZƒ‹‚Å”»’è‚·‚é‚ÆAŒã‘±‚ÌŒõ—Ìˆæ‚ªÚG‚µ‚Ä‚¢‚é‚¾‚¯‚Åˆêu‚ÅØ‚è‘Ö‚í‚Á‚Ä‚µ‚Ü‚¤B
-                if ((checkPos == ShineGridPositions.back()) && !needNextShineArea)
-                {
-                    needNextShineArea = HasOtherShineAreaInGrid(checkPos, shineDirections, shineDirectionsIndex);
-                }
-
-                if (needNextShineArea)
-                {
-                    SHINE_AREA_CHECK_DATA setShineChangeData;
-                    setShineChangeData.ShineAreaIndex = shineDirectionsIndex;
-                    setShineChangeData.CheckGridPos = checkPos;
-                    mstMapObjectGridData[checkShinePos.y][checkShinePos.x].ShineChangeDatas.push_back(setShineChangeData);
-                    break;
-                }
             }
-
-            if (needNextShineArea)
-            {
-                ++shineDirectionsIndex;
-                continue;
-            }
-            nowCheckShinePos.pop();
         }
 
-        if (shineDirectionsIndex >= static_cast<int>(shineDirections.size()))
-        {
-#ifndef _DEBUG
-#endif
-        }
-
-        // Œõ‚ğÕ‚é•¨‚Ìˆ—
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Õ‚é•¨ï¿½Ìï¿½ï¿½ï¿½
         ShineBlockProcess(blockPoss, nextCheckShinePos, shineDirections);
 
-        // Ÿ’Tõ‚·‚éƒOƒŠƒbƒh‚Ì’†‚©‚çŒõ‚ª“Í‚¢‚Ä‚È‚¢ƒOƒŠƒbƒh‚ğ”»’è
+        // ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‚È‚ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ğ”»’ï¿½
         UpdateGridLightState(nextCheckShinePos, shineDirections);
 
-        // Œõ—Ìˆæ‚ğ‹L˜^
+        // ï¿½ï¿½ï¿½Ìˆï¿½ï¿½ï¿½Lï¿½^
         mstShineAreaResult.push_back(shineDirections);
     }
 
-    // ‰æ–Ê‚ÌŠpƒ|ƒWƒVƒ‡ƒ“
+    // ï¿½ï¿½Ê‚ÌŠpï¿½|ï¿½Wï¿½Vï¿½ï¿½ï¿½ï¿½
     const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX] =
     {
         Vector2(0.0f,       0.0f),
@@ -1148,7 +1101,7 @@ void ShineManager::CheckShineGrid()
         Vector2(MAP_SIZE_X, 0.0f), 
         Vector2(MAP_SIZE_X, MAP_SIZE_Y)
     };
-    // ŒõŒ¹‚©‚çŒ©‚Ä‰æ–Ê‚ÌŠpƒAƒ“ƒOƒ‹
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½çŒ©ï¿½Ä‰ï¿½Ê‚ÌŠpï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½
     float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX] =
     {
         GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]),
@@ -1165,13 +1118,13 @@ void ShineManager::CheckShineGrid()
 
         Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX];
 
-        // Œõˆæ¶‰E‚Ì•ûŒü‚ÆŒğ“_‚ğZo
+        // ï¿½ï¿½ï¿½æ¶ï¿½Eï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÆŒï¿½_ï¿½ï¿½ï¿½Zï¿½o
         if (!GetShineDirectionIntersection(shineDirectionsLeftAndRight, shineAnglesLeftAndRight, shineAngleNumbers, intersectionPositions, displayCornerAngles, displayCornerPosition))
         {
             continue;
         }
 
-        // Šp‚ğŠÜ‚ß‚é‚È‚çŠp‚à•`‰æ—pOŠp‚É’Ç‰Á
+        // ï¿½pï¿½ï¿½ï¿½Ü‚ß‚ï¿½È‚ï¿½pï¿½ï¿½ï¿½`ï¿½ï¿½pï¿½Oï¿½pï¿½É’Ç‰ï¿½
         AddDisplayCornerToDrawTriangle(intersectionPositions, shineAngleNumbers, displayCornerPosition);
     }
 
@@ -1183,22 +1136,22 @@ void ShineManager::CheckShineGrid()
 
 bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirection, float left, float right, float top, float bottom);
 
-// ƒOƒŠƒbƒh‚ªŒõ”ÍˆÍ“à‚©”»’è
+// ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ÍˆÍ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::vector<SHINE_DIRECTION>& shineDirections, int shineDirectionsIndex)
 {
-    // Œõ‚Ì•ûŒü
+    // ï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½
     SHINE_DIRECTION shineDirection = shineDirections[shineDirectionsIndex];
 
     Vector2 direction1 = shineDirection.shineDirectionLeft;
 
     Vector2 direction2 = shineDirection.shineDirectionRight;
 
-    // 2–{‚Ì•ûŒüƒxƒNƒgƒ‹‚ÌŠOÏ
+    // 2ï¿½{ï¿½Ì•ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ÌŠOï¿½ï¿½
     const float directionCross =
         direction1.x * direction2.y -
         direction1.y * direction2.x;
 
-    // ƒOƒŠƒbƒh‚Ìl‹÷‚ÌÀ•W
+    // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ìlï¿½ï¿½ï¿½Ìï¿½ï¿½W
     const float left =
         gridPos.x * ONE_GRID_SIZE_X;
 
@@ -1219,13 +1172,13 @@ SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::v
         Vector2(right, bottom)
     };
 
-    // l‹÷‚Ì‚¢‚¸‚ê‚©‚ªŒõ”ÍˆÍ“à‚©”»’è
+    // ï¿½lï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ê‚©ï¿½ï¿½ï¿½ï¿½ï¿½ÍˆÍ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (const Vector2& corner : gridCorners)
     {
-        // ŒõŒ¹‚©‚çƒOƒŠƒbƒh‚ÌŠp‚Ö‚Ì•ûŒü
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ÌŠpï¿½Ö‚Ì•ï¿½ï¿½ï¿½
         Vector2 toCorner = corner - mstShinePos;
 
-        // ŒõŒ¹‚ÆŠp‚ª“¯‚¶ˆÊ’u‚È‚çŒõ”ÍˆÍ“à
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ÆŠpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê’uï¿½È‚ï¿½ï¿½ï¿½ÍˆÍ“ï¿½
         if (toCorner.x == 0.0f &&
             toCorner.y == 0.0f)
         {
@@ -1236,35 +1189,35 @@ SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::v
             return SHINE_GRID_TYPE::SHINE_GRID;
         }
 
-        // 1–{–Ú‚Ì•ûŒü‚Æ‚ÌŠOÏ
+        // 1ï¿½{ï¿½Ú‚Ì•ï¿½ï¿½ï¿½ï¿½Æ‚ÌŠOï¿½ï¿½
         const float cross1 =
             direction1.x * toCorner.y -
             direction1.y * toCorner.x;
 
-        // 2–{–Ú‚Ì•ûŒü‚Æ‚ÌŠOÏ
+        // 2ï¿½{ï¿½Ú‚Ì•ï¿½ï¿½ï¿½ï¿½Æ‚ÌŠOï¿½ï¿½
         const float cross2 =
             direction2.x * toCorner.y -
             direction2.y * toCorner.x;
 
         bool isShineArea = false;
 
-        // 2–{‚Ì•ûŒüƒxƒNƒgƒ‹‚ÌŠÔ‚É‚ ‚é‚©”»’è
+        // 2ï¿½{ï¿½Ì•ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ÌŠÔ‚É‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½
         if (directionCross < 0.0f)
         {
-            // Œv‰ñ‚è
+            // ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½
             isShineArea =
                 cross1 <= 0.0f &&
                 cross2 >= 0.0f;
         }
         else
         {
-            // ”½Œv‰ñ‚è
+            // ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½
             isShineArea =
                 cross1 >= 0.0f &&
                 cross2 <= 0.0f;
         }
 
-        // Œõ”ÍˆÍ“à
+        // ï¿½ï¿½ï¿½ÍˆÍ“ï¿½
         if (isShineArea)
         {
             if (mstMapObjectGridData[gridPos.y][gridPos.x].LinePoss.size() > 0)
@@ -1285,14 +1238,14 @@ SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::v
         return SHINE_GRID_TYPE::SHINE_GRID;
     }
 
-    // Œõ”ÍˆÍŠO
+    // ï¿½ï¿½ï¿½ÍˆÍŠO
     return SHINE_GRID_TYPE::NOT_SHINE_GRID;
 }
 
-// ƒOƒŠƒbƒh“à‚ÉŒ»İ‚ÌŒõ—ÌˆæˆÈŠO‚ÌŒõ—Ìˆæ‚ª‚ ‚é‚©”»’è
+// ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½ÉŒï¿½ï¿½İ‚ÌŒï¿½ï¿½Ìˆï¿½ÈŠOï¿½ÌŒï¿½ï¿½Ìˆæ‚ªï¿½ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½
 bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std::vector<SHINE_DIRECTION>& shineDirections, int shineDirectionsIndex)
 {
-    // Œ»İ‚ÌŒõ—Ìˆæ‚ÌŸ‚©‚ç’²‚×‚é
+    // ï¿½ï¿½ï¿½İ‚ÌŒï¿½ï¿½Ìˆï¿½Ìï¿½ï¿½ï¿½ï¿½ç’²ï¿½×‚ï¿½
     for (int i = (shineDirectionsIndex + 1); i < static_cast<int>(shineDirections.size()); ++i)
     {
         const SHINE_DIRECTION& shineDirection =
@@ -1308,7 +1261,7 @@ bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std
             direction1.x * direction2.y -
             direction1.y * direction2.x;
 
-        // ƒOƒŠƒbƒh‚Ìl‹÷‚ÌÀ•W
+        // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ìlï¿½ï¿½ï¿½Ìï¿½ï¿½W
         const float left =
             gridPos.x * ONE_GRID_SIZE_X;
 
@@ -1329,12 +1282,12 @@ bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std
             Vector2(right, bottom)
         };
 
-        // l‹÷‚Ì‚¢‚¸‚ê‚©‚ªŒõ”ÍˆÍ“à‚©”»’è
+        // ï¿½lï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ê‚©ï¿½ï¿½ï¿½ï¿½ï¿½ÍˆÍ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         for (const Vector2& corner : gridCorners)
         {
             Vector2 toCorner = corner - mstShinePos;
 
-            // ŒõŒ¹‚ÆŠp‚ª“¯‚¶ˆÊ’u‚È‚çŒõ”ÍˆÍ“à
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ÆŠpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê’uï¿½È‚ï¿½ï¿½ï¿½ÍˆÍ“ï¿½
             if (toCorner.x == 0.0f &&
                 toCorner.y == 0.0f)
             {
@@ -1353,14 +1306,14 @@ bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std
 
             if (directionCross < 0.0f)
             {
-                // Œv‰ñ‚è
+                // ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½
                 isShineArea =
                     cross1 <= 0.0f &&
                     cross2 >= 0.0f;
             }
             else
             {
-                // ”½Œv‰ñ‚è
+                // ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½
                 isShineArea =
                     cross1 >= 0.0f &&
                     cross2 <= 0.0f;
@@ -1372,7 +1325,7 @@ bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std
             }
         }
 
-        // Œõ”ÍˆÍ‚Ì‹«ŠEü‚ªƒOƒŠƒbƒh‚ğ’Ê‰ß‚µ‚Ä‚¢‚é‚©”»’è
+        // ï¿½ï¿½ï¿½ÍˆÍ‚Ì‹ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½Ê‰ß‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½
         if (IsRayIntersectRect(mstShinePos, direction1, left, right, top, bottom) || IsRayIntersectRect(mstShinePos, direction2, left, right, top, bottom))
         {
             return true;
@@ -1384,10 +1337,10 @@ bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std
 
 bool IsAngleBetween(float targetAngle, float leftAngle, float rightAngle);
 
-// Œõ‚ğÕ‚é‚à‚Ì‚ğŠm”F‚µA‚»‚ê‚É‰‚¶‚½ˆ—‚ğs‚¤
+// ï¿½ï¿½ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½mï¿½Fï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
 void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std::queue<Vector2_Int>& nextCheckShinePos, std::vector<SHINE_DIRECTION>& shineDirections)
 {
-    // Õ‚Á‚Ä‚¢‚éêŠ‚ğ’T‚·
+    // ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½êŠï¿½ï¿½Tï¿½ï¿½
     while (!blockPoss.empty() && !shineDirections.empty())
     {
         BLOCK_POS_DATA blockPos = blockPoss.top();
@@ -1398,46 +1351,46 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
             continue;
         }
 
-        // TODO:_ ‚í‚´‚í‚´®—ñw‚¹‚È‚­‚Ä‚ào—ˆ‚»‚¤‚¾‚µ‚±‚ê‚¶‚á‚Ù‚Æ‚ñ‚Ç¡‚ª‚È‚©‚Á‚½‚©‚çÁ‚·‚©‚à
+        // TODO:_ ï¿½í‚´ï¿½í‚´ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚¶ï¿½ï¿½Ù‚Æ‚ï¿½Çï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         std::vector<LINE_POS> linePoss = mstMapObjectGridData[blockPos.BlockPos.y][blockPos.BlockPos.x].LinePoss;
         std::sort(linePoss.begin(), linePoss.end(),
                 [this](const LINE_POS& a, const LINE_POS& b)
                 {
-                    // --- 1. Œõ‚Ì¶’[ (leftAngle) ‚ğŠî€‚Æ‚µ‚½Œv‰ñ‚è‘Š‘ÎŠp“x‚ğŒvZ ---
+                    // --- 1. ï¿½ï¿½ï¿½Ìï¿½ï¿½[ (leftAngle) ï¿½ï¿½ï¿½î€ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½è‘Šï¿½ÎŠpï¿½xï¿½ï¿½ï¿½vï¿½Z ---
                     const float leftAngle = mpShineObject->GetShineDirection().leftAngle;
 
-                    // leftAngle ‚ğ 0 ‚Æ‚µ‚½Œv‰ñ‚è•ûŒü‚Ö‚Ì‘Š‘ÎŠp“x (0 ` 2ƒÎ) ‚ğZo‚·‚éƒwƒ‹ƒp[ŠÖ”
+                    // leftAngle ï¿½ï¿½ 0 ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö‚Ì‘ï¿½ï¿½ÎŠpï¿½x (0 ï¿½` 2ï¿½ï¿½) ï¿½ï¿½ï¿½Zï¿½oï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½pï¿½[ï¿½Öï¿½
                     auto GetClockwiseAngleFromLeft = [](float angle, float baseLeft) {
                         static constexpr float TWO_PI = 6.28318530717958647692f;
                         float diff = std::fmod(angle - baseLeft, TWO_PI);
                         if (diff < 0.0f) diff += TWO_PI;
-                        return diff; // 0¶’[A’l‚ª‘å‚«‚¢‚Ù‚Ç‰E‘¤
+                        return diff; // 0ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½Aï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½Ù‚Ç‰Eï¿½ï¿½
                     };
 
-                    // a ‚Ì 2 “_‚ÌƒAƒ“ƒOƒ‹ (ŒõŒ¹‚©‚ç‚Ì‘Š‘ÎŠp“x)
+                    // a ï¿½ï¿½ 2 ï¿½_ï¿½ÌƒAï¿½ï¿½ï¿½Oï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½ÎŠpï¿½x)
                     const float aAngle1 = GetClockwiseAngleFromLeft(
                         std::atan2f(a.linePos1.y - mstShinePos.y, a.linePos1.x - mstShinePos.x), leftAngle);
                     const float aAngle2 = GetClockwiseAngleFromLeft(
                         std::atan2f(a.linePos2.y - mstShinePos.y, a.linePos2.x - mstShinePos.x), leftAngle);
 
-                    // b ‚Ì 2 “_‚ÌƒAƒ“ƒOƒ‹ (ŒõŒ¹‚©‚ç‚Ì‘Š‘ÎŠp“x)
+                    // b ï¿½ï¿½ 2 ï¿½_ï¿½ÌƒAï¿½ï¿½ï¿½Oï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½ÎŠpï¿½x)
                     const float bAngle1 = GetClockwiseAngleFromLeft(
                         std::atan2f(b.linePos1.y - mstShinePos.y, b.linePos1.x - mstShinePos.x), leftAngle);
                     const float bAngle2 = GetClockwiseAngleFromLeft(
                         std::atan2f(b.linePos2.y - mstShinePos.y, b.linePos2.x - mstShinePos.x), leftAngle);
 
-                    // Šeü•ª‚Ì‰E’[ƒAƒ“ƒOƒ‹ (Šp“x‚ª‘å‚«‚¢‚Ù‚Ç‰E‘¤)
+                    // ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½Ì‰Eï¿½[ï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½ (ï¿½pï¿½xï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½Ù‚Ç‰Eï¿½ï¿½)
                     const float aMaxAngle = max(aAngle1, aAngle2);
                     const float bMaxAngle = max(bAngle1, bAngle2);
 
-                    // y—Dæ‡ˆÊ 1zÀ•W‚ğƒAƒ“ƒOƒ‹‰»‚µ‚Ä‰E‚É‚ ‚é‚à‚Ì‚ğ—Dæi•‚“®¬”“_”‚ÌŒë·‹zû—pƒCƒvƒVƒƒ“•t‚«j
+                    // ï¿½yï¿½Dï¿½æ‡ï¿½ï¿½ 1ï¿½zï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‰Eï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ï¿½Dï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ÌŒë·ï¿½zï¿½ï¿½ï¿½pï¿½Cï¿½vï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½j
                     constexpr float EPSILON_ANGLE = 0.0001f;
                     if (std::abs(aMaxAngle - bMaxAngle) > EPSILON_ANGLE)
                     {
-                        return aMaxAngle > bMaxAngle; // ‰E‚É‚ ‚é•ûiƒAƒ“ƒOƒ‹‚ª‘å‚«‚¢•ûj‚ğ‘O‚É”z’u
+                        return aMaxAngle > bMaxAngle; // ï¿½Eï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ï¿½Oï¿½É”zï¿½u
                     }
 
-                    // --- 2 & 3. ‹——£‚É‚æ‚é”äŠrˆ—iƒAƒ“ƒOƒ‹‚ª“¯‚¶ê‡‚Ì‚İÀsj ---
+                    // --- 2 & 3. ï¿½ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½rï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Ì‚İï¿½ï¿½sï¿½j ---
                     auto GetDistanceSquared = [this](const Vector2& pos)
                     {
                         const float x = pos.x - mstShinePos.x;
@@ -1450,7 +1403,7 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
                     const float bDistance1 = GetDistanceSquared(b.linePos1);
                     const float bDistance2 = GetDistanceSquared(b.linePos2);
 
-                    // y—Dæ‡ˆÊ 2zÀ•W‚ğŒ©‚ÄŒõ‚É‹ß‚¢’¸“_‚ª‚ ‚é•û
+                    // ï¿½yï¿½Dï¿½æ‡ï¿½ï¿½ 2ï¿½zï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ÄŒï¿½ï¿½É‹ß‚ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     const float aNear = min(aDistance1, aDistance2);
                     const float bNear = min(bDistance1, bDistance2);
 
@@ -1462,7 +1415,7 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
                         return aNearInt < bNearInt;
                     }
 
-                    // y—Dæ‡ˆÊ 3z‹ß‚¢•û‚ª“¯‚¶‚È‚çA‰“‚¢•û‚ğŒ©‚Ä‹ß‚¢•û
+                    // ï¿½yï¿½Dï¿½æ‡ï¿½ï¿½ 3ï¿½zï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‹ß‚ï¿½ï¿½ï¿½
                     const float aFar = max(aDistance1, aDistance2);
                     const float bFar = max(bDistance1, bDistance2);
 
@@ -1479,28 +1432,74 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
     }
 
     mstSettingDebugWallLineResult.clear();
-    for (int i = (shineDirections.size() - 1); i >= 0; --i)
+
+    auto remapGridShineAreaIndices = [this](int shineIndex, int newCount)
+    {
+        if (newCount == 1)
+        {
+            return;
+        }
+
+        for (int y = 0; y < MAP_ARRAY_SIZE_Y; ++y)
+        {
+            for (int x = 0; x < MAP_ARRAY_SIZE_X; ++x)
+            {
+                auto remapList = [shineIndex, newCount](std::vector<int>& indices)
+                {
+                    if (newCount <= 0)
+                    {
+                        std::vector<int> remapped;
+                        remapped.reserve(indices.size());
+                        for (int index : indices)
+                        {
+                            if (index == shineIndex)
+                            {
+                                continue;
+                            }
+                            remapped.push_back(index > shineIndex ? index - 1 : index);
+                        }
+                        indices.swap(remapped);
+                        return;
+                    }
+
+                    const int delta = newCount - 1;
+                    for (int& index : indices)
+                    {
+                        if (index > shineIndex)
+                        {
+                            index += delta;
+                        }
+                    }
+                };
+
+                remapList(mstMapObjectGridData[y][x].ConfiguredShineAreaIndex);
+                remapList(mstMapObjectGridData[y][x].ShineAreaIndex);
+            }
+        }
+    };
+
+    for (int i = static_cast<int>(shineDirections.size()) - 1; i >= 0; --i)
     {
         std::vector<SHINE_DIRECTION> newShineDirections = ProcessShineAreaEndPointCandidates(i, shineDirections[i]);
-        
-        // Œõ‚Ì—Ìˆæ”‚ª•ÏX–³‚¢‚È‚ç‰½‚à‚µ‚È‚¢
+
         if (newShineDirections.size() != 1)
         {
             shineDirections.erase(shineDirections.begin() + i);
             shineDirections.insert(shineDirections.begin() + i, newShineDirections.begin(), newShineDirections.end());
+            remapGridShineAreaIndices(i, static_cast<int>(newShineDirections.size()));
         }
-        // ƒTƒCƒY‚ªŒ³‚Æ•Ï‚í‚ç‚È‚¢‚È‚ç“ü‚ê‘Ö‚¦‚é‚¾‚¯‚È‚ç
         else
         {
             shineDirections[i] = newShineDirections[0];
         }
     }
+
     mstLightAreaEndPoint.clear();
 
     mstDebugWallLinePointDrawData.push_back(mstSettingDebugWallLineResult);
 }
 
-// leftAngleiŒõ‚Ì¶’[j‚ğŠî€u0.0v‚Æ‚µ‚½Œv‰ñ‚è•ûŒü‚Ö‚Ì‘Š‘ÎŠp“xi0 ` 2ƒÎj‚ğZo‚·‚é
+// leftAngleï¿½iï¿½ï¿½ï¿½Ìï¿½ï¿½[ï¿½jï¿½ï¿½ï¿½î€ï¿½u0.0ï¿½vï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö‚Ì‘ï¿½ï¿½ÎŠpï¿½xï¿½i0 ï¿½` 2ï¿½Îjï¿½ï¿½ï¿½Zï¿½oï¿½ï¿½ï¿½ï¿½
 static float GetClockwiseAngleFromLeft(float angle, float baseLeft)
 {
     float diff = std::fmod(angle - baseLeft, DX_TWO_PI_F);
@@ -1523,21 +1522,21 @@ static float GetSignedAngleFromLeft(float angle, float baseLeft)
     return diff;
 }
 
-// Œõˆæ‚ÌI’[Œó•â‚ğ“o˜^‚·‚é
+// ï¿½ï¿½ï¿½ï¿½ÌIï¿½[ï¿½ï¿½ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½
 void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, const BLOCK_POS_DATA& blockPos, std::vector<SHINE_DIRECTION>& shineDirections)
 {
-    // Œ»İˆ—‚µ‚Ä‚¢‚éŒõˆæ‚É‘Î‰‚·‚éŒõ•ûŒü‚ğæ“¾
+    // ï¿½ï¿½ï¿½İï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
     const SHINE_DIRECTION& currentShineDir =
         shineDirections[blockPos.ArrayIndex];
 
-    // áŠQ•¨‚Ì¶’[E‰E’[‚©‚çŒõŒ¹‚Ö‚ÌŠp“x‚ğ‹‚ß‚é
+    // ï¿½ï¿½Qï¿½ï¿½ï¿½Ìï¿½ï¿½[ï¿½Eï¿½Eï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö‚ÌŠpï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     const float blockLeftAngle =
         GetAngleToPoint(mstShinePos, blockLinePos.linePos1);
 
     const float blockRightAngle =
         GetAngleToPoint(mstShinePos, blockLinePos.linePos2);
 
-    // Œõˆæ‚Ì¶’[‚ğŠî€‚Æ‚µ‚½‘Š‘ÎŠp“x‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½[ï¿½ï¿½ï¿½î€ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎŠpï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     const float blockLeftRel =
         GetSignedAngleFromLeft(
             blockLeftAngle,
@@ -1548,13 +1547,13 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
             blockRightAngle,
             currentShineDir.leftAngle);
 
-    // Œ»İ‚ÌŒõˆæ‚ÌŠp“x•
+    // ï¿½ï¿½ï¿½İ‚ÌŒï¿½ï¿½ï¿½ÌŠpï¿½xï¿½ï¿½
     const float totalShineWidth =
         GetSignedAngleFromLeft(
             currentShineDir.rightAngle,
             currentShineDir.leftAngle);
 
-    // Š®‘S‚ÉŒõˆæ‚ÌŠO‘¤
+    // ï¿½ï¿½ï¿½Sï¿½ÉŒï¿½ï¿½ï¿½ÌŠOï¿½ï¿½
     const bool isOutsideLeft =
         blockLeftRel < 0.0f &&
         blockRightRel < 0.0f;
@@ -1568,22 +1567,22 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
         return;
     }
 
-    // áŠQ•¨‚ªŒõˆæ‚Ì¶’[‚ğÕ‚Á‚Ä‚¢‚é‚©”»’è
+    // ï¿½ï¿½Qï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½[ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½
     const bool crossesLeftEdge =
     (blockLeftRel < 0.0f && blockRightRel >= 0.0f) ||
     (blockRightRel < 0.0f && blockLeftRel >= 0.0f);
 
-    // áŠQ•¨‚ªŒõˆæ‚Ì‰E’[‚ğÕ‚Á‚Ä‚¢‚é‚©”»’è
+    // ï¿½ï¿½Qï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‰Eï¿½[ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½
     const bool crossesRightEdge =
     (blockLeftRel < totalShineWidth && blockRightRel >= totalShineWidth) ||
     (blockRightRel < totalShineWidth && blockLeftRel >= totalShineWidth);
 
-    // Œõˆæ‚Ì¶‰E’[‚ğÕ‚Á‚Ä‚¢‚éê‡
+    // ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Eï¿½[ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡
     if (crossesLeftEdge || crossesRightEdge)
     {
         const float RAY_LENGTH = 10000.0f;
      
-        // Œõˆæ‚Ì¶’[‚ğÕ‚Á‚Ä‚¢‚éê‡
+        // ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½[ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡
         if (crossesLeftEdge)
         {
             const Vector2 leftRayEnd =
@@ -1604,7 +1603,7 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
                     blockLinePos.linePos2,
                     intersection))
             {
-                // ¶’[‚æ‚èŠO‘¤‚É‚ ‚é•û‚ğŒğ“_‚Ö’u‚«Š·‚¦‚é
+                // ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½Ö’uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (blockLeftRel < 0.0f)
                 {
                     blockLinePos.linePos1 = intersection;
@@ -1615,7 +1614,7 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
                 }
             }
         }
-        // Œõˆæ‚Ì‰E’[‚ğÕ‚Á‚Ä‚¢‚éê‡
+        // ï¿½ï¿½ï¿½ï¿½Ì‰Eï¿½[ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡
        if (crossesRightEdge)
         {
             const Vector2 rightRayEnd =
@@ -1635,7 +1634,7 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
                     blockLinePos.linePos2,
                     intersection))
             {
-                // ‰E’[‚æ‚èŠO‘¤‚É‚ ‚é•û‚ğŒğ“_‚Ö’u‚«Š·‚¦‚é
+                // ï¿½Eï¿½[ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½Ö’uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (blockLeftRel > totalShineWidth)
                 {
                     blockLinePos.linePos1 = intersection;
@@ -1647,31 +1646,31 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
             }
         }
 
-        // Œõˆæ‚ğ‚»‚Ìê‚Å‚Í•ÏX‚¹‚¸A
-        // Œğ“_‚É‚æ‚Á‚Ä’²®‚µ‚½áŠQ•¨‚ğ
-        // Œõˆæ‚ÌI’[Œó•â‚Æ‚µ‚Ä“o˜^‚·‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½Å‚Í•ÏXï¿½ï¿½ï¿½ï¿½ï¿½A
+        // ï¿½ï¿½_ï¿½É‚ï¿½ï¿½ï¿½Ä’ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Qï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ÌIï¿½[ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Ä“oï¿½^ï¿½ï¿½ï¿½ï¿½
         mstLightAreaEndPoint.push_back(SHINE_AREA_END_POSITION(blockLinePos, blockPos.ArrayIndex));
     }
-    // ¶‰E‚Ç‚¿‚ç‚Ì’[‚àÕ‚Á‚Ä‚¢‚È‚¢ê‡
+    // ï¿½ï¿½ï¿½Eï¿½Ç‚ï¿½ï¿½ï¿½Ì’[ï¿½ï¿½ï¿½Õ‚ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡
     else
     {
-        // Œõˆæ‚Ì“à•”‚ÅáŠQ•¨‚ÉÕ‚ç‚ê‚Ä‚¢‚éó‘ÔB
-        // Œã‚ÅŒõˆæ‚ÌI’[‚ğŒˆ’è‚·‚é‚½‚ß‚ÌŒó•â‚Æ‚µ‚Ä“o˜^‚·‚éB
+        // ï¿½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½Åï¿½Qï¿½ï¿½ï¿½ÉÕ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ÔB
+        // ï¿½ï¿½ÅŒï¿½ï¿½ï¿½ÌIï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½é‚½ï¿½ß‚ÌŒï¿½ï¿½Æ‚ï¿½ï¿½Ä“oï¿½^ï¿½ï¿½ï¿½ï¿½B
         mstLightAreaEndPoint.push_back(SHINE_AREA_END_POSITION(blockLinePos, blockPos.ArrayIndex));
     }
 }
 
-// “o˜^‚³‚ê‚½ŒõˆæI’[Œó•â‚ğg—p‚µ‚ÄAŒõˆæ‚ğí‚èAí‚Á‚½•”•ª‚ğ•`‰æ—pOŠpŒ`‚É“o˜^‚·‚é
+// ï¿½oï¿½^ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½ï¿½Iï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½ÄAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½pï¿½Oï¿½pï¿½`ï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½
 std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(int shineIndex, const SHINE_DIRECTION& shineDirections)
 {
-    // Œ»İ‚ÌŒõ—Ìˆæ
+    // ï¿½ï¿½ï¿½İ‚ÌŒï¿½ï¿½Ìˆï¿½
     std::vector<SHINE_DIRECTION> newShineDirections;
     newShineDirections.push_back(shineDirections);
 
-    // í‚Á‚½•”•ª‚ÌOŠpŒ`Œó•â
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌOï¿½pï¿½`ï¿½ï¿½ï¿½
     std::vector<SHINE_TRIANGLE> savedTriangle;
 
-    // ‘ÎÛ‚Æ‚È‚éI’[Œó•â‚ğˆ—
+    // ï¿½ÎÛ‚Æ‚È‚ï¿½Iï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (int lightIterator = (mstLightAreaEndPoint.size() - 1); lightIterator >= 0; --lightIterator)
     {
         const SHINE_AREA_END_POSITION endPoint = mstLightAreaEndPoint[lightIterator];
@@ -1679,12 +1678,12 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
         {
             continue;
         }
-        // ˆ—‚·‚éI’[Œó•â‚ğíœ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½íœ
         mstLightAreaEndPoint.erase(mstLightAreaEndPoint.begin() + lightIterator);
 
         mstSettingDebugWallLineResult.push_back(endPoint);
         
-        // OŠp‚É“o˜^
+        // ï¿½Oï¿½pï¿½É“oï¿½^
         {
             SHINE_TRIANGLE triangle;
 
@@ -1706,14 +1705,14 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
             savedTriangle.push_back(triangle);
         }
 
-        /*‡@ ü•ª‚Ì—¼’[‚ğŒõŒ¹‚©‚çŒ©‚½Šp“x‚É•ÏŠ·*/
+        /*ï¿½@ ï¿½ï¿½ï¿½ï¿½ï¿½Ì—ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½çŒ©ï¿½ï¿½ï¿½pï¿½xï¿½É•ÏŠï¿½*/
         const float lineAngle1 =
             GetAngleToPoint(mstShinePos, endPoint.linePos1);
 
         const float lineAngle2 =
             GetAngleToPoint(mstShinePos, endPoint.linePos2);
 
-        /*‡A Œ»İ‚ÌŒõ—Ìˆæ‚É‘Î‚µ‚ÄA‚±‚Ìü•ª‚ªÕ‚éŠp“x”ÍˆÍ‚ğ‹‚ß‚é*/
+        /*ï¿½A ï¿½ï¿½ï¿½İ‚ÌŒï¿½ï¿½Ìˆï¿½É‘Î‚ï¿½ï¿½ÄAï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ‚ï¿½pï¿½xï¿½ÍˆÍ‚ï¿½ï¿½ï¿½ï¿½ß‚ï¿½*/
         const float lineRelativeAngle1 =
             GetSignedAngleFromLeft(
                 lineAngle1,
@@ -1730,7 +1729,7 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
         const float blockRightAngle =
             max(lineRelativeAngle1, lineRelativeAngle2);
 
-        /*‡B Õ‚ç‚ê‚é•”•ª‚ğnewShineDirections ‚©‚çíœE•ªŠ„*/
+        /*ï¿½B ï¿½Õ‚ï¿½ï¿½é•”ï¿½ï¿½ï¿½ï¿½newShineDirections ï¿½ï¿½ï¿½ï¿½íœï¿½Eï¿½ï¿½ï¿½ï¿½*/
         std::vector<SHINE_DIRECTION> splitShineDirections;
 
         for (const SHINE_DIRECTION& currentShineDirection : newShineDirections)
@@ -1745,21 +1744,21 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
                     currentShineDirection.rightAngle,
                     shineDirections.leftAngle);
 
-            // Œ»İ‚ÌŒõ—Ìˆæ‚ÆÕ•Á”ÍˆÍ‚Ìd‚È‚è
+            // ï¿½ï¿½ï¿½İ‚ÌŒï¿½ï¿½Ìˆï¿½ÆÕ•ï¿½ï¿½ÍˆÍ‚Ìdï¿½È‚ï¿½
             const float overlapLeft =
                 max(currentLeftAngle, blockLeftAngle);
 
             const float overlapRight =
                 min(currentRightAngle, blockRightAngle);
 
-            // d‚È‚Á‚Ä‚¢‚È‚¢
+            // ï¿½dï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½
             if (overlapRight <= overlapLeft)
             {
                 splitShineDirections.push_back(currentShineDirection);
                 continue;
             }
 
-            // ¶‘¤‚Éc‚éŒõ—Ìˆæ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Écï¿½ï¿½ï¿½ï¿½Ìˆï¿½
             if (currentLeftAngle < overlapLeft)
             {
                 SHINE_DIRECTION leftShineDirection = currentShineDirection;
@@ -1793,7 +1792,7 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
                 splitShineDirections.push_back(leftShineDirection);
             }
 
-            // ‰E‘¤‚Éc‚éŒõ—Ìˆæ
+            // ï¿½Eï¿½ï¿½ï¿½Écï¿½ï¿½ï¿½ï¿½Ìˆï¿½
             if (overlapRight < currentRightAngle)
             {
                 SHINE_DIRECTION rightShineDirection = currentShineDirection;
@@ -1831,11 +1830,11 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
         newShineDirections = splitShineDirections;
     }
 
-    // OŠp‚ğí‚é
+    // ï¿½Oï¿½pï¿½ï¿½ï¿½ï¿½ï¿½
     {
     }
 
-    // OŠp“o˜^
+    // ï¿½Oï¿½pï¿½oï¿½^
     for (int i = 0; i < savedTriangle.size(); ++i)
     {
         //AddDrawTriangleData(savedTriangle[i]);
@@ -1844,7 +1843,7 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
     return newShineDirections;
 }
 
-// ƒ}ƒbƒvŠO”»’è
+// ï¿½}ï¿½bï¿½vï¿½Oï¿½ï¿½ï¿½ï¿½
 bool ShineManager::IsOutsideShineStage(const Vector2_Int& gridPos)
 {
     if (gridPos.x < 0 || gridPos.x >= MAP_ARRAY_SIZE_X ||
@@ -1857,7 +1856,7 @@ bool ShineManager::IsOutsideShineStage(const Vector2_Int& gridPos)
 }
 
 
-// Šp“x targetAngle ‚ª leftAngle ‚©‚ç rightAngle ‚Ì”ÍˆÍ‚ÉŠÜ‚Ü‚ê‚é‚©”»’è‚·‚éŠÖ”
+// ï¿½pï¿½x targetAngle ï¿½ï¿½ leftAngle ï¿½ï¿½ï¿½ï¿½ rightAngle ï¿½Ì”ÍˆÍ‚ÉŠÜ‚Ü‚ï¿½é‚©ï¿½ï¿½ï¿½è‚·ï¿½ï¿½Öï¿½
 static bool IsAngleBetween(float targetAngle, float leftAngle, float rightAngle)
 {
     static constexpr float TWO_PI = 6.28318530717958647692f;
@@ -1878,7 +1877,7 @@ static bool IsAngleBetween(float targetAngle, float leftAngle, float rightAngle)
     }
     else
     {
-        // 0 / 2ƒÎ ‚Ì‹«ŠE‚ğŒ×‚®ê‡
+        // 0 / 2ï¿½ï¿½ ï¿½Ì‹ï¿½ï¿½Eï¿½ï¿½ï¿½×‚ï¿½ï¿½ê‡
         return target >= left || target <= right;
     }
 }
@@ -1889,7 +1888,7 @@ static bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirec
     float tMin = 0.0f;
     float tMax = FLT_MAX;
 
-    // X•ûŒü
+    // Xï¿½ï¿½ï¿½ï¿½
     if (rayDirection.x == 0.0f)
     {
         if (rayOrigin.x < left || rayOrigin.x > right)
@@ -1910,7 +1909,7 @@ static bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirec
             return false;
     }
 
-    // Y•ûŒü
+    // Yï¿½ï¿½ï¿½ï¿½
     if (rayDirection.y == 0.0f)
     {
         if (rayOrigin.y < top || rayOrigin.y > bottom)
@@ -1934,7 +1933,7 @@ static bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirec
     return tMax >= 0.0f;
 }
 
-// w’è‚µ‚½ƒOƒŠƒbƒh‚ÉŒõ‚ª’Ê‚Á‚Ä‚¢‚é‚©”»’è
+// ï¿½wï¿½è‚µï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ÉŒï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½
 bool ShineManager::IsGridInsideShine(const Vector2_Int& gridPos, const SHINE_DIRECTION& shineDirection)
 {
     const Vector2 shinePos = mpShineObject->GetPosition();
@@ -1945,12 +1944,12 @@ bool ShineManager::IsGridInsideShine(const Vector2_Int& gridPos, const SHINE_DIR
     const Vector2 rightDirection =
         shineDirection.shineDirectionRight;
 
-    // ¶‰E‚ÌÆË•ûŒü‚ÌŠOÏ
+    // ï¿½ï¿½ï¿½Eï¿½ÌÆË•ï¿½ï¿½ï¿½ï¿½ÌŠOï¿½ï¿½
     const float directionCross =
         leftDirection.x * rightDirection.y -
         leftDirection.y * rightDirection.x;
 
-    // ƒOƒŠƒbƒh‚Ìl•Ó‚ÌÀ•W‚ğZo
+    // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ìlï¿½Ó‚Ìï¿½ï¿½Wï¿½ï¿½ï¿½Zï¿½o
     const float left =
         static_cast<float>(gridPos.x * ONE_GRID_SIZE_X);
 
@@ -1963,7 +1962,7 @@ bool ShineManager::IsGridInsideShine(const Vector2_Int& gridPos, const SHINE_DIR
     const float bottom =
         top + static_cast<float>(ONE_GRID_SIZE_Y);
 
-    // ƒOƒŠƒbƒh‚Ìl‹÷‚ÌÀ•W
+    // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ìlï¿½ï¿½ï¿½Ìï¿½ï¿½W
     const Vector2 corners[4] =
     {
         { left,  top },
@@ -2014,26 +2013,26 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
 {
     std::vector<Vector2_Int> shineGridPositions;
 
-    // Œ»İƒOƒŠƒbƒh©g‚ÉA‚±‚Ì•ûŒü‚ÌŒõ‚ª’Ê‚Á‚Ä‚¢‚é‚©Šm”F
+    // ï¿½ï¿½ï¿½İƒOï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½gï¿½ÉAï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÌŒï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½mï¿½F
     if (!IsGridInsideShine(nowCheckShinePos, shineDirection))
     {
         return {};
     }
 
-    // ŒõŒ¹‚Ìƒ[ƒ‹ƒhˆÊ’u‚¨‚æ‚ÑÆË•ûŒüi¶‰E‚ÌŒÀŠEŠp“xj‚ğæ“¾
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½Ê’uï¿½ï¿½ï¿½ï¿½ÑÆË•ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½Eï¿½ÌŒï¿½ï¿½Eï¿½pï¿½xï¿½jï¿½ï¿½ï¿½æ“¾
     const Vector2 shinePos = mpShineObject->GetPosition();
     const SHINE_DIRECTION shineDir = shineDirection;
 
-    // ¶‰E‚ÌÆË•ûŒü
+    // ï¿½ï¿½ï¿½Eï¿½ÌÆË•ï¿½ï¿½ï¿½
     const Vector2 leftDirection = shineDir.shineDirectionLeft;
     const Vector2 rightDirection = shineDir.shineDirectionRight;
 
-    // ¶‰E‚Ì•ûŒü‚ÌŠOÏ
+    // ï¿½ï¿½ï¿½Eï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÌŠOï¿½ï¿½
     const float directionCross =
         leftDirection.x * rightDirection.y -
         leftDirection.y * rightDirection.x;
 
-    // üˆÍ8•ûŒü‚Ì—×ÚƒOƒŠƒbƒh‚ğ’²‚×‚é
+    // ï¿½ï¿½ï¿½ï¿½8ï¿½ï¿½ï¿½ï¿½ï¿½Ì—×ÚƒOï¿½ï¿½ï¿½bï¿½hï¿½ğ’²‚×‚ï¿½
     for (int y = -1; y <= 1; ++y)
     {
         for (int x = -1; x <= 1; ++x)
@@ -2049,7 +2048,7 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
                 nowCheckShinePos.y + y
             };
 
-            // ƒOƒŠƒbƒh‚ÉŒõ‚ª’Ê‚Á‚Ä‚¢‚éê‡‚Í‘ÎÛ
+            // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ÉŒï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½Í‘Îï¿½
             if (IsGridInsideShine(nextPos, shineDirection))
             {
                 shineGridPositions.push_back(nextPos);
@@ -2057,13 +2056,13 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
         }
     }
 
-       // --- ƒ\[ƒgˆ—iŒõ‚Ìu¶’[v‚ğŠî€‚É‚µ‚ÄA¶‚©‚ç‰E‚Ö³‚µ‚­®—ñ‚³‚¹‚éj ---
+       // --- ï¿½\ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½Ìuï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½î€ï¿½É‚ï¿½ï¿½ÄAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Eï¿½Öï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ñ‚³‚ï¿½ï¿½ï¿½j ---
     std::sort(
             shineGridPositions.begin(),
             shineGridPositions.end(),
             [&](const Vector2_Int& lhs, const Vector2_Int& rhs)
         {
-            // ŠeƒOƒŠƒbƒh‚Ì’†SÀ•W
+            // ï¿½eï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ì’ï¿½ï¿½Sï¿½ï¿½ï¿½W
             const Vector2 lhsCenter = {
                 lhs.x * ONE_GRID_SIZE_X + ONE_GRID_SIZE_X * 0.5f,
                 lhs.y * ONE_GRID_SIZE_Y + ONE_GRID_SIZE_Y * 0.5f
@@ -2073,15 +2072,15 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
                 rhs.y * ONE_GRID_SIZE_Y + ONE_GRID_SIZE_Y * 0.5f
             };
 
-            // ŒõŒ¹‚©‚çƒOƒŠƒbƒh’†S‚Ö‚Ìâ‘ÎŠp“x (ƒ‰ƒWƒAƒ“: -ƒÎ ` +ƒÎ)
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½Sï¿½Ö‚Ìï¿½ÎŠpï¿½x (ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½: -ï¿½ï¿½ ï¿½` +ï¿½ï¿½)
             const float lhsAngle = std::atan2f(lhsCenter.y - shinePos.y, lhsCenter.x - shinePos.x);
             const float rhsAngle = std::atan2f(rhsCenter.y - shinePos.y, rhsCenter.x - shinePos.x);
 
-            // Œõ‚Ì¶’[‚Ì•ûŒü (ƒ‰ƒWƒAƒ“)
-            const float leftAngle = shineDir.leftAngle; // ¦¶’[Šp“x‚ğæ“¾
+            // ï¿½ï¿½ï¿½Ìï¿½ï¿½[ï¿½Ì•ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½)
+            const float leftAngle = shineDir.leftAngle; // ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½pï¿½xï¿½ï¿½ï¿½æ“¾
 
-            // ¶’[Šp“x (leftAngle) ‚©‚ç‚Ì‘Š‘ÎŠp“x‚ğ [-ƒÎ, +ƒÎ] ‚Ì”ÍˆÍ‚ÅZo‚·‚éŠÖ”
-            // (¶’[‚æ‚è‚í‚¸‚©‚É¶‚É‚ ‚éƒOƒŠƒbƒh‚ª 2ƒÎ ‹ß‚­‚É”ò‚ñ‚Å––”ö‚É‰ñ‚é‚Ì‚ğ–h‚®)
+            // ï¿½ï¿½ï¿½[ï¿½pï¿½x (leftAngle) ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½ÎŠpï¿½xï¿½ï¿½ [-ï¿½ï¿½, +ï¿½ï¿½] ï¿½Ì”ÍˆÍ‚ÅZï¿½oï¿½ï¿½ï¿½ï¿½Öï¿½
+            // (ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½í‚¸ï¿½ï¿½ï¿½Éï¿½ï¿½É‚ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ 2ï¿½ï¿½ ï¿½ß‚ï¿½ï¿½É”ï¿½ï¿½Å–ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½Ì‚ï¿½hï¿½ï¿½)
             auto GetSignedAngleFromLeft = [](float angle, float baseLeft) {
                 static constexpr float TWO_PI = 6.28318530717958647692f;
                 static constexpr float PI     = 3.14159265358979323846f;
@@ -2089,20 +2088,20 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
                 float diff = std::fmod(angle - baseLeft, TWO_PI);
                 if (diff > PI)  diff -= TWO_PI;
                 if (diff < -PI) diff += TWO_PI;
-                return diff; // •‰‚Ì’l¶’[‚æ‚è‚³‚ç‚É¶A0¶’[‚Ò‚Á‚½‚èA³‚Ì’l‰E•ûŒü
+                return diff; // ï¿½ï¿½ï¿½Ì’lï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½è‚³ï¿½ï¿½Éï¿½ï¿½A0ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½Ò‚ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Ì’lï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½
             };
 
             const float lhsDiff = GetSignedAngleFromLeft(lhsAngle, leftAngle);
             const float rhsDiff = GetSignedAngleFromLeft(rhsAngle, leftAngle);
 
-            // ¶‘¤i’l‚ª¬‚³‚¢‚à‚Ìj‚©‚ç‰E‘¤i’l‚ª‘å‚«‚¢‚à‚Ìj‚Ö¸‡ƒ\[ƒg
+            // ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìjï¿½ï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½iï¿½lï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ï¿½ï¿½Ìjï¿½Öï¿½ï¿½ï¿½ï¿½\ï¿½[ï¿½g
             return lhsDiff < rhsDiff;
         });
 
     return shineGridPositions;
 }
 
-// •`‰æOŠp’Ç‰Á
+// ï¿½`ï¿½ï¿½Oï¿½pï¿½Ç‰ï¿½
 void ShineManager::AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2)
 {
     SHINE_TRIANGLE shineTriangle;
@@ -2129,7 +2128,7 @@ void ShineManager::AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2)
 }
 
 
-// áŠQ•¨‚Æ‚ÌŒğ“_‚ğæ“¾
+// ï¿½ï¿½Qï¿½ï¿½ï¿½Æ‚ÌŒï¿½_ï¿½ï¿½ï¿½æ“¾
 void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const Vector2& edgePos2, const SHINE_DIRECTION& shineDirection, const Vector2_Int& blockPos, Vector2& intersection1, Vector2& intersection2)
 {
     const Vector2 edge = edgePos2 - edgePos1;
@@ -2142,7 +2141,7 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
         return;
     }
 
-    // Œõ•ûŒü1‚Æ‚ÌŒğ“_
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½Æ‚ÌŒï¿½_
     const float cross1 =
         shineDirection.shineDirectionLeft.x * edge.y -
         shineDirection.shineDirectionLeft.y * edge.x;
@@ -2160,7 +2159,7 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
             mstShinePos +
             shineDirection.shineDirectionLeft * t;
 
-        // Œõ‚Ì‘O•û‚É‚ ‚éŒğ“_‚¾‚¯‚ğ‘ÎÛ‚É‚·‚é
+        // ï¿½ï¿½ï¿½Ì‘Oï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚É‚ï¿½ï¿½ï¿½
         if (t >= 0.0f)
         {
             const Vector2 candidate =
@@ -2170,13 +2169,13 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
             const Vector2 toCandidate =
                 candidate - edgePos1;
 
-            // edgePos1 ` edgePos2 ‚Ì‚Ç‚±‚É‚ ‚é‚©
+            // edgePos1 ï¿½` edgePos2 ï¿½Ì‚Ç‚ï¿½ï¿½É‚ï¿½ï¿½é‚©
             const float u =
                 (toCandidate.x * edge.x +
                  toCandidate.y * edge.y) /
                 edgeLengthSquared;
 
-            // “n‚³‚ê‚½‰‚Ì“à‘¤‚É‚ ‚éê‡‚¾‚¯Ì—p
+            // ï¿½nï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ê‡ï¿½ï¿½ï¿½ï¿½ï¿½Ì—p
             if (u >= 0.0f && u <= 1.0f)
             {
                 intersection1 = candidate;
@@ -2184,7 +2183,7 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
         }
     }
 
-    // Œõ•ûŒü2‚Æ‚ÌŒğ“_
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½Æ‚ÌŒï¿½_
     const float cross2 =
         shineDirection.shineDirectionRight.x * edge.y -
         shineDirection.shineDirectionRight.y * edge.x;
@@ -2202,7 +2201,7 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
             mstShinePos +
             shineDirection.shineDirectionRight * t;
  
-        // Œõ‚Ì‘O•û‚É‚ ‚éŒğ“_‚¾‚¯‚ğ‘ÎÛ‚É‚·‚é
+        // ï¿½ï¿½ï¿½Ì‘Oï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚É‚ï¿½ï¿½ï¿½
         if (t >= 0.0f)
         {
             const Vector2 candidate =
@@ -2212,13 +2211,13 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
             const Vector2 toCandidate =
                 candidate - edgePos1;
 
-            // edgePos1 ` edgePos2 ‚Ì‚Ç‚±‚É‚ ‚é‚©
+            // edgePos1 ï¿½` edgePos2 ï¿½Ì‚Ç‚ï¿½ï¿½É‚ï¿½ï¿½é‚©
             const float u =
                 (toCandidate.x * edge.x +
                  toCandidate.y * edge.y) /
                 edgeLengthSquared;
 
-            // “n‚³‚ê‚½‰‚Ì“à‘¤‚É‚ ‚éê‡‚¾‚¯Ì—p
+            // ï¿½nï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ê‡ï¿½ï¿½ï¿½ï¿½ï¿½Ì—p
             if (u >= 0.0f && u <= 1.0f)
             {
                 intersection2 = candidate;
@@ -2227,13 +2226,13 @@ void ShineManager::GetShineBlockingIntersection(const Vector2& edgePos1, const V
     }
 
     {
-        // ƒOƒŠƒbƒh“à‚É•â³
+        // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½É•â³
         intersection1 = AdjustPositionToGrid(blockPos, intersection1);
         intersection2 = AdjustPositionToGrid(blockPos, intersection2);
     }
 }
 
-// ƒOƒŠƒbƒh‚ÌŒõó‘Ô‚ğXV
+// ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ÌŒï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Xï¿½V
 void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections)
 {
     std::queue<Vector2_Int> checkGridPoss = nextCheckShinePos;
@@ -2255,7 +2254,7 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
             }
         }
 
-        // Œõ—ÌˆæŠO‚É‚È‚Á‚½ê‡‚Íƒtƒ‰ƒO‚ğ‰ğœ
+        // ï¿½ï¿½ï¿½Ìˆï¿½Oï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Íƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (!isStillLit)
         {
             if (mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
@@ -2271,7 +2270,7 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
 
     nextCheckShinePos.swap(nextGridPoss);
 
-    //     // ƒOƒŠƒbƒh‚Ì‹éŒ`À•W
+    //     // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ì‹ï¿½`ï¿½ï¿½ï¿½W
     //     const float gridLeft =
     //         static_cast<float>(checkPos.x * ONE_GRID_SIZE_X);
 
@@ -2298,7 +2297,7 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
     //     {
     //         /*
     //          * ---------------------------------------------------------
-    //          * 1. ƒOƒŠƒbƒh‚Ìl‹÷‚ªŒõ”ÍˆÍ“à‚É‚ ‚é‚©
+    //          * 1. ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ìlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍˆÍ“ï¿½ï¿½É‚ï¿½ï¿½é‚©
     //          * ---------------------------------------------------------
     //          */
     //         for (const Vector2& corner : corners)
@@ -2323,7 +2322,7 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
 
     //         /*
     //          * ---------------------------------------------------------
-    //          * 2. Œõ”ÍˆÍ‚Ì‹«ŠEü‚ªƒOƒŠƒbƒh‚ğ’Ê‰ß‚µ‚Ä‚¢‚é‚©
+    //          * 2. ï¿½ï¿½ï¿½ÍˆÍ‚Ì‹ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½Ê‰ß‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
     //          * ---------------------------------------------------------
     //          */
     //         const Vector2 leftDirection =
@@ -2338,14 +2337,14 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
     //             std::sin(shineDir.rightAngle)
     //         };
 
-    //         // ¶‹«ŠE
+    //         // ï¿½ï¿½ï¿½ï¿½ï¿½E
     //         if (IsRayIntersectRect(mstShinePos, leftDirection, gridLeft, gridRight, gridTop, gridBottom))
     //         {
     //             isStillLit = true;
     //             break;
     //         }
 
-    //         // ‰E‹«ŠE
+    //         // ï¿½Eï¿½ï¿½ï¿½E
     //         if (IsRayIntersectRect(mstShinePos, rightDirection, gridLeft, gridRight, gridTop, gridBottom))
     //         {
     //             isStillLit = true;
@@ -2353,7 +2352,7 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
     //         }
     //     }
 
-    //     // Œõ—Ìˆæ‚ªc‚Á‚Ä‚¢‚éê‡‚Íƒtƒ‰ƒO‚ğXV‚µ‚ÄŸ‚Ì’TõƒLƒ…[‚É’Ç‰Á
+    //     // ï¿½ï¿½ï¿½Ìˆæ‚ªï¿½cï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½Íƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½Äï¿½ï¿½Ì’Tï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½[ï¿½É’Ç‰ï¿½
     //     if (!isStillLit && mstMapObjectGridData[checkPos.y][checkPos.x].LitFlag)
     //     {
     //         mstMapObjectGridData[checkPos.y][checkPos.x].ConfiguredShineAreaIndex.clear();
@@ -2362,129 +2361,129 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
     // }
 }
 
-// 2ŸŒ³ƒxƒNƒgƒ‹“¯m‚ÌŠOÏ‚ÌZ¬•ª‚ğ‹‚ß‚é
+// 2ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ÌŠOï¿½Ï‚ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
 float ShineManager::Cross(const Vector2& src, const Vector2& dst)
 {
     return src.x * dst.y - src.y * dst.x;
 }
 
-// 2–{‚Ìü•ª‚ÌŒğ“_‚ğ‹‚ß‚é
+// 2ï¿½{ï¿½Ìï¿½ï¿½ï¿½ï¿½ÌŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
 bool ShineManager::GetIntersection(const Vector2 srcA, const Vector2 srcB, const Vector2 dstC, const Vector2 dstD, Vector2& intersection)
 {
-    // ü•ªsrcAB‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½Ì•ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     Vector2 srcAB =
     {
         srcB.x - srcA.x,
         srcB.y - srcA.y
     };
 
-    // ü•ªdstCD‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½dstCDï¿½Ì•ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     Vector2 dstCD =
     {
         dstD.x - dstC.x,
         dstD.y - dstC.y
     };
 
-    // srcAB‚ÆdstCD‚ÌŠOÏ‚ğ‹‚ß‚é
+    // srcABï¿½ï¿½dstCDï¿½ÌŠOï¿½Ï‚ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     float denominator = Cross(srcAB, dstCD);
 
-    // ŠOÏ‚ª0‚Ìê‡A2–{‚Ìü•ª‚Í•½s
-    // •½s‚Èê‡‚ÍŒğ“_‚ğ‹‚ß‚ç‚ê‚È‚¢
+    // ï¿½Oï¿½Ï‚ï¿½0ï¿½Ìê‡ï¿½A2ï¿½{ï¿½Ìï¿½ï¿½ï¿½ï¿½Í•ï¿½ï¿½s
+    // ï¿½ï¿½ï¿½sï¿½Èê‡ï¿½ÍŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½È‚ï¿½
     if (fabsf(denominator) < 0.000001f)
     {
         return false;
     }
 
-    // ü•ªsrcAB‚Ìn“_srcA‚©‚ç
-    // ü•ªdstCD‚Ìn“_dstC‚Ü‚Å‚ÌƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½Ìnï¿½_srcAï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½dstCDï¿½Ìnï¿½_dstCï¿½Ü‚Å‚Ìƒxï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     Vector2 srcAdstC =
     {
         dstC.x - srcA.x,
         dstC.y - srcA.y
     };
 
-    // ü•ªsrcABã‚Ì‚Ç‚ÌˆÊ’u‚ÉŒğ“_‚ª‚ ‚é‚©‚ğ‹‚ß‚é
-    // 0‚È‚çsrcAA1‚È‚çsrcBA0.5‚È‚çsrcA‚ÆsrcB‚Ì’†ŠÔ
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½ï¿½Ì‚Ç‚ÌˆÊ’uï¿½ÉŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
+    // 0ï¿½È‚ï¿½srcAï¿½A1ï¿½È‚ï¿½srcBï¿½A0.5ï¿½È‚ï¿½srcAï¿½ï¿½srcBï¿½Ì’ï¿½ï¿½ï¿½
     float t = Cross(srcAdstC, dstCD) / denominator;
 
-    // ü•ªdstCDã‚Ì‚Ç‚ÌˆÊ’u‚ÉŒğ“_‚ª‚ ‚é‚©‚ğ‹‚ß‚é
-    // 0‚È‚çdstCA1‚È‚çdstDA0.5‚È‚çdstC‚ÆdstD‚Ì’†ŠÔ
+    // ï¿½ï¿½ï¿½ï¿½dstCDï¿½ï¿½Ì‚Ç‚ÌˆÊ’uï¿½ÉŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
+    // 0ï¿½È‚ï¿½dstCï¿½A1ï¿½È‚ï¿½dstDï¿½A0.5ï¿½È‚ï¿½dstCï¿½ï¿½dstDï¿½Ì’ï¿½ï¿½ï¿½
     float u = Cross(srcAdstC, srcAB) / denominator;
 
-    // t‚ª0`1‚Ì”ÍˆÍŠO‚È‚çAŒğ“_‚Íü•ªsrcAB‚ÌŠO‘¤
-    // u‚ª0`1‚Ì”ÍˆÍŠO‚È‚çAŒğ“_‚Íü•ªdstCD‚ÌŠO‘¤
+    // tï¿½ï¿½0ï¿½`1ï¿½Ì”ÍˆÍŠOï¿½È‚ï¿½Aï¿½ï¿½_ï¿½Íï¿½ï¿½ï¿½srcABï¿½ÌŠOï¿½ï¿½
+    // uï¿½ï¿½0ï¿½`1ï¿½Ì”ÍˆÍŠOï¿½È‚ï¿½Aï¿½ï¿½_ï¿½Íï¿½ï¿½ï¿½dstCDï¿½ÌŠOï¿½ï¿½
     if (t < 0.0f || t > 1.0f ||
         u < 0.0f || u > 1.0f)
     {
         return false;
     }
 
-    // ü•ªsrcABã‚Ìt‚ÌˆÊ’u‚©‚çŒğ“_‚ÌÀ•W‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½ï¿½ï¿½tï¿½ÌˆÊ’uï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     intersection =
     {
         srcA.x + srcAB.x * t,
         srcA.y + srcAB.y * t
     };
 
-    // ü•ª“¯m‚ªŒğ·‚µ‚Ä‚¢‚é
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
     return true;
 }
 
-// ü•ªAB‚Ì‰„’·ü‚Æü•ªCD‚Ì‰„’·ü‚ÌŒğ“_‚ğ‹‚ß‚é
+// ï¿½ï¿½ï¿½ï¿½ABï¿½Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æï¿½ï¿½ï¿½CDï¿½Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
 bool ShineManager::GetLineIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection)
 {
-    // ü•ªsrcAB‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½Ì•ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     Vector2 srcAB =
     {
         srcB.x - srcA.x,
         srcB.y - srcA.y
     };
 
-    // ü•ªdstCD‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½dstCDï¿½Ì•ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     Vector2 dstCD =
     {
         dstD.x - dstC.x,
         dstD.y - dstC.y
     };
 
-    // srcAB‚ÆdstCD‚ÌŠOÏ‚ğ‹‚ß‚é
+    // srcABï¿½ï¿½dstCDï¿½ÌŠOï¿½Ï‚ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     float denominator = Cross(srcAB, dstCD);
 
-    // ŠOÏ‚ª0‚Ìê‡A2–{‚Ìü•ª‚Í•½s
-    // •½s‚Èê‡‚ÍŒğ“_‚ğ‹‚ß‚ç‚ê‚È‚¢
+    // ï¿½Oï¿½Ï‚ï¿½0ï¿½Ìê‡ï¿½A2ï¿½{ï¿½Ìï¿½ï¿½ï¿½ï¿½Í•ï¿½ï¿½s
+    // ï¿½ï¿½ï¿½sï¿½Èê‡ï¿½ÍŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½È‚ï¿½
     if (denominator == 0.0f)
     {
         return false;
     }
 
-    // ü•ªsrcAB‚Ìn“_srcA‚©‚ç
-    // ü•ªdstCD‚Ìn“_dstC‚Ü‚Å‚ÌƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½Ìnï¿½_srcAï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½dstCDï¿½Ìnï¿½_dstCï¿½Ü‚Å‚Ìƒxï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     Vector2 srcAdstC =
     {
         dstC.x - srcA.x,
         dstC.y - srcA.y
     };
 
-    // ü•ªsrcABã‚Ì‚Ç‚ÌˆÊ’u‚ÉŒğ“_‚ª‚ ‚é‚©‚ğ‹‚ß‚é
-    // 0‚È‚çsrcAA1‚È‚çsrcBA0.5‚È‚çsrcA‚ÆsrcB‚Ì’†ŠÔ
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½ï¿½Ì‚Ç‚ÌˆÊ’uï¿½ÉŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
+    // 0ï¿½È‚ï¿½srcAï¿½A1ï¿½È‚ï¿½srcBï¿½A0.5ï¿½È‚ï¿½srcAï¿½ï¿½srcBï¿½Ì’ï¿½ï¿½ï¿½
     float t = Cross(srcAdstC, dstCD) / denominator;
 
-    // ü•ªdstCDã‚Ì‚Ç‚ÌˆÊ’u‚ÉŒğ“_‚ª‚ ‚é‚©‚ğ‹‚ß‚é
-    // 0‚È‚çdstCA1‚È‚çdstDA0.5‚È‚çdstC‚ÆdstD‚Ì’†ŠÔ
+    // ï¿½ï¿½ï¿½ï¿½dstCDï¿½ï¿½Ì‚Ç‚ÌˆÊ’uï¿½ÉŒï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½é‚©ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
+    // 0ï¿½È‚ï¿½dstCï¿½A1ï¿½È‚ï¿½dstDï¿½A0.5ï¿½È‚ï¿½dstCï¿½ï¿½dstDï¿½Ì’ï¿½ï¿½ï¿½
     float u = Cross(srcAdstC, srcAB) / denominator;
 
-    // ü•ªsrcABã‚Ìt‚ÌˆÊ’u‚©‚çŒğ“_‚ÌÀ•W‚ğ‹‚ß‚é
+    // ï¿½ï¿½ï¿½ï¿½srcABï¿½ï¿½ï¿½tï¿½ÌˆÊ’uï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½Ìï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
     intersection =
     {
         srcA.x + srcAB.x * t,
         srcA.y + srcAB.y * t
     };
 
-    // ü•ª“¯m‚ªŒğ·‚µ‚Ä‚¢‚é
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
     return true;
 }
 
-// 2“_ŠÔ‚ÌŠp“x‚ğæ“¾‚µ‚Ü‚·B
+// 2ï¿½_ï¿½Ô‚ÌŠpï¿½xï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 float ShineManager::GetAngleToPoint(const Vector2& from, const Vector2& to)
 {
     const float dx = to.x - from.x;
@@ -2500,13 +2499,13 @@ float ShineManager::GetAngleToPoint(const Vector2& from, const Vector2& to)
     return angle;
 }
 
-// Œõ‚Ì‰E‚Æ¶‚Ì•ûŒü‚ÆŒğ“_‚ğZo
+// ï¿½ï¿½ï¿½Ì‰Eï¿½Æï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ÆŒï¿½_ï¿½ï¿½ï¿½Zï¿½o
 bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float shineAngles[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX])
 {
-    // Zo&‚Ç‚Ì•ûŒü‚©æ“¾
+    // ï¿½Zï¿½o&ï¿½Ç‚Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
     for(int i = 0; i < ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX; ++i)
     {
-        // 0`PI*2 ‚ÌŠÔ‚Éû‚ß‚é
+        // 0ï¿½`PI*2 ï¿½ÌŠÔ‚Éï¿½ï¿½ß‚ï¿½
         {
             while (shineAngles[i] < 0.0f)
             {
@@ -2521,12 +2520,12 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
 
         shineAngleNumbers[i] = -1;
         
-        // ¶
+        // ï¿½ï¿½
         if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]    >= shineAngles[i]) &&
             (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN] <= shineAngles[i]))
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT;
-            // Zo
+            // ï¿½Zï¿½o
             if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
@@ -2534,12 +2533,12 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
                 return false;
             }
         }
-        // ‰E(0‚ª‰E‚È‚½‚ß||)
+        // ï¿½E(0ï¿½ï¿½ï¿½Eï¿½È‚ï¿½ï¿½ï¿½||)
         else if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]   <= shineAngles[i]) ||
                 (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN] >= shineAngles[i]))
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_RIGHT;
-            // Zo
+            // ï¿½Zï¿½o
             if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
@@ -2547,12 +2546,12 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
                 return false;
             }
         }
-        // ã
+        // ï¿½ï¿½
         else if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]  <= shineAngles[i]) &&
                 (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP] >= shineAngles[i]))
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP;
-            // Zo
+            // ï¿½Zï¿½o
             if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
@@ -2560,12 +2559,12 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
                 return false;
             }
         }
-        // ‰º
+        // ï¿½ï¿½
         else if ((displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]   <= shineAngles[i]) &&
                 (displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]    >= shineAngles[i]))
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_DOWN;
-            // Zo
+            // ï¿½Zï¿½o
             if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
@@ -2583,7 +2582,7 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
     return true;
 }
 
-// Šp‚ªŠÜ‚Ü‚ê‚é‚È‚çŠp‚ğ•`‰æ‚É’Ç‰Á
+// ï¿½pï¿½ï¿½ï¿½Ü‚Ü‚ï¿½ï¿½È‚ï¿½pï¿½ï¿½`ï¿½ï¿½É’Ç‰ï¿½
 void ShineManager::AddDisplayCornerToDrawTriangle(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], const int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX])
 {
     switch (shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT] | shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT])
@@ -2611,22 +2610,22 @@ void ShineManager::AddDisplayCornerToDrawTriangle(const Vector2 shineDirections[
     case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT_RIGHT:
         if (shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT] == ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT)
         {
-            // ¶ã
+            // ï¿½ï¿½ï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
-            // ‰Eã
+            // ï¿½Eï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
             
-            // ã
+            // ï¿½ï¿½
             AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
         }
         else
         {
-            // ¶‰º
+            // ï¿½ï¿½ï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
-            // ‰E‰º
+            // ï¿½Eï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
 
-            // ‰º
+            // ï¿½ï¿½
             AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
         }
         break;
@@ -2634,28 +2633,28 @@ void ShineManager::AddDisplayCornerToDrawTriangle(const Vector2 shineDirections[
     case ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP_DOWN:
         if (shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT] == ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP)
         {
-            // ‰Eã
+            // ï¿½Eï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]);
-            // ‰E‰º
+            // ï¿½Eï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
             
-            // ‰E
+            // ï¿½E
             AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN]);
         }
         else
         {
-            // ¶ã
+            // ï¿½ï¿½ï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]);
-            // ¶‰º
+            // ï¿½ï¿½ï¿½ï¿½
             AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
             
-            // ¶
+            // ï¿½ï¿½
             AddDrawTriangleData(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]);
         }
         break;
 
     default:
-        // •`‰æ—pOŠp‚É’Ç‰Á
+        // ï¿½`ï¿½ï¿½pï¿½Oï¿½pï¿½É’Ç‰ï¿½
         AddDrawTriangleData(shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_LEFT], shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_RIGHT]);
         break;
     }
