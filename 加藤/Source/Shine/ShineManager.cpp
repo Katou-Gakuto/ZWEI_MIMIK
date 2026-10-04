@@ -79,7 +79,7 @@ ShineManager::ShineManager()
     mnDrawMode[1] = SHINE_DRAW_MODE::TRIANGLE_SHINE_DRAW_MODE;
     mnDrawMode[2] = SHINE_DRAW_MODE::TEST_ANGLE_DRAW_MODE;
     mnDrawMode[3] = SHINE_DRAW_MODE::GRID_SHINE_LOOP_NUMBER_DRAW_MODE;
-    mnDrawMode[4] = SHINE_DRAW_MODE::SHINE_CHECK_GRID_DRAW_MODE;
+    //mnDrawMode[4] = SHINE_DRAW_MODE::SHINE_CHECK_GRID_DRAW_MODE;
     mnDrawMode[5] = SHINE_DRAW_MODE::TRIANGLE_SHINE_DRAW_MODE;
 }
 
@@ -1113,7 +1113,10 @@ void ShineManager::CheckShineGrid()
         mstShineAreaResult.push_back(shineDirections);
     }
 
+    AddVisibleShineTriangles(mpShineObject->GetShineDirection());
+
     // âÊñ ÇÃäpÉ|ÉWÉVÉáÉì
+
     const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX] =
     {
         Vector2(0.0f,       0.0f),
@@ -1688,7 +1691,6 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
     newShineDirections.push_back(shineDirections);
 
     // çÌÇ¡ÇΩïîï™ÇÃéOäpå`åÛï‚
-    std::vector<SHINE_TRIANGLE> savedTriangle;
 
     // ëŒè€Ç∆Ç»ÇÈèIí[åÛï‚Çèàóù
     for (int lightIterator = (mstLightAreaEndPoint.size() - 1); lightIterator >= 0; --lightIterator)
@@ -1703,28 +1705,6 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
 
         mstSettingDebugWallLineResult.push_back(endPoint);
         
-        // éOäpÇ…ìoò^
-        {
-            SHINE_TRIANGLE triangle;
-
-            triangle.Vertex1 =
-                Vector2_Int(
-                    static_cast<int>(mstShinePos.x),
-                    static_cast<int>(mstShinePos.y));
-
-            triangle.Vertex2 =
-                Vector2_Int(
-                    static_cast<int>(endPoint.linePos1.x),
-                    static_cast<int>(endPoint.linePos1.y));
-
-            triangle.Vertex3 =
-                Vector2_Int(
-                    static_cast<int>(endPoint.linePos2.x),
-                    static_cast<int>(endPoint.linePos2.y));
-
-            savedTriangle.push_back(triangle);
-        }
-
         /*á@ ê¸ï™ÇÃóºí[ÇåıåπÇ©ÇÁå©ÇΩäpìxÇ…ïœä∑*/
         const float lineAngle1 =
             GetAngleToPoint(mstShinePos, endPoint.linePos1);
@@ -1851,16 +1831,330 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
     }
 
     // éOäpÇçÌÇÈ
+    return newShineDirections;
+}
+
+
+void ShineManager::AddVisibleShineTriangles(const SHINE_DIRECTION& shineDirections)
+{
+    std::vector<SHINE_TRIANGLE> savedTriangle;
+    std::vector<LINE_POS> savedTriangleEdges;
+    const float shineAngleWidth = shineDirections.visionAngle;
+    const auto edgeTouchesShineAngle = [&](const LINE_POS& edge)
     {
+        const double dx1 = edge.linePos1.x - mstShinePos.x;
+        const double dy1 = edge.linePos1.y - mstShinePos.y;
+        const double dx2 = edge.linePos2.x - mstShinePos.x;
+        const double dy2 = edge.linePos2.y - mstShinePos.y;
+        const double edgeX = dx2 - dx1;
+        const double edgeY = dy2 - dy1;
+        const double edgeLengthSquared = edgeX * edgeX + edgeY * edgeY;
+        if (edgeLengthSquared <= 0.000001)
+        {
+            return false;
+        }
+        const double sourceCross = dx1 * edgeY - dy1 * edgeX;
+        const double sourceProjection = -(dx1 * edgeX + dy1 * edgeY);
+        if (fabs(sourceCross) < 0.0001 &&
+            sourceProjection >= 0.0 && sourceProjection <= edgeLengthSquared)
+        {
+            return true;
+        }
+        const auto getRelativeAngle = [&](double x, double y)
+        {
+            double angle = std::atan2(y, x) - shineDirections.leftAngle;
+            angle = std::fmod(angle, static_cast<double>(DX_TWO_PI_F));
+            if (angle < 0.0)
+            {
+                angle += DX_TWO_PI_F;
+            }
+            return angle;
+        };
+        double angle1 = getRelativeAngle(dx1, dy1);
+        double angle2 = getRelativeAngle(dx2, dy2);
+        if (angle1 - angle2 > DX_PI_F)
+        {
+            angle1 -= DX_TWO_PI_F;
+        }
+        else if (angle2 - angle1 > DX_PI_F)
+        {
+            angle2 -= DX_TWO_PI_F;
+        }
+        const double angleMin = min(angle1, angle2);
+        const double angleMax = max(angle1, angle2);
+        for (int wrap = -1; wrap <= 1; ++wrap)
+        {
+            const double wrappedMin = angleMin + wrap * DX_TWO_PI_F;
+            const double wrappedMax = angleMax + wrap * DX_TWO_PI_F;
+            if (wrappedMax >= -0.0001 &&
+                wrappedMin <= shineAngleWidth + 0.0001)
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+    for (int gridY = 0; gridY < MAP_ARRAY_SIZE_Y; ++gridY)
+    {
+        for (int gridX = 0; gridX < MAP_ARRAY_SIZE_X; ++gridX)
+        {
+            const std::vector<LINE_POS>& gridEdges = mstMapObjectGridData[gridY][gridX].LinePoss;
+            for (const LINE_POS& edge : gridEdges)
+            {
+                if (edgeTouchesShineAngle(edge))
+                {
+                    savedTriangleEdges.push_back(edge);
+                }
+            }
+        }
+    }
+    if (!savedTriangleEdges.empty())
+    {
+        const Vector2 origin = mstShinePos;
+        const Vector2_Int originInt(
+            static_cast<int>(mstShinePos.x),
+            static_cast<int>(mstShinePos.y));
+        std::vector<float> splitAngles;
+        splitAngles.push_back(0.0f);
+        splitAngles.push_back(shineAngleWidth);
+
+        const auto addSplitAngle = [&](const Vector2& point)
+        {
+            const float dx = point.x - origin.x;
+            const float dy = point.y - origin.y;
+            if (dx * dx + dy * dy > 0.000001f)
+            {
+                float relativeAngle = std::fmod(
+                    GetAngleToPoint(origin, point) - shineDirections.leftAngle,
+                    DX_TWO_PI_F);
+                if (relativeAngle < 0.0f)
+                {
+                    relativeAngle += DX_TWO_PI_F;
+                }
+                if (relativeAngle < shineAngleWidth)
+                {
+                    splitAngles.push_back(relativeAngle);
+                }
+            }
+        };
+
+        for (const LINE_POS& edge : savedTriangleEdges)
+        {
+            addSplitAngle(edge.linePos1);
+            addSplitAngle(edge.linePos2);
+        }
+
+        // ï”ìØémÇÃåì_Ç‡ÅAå©Ç¶ÇÈï”Ç™êÿÇËë÷ÇÌÇÈäpìxÇ∆ÇµÇƒí«â¡Ç∑ÇÈÅB
+        const auto crossDouble = [](double ax, double ay, double bx, double by)
+        {
+            return ax * by - ay * bx;
+        };
+
+        for (size_t i = 0; i < savedTriangleEdges.size(); ++i)
+        {
+            const Vector2 edgeA1 = savedTriangleEdges[i].linePos1;
+            const Vector2 edgeA2 = savedTriangleEdges[i].linePos2;
+            const double edgeAX = edgeA2.x - edgeA1.x;
+            const double edgeAY = edgeA2.y - edgeA1.y;
+
+            for (size_t j = i + 1; j < savedTriangleEdges.size(); ++j)
+            {
+                const Vector2 edgeB1 = savedTriangleEdges[j].linePos1;
+                const Vector2 edgeB2 = savedTriangleEdges[j].linePos2;
+                const double edgeBX = edgeB2.x - edgeB1.x;
+                const double edgeBY = edgeB2.y - edgeB1.y;
+                const double betweenX = edgeB1.x - edgeA1.x;
+                const double betweenY = edgeB1.y - edgeA1.y;
+                const double denominator = crossDouble(edgeAX, edgeAY, edgeBX, edgeBY);
+
+                if (denominator == 0.0)
+                {
+                    continue;
+                }
+
+                const double edgeARatio =
+                    crossDouble(betweenX, betweenY, edgeBX, edgeBY) / denominator;
+                const double edgeBRatio =
+                    crossDouble(betweenX, betweenY, edgeAX, edgeAY) / denominator;
+                const double ratioTolerance = 0.000001;
+                if (edgeARatio < -ratioTolerance || edgeARatio > 1.0 + ratioTolerance ||
+                    edgeBRatio < -ratioTolerance || edgeBRatio > 1.0 + ratioTolerance)
+                {
+                    continue;
+                }
+
+                const Vector2 intersection(
+                    static_cast<float>(edgeA1.x + edgeAX * edgeARatio),
+                    static_cast<float>(edgeA1.y + edgeAY * edgeARatio));
+                addSplitAngle(intersection);
+            }
+        }
+
+        std::sort(splitAngles.begin(), splitAngles.end());
+        splitAngles.erase(
+            std::unique(
+                splitAngles.begin(),
+                splitAngles.end(),
+                [](float lhs, float rhs)
+                {
+                    return fabsf(lhs - rhs) < 0.0000001f;
+                }),
+            splitAngles.end());
+
+        // äeäpìxÇÃåıê¸Ç∆ï”ÇÃåì_Çî{ê∏ìxÇ≈ãÅÇﬂÇÈÅB
+        const auto getRayIntersection =
+            [&](const LINE_POS& edge, float angle, Vector2& intersection, double& distance)
+        {
+            const double rayX = std::cos(static_cast<double>(angle));
+            const double rayY = std::sin(static_cast<double>(angle));
+            const Vector2& edgeStart = edge.linePos1;
+            const Vector2& edgeEnd = edge.linePos2;
+            const double edgeX = edgeEnd.x - edgeStart.x;
+            const double edgeY = edgeEnd.y - edgeStart.y;
+            const double offsetX = edgeStart.x - origin.x;
+            const double offsetY = edgeStart.y - origin.y;
+            const double denominator = crossDouble(rayX, rayY, edgeX, edgeY);
+
+            if (fabs(denominator) < 0.000000001)
+            {
+                if (fabs(crossDouble(offsetX, offsetY, rayX, rayY)) >= 0.0001)
+                {
+                    return false;
+                }
+
+                const double startDistance = offsetX * rayX + offsetY * rayY;
+                const double endOffsetX = edgeEnd.x - origin.x;
+                const double endOffsetY = edgeEnd.y - origin.y;
+                const double endDistance = endOffsetX * rayX + endOffsetY * rayY;
+                distance = DBL_MAX;
+
+                if (startDistance >= -0.0001)
+                {
+                    distance = max(0.0, startDistance);
+                    intersection = edgeStart;
+                }
+                if (endDistance >= -0.0001 && endDistance < distance)
+                {
+                    distance = max(0.0, endDistance);
+                    intersection = edgeEnd;
+                }
+                return distance != DBL_MAX;
+            }
+
+            const double rayDistance = crossDouble(offsetX, offsetY, edgeX, edgeY) / denominator;
+            const double edgeRatio = crossDouble(offsetX, offsetY, rayX, rayY) / denominator;
+            const double ratioTolerance = 0.0001;
+            if (rayDistance < -0.0001 ||
+                edgeRatio < -ratioTolerance ||
+                edgeRatio > 1.0 + ratioTolerance)
+            {
+                return false;
+            }
+
+            distance = max(0.0, rayDistance);
+            intersection =
+            {
+                static_cast<float>(origin.x + rayX * distance),
+                static_cast<float>(origin.y + rayY * distance)
+            };
+            return true;
+        };
+
+        const auto findClosestEdge =
+            [&](float angle, Vector2& intersection, double& closestDistance)
+        {
+            size_t closestEdgeIndex = savedTriangleEdges.size();
+            closestDistance = DBL_MAX;
+
+            for (size_t edgeIndex = 0; edgeIndex < savedTriangleEdges.size(); ++edgeIndex)
+            {
+                Vector2 edgeIntersection;
+                double distance = DBL_MAX;
+                if (getRayIntersection(
+                        savedTriangleEdges[edgeIndex],
+                        angle,
+                        edgeIntersection,
+                        distance) &&
+                    distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEdgeIndex = edgeIndex;
+                    intersection = edgeIntersection;
+                }
+            }
+
+            return closestEdgeIndex;
+        };
+
+        std::vector<SHINE_TRIANGLE> visibleTriangles;
+        for (size_t angleIndex = 0; angleIndex + 1 < splitAngles.size(); ++angleIndex)
+        {
+            const float leftAngle = splitAngles[angleIndex];
+            const float rightAngle = splitAngles[angleIndex + 1];
+            if (rightAngle - leftAngle < 0.0000001f)
+            {
+                continue;
+            }
+
+            const float middleAngle = (leftAngle + rightAngle) * 0.5f;
+            if (middleAngle > shineAngleWidth)
+            {
+                continue;
+            }
+            const float rayAngle = shineDirections.leftAngle + middleAngle;
+            Vector2 unusedIntersection;
+            double unusedDistance = DBL_MAX;
+            const size_t closestEdgeIndex =
+                findClosestEdge(rayAngle, unusedIntersection, unusedDistance);
+            if (closestEdgeIndex == savedTriangleEdges.size())
+            {
+                continue;
+            }
+
+            Vector2 leftPoint;
+            Vector2 rightPoint;
+            double leftDistance = DBL_MAX;
+            double rightDistance = DBL_MAX;
+            if (findClosestEdge(shineDirections.leftAngle + leftAngle, leftPoint, leftDistance) ==
+                    savedTriangleEdges.size() ||
+                findClosestEdge(shineDirections.leftAngle + rightAngle, rightPoint, rightDistance) ==
+                    savedTriangleEdges.size())
+            {
+                continue;
+            }
+
+            SHINE_TRIANGLE visibleTriangle;
+            visibleTriangle.Vertex1 = originInt;
+            visibleTriangle.Vertex2 =
+            {
+                static_cast<int>(std::lround(leftPoint.x)),
+                static_cast<int>(std::lround(leftPoint.y))
+            };
+            visibleTriangle.Vertex3 =
+            {
+                static_cast<int>(std::lround(rightPoint.x)),
+                static_cast<int>(std::lround(rightPoint.y))
+            };
+
+            const Vector2 edge1(
+                visibleTriangle.Vertex2.x - originInt.x,
+                visibleTriangle.Vertex2.y - originInt.y);
+            const Vector2 edge2(
+                visibleTriangle.Vertex3.x - originInt.x,
+                visibleTriangle.Vertex3.y - originInt.y);
+            if (fabsf(Cross(edge1, edge2)) > 0.0001f)
+            {
+                visibleTriangles.push_back(visibleTriangle);
+            }
+        }
+        savedTriangle.swap(visibleTriangles);
     }
 
     // éOäpìoò^
     for (int i = 0; i < savedTriangle.size(); ++i)
     {
-        //AddDrawTriangleData(savedTriangle[i]);
+        AddDrawTriangleData(savedTriangle[i]);
     }
-
-    return newShineDirections;
 }
 
 // É}ÉbÉväOîªíË

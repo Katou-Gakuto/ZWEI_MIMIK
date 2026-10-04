@@ -204,6 +204,7 @@ private:
 	
 	// 登録された光域終端候補を使用して、光域を削り、削った部分を描画用三角形に登録する
 	std::vector<SHINE_DIRECTION> ProcessShineAreaEndPointCandidates(int shineIndex, const SHINE_DIRECTION& shineDirections);
+	void AddVisibleShineTriangles(const SHINE_DIRECTION& shineDirections);
 
     // マップ外判定
     bool IsOutsideShineStage(const Vector2_Int& gridPos);
