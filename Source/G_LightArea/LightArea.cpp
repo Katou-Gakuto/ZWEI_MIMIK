@@ -5,11 +5,11 @@
 #include "../Y_Tool/MyFunctions.h"
 
 // 
-LightArea::LightArea(void *parentLight) :
+LightArea::LightArea() :
     mlLightFirstNode(),
     mlLineEndPosBox(),
     mlLineAngleBox(),
-    mpParentLight(parentLight),
+    mpParentObject(nullptr),
     mnLightLineCount(0),
     mbOffLight(false)
 {
@@ -21,22 +21,32 @@ LightArea::~LightArea()
 }
 
 // 
-void LightArea::SetLightLineAngleBox(uint32_t lineCount, float maxAngle)
+void LightArea::SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle)
 {
     // 
-    float oneAngle = MyFunctions::GetAllRad() / static_cast<float>(lineCount);
+    this->mpParentObject = parentObject;
 
     // 
     this->SetLightLineCount(lineCount);
 
     // 
-    float startAngle = maxAngle * 0.5f;
+    float oneAngle = lightAngle / static_cast<float>(lineCount);
+
+    // 
+    float startAngle = baseAngle - (lightAngle * 0.5f);
 
     // 
     for (uint32_t i = 0; i < lineCount; i++)
     {
         // 
-        this->mlLineAngleBox[i] = startAngle + (oneAngle * static_cast<float>(i));
+        if (this->mlLightFirstNode[i] == nullptr)
+        {
+            // 
+            this->mlLightFirstNode[i] = new LightLineNode(parentObject);
+        }
+
+        // 
+        this->mlLineAngleBox[i] = MyFunctions::GetArrangeRad(startAngle + (oneAngle * static_cast<float>(i)));
     }
 }
 
@@ -45,7 +55,6 @@ void LightArea::SetLightLineAngleBox(uint32_t lineCount, float maxAngle)
 bool LightArea::CalculateNode(
     float baseAngle,
     float stockMagunitude,
-    const VECTOR2D &startPos,
     const std::vector<BaseCollision2D *> &objectCollBox,
     const std::vector<BaseCollision2D *> &mirrorCollBox,
     Ray2D &tempRay,
@@ -54,12 +63,12 @@ bool LightArea::CalculateNode(
 {
     // 
     LightLineNode *currentNode = nullptr;
+    LightLineNode *nextNode = nullptr;
 
     // 
     float tempMagnitudeNoSqrt = 0.0f;
 
-    // 
-    VECTOR2D tempStartPos = startPos;
+    VECTOR2D tempStartPos;
 
     // 
     VECTOR2D toEndNorm;
@@ -67,6 +76,9 @@ bool LightArea::CalculateNode(
     // 
     for (uint32_t i = 0; i < this->mnLightLineCount; i++)
     {
+        // 
+        tempStartPos = this->mlLightFirstNode[i]->GetListStartPos();
+
         // 
         toEndNorm = VECTOR2D::GetOnUnitCirclePos('x', 'y', baseAngle + this->mlLineAngleBox[i]);
 
@@ -91,10 +103,17 @@ bool LightArea::CalculateNode(
             tempStartPos = currentNode->GetMyEndPos();
 
             // 
-            toEndNorm = VECTOR2D::Reflect(toEndNorm, tempResultNewr.mvRepulsionVecA);
+            toEndNorm = VECTOR2D::Reflect(toEndNorm, tempResultNewr.mvRepulsionVecA.Normalize());
 
             // 
-            this->mlLightFirstNode[i]->AccessNext(&currentNode);
+            if (!currentNode->AccessNext(&nextNode))
+            {
+                // 
+                break;
+            }
+
+            // 
+            currentNode = nextNode;
         }
 
         // 

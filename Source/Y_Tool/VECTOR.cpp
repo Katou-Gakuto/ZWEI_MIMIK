@@ -222,7 +222,7 @@ bool VECTOR2D::EqualInRange(const VECTOR2D &vec1, const VECTOR2D &vec2, const fl
     return (EqualInRangeF_VECTOR_cpp(vec1.mfParamX, vec2.mfParamX, range) && EqualInRangeF_VECTOR_cpp(vec1.mfParamY, vec2.mfParamY, range));
 }
 
-// 点pと直線ABの線上最近点を求め、世界座標を返す
+// 点pと無限直線ABの線上最近点を求め、世界座標を返す
 VECTOR2D VECTOR2D::GetNewrPosOnLine(const VECTOR2D &pointPos, const VECTOR2D &startPos, const VECTOR2D &endPos)
 {
     // 二つのベクトルを作る
@@ -242,6 +242,42 @@ VECTOR2D VECTOR2D::GetNewrPosOnLine(const VECTOR2D &pointPos, const VECTOR2D &st
 
     // 線上最近点を返す
     return newrPoint;
+}
+
+VECTOR2D VECTOR2D::GetNearestPosOnLineSegment(
+    const VECTOR2D &pointPos,
+    const VECTOR2D &startPos,
+    const VECTOR2D &endPos)
+{
+    VECTOR2D startToEnd = endPos - startPos;
+    VECTOR2D startToPoint = pointPos - startPos;
+
+    float lengthSquared = Dot(startToEnd, startToEnd);
+
+    // 線分の長さが0の場合、始点を最近点とする
+    if (lengthSquared <= 0.0f)
+    {
+        return startPos;
+    }
+
+    // 始点からの投影距離（線分方向の長さ）
+    float distance = Dot(startToPoint, startToEnd);
+
+    // 線分の範囲 [0, lengthSquared] に制限
+    if (distance <= 0.0f)
+    {
+        return startPos;
+    }
+
+    if (distance >= lengthSquared)
+    {
+        return endPos;
+    }
+
+    // 線分内部への射影点
+    float t = distance / lengthSquared;
+
+    return startPos + startToEnd * t;
 }
 
 // vecAの方向成分とvecBの方向成分のどちらがよりtargetVecの方向成分に近いかを確認する関数。
@@ -861,7 +897,7 @@ VECTOR2D operator -(const VECTOR2D &vecL, const VECTOR2D &vecR)
 
 VECTOR2D operator *(const VECTOR2D &vecL, float scaler)
 {
-    return VECTOR2D(vecL.GetX() + scaler, vecL.GetY() * scaler);
+    return VECTOR2D(vecL.GetX() * scaler, vecL.GetY() * scaler);
 }
 
 VECTOR2D operator /(const VECTOR2D &vecL, float scaler)

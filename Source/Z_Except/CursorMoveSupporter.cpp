@@ -5,8 +5,8 @@
 
 // 
 CursorMoveSupporter::CursorMoveSupporter() :
-    mnBaseCount(100),
-    mnPushHoldFrameMax(3),
+    mnBaseCount(30),
+    mnPushHoldFrameMax(5),
     mnLastModeFrameCount(-100),
     mnPlayerNumber(0)
 {
@@ -85,7 +85,7 @@ bool CursorMoveSupporter::Move(CursorMoveData &moveData, int &moveVec)
         if (this->mnLastModeFrameCount <= 0)
         {
             // 
-            this->mnLastModeFrameCount = 0;
+            this->mnLastModeFrameCount = 1;
         }
         else
         {

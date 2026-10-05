@@ -44,6 +44,18 @@ public:
     // 
     void SetOnePushActive(bool flag) { this->mbFlags[1] = flag; }
 
+    // 
+    static PuzzleGimmickActiveParam Create(bool signalNot, bool onePushActive)
+    {
+        // 
+        PuzzleGimmickActiveParam temp;
+        temp.SetSignalNot(signalNot);
+        temp.SetOnePushActive(onePushActive);
+
+        // 
+        return temp;
+    }
+
 private:
     // 0 ? NotFlag : Flag(トリガーの条件にNOT演算をするか)
     // 1 ? OnePushActive : HitFrame(細々した計算が必要ならtrueで、トリガーの条件がOffになったらOffがfalse)
@@ -105,7 +117,7 @@ struct PuzzleGimmickData
     BaseGimmickTrigger *mpTrigger;
 
     // シミュレーションを行うメンバ
-    BaseGimmickExecutor *mpSumilater;
+    BaseGimmickExecutor *mpExecutor;
 
     // このフレームでトリガーがどのようなシグナルを出したか
     bool mbTriggerSignal;

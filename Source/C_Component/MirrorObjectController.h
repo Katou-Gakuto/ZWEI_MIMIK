@@ -20,5 +20,5 @@ public:
 
 private:
     unsigned char mnMirrorFace;
-    CollisionHandle mdHandle[4];
+    CollisionHandle mdMirrorFaceRay;
 };

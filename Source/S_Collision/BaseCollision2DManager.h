@@ -38,6 +38,13 @@ private:
     // 二つの当たり判定のスライド移動を行う関数
     static int CollisionSlide(BaseCollision2D *collision2DA, BaseCollision2D *collision2DB, const CollisionCheckResult2D &hitResult);
 
+    // 二つの当たり判定のスライド移動を行う関数
+    static bool GetCollisionMoveLate(BaseCollision2D *collision2DA,
+        BaseCollision2D *collision2DB,
+        const CollisionCheckResult2D &hitResult,
+        float &aMoveLate,
+        float &bMoveLate);
+
     // 点と謎の当たり判定の衝突確認を行う関数
     static CollisionCheckResult2D CheckHitPoint2DToCollision2D(Point2D *point2D, BaseCollision2D *collision);
 
@@ -121,6 +128,12 @@ private:
 
     // 当たり判定の寿命に関する更新処理を行う関数
     int UpdateCollisionLife();
+
+    // 
+    static int SelectCornerEdge(
+        const CollisionCheckResult2D &edgeResult0,
+        const CollisionCheckResult2D &edgeResult1,
+        const VECTOR2D &relativeMoveVec);
 
 public:
     BaseCollision2DManager();

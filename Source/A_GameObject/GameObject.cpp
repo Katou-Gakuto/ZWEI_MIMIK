@@ -449,6 +449,11 @@ int GameObject::CreateObjectComponentList()
 void GameObject::SetInitBehavior(const BehaviorAccessData &accessData)
 {
     this->mdInitBehavior = accessData;
+    if (this->mpBehaviorTree == nullptr)
+    {
+        // 
+        this->CreateObjectBehavior(this->mdInitBehavior);
+    }
 }
 
 GameObjectTag GameObject::GetObjectTag() const
@@ -518,20 +523,32 @@ BaseComponentList *GameObject::GetBaseComponentList()const
 
 int GameObject::AddModel(BaseModel *model, BaseModelHandle &out)
 {
-    if (model == nullptr ||
-        this->mpModelList == nullptr)
+    if (model == nullptr)
     {
         return -1;
+    }
+    if (this->mpModelList == nullptr)
+    {
+        if (this->CreateObjectModelList() != 0)
+        {
+            return -1;
+        }
     }
     return this->mpModelList->Add(model, out);
 }
 
 int GameObject::AddCollision(BaseCollision *collision, CollisionHandle &out)
 {
-    if (collision == nullptr ||
-        this->mpBaseCollisionList == nullptr)
+    if (collision == nullptr)
     {
         return -1;
+    }
+    if (this->mpBaseCollisionList == nullptr)
+    {
+        if (this->CreateObjectCollisionList() != 0)
+        {
+            return -1;
+        }
     }
     return this->mpBaseCollisionList->Add(collision, out);
 }
@@ -558,10 +575,16 @@ int GameObject::AddMonoBehavior(MonoBehavior *mono, const BehaviorAccessData &ac
 
 int GameObject::AddComponent(BaseComponent *component)
 {
-    if (component == nullptr ||
-        this->mpBaseComponentList == nullptr)
+    if (component == nullptr)
     {
         return -1;
+    }    
+    if (this->mpBaseComponentList == nullptr)
+    {
+        if (this->CreateObjectComponentList() != 0)
+        {
+            return -1;            
+        }
     }
     return this->mpBaseComponentList->Add(component);
 }

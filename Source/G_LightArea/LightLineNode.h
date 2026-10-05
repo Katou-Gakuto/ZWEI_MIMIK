@@ -51,7 +51,7 @@ public:
 
 private:
     // 
-    void *mpParentLight;
+    void *mpParentObject;
 
     // Œõ‚ªI‚í‚éÀ•W
     VECTOR2D mvEndPos;

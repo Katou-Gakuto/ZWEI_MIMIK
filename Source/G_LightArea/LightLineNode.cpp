@@ -10,7 +10,7 @@
 
 // コンストラクタ
 LightLineNode::LightLineNode(void *parent) :
-    mpParentLight(parent),
+    mpParentObject(parent),
     mvEndPos(),
     mbNext(false),
     mpPrev(nullptr),
@@ -48,6 +48,12 @@ bool LightLineNode::CalculateEndPos(
     CollisionCheckResult2D &tempResultNewr)
 {
     // 
+    this->mbNext = false;
+
+    // 
+    bool wallHit = false;
+
+    // 
     VECTOR2D start2current;
     VECTOR2D start2newr;
 
@@ -61,11 +67,18 @@ bool LightLineNode::CalculateEndPos(
     // このレイが最も近くで当たったオブジェクトを走査する関数
     for (uint32_t i = 0; i < objectCollBox.size(); i++)
     {
+        // 
+        if (this->mpParentObject == objectCollBox[i]->GetMyObject())
+        {
+            // ループの頭まで処理を飛ばす
+            continue;
+        }
+
         // 当たり判定の計算を行う
         tempResultCurrent = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempRay, objectCollBox[i]);
 
         // 当たっていなかった場合は処理を行う
-        if (tempResultCurrent.mnResultParam <= 0)
+        if (tempResultCurrent.mnResultParam < 0)
         {
             // ループの頭まで処理を飛ばす
             continue;
@@ -74,10 +87,20 @@ bool LightLineNode::CalculateEndPos(
         // 今回のレイの開始地点から、当たった場所までの距離を取得する
         start2current = tempResultCurrent.mvHitPos - tempRay.GetStartPos();
 
+        // スタート地点からあまりにも近すぎたら処理を行う
+        if (MyFunctions::EqualInRangeF(start2current.Magnitude(), 0.0f, 0.01f))
+        {
+            // 今回は飛ばす
+            continue;
+        }
+
         // 今回初めてオブジェクトに当たった場合、もしくはこれまでのどれよりも当たった場所が近かった場合は処理を行う
         if (tempResultNewr.mnResultParam < 0 ||
             start2current.Magnitude() < start2newr.Magnitude())
         {
+            // 
+            wallHit = true;
+
             // 今回の結果をそのまま記憶しておく
             tempResultNewr = tempResultCurrent;
 
@@ -93,7 +116,7 @@ bool LightLineNode::CalculateEndPos(
         tempResultCurrent = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempRay, mirrorCollBox[i]);
 
         // 当たっていなかった場合は処理を行う
-        if (tempResultCurrent.mnResultParam <= 0)
+        if (tempResultCurrent.mnResultParam < 0)
         {
             // ループの頭まで処理を飛ばす
             continue;
@@ -102,9 +125,16 @@ bool LightLineNode::CalculateEndPos(
         // 今回のレイの開始地点から、当たった場所までの距離を取得する
         start2current = tempResultCurrent.mvHitPos - tempRay.GetStartPos();
 
+        // スタート地点からあまりにも近すぎたら処理を行う
+        if (MyFunctions::EqualInRangeF(start2current.Magnitude(), 0.0f, 0.01f))
+        {
+            // 今回は飛ばす
+            continue;
+        }
+
         // 今回初めてオブジェクトに当たった場合、もしくはこれまでのどれよりも当たった場所が近かった場合は処理を行う
         if (tempResultNewr.mnResultParam < 0 ||
-            start2current.Magnitude() < start2newr.Magnitude())
+            start2current.MagnitudeNoSqrt() <= start2newr.MagnitudeNoSqrt())
         {
             // 今回の結果をそのまま記憶しておく
             tempResultNewr = tempResultCurrent;
@@ -159,7 +189,7 @@ const VECTOR2D &LightLineNode::GetMyStartPos() const
 const VECTOR2D &LightLineNode::GetListStartPos() const
 {
     // 
-    GameObject2D *light = reinterpret_cast<GameObject2D *>(this->mpParentLight);
+    GameObject2D *light = reinterpret_cast<GameObject2D *>(this->mpParentObject);
 
     // 
     return *light->GetPositionPtr();
@@ -214,7 +244,7 @@ bool LightLineNode::AccessNext(LightLineNode **out)
     if (this->mpNext == nullptr)
     {
         // 
-        LightLineNode *newNode = new LightLineNode(this->mpParentLight);
+        LightLineNode *newNode = new LightLineNode(this->mpParentObject);
 
         // 
         newNode->mpPrev = this;

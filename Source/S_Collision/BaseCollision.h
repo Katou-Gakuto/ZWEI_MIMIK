@@ -20,15 +20,15 @@ enum CollisionTag : unsigned short
     CollisionTag_Checker = 0,                   // 計算用の当たり判定。無条件で全ての当たり判定と計算をする
     CollisionTag_Wall,                          // 壁の当たり判定
     CollisionTag_LightBody,                     // 光発生装置の当たり判定
-    CollisionTag_Ground,                        // 地面の当たり判定
     CollisionTag_Mirror,                        // 鏡面の当たり判定
     CollisionTag_CharaBody,                     // キャラクターの当たり判定
     CollisionTag_Button,                        // ボタンの当たり判定
-    CollisionTag_Attack,                        // 攻撃の当たり判定
     CollisionTag_Max,                           // この列挙子の数の合計
 
     // 以下、現在は使用していないもの
-    CollisionTag_SoundLine,                     
+    CollisionTag_SoundLine,                     // 音の線
+    CollisionTag_Attack,                        // 攻撃の当たり判定
+    CollisionTag_Ground,                        // 地面の当たり判定
 };
 
 enum CollisionType : unsigned char

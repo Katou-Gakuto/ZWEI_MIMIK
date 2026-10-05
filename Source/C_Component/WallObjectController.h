@@ -6,6 +6,8 @@
 
 #include "../Y_Tool/VECTOR.h"
 
+class Quadrangle2D;
+
 // 
 class WallObjectController : public BaseComponent
 {
@@ -23,10 +25,13 @@ public:
     virtual int Draw() override;
 
 protected:
-    WallObjectController(GameObject *myObject, ComponentTagAndOrder ctao, const VECTOR2D &leftUp, const VECTOR2D &rightDown);
-    VECTOR2D mvLeftUpInit;
-    VECTOR2D mvRightDownInit;
-    VECTOR2D mvLeftUp;
-    VECTOR2D mvRightDown;
+    const VECTOR2D mvCenterPosInit;
+    const VECTOR2D mvBlockSizeInit;
+    VECTOR2D mvCenterPos;
+    VECTOR2D mvBlockSize;
     CollisionHandle mdBody;
+
+    WallObjectController(GameObject *myObject, ComponentTagAndOrder ctao, const VECTOR2D &leftUp, const VECTOR2D &rightDown);
+
+    Quadrangle2D *GetBody() const;
 };

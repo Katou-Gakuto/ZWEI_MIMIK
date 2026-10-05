@@ -6,12 +6,22 @@
 
 #include "../Y_Tool/VECTOR.h"
 
+// 
+class GameObject2D;
+
 // LightのON/OFFを行うシミュレーター
 class LightExecutor : public BaseGimmickExecutor
 {
 public:
     // コンストラクタ
-    LightExecutor(PuzzleGimmickActiveParam param);
+    LightExecutor(
+        PuzzleGimmickActiveParam param,
+        GameObject2D *parentObject,
+        int lightAreaIndex,
+        uint32_t lineCount,
+        float baseAngle,
+        float lightAngle,
+        float lightLength);
 
     // デストラクタ
     ~LightExecutor() override;
@@ -32,11 +42,8 @@ public:
     // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
     int Draw(bool triggerSignal) override;
 
-    // このライトのレイの角度を設定する関数
-    virtual void SetLineAngleBox(uint32_t lineCount);
-
     // このライトの光域を計算する関数
-    bool CalculateLineEndPos(const VECTOR2D &startPos);
+    bool CalculateLineEndPos();
 
     // このライトのレイの終点座標の配列を取得する関数
     VECTOR2D *GetLineEndPosBox();
@@ -53,22 +60,19 @@ public:
     // このライトの長さを設定する関数
     void SetLength(float length);
 
-    // このライトの視点を設定する関数
-    void SetStartPos(const VECTOR2D &pos);
-
     // このライトの全体の角度を設定する関数
     void SetLightAngle(float radian);
 
 protected:
-    // このライトのレイの角度を設定する関数
-    void SetLineAngleBox_In(uint32_t lineCount, float maxAngle);
-
     // この光域を取得する関数
     LightArea *GetMyLightArea() const;
 
 private:
     // 今ライトが点いているか
     bool mbLightOn;
+
+    // 
+    int mnAreaIndex;
 
     // ライトの距離。3000くらいあったらこのゲームでは無限くらいだと思うけど、無限って意味で0にするのはやめてね。
     float mfLength;
@@ -80,8 +84,5 @@ private:
     float mfLightAngle;
 
     // 
-    VECTOR2D mvStartPos;
-
-    // 
-    int mnAreaIndex;
+    uint32_t mnLineCount;
 };
