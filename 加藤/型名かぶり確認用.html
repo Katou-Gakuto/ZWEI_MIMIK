@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>型名ビューア (class / struct / enum)</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--border:#2a3140;--amber:#c9803a;--text:#e6edf3;--muted:#7d8590;--class:#58a6ff;--struct:#3fb950;--enum:#d2a8ff;--union:#f0883e;--mono:'SF Mono','Fira Code','Consolas',monospace;--ui:-apple-system,BlinkMacSystemFont,'Segoe UI','Yu Gothic',sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fff;--panel:#f6f8fa;--border:#d0d7de;--text:#1f2328;--muted:#656d76;--amber:#b15f00}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);display:flex;flex-direction:column;min-height:100vh}
+header{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--panel);font-family:var(--mono);font-size:13px;color:var(--amber)}
+.ws{display:grid;grid-template-columns:300px 1fr;flex:1;min-height:0}
+@media(max-width:700px){.ws{grid-template-columns:1fr}}
+aside{background:var(--panel);border-right:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:14px}
+label.t{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 9px;border-radius:6px;outline:none}
+input[type=text]:focus{border-color:var(--amber)}
+.drop{border:1.5px dashed var(--border);border-radius:10px;padding:20px 12px;text-align:center;position:relative;font-size:12px;color:var(--muted);background:var(--bg)}
+.drop:hover,.drop.over{border-color:var(--amber)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop b{display:block;color:var(--text);font-size:13px;margin-bottom:4px}
+.kinds{display:flex;flex-wrap:wrap;gap:10px;font-size:12px}
+.kinds label{display:flex;gap:4px;align-items:center;cursor:pointer}
+.hint{font-size:10px;color:var(--muted);margin-top:4px}
+button{padding:9px;border:none;border-radius:6px;background:var(--amber);color:#fff;font-weight:600;cursor:pointer;font-size:13px}
+button:disabled{opacity:.35;cursor:not-allowed}
+button.sub{background:transparent;border:1px solid var(--border);color:var(--muted);padding:5px 12px;font-weight:400;font-size:12px}
+main{display:flex;flex-direction:column;min-width:0}
+.bar{display:flex;gap:10px;align-items:center;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--panel)}
+.bar input{flex:1}
+#sum{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+#out{padding:16px 20px;overflow:auto;flex:1;font-family:var(--mono);font-size:13px;line-height:1.7}
+.file{margin-bottom:14px}
+.fn{color:var(--amber);font-weight:500;word-break:break-all}
+.fn small{color:var(--muted);font-weight:400}
+.it{display:flex;gap:10px;padding-left:18px;align-items:baseline}
+.bd{font-size:10px;min-width:48px;text-align:center;border-radius:4px;padding:0 5px;border:1px solid currentColor}
+.k-class{color:var(--class)}.k-struct{color:var(--struct)}.k-enum{color:var(--enum)}.k-union{color:var(--union)}
+.nm{color:var(--text)}.ln{color:var(--muted);font-size:11px}
+.empty{color:var(--muted);text-align:center;margin-top:80px;font-family:var(--ui)}
+</style>
+</head>
+<body>
+<header>▸ type-viewer / 構造体名・クラス名・enum名 ビューア</header>
+<div class="ws">
+<aside>
+  <div>
+    <label class="t">フォルダを選択</label>
+    <div class="drop" id="dz"><input type="file" id="fi" webkitdirectory multiple><b>📁 クリックしてフォルダを選択</b><span id="dzs">C++のソースを解析します</span></div>
+  </div>
+  <div>
+    <label class="t">対象拡張子（カンマ区切り）</label>
+    <input type="text" id="exts" value="h,hpp,hh,hxx,inl,c,cc,cpp,cxx">
+  </div>
+  <div>
+    <label class="t">除外フォルダ/ファイル名（完全一致）</label>
+    <input type="text" id="excl" value="node_modules,.git,.vs,Debug,Release,x64">
+    <p class="hint">パス中のどこかの名前が一致すると無視</p>
+  </div>
+  <div>
+    <label class="t">表示する種類</label>
+    <div class="kinds">
+      <label class="k-class"><input type="checkbox" data-k="class" checked>class</label>
+      <label class="k-struct"><input type="checkbox" data-k="struct" checked>struct</label>
+      <label class="k-enum"><input type="checkbox" data-k="enum" checked>enum</label>
+      <label class="k-union"><input type="checkbox" data-k="union">union</label>
+    </div>
+  </div>
+  <button id="run" disabled>解析する</button>
+</aside>
+<main>
+  <div class="bar">
+    <input type="text" id="q" placeholder="名前で絞り込み（部分一致）">
+    <span id="sum"></span>
+    <button class="sub" id="cp">📋 コピー</button>
+  </div>
+  <div id="out"><div class="empty">フォルダを選択して「解析する」を押してください</div></div>
+</main>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let files=[],results=[];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+$('fi').addEventListener('change',e=>setFiles([...e.target.files]));
+const dz=$('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');setFiles([...e.dataTransfer.files])});
+function setFiles(f){
+  files=f.filter(x=>x.webkitRelativePath);
+  if(!files.length)return;
+  $('run').disabled=false;
+  $('dzs').textContent=files[0].webkitRelativePath.split('/')[0]+' / '+files.length.toLocaleString()+' ファイル';
+}
+
+// コメントと文字列を空白化（改行は維持して行番号を保つ）
+function strip(s){
+  return s.replace(/\/\*[\s\S]*?\*\/|\/\/(?:\\\r?\n|[^\n])*|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'/g,m=>m.replace(/[^\n]/g,' '));
+}
+function kindOf(w){return w.startsWith('enum')?'enum':w}
+
+function parse(src){
+  const s=strip(src),out=[];
+  const nl=[0];for(let i=0;i<s.length;i++)if(s[i]==='\n')nl.push(i+1);
+  const line=idx=>{let lo=0,hi=nl.length-1;while(lo<hi){const m=(lo+hi+1)>>1;nl[m]<=idx?lo=m:hi=m-1}return lo+1};
+  // 通常定義: class/struct/enum/union Name ... {  （前方宣言・変数宣言は除外）
+  const re=/\b(class|struct|union|enum(?:\s+(?:class|struct))?)\s+(?:alignas\s*\([^)]*\)\s*|\[\[[^\]]*\]\]\s*|__declspec\s*\([^)]*\)\s*|[A-Z_][A-Z0-9_]*\s+)*([A-Za-z_]\w*)\s*(?:final\s*)?(?::[^;{}]*)?\{/g;
+  let m;
+  while((m=re.exec(s)))out.push({kind:kindOf(m[1]),name:m[2],line:line(m.index),label:m[1].replace(/\s+/g,' ')});
+  // typedef struct {...} Name;
+  const rt=/\btypedef\s+(struct|union|enum)\s*(?:[A-Za-z_]\w*\s*)?\{/g;
+  while((m=rt.exec(s))){
+    let i=m.index+m[0].length,d=1;
+    while(i<s.length&&d>0){if(s[i]==='{')d++;else if(s[i]==='}')d--;i++}
+    const t=/^\s*([A-Za-z_]\w*)/.exec(s.slice(i,i+200));
+    if(t)out.push({kind:m[1],name:t[1],line:line(m.index),label:'typedef '+m[1]});
+  }
+  return out.sort((a,b)=>a.line-b.line);
+}
+
+$('run').onclick=async()=>{
+  const exts=new Set($('exts').value.split(',').map(x=>x.trim().replace(/^\./,'').toLowerCase()).filter(Boolean));
+  const ex=new Set($('excl').value.split(',').map(x=>x.trim()).filter(Boolean));
+  const targets=files.filter(f=>{
+    const p=f.webkitRelativePath.split('/');
+    if(p.slice(1).some(n=>ex.has(n)))return false;
+    const e=f.name.includes('.')?f.name.split('.').pop().toLowerCase():'';
+    return exts.has(e);
+  }).sort((a,b)=>a.webkitRelativePath.localeCompare(b.webkitRelativePath));
+  $('out').innerHTML='<div class="empty">解析中...</div>';
+  results=[];
+  for(const f of targets){
+    try{const items=parse(await f.text());results.push({path:f.webkitRelativePath,items})}catch(e){}
+  }
+  render();
+};
+
+function activeKinds(){return new Set([...document.querySelectorAll('[data-k]:checked')].map(c=>c.dataset.k))}
+function view(){
+  const ks=activeKinds(),q=$('q').value.trim().toLowerCase();
+  return results.map(r=>({path:r.path,items:r.items.filter(i=>ks.has(i.kind)&&(!q||i.name.toLowerCase().includes(q)))})).filter(r=>r.items.length);
+}
+function render(){
+  const v=view(),cnt={};let total=0;
+  v.forEach(r=>r.items.forEach(i=>{cnt[i.kind]=(cnt[i.kind]||0)+1;total++}));
+  $('sum').textContent=`${v.length} files / ${total} types`+(total?'  ('+Object.entries(cnt).map(([k,n])=>k+':'+n).join(' '):'')+(total?')':'');
+  if(!v.length){$('out').innerHTML='<div class="empty">該当する型は見つかりませんでした</div>';return}
+  $('out').innerHTML=v.map(r=>`<div class="file"><div class="fn">${esc(r.path)} <small>(${r.items.length})</small></div>`+
+    r.items.map(i=>`<div class="it"><span class="bd k-${i.kind}">${esc(i.label)}</span><span class="nm">${esc(i.name)}</span><span class="ln">L${i.line}</span></div>`).join('')+'</div>').join('');
+}
+document.querySelectorAll('[data-k]').forEach(c=>c.onchange=render);
+$('q').oninput=render;
+$('cp').onclick=()=>{
+  const t=view().map(r=>r.path+'\n'+r.items.map(i=>`  ${i.label} ${i.name} (L${i.line})`).join('\n')).join('\n\n');
+  if(!t)return;
+  try{navigator.clipboard.writeText(t).then(()=>{$('cp').textContent='✓ コピー完了';setTimeout(()=>$('cp').textContent='📋 コピー',1500)})}catch(e){}
+};
+</script>
+</body>
+</html>

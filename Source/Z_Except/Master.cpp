@@ -47,6 +47,7 @@ int Master::Initialize()
     mpBaseSceneManager->Initialize();
 
     mpLightManager = new LightAreaManager();
+    mpLightManager->Initilize();
 
 
     return 0;
