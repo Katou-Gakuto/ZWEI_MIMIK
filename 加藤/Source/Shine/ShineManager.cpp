@@ -81,6 +81,8 @@ ShineManager::ShineManager()
     mnDrawMode[3] = SHINE_DRAW_MODE::GRID_SHINE_LOOP_NUMBER_DRAW_MODE;
     //mnDrawMode[4] = SHINE_DRAW_MODE::SHINE_CHECK_GRID_DRAW_MODE;
     mnDrawMode[5] = SHINE_DRAW_MODE::TRIANGLE_SHINE_DRAW_MODE;
+    //mnDrawMode[6] = SHINE_DRAW_MODE::TRIANGLE_SHINE_SINGLE_DRAW_MODE_TRUE;
+    mnDrawMode[7] = SHINE_DRAW_MODE::GRID_SET_MAP_OBJECT_DRAW_MODE;
 }
 
 ShineManager::~ShineManager()
@@ -92,14 +94,124 @@ void ShineManager::Init()
     mpObjects.clear();
 
     // ここで生成
+    //==================================================
+    // テスト用 WallObject 生成
+    //==================================================
+
+    // ① 単体
     WallObject* wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.7f, 960 * 0.7f));
+    wallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.20f));
     wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
     mpObjects.push_back(wallObject);
+
+    // ② 横長
     wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.5f, 960 * 0.5f));
+    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.20f));
+    wallObject->SetSize(Vector2(1280 * 0.20f, 960 * 0.04f));
+    mpObjects.push_back(wallObject);
+
+    // ③ 縦長
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.80f, 960 * 0.30f));
+    wallObject->SetSize(Vector2(1280 * 0.04f, 960 * 0.20f));
+    mpObjects.push_back(wallObject);
+
+
+    //==================================================
+    // 重なりテスト
+    //==================================================
+
+    // ④ 完全に重なる
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+    wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+    mpObjects.push_back(wallObject);
+
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
     wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
     mpObjects.push_back(wallObject);
+
+
+    //==================================================
+    // 接触・近接テスト
+    //==================================================
+
+    // ⑤ 横方向に接触
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.50f));
+    wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+    mpObjects.push_back(wallObject);
+
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.58f, 960 * 0.50f));
+    wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+    mpObjects.push_back(wallObject);
+
+
+    // ⑥ 少しだけ離れている
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.70f, 960 * 0.55f));
+    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+    mpObjects.push_back(wallObject);
+
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.76f, 960 * 0.55f));
+    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+    mpObjects.push_back(wallObject);
+
+
+    //==================================================
+    // 光源周辺テスト
+    //==================================================
+
+    // ⑦ 光源の左
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.40f, 960 * 0.70f));
+    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+    mpObjects.push_back(wallObject);
+
+    // ⑧ 光源の右
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.60f, 960 * 0.70f));
+    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+    mpObjects.push_back(wallObject);
+
+    // ⑨ 光源の下
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.85f));
+    wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+    mpObjects.push_back(wallObject);
+
+
+    //==================================================
+    // 画面端テスト
+    //==================================================
+
+    // ⑩ 左端
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.02f, 960 * 0.50f));
+    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+    mpObjects.push_back(wallObject);
+
+    // ⑪ 右端
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.98f, 960 * 0.50f));
+    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+    mpObjects.push_back(wallObject);
+
+    // ⑫ 上端
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.02f));
+    wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+    mpObjects.push_back(wallObject);
+
+    // ⑬ 下端
+    wallObject = new WallObject();
+    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.98f));
+    wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+    mpObjects.push_back(wallObject);
+
 
     mpShineObject = new ShineObject();
     mpShineObject->Init();
@@ -1113,7 +1225,8 @@ void ShineManager::CheckShineGrid()
         mstShineAreaResult.push_back(shineDirections);
     }
 
-    AddVisibleShineTriangles(mpShineObject->GetShineDirection());
+    // TODO:_ これで全部探索しちゃってるからこれなくす
+    //AddVisibleShineTriangles(mpShineObject->GetShineDirection());
 
     // 画面の角ポジション
 
@@ -1691,6 +1804,9 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
     newShineDirections.push_back(shineDirections);
 
     // 削った部分の三角形候補
+    std::vector<SHINE_TRIANGLE> savedTriangle;
+
+    constexpr float CUT_ANGLE_EPSILON_SHINE = 0.001f;
 
     // 対象となる終端候補を処理
     for (int lightIterator = (mstLightAreaEndPoint.size() - 1); lightIterator >= 0; --lightIterator)
@@ -1704,7 +1820,29 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
         mstLightAreaEndPoint.erase(mstLightAreaEndPoint.begin() + lightIterator);
 
         mstSettingDebugWallLineResult.push_back(endPoint);
-        
+
+        // 三角に登録
+        {
+            SHINE_TRIANGLE triangle;
+
+            triangle.Vertex1 =
+                Vector2_Int(
+                    static_cast<int>(mstShinePos.x),
+                    static_cast<int>(mstShinePos.y));
+
+            triangle.Vertex2 =
+                Vector2_Int(
+                    static_cast<int>(endPoint.linePos1.x),
+                    static_cast<int>(endPoint.linePos1.y));
+
+            triangle.Vertex3 =
+                Vector2_Int(
+                    static_cast<int>(endPoint.linePos2.x),
+                    static_cast<int>(endPoint.linePos2.y));
+
+            savedTriangle.push_back(triangle);
+        }
+
         /*① 線分の両端を光源から見た角度に変換*/
         const float lineAngle1 =
             GetAngleToPoint(mstShinePos, endPoint.linePos1);
@@ -1745,11 +1883,25 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
                     shineDirections.leftAngle);
 
             // 現在の光領域と遮蔽範囲の重なり
-            const float overlapLeft =
+            float overlapLeft =
                 max(currentLeftAngle, blockLeftAngle);
 
-            const float overlapRight =
+            float overlapRight =
                 min(currentRightAngle, blockRightAngle);
+
+            // 実際に重なっている場合だけ、削る量を少し多くする
+            if (overlapRight > overlapLeft)
+            {
+                overlapLeft =
+                    max(
+                        currentLeftAngle,
+                        overlapLeft - CUT_ANGLE_EPSILON_SHINE);
+
+                overlapRight =
+                    min(
+                        currentRightAngle,
+                        overlapRight + CUT_ANGLE_EPSILON_SHINE);
+            }
 
             // 重なっていない
             if (overlapRight <= overlapLeft)
@@ -1831,6 +1983,610 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
     }
 
     // 三角を削る
+    {
+       
+    if (savedTriangle.empty())
+    {
+        // 何もないので処理不要
+    }
+    else
+    {
+        const Vector2 origin = mstShinePos;
+
+        // ------------------------------------------------------------
+        // 三角を削る際の余裕
+        //
+        // グリッド境界上の誤差によって、
+        // 本来遮られているはずの部分が僅かに残るのを防ぐ。
+        //
+        // 大きくしすぎると本来見える部分まで削るので、
+        // まずは非常に小さい値から調整する。
+        // ------------------------------------------------------------
+        constexpr float CUT_ANGLE_EPSILON_TRIANGLE = 0.0005f;
+
+        // ------------------------------------------------------------
+        // 三角形が光源から見てどの角度範囲に存在するか
+        // ------------------------------------------------------------
+        struct TRIANGLE_ANGLE_DATA
+        {
+            float leftAngle;
+            float rightAngle;
+            int triangleIndex;
+        };
+
+        std::vector<TRIANGLE_ANGLE_DATA> triangleAngleDatas;
+        triangleAngleDatas.reserve(savedTriangle.size());
+
+        // ------------------------------------------------------------
+        // 角度の分割点
+        //
+        // AddVisibleShineTriangles() と同じ考え方で、
+        // 「手前の三角が切り替わる可能性がある角度」を
+        // すべて登録する。
+        // ------------------------------------------------------------
+        std::vector<float> splitAngles;
+
+        splitAngles.push_back(0.0f);
+        splitAngles.push_back(shineDirections.visionAngle);
+
+        // ------------------------------------------------------------
+        // 三角形の角度範囲を登録
+        // ------------------------------------------------------------
+        for (int triangleIndex = 0;
+             triangleIndex < static_cast<int>(savedTriangle.size());
+             ++triangleIndex)
+        {
+            const SHINE_TRIANGLE& triangle =
+                savedTriangle[triangleIndex];
+
+            const Vector2 vertex2(
+                static_cast<float>(triangle.Vertex2.x),
+                static_cast<float>(triangle.Vertex2.y));
+
+            const Vector2 vertex3(
+                static_cast<float>(triangle.Vertex3.x),
+                static_cast<float>(triangle.Vertex3.y));
+
+            float angle1 =
+                GetSignedAngleFromLeft(
+                    GetAngleToPoint(origin, vertex2),
+                    shineDirections.leftAngle);
+
+            float angle2 =
+                GetSignedAngleFromLeft(
+                    GetAngleToPoint(origin, vertex3),
+                    shineDirections.leftAngle);
+
+            if (angle1 > angle2)
+            {
+                std::swap(angle1, angle2);
+            }
+
+            // 光領域の外に完全に出ている三角は無視
+            if (angle2 <= 0.0f ||
+                angle1 >= shineDirections.visionAngle)
+            {
+                continue;
+            }
+
+            angle1 =
+                max(angle1, 0.0f);
+
+            angle2 =
+                min(angle2, shineDirections.visionAngle);
+
+            triangleAngleDatas.push_back(
+            {
+                angle1,
+                angle2,
+                triangleIndex
+            });
+
+            splitAngles.push_back(angle1);
+            splitAngles.push_back(angle2);
+        }
+
+        // ------------------------------------------------------------
+        // 三角形同士の辺の交点も分割角度に追加する。
+        //
+        // これが重要。
+        //
+        // 端点の角度だけでは、
+        //
+        //   手前の辺
+        //       \
+        //        \
+        //         X ← ここで奥行き関係が入れ替わる
+        //        /
+        //       /
+        //   奥の辺
+        //
+        // のようなケースで切り替わり位置を拾えない。
+        //
+        // AddVisibleShineTriangles() と同じ結果に近づけるため、
+        // 辺同士の交点の角度も追加する。
+        // ------------------------------------------------------------
+        const auto crossDouble =
+            [](double ax, double ay, double bx, double by)
+        {
+            return ax * by - ay * bx;
+        };
+
+        for (size_t i = 0;
+             i < savedTriangle.size();
+             ++i)
+        {
+            const Vector2 edgeA1(
+                static_cast<float>(
+                    savedTriangle[i].Vertex2.x),
+                static_cast<float>(
+                    savedTriangle[i].Vertex2.y));
+
+            const Vector2 edgeA2(
+                static_cast<float>(
+                    savedTriangle[i].Vertex3.x),
+                static_cast<float>(
+                    savedTriangle[i].Vertex3.y));
+
+            const double edgeAX =
+                edgeA2.x - edgeA1.x;
+
+            const double edgeAY =
+                edgeA2.y - edgeA1.y;
+
+            for (size_t j = i + 1;
+                 j < savedTriangle.size();
+                 ++j)
+            {
+                const Vector2 edgeB1(
+                    static_cast<float>(
+                        savedTriangle[j].Vertex2.x),
+                    static_cast<float>(
+                        savedTriangle[j].Vertex2.y));
+
+                const Vector2 edgeB2(
+                    static_cast<float>(
+                        savedTriangle[j].Vertex3.x),
+                    static_cast<float>(
+                        savedTriangle[j].Vertex3.y));
+
+                const double edgeBX =
+                    edgeB2.x - edgeB1.x;
+
+                const double edgeBY =
+                    edgeB2.y - edgeB1.y;
+
+                const double betweenX =
+                    edgeB1.x - edgeA1.x;
+
+                const double betweenY =
+                    edgeB1.y - edgeA1.y;
+
+                const double denominator =
+                    crossDouble(
+                        edgeAX,
+                        edgeAY,
+                        edgeBX,
+                        edgeBY);
+
+                if (fabs(denominator) < 0.000000001)
+                {
+                    continue;
+                }
+
+                const double edgeARatio =
+                    crossDouble(
+                        betweenX,
+                        betweenY,
+                        edgeBX,
+                        edgeBY) /
+                    denominator;
+
+                const double edgeBRatio =
+                    crossDouble(
+                        betweenX,
+                        betweenY,
+                        edgeAX,
+                        edgeAY) /
+                    denominator;
+
+                constexpr double RATIO_EPSILON = 0.000001;
+
+                if (edgeARatio < -RATIO_EPSILON ||
+                    edgeARatio > 1.0 + RATIO_EPSILON ||
+                    edgeBRatio < -RATIO_EPSILON ||
+                    edgeBRatio > 1.0 + RATIO_EPSILON)
+                {
+                    continue;
+                }
+
+                const Vector2 intersection(
+                    static_cast<float>(
+                        edgeA1.x +
+                        edgeAX * edgeARatio),
+
+                    static_cast<float>(
+                        edgeA1.y +
+                        edgeAY * edgeARatio));
+
+                const double dx =
+                    intersection.x - origin.x;
+
+                const double dy =
+                    intersection.y - origin.y;
+
+                if (dx * dx + dy * dy <= 0.000001)
+                {
+                    continue;
+                }
+
+                float relativeAngle =
+                    GetSignedAngleFromLeft(
+                        GetAngleToPoint(
+                            origin,
+                            intersection),
+                        shineDirections.leftAngle);
+
+                if (relativeAngle >= 0.0f &&
+                    relativeAngle <=
+                        shineDirections.visionAngle)
+                {
+                    splitAngles.push_back(
+                        relativeAngle);
+                }
+            }
+        }
+
+        // ------------------------------------------------------------
+        // 角度をソート
+        // ------------------------------------------------------------
+        std::sort(
+            splitAngles.begin(),
+            splitAngles.end());
+
+        splitAngles.erase(
+            std::unique(
+                splitAngles.begin(),
+                splitAngles.end(),
+                [](float lhs, float rhs)
+                {
+                    return fabsf(lhs - rhs) < 0.000001f;
+                }),
+            splitAngles.end());
+
+        // ------------------------------------------------------------
+        // 三角形の終端辺と光線の交点を求める
+        // ------------------------------------------------------------
+        const auto getTriangleRayIntersection =
+            [&](const SHINE_TRIANGLE& triangle,
+                float angle,
+                Vector2& intersection,
+                double& distance)
+        {
+            const double rayX =
+                std::cos(
+                    static_cast<double>(angle));
+
+            const double rayY =
+                std::sin(
+                    static_cast<double>(angle));
+
+            const Vector2 edgeStart(
+                static_cast<float>(
+                    triangle.Vertex2.x),
+                static_cast<float>(
+                    triangle.Vertex2.y));
+
+            const Vector2 edgeEnd(
+                static_cast<float>(
+                    triangle.Vertex3.x),
+                static_cast<float>(
+                    triangle.Vertex3.y));
+
+            const double edgeX =
+                edgeEnd.x - edgeStart.x;
+
+            const double edgeY =
+                edgeEnd.y - edgeStart.y;
+
+            const double offsetX =
+                edgeStart.x - origin.x;
+
+            const double offsetY =
+                edgeStart.y - origin.y;
+
+            const double denominator =
+                crossDouble(
+                    rayX,
+                    rayY,
+                    edgeX,
+                    edgeY);
+
+            // 平行
+            if (fabs(denominator) < 0.000000001)
+            {
+                return false;
+            }
+
+            const double rayDistance =
+                crossDouble(
+                    offsetX,
+                    offsetY,
+                    edgeX,
+                    edgeY) /
+                denominator;
+
+            const double edgeRatio =
+                crossDouble(
+                    offsetX,
+                    offsetY,
+                    rayX,
+                    rayY) /
+                denominator;
+
+            constexpr double DISTANCE_EPSILON = 0.0001;
+            constexpr double RATIO_EPSILON = 0.0001;
+
+            if (rayDistance < -DISTANCE_EPSILON ||
+                edgeRatio < -RATIO_EPSILON ||
+                edgeRatio > 1.0 + RATIO_EPSILON)
+            {
+                return false;
+            }
+
+            distance =
+                max(0.0, rayDistance);
+
+            intersection =
+            {
+                static_cast<float>(
+                    origin.x +
+                    rayX * distance),
+
+                static_cast<float>(
+                    origin.y +
+                    rayY * distance)
+            };
+
+            return true;
+        };
+
+        // ------------------------------------------------------------
+        // 各角度区間で一番近い三角形を求める
+        // ------------------------------------------------------------
+        std::vector<SHINE_TRIANGLE> visibleTriangles;
+
+        for (size_t angleIndex = 0;
+             angleIndex + 1 < splitAngles.size();
+             ++angleIndex)
+        {
+            const float leftAngle =
+                splitAngles[angleIndex];
+
+            const float rightAngle =
+                splitAngles[angleIndex + 1];
+
+            if (rightAngle - leftAngle <
+                0.000001f)
+            {
+                continue;
+            }
+
+            const float middleAngle =
+                (leftAngle + rightAngle) *
+                0.5f;
+            constexpr float MIN_TRIANGLE_ANGLE = 0.0005f;
+
+            if (rightAngle - leftAngle <
+                MIN_TRIANGLE_ANGLE)
+            {
+                continue;
+            }
+            // --------------------------------------------------------
+            // この角度区間に存在する三角形の中から
+            // 光源に最も近いものを探す。
+            // --------------------------------------------------------
+            int closestTriangleIndex = -1;
+
+            double closestDistance =
+                DBL_MAX;
+
+            for (const TRIANGLE_ANGLE_DATA&
+                 triangleAngleData :
+                 triangleAngleDatas)
+            {
+                if (middleAngle <
+                        triangleAngleData.leftAngle ||
+                    middleAngle >
+                        triangleAngleData.rightAngle)
+                {
+                    continue;
+                }
+
+                Vector2 intersection;
+                double distance = DBL_MAX;
+
+                if (!getTriangleRayIntersection(
+                        savedTriangle[
+                            triangleAngleData.triangleIndex],
+                        shineDirections.leftAngle +
+                            middleAngle,
+                        intersection,
+                        distance))
+                {
+                    continue;
+                }
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+
+                    closestTriangleIndex =
+                        triangleAngleData.triangleIndex;
+                }
+            }
+
+            if (closestTriangleIndex < 0)
+            {
+                continue;
+            }
+
+            const SHINE_TRIANGLE& closestTriangle =
+                savedTriangle[closestTriangleIndex];
+
+            // --------------------------------------------------------
+            // この角度区間の左右端で、
+            // 一番近い三角形との交点を取得する。
+            //
+            // 境界ギリギリでは後ろの三角が拾われる可能性があるため、
+            // 「削る側」の判定だけ少し余裕を持たせる。
+            // --------------------------------------------------------
+
+            float intersectionLeftAngle =
+                leftAngle;
+
+            float intersectionRightAngle =
+                rightAngle;
+
+            // 区間の幅が十分ある場合だけ、
+            // 削る側の余裕を入れる。
+            //
+            // ただし実際の三角形境界そのものは削らない。
+            // ここでは「どの三角形を採用するか」の判定だけに使う。
+            if (intersectionLeftAngle > 0.0f)
+            {
+                intersectionLeftAngle =
+                    max(
+                        0.0f,
+                        intersectionLeftAngle -
+                        CUT_ANGLE_EPSILON_TRIANGLE);
+            }
+
+            if (intersectionRightAngle <
+                shineDirections.visionAngle)
+            {
+                intersectionRightAngle =
+                    min(
+                        shineDirections.visionAngle,
+                        intersectionRightAngle +
+                        CUT_ANGLE_EPSILON_TRIANGLE);
+            }
+
+            Vector2 leftPoint;
+            Vector2 rightPoint;
+
+            double leftDistance =
+                DBL_MAX;
+
+            double rightDistance =
+                DBL_MAX;
+
+            if (!getTriangleRayIntersection(
+                    closestTriangle,
+                    shineDirections.leftAngle +
+                        intersectionLeftAngle,
+                    leftPoint,
+                    leftDistance))
+            {
+                // 補正した角度では交点がなくなった場合、
+                // 元の角度でもう一度取得する。
+                if (!getTriangleRayIntersection(
+                        closestTriangle,
+                        shineDirections.leftAngle +
+                            leftAngle,
+                        leftPoint,
+                        leftDistance))
+                {
+                    continue;
+                }
+            }
+
+            if (!getTriangleRayIntersection(
+                    closestTriangle,
+                    shineDirections.leftAngle +
+                        intersectionRightAngle,
+                    rightPoint,
+                    rightDistance))
+            {
+                if (!getTriangleRayIntersection(
+                        closestTriangle,
+                        shineDirections.leftAngle +
+                            rightAngle,
+                        rightPoint,
+                        rightDistance))
+                {
+                    continue;
+                }
+            }
+
+            // --------------------------------------------------------
+            // 三角形作成
+            // --------------------------------------------------------
+            SHINE_TRIANGLE visibleTriangle;
+
+            visibleTriangle.Vertex1 =
+            {
+                static_cast<int>(
+                    std::lround(origin.x)),
+
+                static_cast<int>(
+                    std::lround(origin.y))
+            };
+
+            visibleTriangle.Vertex2 =
+            {
+                static_cast<int>(
+                    std::lround(leftPoint.x)),
+
+                static_cast<int>(
+                    std::lround(leftPoint.y))
+            };
+
+            visibleTriangle.Vertex3 =
+            {
+                static_cast<int>(
+                    std::lround(rightPoint.x)),
+
+                static_cast<int>(
+                    std::lround(rightPoint.y))
+            };
+
+            // --------------------------------------------------------
+            // 退化三角形を除外
+            // --------------------------------------------------------
+            const Vector2 edge1(
+                visibleTriangle.Vertex2.x -
+                    visibleTriangle.Vertex1.x,
+
+                visibleTriangle.Vertex2.y -
+                    visibleTriangle.Vertex1.y);
+
+            const Vector2 edge2(
+                visibleTriangle.Vertex3.x -
+                    visibleTriangle.Vertex1.x,
+
+                visibleTriangle.Vertex3.y -
+                    visibleTriangle.Vertex1.y);
+
+            if (fabsf(Cross(edge1, edge2)) >
+                0.0001f)
+            {
+                visibleTriangles.push_back(
+                    visibleTriangle);
+            }
+        }
+
+        savedTriangle.swap(
+            visibleTriangles);
+    }
+    }
+
+    // 三角登録
+    for (int i = 0; i < savedTriangle.size(); ++i)
+    {
+        AddDrawTriangleData(savedTriangle[i]);
+    }
+
     return newShineDirections;
 }
 

@@ -132,7 +132,9 @@ void WallObject::ChangeMoveEdges_ShineMap()
 void WallObject::LineDataSetting(Vector2_Int gridIndex, Vector2 linePos1, Vector2 linePos2, bool yFlag)
 {
     int checkValue = yFlag ? gridIndex.y : gridIndex.x;
-    if ((0 <= checkValue) && (checkValue < (yFlag ? mpShineManager->MAP_ARRAY_SIZE_Y : mpShineManager->MAP_ARRAY_SIZE_X)))
+    int notCheckValue = yFlag ? gridIndex.x : gridIndex.y;
+    if ((0 <= checkValue) && (checkValue < (yFlag ? mpShineManager->MAP_ARRAY_SIZE_Y : mpShineManager->MAP_ARRAY_SIZE_X)) &&
+        (0 <= notCheckValue) && (notCheckValue < (yFlag ? mpShineManager->MAP_ARRAY_SIZE_X : mpShineManager->MAP_ARRAY_SIZE_Y)))
     {
         LINE_POS linePos;
         linePos.id = mpShineManager->GetNewLineID();
