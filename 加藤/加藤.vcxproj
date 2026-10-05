@@ -144,8 +144,11 @@
     <ClInclude Include="Source\Enum\ImguiEnum.h" />
     <ClInclude Include="Source\Enum\KeyStateEnum.h" />
     <ClInclude Include="Source\Enum\ResourceEnum.h" />
+    <ClInclude Include="Source\Shine\DiamondWallObject.h" />
+    <ClInclude Include="Source\Shine\MyMath.h" />
     <ClInclude Include="Source\Shine\ShineManager.h" />
     <ClInclude Include="Source\Shine\ShineObject.h" />
+    <ClInclude Include="Source\Shine\MapObjectData.h" />
     <ClInclude Include="Source\Shine\TestObjectBase.h" />
     <ClInclude Include="Source\Shine\WallObject.h" />
     <ClInclude Include="Source\Singleton\CameraManager.h" />
@@ -197,9 +200,11 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Source\DebugLogs\DebugLog.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Shine\MyMath.cpp" />
     <ClCompile Include="Source\Shine\ShineManager.cpp" />
     <ClCompile Include="Source\Shine\ShineObject.cpp" />
     <ClCompile Include="Source\Shine\WallObject.cpp" />
+    <ClCompile Include="Source\Shine\DiamondWallObject.cpp" />
     <ClCompile Include="Source\Singleton\CameraManager.cpp" />
     <ClCompile Include="Source\Singleton\DotWeenManager.cpp" />
     <ClCompile Include="Source\Singleton\DrawManager.cpp" />

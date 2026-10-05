@@ -261,6 +261,15 @@
     <ClInclude Include="Source\Struct\UseDeclaration.h">
       <Filter>ヘッダー ファイル\Struct</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Shine\MapObjectData.h">
+      <Filter>ヘッダー ファイル\Shine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shine\DiamondWallObject.h">
+      <Filter>ヘッダー ファイル\Shine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shine\MyMath.h">
+      <Filter>ヘッダー ファイル\Shine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -372,6 +381,12 @@
       <Filter>ソース ファイル\Shine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Shine\ShineManager.cpp">
+      <Filter>ソース ファイル\Shine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shine\DiamondWallObject.cpp">
+      <Filter>ソース ファイル\Shine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shine\MyMath.cpp">
       <Filter>ソース ファイル\Shine</Filter>
     </ClCompile>
   </ItemGroup>

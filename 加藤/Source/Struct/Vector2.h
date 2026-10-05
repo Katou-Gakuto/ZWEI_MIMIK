@@ -61,6 +61,11 @@ struct Vector2
 		this->x = X;
 		this->y = Y;
 	}
+	Vector2(Vector2_Int src)
+	{
+		this->x = src.x;
+		this->y = src.y;
+	}
 
 	Vector2& operator +=(Vector2& src)
 	{
@@ -368,4 +373,25 @@ inline Vector2 operator/(float lhs, const Vector2& rhs)
 		lhs / rhs.x,
 		lhs / rhs.y
 	);
+}
+
+
+
+
+inline bool operator==(const Vector2_Int& lhs, const Vector2_Int& rhs)
+{
+	return (lhs.x == rhs.x) && (lhs.y == rhs.y);
+}
+inline bool operator==(int lhs, const Vector2_Int& rhs)
+{
+	return (lhs == rhs.x) && (lhs == rhs.y);
+}
+
+inline bool operator!=(const Vector2_Int& lhs, const Vector2_Int& rhs)
+{
+	return (lhs.x != rhs.x) || (lhs.y != rhs.y);
+}
+inline bool operator!=(int lhs, const Vector2_Int& rhs)
+{
+	return (lhs != rhs.x) || (lhs != rhs.y);
 }

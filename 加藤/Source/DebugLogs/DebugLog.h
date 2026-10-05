@@ -23,6 +23,7 @@ namespace DEBUG
 		DEBUG_FADE,
 		DEBUG_FAILURE_LOG,
 		DEBUG_TIME,
+		DEBUG_SHINE_POS,
 	};
 
 	// デバッグ用処理種類
