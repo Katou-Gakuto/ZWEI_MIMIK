@@ -1,10 +1,13 @@
 #include "LightExecutor.h"
 
+#include "DxLib.h"
+
 #include "../A_GameObject/GameObject2D.h"
 
 #include "../E_Scene/BaseScene.h"
 #include "../E_Scene/BaseSceneManager.h"
 
+#include "../G_LightArea/LightLineNode.h"
 #include "../G_LightArea/LightArea.h"
 #include "../G_LightArea/LightAreaManager.h"
 
@@ -17,15 +20,24 @@
 #include "../Z_Except/Master.h"
 
 // コンストラクタ
-LightExecutor::LightExecutor(PuzzleGimmickActiveParam param) :
-    mfLength(0.0f),
-    mfBaseAngle(0.0f),
-    mfLightAngle(MyFunctions::GetAllRad()),
-    mvStartPos(),
-    mnAreaIndex(0),
+LightExecutor::LightExecutor(
+    PuzzleGimmickActiveParam param,
+    GameObject2D *parentObject,
+    int lightAreaIndex,
+    uint32_t lineCount,
+    float baseAngle,
+    float lightAngle,
+    float lightLength) :
     mbLightOn(true),
+    mnAreaIndex(lightAreaIndex),
+    mnLineCount(lineCount),
+    mfBaseAngle(baseAngle),
+    mfLightAngle(lightAngle),
+    mfLength(lightLength),
     BaseGimmickExecutor(param)
 {
+    // 
+    this->GetMyLightArea()->SetParam(parentObject, this->mnLineCount, this->mfBaseAngle, this->mfLightAngle);
 }
 
 // デストラクタ
@@ -84,7 +96,7 @@ int LightExecutor::LateUpdate(bool triggerSignal)
         this->GetMyLightArea()->OnLight();
 
         // 
-        this->CalculateLineEndPos(this->mvStartPos);
+        this->CalculateLineEndPos();
     }
     else
     {
@@ -100,19 +112,59 @@ int LightExecutor::LateUpdate(bool triggerSignal)
 // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
 int LightExecutor::Draw(bool triggerSignal)
 {
+    // 
+    if (!this->mbLightOn)
+    {
+        // 光域のシミュレーターは描画はしません
+        return 0;
+    }
+
+    // 
+    LightArea *lightArea = Master::mpLightManager->SearchArea(this->mnAreaIndex);
+    LightLineNode *currentNode;
+    LightLineNode *nextNode;
+
+    for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
+    {
+        // 
+        currentNode = lightArea->GetFirstNodeBox()[i];
+
+        // 
+        if (currentNode == nullptr)
+        {
+            // 
+            continue;
+        }
+
+        // 
+        while (true)
+        {
+            // 
+            int result = DxLib::DrawLine(
+                currentNode->GetMyStartPos().GetX(),
+                currentNode->GetMyStartPos().GetY(),
+                currentNode->GetMyEndPos().GetX(),
+                currentNode->GetMyEndPos().GetY(),
+                0x00ffff);
+
+            // 
+            if (!currentNode->AccessNext(&nextNode))
+            {
+                // 
+                break;
+            }
+
+            // 
+            currentNode = nextNode;
+        }
+    }
+
     // 光域のシミュレーターは描画はしません
     return 0;
 }
 
-// このライトのレイの角度を設定する関数
-void LightExecutor::SetLineAngleBox(uint32_t lineCount)
-{
-    // 
-    this->SetLineAngleBox_In(lineCount, this->mfLightAngle);
-}
-
 // このライトの光域を計算する関数
-bool LightExecutor::CalculateLineEndPos(const VECTOR2D &startPos)
+bool LightExecutor::CalculateLineEndPos()
 {
     // 
     std::vector<BaseCollision2D *> objectCollisionBox;
@@ -146,7 +198,6 @@ bool LightExecutor::CalculateLineEndPos(const VECTOR2D &startPos)
     return this->GetMyLightArea()->CalculateNode(
         this->mfBaseAngle,
         this->mfLength,
-        startPos,
         objectCollisionBox,
         mirrorCollisionBox,
         tempRay,
@@ -188,23 +239,10 @@ void LightExecutor::SetLength(float length)
     this->mfLength = length;
 }
 
-// このライトの視点を設定する関数
-void LightExecutor::SetStartPos(const VECTOR2D &pos)
-{
-    this->mvStartPos = pos;
-}
-
 // このライトの全体の角度を設定する関数
 void LightExecutor::SetLightAngle(float radian)
 {
     this->mfLightAngle = radian;
-}
-
-// このライトのレイの角度を設定する関数
-void LightExecutor::SetLineAngleBox_In(uint32_t lineCount, float maxAngle)
-{
-    // 
-    this->GetMyLightArea()->SetLightLineAngleBox(lineCount, maxAngle);
 }
 
 // 

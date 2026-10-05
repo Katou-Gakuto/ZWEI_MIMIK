@@ -7,8 +7,9 @@
 #include "../C_Component/Player.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
-#include "../Z_Except/ResourceManager.h"
 #include "../T_Model/DXModelAnim.h"
+#include "../Z_Except/CursorMoveSupporter.h"
+#include "../Z_Except/ResourceManager.h"
 
 
 // Ã“Iƒƒ“ƒo[‚Ì‰Šú‰»
@@ -39,6 +40,8 @@ int Master::Initialize()
 
     mpKeyState = new KeyState();
     // 
+
+    mpCursorMoveSupporter = new CursorMoveSupporter;
 
     mpBaseSceneManager = new BaseSceneManager();
     mpBaseSceneManager->Initialize();

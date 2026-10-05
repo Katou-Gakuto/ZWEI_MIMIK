@@ -1,13 +1,27 @@
 #include "TestScene.h"
-#include "PlayerObject.h"
 
-#include "GameObject2D.h"
-#include "GameObjectManager.h"
+#include "../A_GameObject/GameObject2D.h"
+#include "../A_GameObject/GameObjectManager.h"
+#include "../A_GameObject/PlayerObject.h"
+#include "../A_GameObject/MirrorObject.h"
+#include "../A_GameObject/WallObject.h"
 
-#include "BaseCollision2DManager.h"
+#include "../C_Component/GimmickObjectController.h"
+
+#include "../F_PuzzleGimmick/ButtonTrigger.h"
+#include "../F_PuzzleGimmick/LightExecutor.h"
+
+#include "../G_LightArea/LightAreaManager.h"
+
+#include "../S_Collision/BaseCollision2DManager.h"
+
+#include "../Y_Tool/MyFunctions.h"
+
+#include "../Z_Except/Master.h"
 
 TestScene::TestScene()
-: BaseScene(SceneTag::ST_Test)
+: mpPlayer(nullptr)
+, BaseScene(SceneTag::ST_Test)
 {
 }
 
@@ -20,12 +34,55 @@ int TestScene::Create()
 	this->mpGameObjectManager = new GameObjectManager();
 	this->mpBaseCollision2DManager = new BaseCollision2DManager();
 
-	GameObject2D* currentObject = nullptr;
+	GameObject2D *currentObject = nullptr;
 
 	currentObject = new PlayerObject(1);
 	this->mpGameObjectManager->Add(currentObject);
 	currentObject = new PlayerObject(2);
 	this->mpGameObjectManager->Add(currentObject);
+
+	const VECTOR2D tempBlockSize = VECTOR2D(150.0f, 150.0f);
+	const VECTOR2D tempCenterStart = tempBlockSize * 0.5f;
+	VECTOR2D tempCenter;
+
+	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 1.0f, tempBlockSize.GetY() * 1.0f);
+	currentObject = new WallObject(false, tempCenter, tempBlockSize);
+	this->mpGameObjectManager->Add(currentObject);
+
+	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 2.0f, tempBlockSize.GetY() * 2.0f);
+	currentObject = new MirrorObject(false, tempCenter, tempBlockSize, 2);
+	this->mpGameObjectManager->Add(currentObject);
+
+	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 3.0f, tempBlockSize.GetY() * 4.0f);
+	currentObject = new MirrorObject(false, tempCenter, tempBlockSize, 0);
+	this->mpGameObjectManager->Add(currentObject);
+
+	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 4.0f, tempBlockSize.GetY() * 2.0f);
+	int useLightCount = 1;
+	for (int i = 0; i < useLightCount; i++)
+	{
+		// 
+		if (Master::mpLightManager->SearchArea(i) == nullptr)
+		{
+			// 
+			Master::mpLightManager->AddArea(new LightArea());
+		}
+	}
+
+	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize);
+	GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
+	gimmickController->AddGimmick(
+		new ButtonTrigger,
+		new LightExecutor(
+			PuzzleGimmickActiveParam::Create(true, false),
+			gimmickObject,
+			0,
+			300,
+			MyFunctions::Deg2Rad(198.5f),
+			MyFunctions::Deg2Rad(135.0f),
+			10000.0f));
+
+	this->mpGameObjectManager->Add(gimmickObject);
 
 	this->mpGameObjectManager->Create();
 	return 0;

@@ -135,7 +135,7 @@ int TitleScene::Draw()
         else
         {
             // –îˆó•ª‚Ì‹ó”’‚ğİ’è‚·‚é
-            message = " ";
+            message = "@";
         }
 
         // •¶š—ñ‚ğ‚³‚ç‚É’Ç‰Á‚·‚é
@@ -157,7 +157,7 @@ int TitleScene::Draw()
         else
         {
             // –îˆó•ª‚Ì‹ó”’‚ğİ’è‚·‚é
-            message = " ";
+            message = "@";
         }
 
         // 

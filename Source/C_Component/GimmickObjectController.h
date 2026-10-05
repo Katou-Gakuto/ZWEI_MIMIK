@@ -40,7 +40,7 @@ public:
     int Draw() override;
 
     // 
-    bool AddGimmick(const PuzzleGimmickData &gimmick);
+    bool AddGimmick(BaseGimmickTrigger *gimmickTrigger, BaseGimmickExecutor *gimmickExecutor);
 
 private:
     // 

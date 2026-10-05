@@ -1,16 +1,18 @@
 #include "WallObjectController.h"
 
+#include "DxLib.h"
+
 #include "../A_GameObject/GameObject2D.h"
 
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Quadrangle2D.h"
 
 
-WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown) :
-    mvLeftUpInit(leftUp),
-    mvRightDownInit(rightDown),
-    mvLeftUp(leftUp),
-    mvRightDown(rightDown),
+WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &centerPos, const VECTOR2D &blockSize) :
+    mvCenterPosInit(centerPos),
+    mvBlockSizeInit(blockSize),
+    mvCenterPos(centerPos),
+    mvBlockSize(blockSize),
     BaseComponent(myObject, ComponentTagAndOrder::CTAO_MirrorController)
 {
 }
@@ -47,6 +49,8 @@ int WallObjectController::Create()
         false,
         false,
         0.0f);
+    collision->AddProcessingTag(CollisionTag::CollisionTag_CharaBody);
+    collision->AddProcessingTag(CollisionTag::CollisionTag_Wall);
 
     // 
     if (obj->AddCollision(collision, this->mdBody) != 0)
@@ -54,6 +58,7 @@ int WallObjectController::Create()
         // 
         return -1;
     }
+
 
     // 
     collision->WorldConnectMySelf();
@@ -65,8 +70,8 @@ int WallObjectController::Create()
 int WallObjectController::Initialize()
 {
     // 
-    this->mvLeftUp = this->mvLeftUpInit;
-    this->mvRightDown = this->mvRightDownInit;
+    this->mvCenterPos = this->mvCenterPosInit;
+    this->mvBlockSize = this->mvBlockSizeInit;
 
     // 
     GameObject2D *obj = this->GetMyObject2D();
@@ -76,21 +81,17 @@ int WallObjectController::Initialize()
         return -1;
     }
 
-    // 
-    Quadrangle2D *collision = nullptr;
+    obj->SetPosition(this->mvCenterPos);
 
     // 
     VECTOR2D tempPos[4];
-    tempPos[0] = this->mvLeftUp;
-    tempPos[1].SetXY(this->mvRightDown.GetX(), this->mvLeftUp.GetY());
-    tempPos[2].SetXY(this->mvLeftUp.GetX(), this->mvRightDown.GetY());
-    tempPos[3] = this->mvRightDown;
+    tempPos[0] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[1] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[2] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[3] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
 
     // 
-    BaseCollisionList *list = obj->GetBaseCollisionList();
-
-    // 
-    collision = static_cast<Quadrangle2D *>(list->SearchCollision(this->mdBody));
+    Quadrangle2D *collision = this->GetBody();
 
     // 
     collision->SetShapeParameter(tempPos[0], tempPos[1], tempPos[2], tempPos[3]);
@@ -132,14 +133,32 @@ int WallObjectController::LateUpdate()
 int WallObjectController::Draw()
 {
     // 
+    Quadrangle2D *bodyCollision = this->GetBody();
+
+    // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
+    DxLib::DrawBox(
+        bodyCollision->GetVertexPos(0).GetX(),
+        bodyCollision->GetVertexPos(0).GetY(),
+        bodyCollision->GetVertexPos(3).GetX(),
+        bodyCollision->GetVertexPos(3).GetY(),
+        0xaaaa00,
+        true);
+
+    // 
     return 0;
 }
 
 WallObjectController::WallObjectController(GameObject *myObject, ComponentTagAndOrder ctao, const VECTOR2D &leftUp, const VECTOR2D &rightDown) :
-    mvLeftUpInit(leftUp),
-    mvRightDownInit(rightDown),
-    mvLeftUp(leftUp),
-    mvRightDown(rightDown),
+    mvCenterPosInit(leftUp),
+    mvBlockSizeInit(rightDown),
+    mvCenterPos(leftUp),
+    mvBlockSize(rightDown),
     BaseComponent(myObject, ctao)
 {
+}
+
+Quadrangle2D *WallObjectController::GetBody() const
+{
+    // 
+    return static_cast<Quadrangle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBody));
 }

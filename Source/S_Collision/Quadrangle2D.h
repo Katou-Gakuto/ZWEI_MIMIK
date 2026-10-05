@@ -24,4 +24,7 @@ public:
     void SetShapeParameter(const VECTOR2D &pos0, const VECTOR2D &pos1, const VECTOR2D &pos2, const VECTOR2D &pos3);
 
     VECTOR2D GetVertexPos(int index);
+
+    // ‚±‚ÌlŠpŒ`‚Ì–ÊÏ‚ğ‹‚ß‚éŠÖ”
+    float GetSignedArea() const;
 };

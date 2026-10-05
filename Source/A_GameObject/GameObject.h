@@ -8,6 +8,7 @@
 enum GameObjectTag : unsigned long
 {
     GOT_Player = 0,
+    GOT_Wall,
 
     GOT_Max,
 };
@@ -63,6 +64,14 @@ private:
     void SetStopBit(bool flag);
     void SetDrawBit(bool flag);
 
+    int CreateObjectModelList();
+    int CreateObjectCollisionList();
+    int CreateObjectComponentList();
+    int CreateObjectBehavior(const BehaviorAccessData &initAccessData);
+
+protected:
+    void SetInitBehavior(const BehaviorAccessData &accessData);
+
 public:
     GameObject(GameObjectTag tag);
     virtual ~GameObject();
@@ -91,11 +100,6 @@ public:
     void SetActiveFlag(bool active);
     void SetStopFlag(bool stop);
     void SetDrawFlag(bool draw);
-    int CreateObjectModelList();
-    int CreateObjectCollisionList();
-    int CreateObjectBehavior(const BehaviorAccessData &initAccessData);
-    int CreateObjectComponentList();
-    void SetInitBehavior(const BehaviorAccessData &accessData);
 
     GameObjectTag GetObjectTag() const;
     bool GetModelCreateFlag() const;

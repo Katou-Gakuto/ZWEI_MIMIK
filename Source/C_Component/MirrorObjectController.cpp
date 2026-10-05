@@ -1,8 +1,11 @@
 #include "MirrorObjectController.h"
 
+#include "DxLib.h"
+
 #include "../A_GameObject/GameObject2D.h"
 
 #include "../S_Collision/BaseCollisionList.h"
+#include "../S_Collision/Quadrangle2D.h"
 #include "../S_Collision/Ray2D.h"
 
 MirrorObjectController::MirrorObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, unsigned char mirrorFace) :
@@ -27,35 +30,32 @@ int MirrorObjectController::Create()
 
     // 
     BaseCollision *collision = nullptr;
+    collision = new Quadrangle2D(
+        VECTOR2D(),
+        VECTOR2D(),
+        VECTOR2D(),
+        VECTOR2D(),
+        obj,
+        CollisionTag::CollisionTag_Wall,
+        CollisionNorm::CollisionNorm_Out,
+        false,
+        false,
+        0.0f);
+    collision->AddProcessingTag(CollisionTag::CollisionTag_CharaBody);
+    collision->AddProcessingTag(CollisionTag::CollisionTag_Wall);
+    if (obj->AddCollision(collision, this->mdBody) != 0)
+    {
+        return -1;
+    }
+    collision->WorldConnectMySelf();
 
     // 
-    CollisionTag setTag;
-
-    // ê›íËÇ∑ÇÈ
-    for (unsigned char i = 0; i < 4; i++)
+    collision = new Ray2D(VECTOR2D(), VECTOR2D(), obj, CollisionTag::CollisionTag_Mirror, false, false, 0.0f);
+    if (obj->AddCollision(collision, this->mdMirrorFaceRay) != 0)
     {
-        // 
-        if (this->mnMirrorFace == i)
-        {
-            // 
-            setTag = CollisionTag::CollisionTag_Mirror;
-        }
-        else
-        {
-            // 
-            setTag = CollisionTag::CollisionTag_Wall;
-        }
-
-        // 
-        collision = new Ray2D(VECTOR2D(), VECTOR2D(), obj, setTag, false, false, 0.0f);
-
-        // 
-        if (obj->AddCollision(collision, this->mdHandle[i]) != 0)
-        {
-            // 
-            return -1;
-        }
+        return -1;
     }
+    collision->WorldConnectMySelf();
 
     // 
     return 0;
@@ -64,17 +64,20 @@ int MirrorObjectController::Create()
 int MirrorObjectController::Initialize()
 {
     // 
-    this->mvLeftUp = this->mvLeftUpInit;
+    this->mvCenterPos = this->mvCenterPosInit;
+    
+    // 
+    this->mvBlockSize = this->mvBlockSizeInit;
 
     // 
-    this->mvRightDown = this->mvRightDownInit;
+    this->GetMyObject2D()->SetPosition(this->mvCenterPos);
 
     // 
-    VECTOR2D posMap[4];
-    posMap[0] = this->mvLeftUp;
-    posMap[1].SetXY(this->mvRightDown.GetX(), this->mvLeftUp.GetY());
-    posMap[2].SetXY(this->mvLeftUp.GetX(), this->mvRightDown.GetY());
-    posMap[3] = this->mvRightDown;
+    VECTOR2D tempPos[4];
+    tempPos[0] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[1] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[2] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[3] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
 
     // 
     GameObject2D *obj = this->GetMyObject2D();
@@ -88,36 +91,34 @@ int MirrorObjectController::Initialize()
     BaseCollisionList *list = obj->GetBaseCollisionList();
 
     // 
-    for (unsigned char i = 0; i < 4; i++)
+    Quadrangle2D *body = static_cast<Quadrangle2D *>(list->SearchCollision(this->mdBody));
+    Ray2D *mirrorRay = static_cast<Ray2D *>(list->SearchCollision(this->mdMirrorFaceRay));
+    if (mirrorRay == nullptr || body == nullptr)
     {
         // 
-        Ray2D *currentRay = static_cast<Ray2D *>(list->SearchCollision(this->mdHandle[i]));
+        return -1;
+    }
 
-        // 
-        if (currentRay == nullptr)
-        {
-            // 
-            return -1;
-        }
+    // 
+    body->SetShapeParameter(tempPos[0], tempPos[1], tempPos[2], tempPos[3]);
 
-        // 
-        switch (i)
-        {
-        case 0:
-            currentRay->SetShapeParameter(posMap[0], posMap[1]);
-            break;
-        case 1:
-            currentRay->SetShapeParameter(posMap[1], posMap[3]);
-            break;
-        case 2:
-            currentRay->SetShapeParameter(posMap[3], posMap[2]);
-            break;
-        case 3:
-            currentRay->SetShapeParameter(posMap[2], posMap[0]);
-            break;
-        default:
-            break;
-        }
+    // 
+    switch (this->mnMirrorFace)
+    {
+    case 0:
+        mirrorRay->SetShapeParameter(tempPos[0], tempPos[1]);
+        break;
+    case 1:
+        mirrorRay->SetShapeParameter(tempPos[1], tempPos[3]);
+        break;
+    case 2:
+        mirrorRay->SetShapeParameter(tempPos[3], tempPos[2]);
+        break;
+    case 3:
+        mirrorRay->SetShapeParameter(tempPos[2], tempPos[0]);
+        break;
+    default:
+        break;
     }
 
     // 
@@ -156,6 +157,74 @@ int MirrorObjectController::LateUpdate()
 
 int MirrorObjectController::Draw()
 {
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return -1;
+    }
+
+    // 
+    BaseCollisionList *list = obj->GetBaseCollisionList();
+
+    // 
+    unsigned int color = 0x000000;
+
+    // 
+    Quadrangle2D *body = static_cast<Quadrangle2D *>(list->SearchCollision(this->mdBody));
+    Ray2D *mirrorRay = static_cast<Ray2D *>(list->SearchCollision(this->mdMirrorFaceRay));
+    if (mirrorRay == nullptr || body == nullptr)
+    {
+        // 
+        return -1;
+    }
+
+    // ãæñ èoÇ»Ç¢ïîï™ÇÕê¬êFÇ≈ï`âÊ
+    color = 0x0000ff;
+
+    // 
+    DxLib::DrawBox(
+        body->GetVertexPos(0).GetX(),
+        body->GetVertexPos(0).GetY(),
+        body->GetVertexPos(3).GetX(),
+        body->GetVertexPos(3).GetY(),
+        color,
+        false);
+
+    // ãæñ ÇÃÇ›éáêFÇ≈ï`âÊ
+    color = 0xff00ff;
+
+    // 
+    const float offsetParam = 3.0f;
+    VECTOR2D offset;
+    switch (this->mnMirrorFace)
+    {
+    case 0:
+        offset.SetXY(0.0f, -offsetParam);
+        break;
+    case 1:
+        offset.SetXY(-offsetParam, 0.0f);
+        break;
+    case 2:
+        offset.SetXY(0.0f, offsetParam);
+        break;
+    case 3:
+        offset.SetXY(offsetParam, 0.0f);
+        break;
+    default:
+        break;
+    }
+
+    
+    // 
+    DxLib::DrawLine(
+        offset.GetX() + mirrorRay->GetStartPos().GetX(),
+        offset.GetY() + mirrorRay->GetStartPos().GetY(),
+        offset.GetX() + mirrorRay->GetEndPos().GetX(),
+        offset.GetY() + mirrorRay->GetEndPos().GetY(),
+        color);
+
     // 
     return 0;
 }

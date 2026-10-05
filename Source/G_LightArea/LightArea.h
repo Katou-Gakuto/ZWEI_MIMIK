@@ -15,20 +15,19 @@ class LightArea
 {
 public:
     // 
-    LightArea(void *parentLightController);
+    LightArea();
 
     // 
     ~LightArea();
 
     // 自身の光のレイの角度を設定する関数
-    void SetLightLineAngleBox(uint32_t lineCount, float maxAngle);
+    void SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle);
 
     // 自身の光の終了地点を計算し、設定する関数
     // 次のノードにつながる場合はtrueを返す
     bool CalculateNode(
         float baseAngle,
         float stockMagunitude,
-        const VECTOR2D &startPos,
         const std::vector<BaseCollision2D *> &objectCollBox,
         const std::vector<BaseCollision2D *> &mirrorCollBox,
         Ray2D &tempRay,
@@ -79,7 +78,7 @@ private:
     std::vector<float> mlLineAngleBox;
 
     // 
-    void *mpParentLight;
+    void *mpParentObject;
 
     // 
     uint32_t mnLightLineCount;

@@ -337,6 +337,12 @@
     <ClCompile Include="Source\Z_Except\ResourceManager.cpp">
       <Filter>Source\Z_Except</Filter>
     </ClCompile>
+    <ClCompile Include="Source\A_GameObject\WallObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\A_GameObject\MirrorObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -650,6 +656,12 @@
     </ClInclude>
     <ClInclude Include="Source\Z_Except\ResourceManager.h">
       <Filter>Source\Z_Except</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\WallObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\MirrorObject.h">
+      <Filter>Source\A_GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

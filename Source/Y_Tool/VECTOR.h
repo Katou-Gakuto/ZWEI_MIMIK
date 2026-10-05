@@ -89,8 +89,11 @@ public:
     // 指定の範囲内でベクトルが等しいか。
     static bool EqualInRange(const VECTOR2D &vec1, const VECTOR2D &vec2, const float range);
 
-    // 点pと直線ABから線上最近点を求め、世界座標を返す
+    // 点pと無限直線ABの線上最近点を求め、世界座標を返す
     static VECTOR2D GetNewrPosOnLine(const VECTOR2D &pointPos, const VECTOR2D &startPos, const VECTOR2D &endPos);
+
+    // 点pと有限直線ABの線上最近点を求め、世界座標を返す
+    static VECTOR2D GetNearestPosOnLineSegment(const VECTOR2D &pointPos, const VECTOR2D &startPos, const VECTOR2D &endPos);
 
     // vecAの方向成分とvecBの方向成分のどちらがよりtargetVecのの方向成分に近いかを確認する関数。AとBのより方向成分が近い方のベクトルを返す
     static VECTOR2D GetTargetDirectionNewrVec(const VECTOR2D &targetVec, const VECTOR2D &vecA, const VECTOR2D &vecB);

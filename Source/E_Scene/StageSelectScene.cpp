@@ -11,7 +11,7 @@
 // 
 StageSelectScene::StageSelectScene() :
     mnCurrentStage(0),
-    mnUnlockStageCount(1),
+    mnUnlockStageCount(100),
     mdMoveData(),
     BaseScene(SceneTag::ST_StageSelect)
 {
@@ -60,8 +60,8 @@ int StageSelectScene::Finalize()
 int StageSelectScene::Update()
 {
     // 
-    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, 0) ||
-        Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, 1))
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
+        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
     {
         // 
         Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test);
@@ -117,8 +117,8 @@ int StageSelectScene::Draw()
 
     // 
     DxLib::DrawString(
-        150 * 1,
         400,
+        150 * 1,
         message.c_str(),
         GetColor(255, 255, 255));
 
@@ -127,8 +127,8 @@ int StageSelectScene::Draw()
 
     // 
     DxLib::DrawString(
-        150 * 2,
         400,
+        150 * 2,
         message.c_str(),
         GetColor(255, 255, 255));
 

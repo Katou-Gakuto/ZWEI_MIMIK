@@ -50,16 +50,20 @@ int Player::Create()
         1.0f);
 
     // 
+    body->AddProcessingTag(CollisionTag::CollisionTag_Wall);
+
+    // 
     obj->AddCollision(body, this->mdBodyCollision);
 
     // 
-    obj->AddModel(new DXAnimModel(obj), this->mdModelHandle);
+    body->WorldConnectMySelf();
 
+    // 
+    obj->AddModel(new DXAnimModel(obj), this->mdModelHandle);
    
     // 
     return 0;
 }
-
 
 int Player::Initialize()
 {
@@ -69,11 +73,21 @@ int Player::Initialize()
     DXAnimModel *playerModel = this->GetPlayerModel();
 
     if (PlayerNum == 1)
+    {
         PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f);
+    }
     else
+    {
         PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f);
-    return 0;
+    }
 
+    // 
+    Circle2D *bodyCollision = GetBodyCollision();
+    float circleRadius = 50.0f;
+    bodyCollision->SetShapeParameter(this->Pos, circleRadius * circleRadius);
+
+    // 
+    return 0;
 }
 
 
@@ -132,6 +146,7 @@ int Player::Update()
 {
     GameObject2D* player = GetMyObject2D();
     player->SetMoveVec(moveVec);
+    player->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
     return 0;
 }
 
@@ -144,7 +159,6 @@ int Player::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollisi
     {
         // 当たったオブジェクトが普通のオブジェクト、ライト、鏡のいずれかの場合は処理を行う
         Hold(hitCollision);
-
     }
 
     // 
@@ -171,20 +185,48 @@ int Player::LateUpdate()
 
 int Player::Draw()
 {
-    //PlayerGraphHandle =
-    GameObject2D *player = GetMyObject2D();
-    if (PlayerNum == 1)// プレイヤー1の場合は赤色で描画
+    // 
+    bool grahpBoxDraw = false;
+    bool bodyCircleDraw = true;
+
+    if (grahpBoxDraw)
+    {
+        // 
+        unsigned int color = 0;
+        GameObject2D *player = GetMyObject2D();
+
+        // p1かどうかで処理を変える
+        if (PlayerNum == 1)
+        {
+            // プレイヤー1の場合は赤色で描画
+            color = 0xff0000;
+        }
+        else
+        {
+            // プレイヤー2の場合は青色で描画
+            color = 0x0000ff;
+        }
+
+        // 描画を行う
         DrawBox(player->GetPosition().GetX() - (Master::PlayerSizeXY / 2),
             player->GetPosition().GetY() - (Master::PlayerSizeXY / 2),
             player->GetPosition().GetX() + (Master::PlayerSizeXY / 2),
             player->GetPosition().GetY() + (Master::PlayerSizeXY / 2),
-            0xFF0000, false);
-	else// プレイヤー2の場合は青色で描画
-        DrawBox(player->GetPosition().GetX() - (Master::PlayerSizeXY / 2),
-            player->GetPosition().GetY() - (Master::PlayerSizeXY / 2),
-            player->GetPosition().GetX() + (Master::PlayerSizeXY / 2),
-            player->GetPosition().GetY() + (Master::PlayerSizeXY / 2),
-            0x0000FF, false);
+            color, false);
+    }
+
+    if (bodyCircleDraw)
+    {
+        // 緑色で円を描画する
+        Circle2D *bodyCollision = GetBodyCollision();
+        DrawCircle(
+            bodyCollision->GetBasePos().GetX(),
+            bodyCollision->GetBasePos().GetY(),
+            bodyCollision->GetBaseRadius(),
+            0x00ff00,
+            false);
+    }
+
     return 0;
 }
 
@@ -310,3 +352,9 @@ DXAnimModel *Player::GetPlayerModel()const
     return playerModel;
 }
 
+// 
+Circle2D *Player::GetBodyCollision() const
+{
+    // 
+    return static_cast<Circle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBodyCollision));
+}

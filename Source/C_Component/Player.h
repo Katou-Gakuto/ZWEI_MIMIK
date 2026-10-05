@@ -9,6 +9,7 @@
 
 class HoldObjectController;
 class DXAnimModel;
+class Circle2D;
 
 class Player : public BaseComponent
 {
@@ -68,4 +69,7 @@ private:
 
     // 
     DXAnimModel *GetPlayerModel()const;
+
+    // 
+    Circle2D *GetBodyCollision() const;
 };

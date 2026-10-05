@@ -49,7 +49,16 @@ int LightAreaManager::AddArea(LightArea *newArea)
     int addIndex = this->mnDeactivateStartIndex;
 
     // 
-    this->mlNode[addIndex] = newArea;
+    if (this->mlNode.size() == addIndex)
+    {
+        // 
+        this->mlNode.push_back(newArea);
+    }
+    else
+    {
+        // 
+        this->mlNode[addIndex] = newArea;
+    }
 
     // 
     this->mnDeactivateStartIndex++;

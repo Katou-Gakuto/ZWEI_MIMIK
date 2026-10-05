@@ -27,6 +27,13 @@ ButtonTrigger::~ButtonTrigger()
 bool ButtonTrigger::GetSignal()
 {
     // 
+    if (this->mlFlagButtonBox.empty())
+    {
+        // 
+        return false;
+    }
+
+    // 
     for (auto currentButton : this->mlFlagButtonBox)
     {
         // 
