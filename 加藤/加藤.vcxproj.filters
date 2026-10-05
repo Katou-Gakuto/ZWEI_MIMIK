@@ -270,6 +270,9 @@
     <ClInclude Include="Source\Shine\MyMath.h">
       <Filter>ヘッダー ファイル\Shine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DebugLogs\PerformanceProfiler.h">
+      <Filter>ヘッダー ファイル\DebugLogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -388,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="Source\Shine\MyMath.cpp">
       <Filter>ソース ファイル\Shine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DebugLogs\PerformanceProfiler.cpp">
+      <Filter>ソース ファイル\DebugLogs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

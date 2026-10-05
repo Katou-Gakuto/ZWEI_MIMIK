@@ -17,11 +17,13 @@
 #include "ShineObject.h"
 #include "TestObjectBase.h"
 #include "WallObject.h"
+#include "DiamondWallObject.h"
 #include "ImguiManager.h"
 
 #ifdef _DEBUG
 #include "DebugLogs/DebugLog.h"
 #endif
+#include "DebugLogs/PerformanceProfiler.h"
 
 enum TEST_INDEX_NUMBERS
 {
@@ -95,123 +97,765 @@ void ShineManager::Init()
     mpObjects.clear();
 
     // ここで生成
-    //==================================================
-    // テスト用 WallObject 生成
-    //==================================================
+    switch (8)
+    {
+    case 0:
+    {
+        //==================================================
+        // テスト用 WallObject 生成
+        //==================================================
 
-    // ① 単体
-    WallObject* wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.20f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
+        // ① 単体
+        WallObject* wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.20f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
 
-    // ② 横長
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.20f));
-    wallObject->SetSize(Vector2(1280 * 0.20f, 960 * 0.04f));
-    mpObjects.push_back(wallObject);
+        // ② 横長
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.20f));
+        wallObject->SetSize(Vector2(1280 * 0.20f, 960 * 0.04f));
+        mpObjects.push_back(wallObject);
 
-    // ③ 縦長
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.80f, 960 * 0.30f));
-    wallObject->SetSize(Vector2(1280 * 0.04f, 960 * 0.20f));
-    mpObjects.push_back(wallObject);
-
-
-    //==================================================
-    // 重なりテスト
-    //==================================================
-
-    // ④ 完全に重なる
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
-    wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
-    mpObjects.push_back(wallObject);
-
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
+        // ③ 縦長
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.80f, 960 * 0.30f));
+        wallObject->SetSize(Vector2(1280 * 0.04f, 960 * 0.20f));
+        mpObjects.push_back(wallObject);
 
 
-    //==================================================
-    // 接触・近接テスト
-    //==================================================
+        //==================================================
+        // 重なりテスト
+        //==================================================
 
-    // ⑤ 横方向に接触
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.50f));
-    wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
-    mpObjects.push_back(wallObject);
+        // ④ 完全に重なる
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(wallObject);
 
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.58f, 960 * 0.50f));
-    wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
-    mpObjects.push_back(wallObject);
-
-
-    // ⑥ 少しだけ離れている
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.70f, 960 * 0.55f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
-
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.76f, 960 * 0.55f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
 
 
-    //==================================================
-    // 光源周辺テスト
-    //==================================================
+        //==================================================
+        // 接触・近接テスト
+        //==================================================
 
-    // ⑦ 光源の左
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.40f, 960 * 0.70f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
-    mpObjects.push_back(wallObject);
+        // ⑤ 横方向に接触
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(wallObject);
 
-    // ⑧ 光源の右
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.60f, 960 * 0.70f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
-    mpObjects.push_back(wallObject);
-
-    // ⑨ 光源の下
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.85f));
-    wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.58f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(wallObject);
 
 
-    //==================================================
-    // 画面端テスト
-    //==================================================
+        // ⑥ 少しだけ離れている
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.70f, 960 * 0.55f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
 
-    // ⑩ 左端
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.02f, 960 * 0.50f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
-    mpObjects.push_back(wallObject);
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.76f, 960 * 0.55f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
 
-    // ⑪ 右端
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.98f, 960 * 0.50f));
-    wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
-    mpObjects.push_back(wallObject);
 
-    // ⑫ 上端
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.02f));
-    wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
+        //==================================================
+        // 光源周辺テスト
+        //==================================================
 
-    // ⑬ 下端
-    wallObject = new WallObject();
-    wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.98f));
-    wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
-    mpObjects.push_back(wallObject);
+        // ⑦ 光源の左
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.40f, 960 * 0.70f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(wallObject);
+
+        // ⑧ 光源の右
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.60f, 960 * 0.70f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(wallObject);
+
+        // ⑨ 光源の下
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.85f));
+        wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
+
+
+        //==================================================
+        // 画面端テスト
+        //==================================================
+
+        // ⑩ 左端
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.02f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(wallObject);
+
+        // ⑪ 右端
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.98f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(wallObject);
+
+        // ⑫ 上端
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.02f));
+        wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
+
+        // ⑬ 下端
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.98f));
+        wallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
+    }
+        break;
+    case 1:
+    {
+        //==================================================
+        // ひし形テスト用 WallObject 生成
+        //==================================================
+
+        // ① 単体
+        DiamondWallObject* diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.20f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ② 横長
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.20f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.20f, 960 * 0.06f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ③ 縦長
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.80f, 960 * 0.30f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.20f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 重なりテスト
+        //==================================================
+
+        // ④ 完全に重なる
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(diamondWallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 接触・近接テスト
+        //==================================================
+
+        // ⑤ 横方向に接触
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(diamondWallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.58f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        // ⑥ 少しだけ離れている
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.70f, 960 * 0.55f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(diamondWallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.76f, 960 * 0.55f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.05f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 光源周辺テスト
+        //==================================================
+
+        // ⑦ 光源の左
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.40f, 960 * 0.70f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ⑧ 光源の右
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.60f, 960 * 0.70f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ⑨ 光源の下
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.85f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 画面端テスト
+        //==================================================
+
+        // ⑩ 左端
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.02f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ⑪ 右端
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.98f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ⑫ 上端
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.02f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+        mpObjects.push_back(diamondWallObject);
+
+        // ⑬ 下端
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.50f, 960 * 0.98f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.05f));
+        mpObjects.push_back(diamondWallObject);
+    }
+        break;
+    
+    case 2:
+    {
+        //==================================================
+        // 長方形 + ひし形 テスト
+        //==================================================
+
+        // ① 長方形 + ひし形：単体比較
+        WallObject* wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.15f, 960 * 0.20f));
+        wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(wallObject);
+
+        DiamondWallObject* diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.20f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 重なり
+        //==================================================
+
+        // ② 長方形の中にひし形
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.45f));
+        wallObject->SetSize(Vector2(1280 * 0.12f, 960 * 0.12f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.45f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        // ③ ひし形と長方形が部分的に重なる
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.42f, 960 * 0.45f));
+        wallObject->SetSize(Vector2(1280 * 0.12f, 960 * 0.10f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.47f, 960 * 0.45f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 接触
+        //==================================================
+
+        // ④ 長方形とひし形が横方向に接触
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.65f, 960 * 0.20f));
+        wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.73f, 960 * 0.20f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.10f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        // ⑤ 長方形とひし形が斜めに接触
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.15f, 960 * 0.70f));
+        wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.22f, 960 * 0.65f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 近接
+        //==================================================
+
+        // ⑥ 長方形とひし形が少しだけ離れている
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.40f, 960 * 0.70f));
+        wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.47f, 960 * 0.70f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.06f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 光源周辺
+        //==================================================
+
+        // ⑦ 長方形とひし形で光源を挟む
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.38f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.05f, 960 * 0.15f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.62f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.12f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        // ⑧ 光源の下に長方形 + ひし形
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.42f, 960 * 0.78f));
+        wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.05f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.58f, 960 * 0.78f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.08f));
+        mpObjects.push_back(diamondWallObject);
+
+
+        //==================================================
+        // 複数配置
+        //==================================================
+
+        // ⑨ 長方形 → ひし形 → 長方形
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.20f, 960 * 0.90f));
+        wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.90f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(diamondWallObject);
+
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.40f, 960 * 0.90f));
+        wallObject->SetSize(Vector2(1280 * 0.08f, 960 * 0.08f));
+        mpObjects.push_back(wallObject);
+
+
+        // ⑩ 長方形とひし形を交互に配置
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.60f, 960 * 0.90f));
+        wallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.06f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.67f, 960 * 0.90f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.06f));
+        mpObjects.push_back(diamondWallObject);
+
+        wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.74f, 960 * 0.90f));
+        wallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.06f));
+        mpObjects.push_back(wallObject);
+
+        diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.81f, 960 * 0.90f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.06f, 960 * 0.06f));
+        mpObjects.push_back(diamondWallObject);
+    }
+        break;
+
+    case 3:
+    {
+        //==================================================
+        // 完全に重なるテスト
+        //==================================================
+
+        // 長方形
+        WallObject* wallObject = new WallObject();
+        wallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+        wallObject->SetSize(Vector2(1280 * 0.10f, 960 * 0.10f));
+        mpObjects.push_back(wallObject);
+
+        // ひし形
+        DiamondWallObject* diamondWallObject = new DiamondWallObject();
+        diamondWallObject->SetPosition(Vector2(1280 * 0.30f, 960 * 0.50f));
+        diamondWallObject->SetSize(Vector2(1280 * 0.15f, 960 * 0.15f));
+        mpObjects.push_back(diamondWallObject);
+    }
+        break;
+
+    case 4:
+    {
+        //==================================================
+        // 大量配置テスト
+        //==================================================
+
+        constexpr int TEST_COLUMN_COUNT = 15;
+        constexpr int TEST_ROW_COUNT = 10;
+
+        constexpr float START_X = 1280.0f * 0.10f;
+        constexpr float START_Y = 960.0f * 0.10f;
+
+        constexpr float INTERVAL_X = 1280.0f * 0.055f;
+        constexpr float INTERVAL_Y = 960.0f * 0.075f;
+
+        for (int y = 0; y < TEST_ROW_COUNT; ++y)
+        {
+            for (int x = 0; x < TEST_COLUMN_COUNT; ++x)
+            {
+                const float posX = START_X + (INTERVAL_X * x);
+                const float posY = START_Y + (INTERVAL_Y * y);
+
+                // 偶数列：長方形
+                if ((x + y) % 2 == 0)
+                {
+                    WallObject* wallObject = new WallObject();
+
+                    wallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    wallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.05f,
+                            960.0f * 0.05f
+                        )
+                    );
+
+                    mpObjects.push_back(wallObject);
+                }
+                // 奇数列：ひし形
+                else
+                {
+                    DiamondWallObject* diamondWallObject =
+                        new DiamondWallObject();
+
+                    diamondWallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    diamondWallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.05f,
+                            960.0f * 0.05f
+                        )
+                    );
+
+                    mpObjects.push_back(diamondWallObject);
+                }
+            }
+        }
+    }
+        break;
+    
+    case 5:
+    {
+        //==================================================
+        // 超大量配置テスト
+        //==================================================
+
+        constexpr int TEST_COLUMN_COUNT = 40;
+        constexpr int TEST_ROW_COUNT = 30;
+
+        constexpr float START_X = 1280.0f * 0.02f;
+        constexpr float START_Y = 960.0f * 0.02f;
+
+        constexpr float INTERVAL_X = 1280.0f * 0.024f;
+        constexpr float INTERVAL_Y = 960.0f * 0.032f;
+
+        for (int y = 0; y < TEST_ROW_COUNT; ++y)
+        {
+            for (int x = 0; x < TEST_COLUMN_COUNT; ++x)
+            {
+                const float posX = START_X + (INTERVAL_X * x);
+                const float posY = START_Y + (INTERVAL_Y * y);
+
+                // 長方形
+                if ((x + y) % 2 == 0)
+                {
+                    WallObject* wallObject = new WallObject();
+
+                    wallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    wallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.035f,
+                            960.0f * 0.045f
+                        )
+                    );
+
+                    mpObjects.push_back(wallObject);
+                }
+                // ひし形
+                else
+                {
+                    DiamondWallObject* diamondWallObject =
+                        new DiamondWallObject();
+
+                    diamondWallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    diamondWallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.035f,
+                            960.0f * 0.045f
+                        )
+                    );
+
+                    mpObjects.push_back(diamondWallObject);
+                }
+            }
+        }
+    }
+        break;
+    
+    case 6:
+    {
+        //==================================================
+        // 1万個大量配置テスト
+        //==================================================
+
+        constexpr int TEST_COLUMN_COUNT = 100;
+        constexpr int TEST_ROW_COUNT = 100;
+
+        constexpr float START_X = 1280.0f * 0.01f;
+        constexpr float START_Y = 960.0f * 0.01f;
+
+        constexpr float INTERVAL_X = 1280.0f * 0.010f;
+        constexpr float INTERVAL_Y = 960.0f * 0.010f;
+
+        for (int y = 0; y < TEST_ROW_COUNT; ++y)
+        {
+            for (int x = 0; x < TEST_COLUMN_COUNT; ++x)
+            {
+                const float posX =
+                    START_X + (INTERVAL_X * x);
+
+                const float posY =
+                    START_Y + (INTERVAL_Y * y);
+
+                // 長方形
+                if ((x + y) % 2 == 0)
+                {
+                    WallObject* wallObject = new WallObject();
+
+                    wallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    wallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.012f,
+                            960.0f * 0.012f
+                        )
+                    );
+
+                    mpObjects.push_back(wallObject);
+                }
+                // ひし形
+                else
+                {
+                    DiamondWallObject* diamondWallObject =
+                        new DiamondWallObject();
+
+                    diamondWallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    diamondWallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.012f,
+                            960.0f * 0.012f
+                        )
+                    );
+
+                    mpObjects.push_back(diamondWallObject);
+                }
+            }
+        }
+    }
+        break;
+
+    case 7:
+    {
+        //==================================================
+        // 1万個大量配置テスト
+        // 狭い範囲に超高密度で配置
+        //==================================================
+
+        constexpr int TEST_COLUMN_COUNT = 100;
+        constexpr int TEST_ROW_COUNT = 100;
+
+        constexpr float START_X = 1280.0f * 0.40f;
+        constexpr float START_Y = 960.0f * 0.40f;
+
+        // 約200 × 200の範囲に配置
+        constexpr float INTERVAL_X = 2.0f;
+        constexpr float INTERVAL_Y = 2.0f;
+
+        for (int y = 0; y < TEST_ROW_COUNT; ++y)
+        {
+            for (int x = 0; x < TEST_COLUMN_COUNT; ++x)
+            {
+                const float posX =
+                    START_X + (INTERVAL_X * x);
+
+                const float posY =
+                    START_Y + (INTERVAL_Y * y);
+
+                // 長方形
+                if ((x + y) % 2 == 0)
+                {
+                    WallObject* wallObject = new WallObject();
+
+                    wallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    wallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.012f,
+                            960.0f * 0.012f
+                        )
+                    );
+
+                    mpObjects.push_back(wallObject);
+                }
+                // ひし形
+                else
+                {
+                    DiamondWallObject* diamondWallObject =
+                        new DiamondWallObject();
+
+                    diamondWallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    diamondWallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.012f,
+                            960.0f * 0.012f
+                        )
+                    );
+
+                    mpObjects.push_back(diamondWallObject);
+                }
+            }
+        }
+    }
+        break;
+
+    case 8:
+    {
+        //==================================================
+        // 約1000個大量配置テスト
+        // 一か所に高密度で配置
+        //==================================================
+
+        constexpr int TEST_COLUMN_COUNT = 30;
+        constexpr int TEST_ROW_COUNT = 34;
+
+        constexpr float START_X = 1280.0f * 0.40f;
+        constexpr float START_Y = 960.0f * 0.40f;
+
+        constexpr float INTERVAL_X = 3.0f;
+        constexpr float INTERVAL_Y = 3.0f;
+
+        for (int y = 0; y < TEST_ROW_COUNT; ++y)
+        {
+            for (int x = 0; x < TEST_COLUMN_COUNT; ++x)
+            {
+                const float posX =
+                    START_X + (INTERVAL_X * x);
+
+                const float posY =
+                    START_Y + (INTERVAL_Y * y);
+
+                // 長方形
+                if ((x + y) % 2 == 0)
+                {
+                    WallObject* wallObject = new WallObject();
+
+                    wallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    wallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.015f,
+                            960.0f * 0.015f
+                        )
+                    );
+
+                    mpObjects.push_back(wallObject);
+                }
+                // ひし形
+                else
+                {
+                    DiamondWallObject* diamondWallObject =
+                        new DiamondWallObject();
+
+                    diamondWallObject->SetPosition(
+                        Vector2(posX, posY)
+                    );
+
+                    diamondWallObject->SetSize(
+                        Vector2(
+                            1280.0f * 0.015f,
+                            960.0f * 0.015f
+                        )
+                    );
+
+                    mpObjects.push_back(diamondWallObject);
+                }
+            }
+        }
+    }
+        break;
+    }
 
 
     mpShineObject = new ShineObject();
@@ -247,16 +891,48 @@ void ShineManager::Finalize()
     delete mpShineObject;
 }
 
+static int testTime_FrameNumber = 0;
 void ShineManager::Update()
 {
+    mUpdateProfiler.Start("ShineManager::Update");
+
+    mObjectUpdateProfiler.Start("mpObjects Update");
+
     for (auto& object : mpObjects)
     {
         object->Update();
     }
+    mObjectUpdateProfiler.Stop();
+    mShineObjectUpdateProfiler.Start("mpShineObject Update");
     mpShineObject->Update();
+    mShineObjectUpdateProfiler.Stop();
 
+    mCreateShineAreaProfiler.Start("CreateShineArea");
     // 光領域作成
     CreateShineArea();
+    mCreateShineAreaProfiler.Stop();
+
+    mUpdateProfiler.Stop();
+
+    if (testTime_FrameNumber == 1000)
+    {
+        mUpdateProfiler.WritePerformanceResult(
+            "PerformanceLog_Update.txt"
+        );
+
+        mObjectUpdateProfiler.WritePerformanceResult(
+            "PerformanceLog_ObjectUpdate.txt"
+        );
+
+        mShineObjectUpdateProfiler.WritePerformanceResult(
+            "PerformanceLog_ShineObjectUpdate.txt"
+        );
+
+        mCreateShineAreaProfiler.WritePerformanceResult(
+            "PerformanceLog_CreateShineArea.txt"
+        );
+    }
+    testTime_FrameNumber += 1;
 
     for (int i = 0; i < DRAW_MODE_NUMBER::DRAW_MODE_NUMBER_MAX; ++i)
     {
@@ -1029,6 +1705,130 @@ void ShineManager::CreateShineArea()
 
     // グリッドの探索
     CheckShineGrid();
+
+    // 最後に三角を光領域として再構成する。
+    // 原点を除いた線分として同一の向きを持つ三角は同一の光領域へ結合する。
+    const std::vector<SHINE_DIRECTION> mergedShineDirections = ConvertTrianglesToShineDirections();
+    if (!mergedShineDirections.empty())
+    {
+        mstShineAreaResult.push_back(mergedShineDirections);
+    }
+}
+
+std::vector<SHINE_DIRECTION> ShineManager::ConvertTrianglesToShineDirections() const
+{
+    struct SHINE_INTERVAL
+    {
+        float leftAngle = 0.0f;
+        float rightAngle = 0.0f;
+    };
+
+    std::vector<SHINE_INTERVAL> intervals;
+    intervals.reserve(mstSheineTriangles.size());
+
+    for (const SHINE_TRIANGLE& triangle : mstSheineTriangles)
+    {
+        if ((triangle.Vertex1.x == triangle.Vertex2.x && triangle.Vertex1.y == triangle.Vertex2.y) ||
+            (triangle.Vertex1.x == triangle.Vertex3.x && triangle.Vertex1.y == triangle.Vertex3.y))
+        {
+            continue;
+        }
+
+        const Vector2 vertex2(
+            static_cast<float>(triangle.Vertex2.x),
+            static_cast<float>(triangle.Vertex2.y));
+
+        const Vector2 vertex3(
+            static_cast<float>(triangle.Vertex3.x),
+            static_cast<float>(triangle.Vertex3.y));
+
+        float angle1 = MyMath::GetAngleToPoint(mstShinePos, vertex2);
+        float angle2 = MyMath::GetAngleToPoint(mstShinePos, vertex3);
+
+        const float span = std::fabs(MyMath::GetSignedAngleFromLeft(angle2, angle1));
+        if (span < 0.0001f)
+        {
+            continue;
+        }
+
+        if (angle1 > angle2)
+        {
+            std::swap(angle1, angle2);
+        }
+
+        SHINE_INTERVAL intervalData;
+        intervalData.leftAngle = angle1;
+        intervalData.rightAngle = angle2;
+        intervals.push_back(intervalData);
+    }
+
+    if (intervals.empty())
+    {
+        return {};
+    }
+
+    std::sort(
+        intervals.begin(),
+        intervals.end(),
+        [](const SHINE_INTERVAL& lhs, const SHINE_INTERVAL& rhs)
+        {
+            return lhs.leftAngle < rhs.leftAngle;
+        });
+
+    std::vector<SHINE_INTERVAL> mergedIntervals;
+    mergedIntervals.reserve(intervals.size());
+
+    for (const SHINE_INTERVAL& interval : intervals)
+    {
+        if (mergedIntervals.empty())
+        {
+            mergedIntervals.push_back(interval);
+            continue;
+        }
+
+        SHINE_INTERVAL& last = mergedIntervals.back();
+        constexpr float MERGE_EPSILON = 0.0001f;
+
+        if (interval.leftAngle <= last.rightAngle + MERGE_EPSILON)
+        {
+            last.rightAngle = max(last.rightAngle, interval.rightAngle);
+        }
+        else
+        {
+            mergedIntervals.push_back(interval);
+        }
+    }
+
+    std::vector<SHINE_DIRECTION> shineDirections;
+    shineDirections.reserve(mergedIntervals.size());
+
+    for (const SHINE_INTERVAL& interval : mergedIntervals)
+    {
+        if (interval.rightAngle - interval.leftAngle <= 0.0001f)
+        {
+            continue;
+        }
+
+        SHINE_DIRECTION direction;
+        direction.leftAngle = interval.leftAngle;
+        direction.rightAngle = interval.rightAngle;
+        direction.visionAngle = interval.rightAngle - interval.leftAngle;
+        direction.angle = (interval.leftAngle + interval.rightAngle) * 0.5f;
+        direction.shineDirectionLeft =
+        {
+            std::cos(direction.leftAngle),
+            std::sin(direction.leftAngle)
+        };
+        direction.shineDirectionRight =
+        {
+            std::cos(direction.rightAngle),
+            std::sin(direction.rightAngle)
+        };
+
+        shineDirections.push_back(direction);
+    }
+
+    return shineDirections;
 }
 
 

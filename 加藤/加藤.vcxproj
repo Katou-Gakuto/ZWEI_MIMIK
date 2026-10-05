@@ -139,6 +139,7 @@
     <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="Source\Container\HandleContainer.h" />
     <ClInclude Include="Source\DebugLogs\DebugLog.h" />
+    <ClInclude Include="Source\DebugLogs\PerformanceProfiler.h" />
     <ClInclude Include="Source\Enum\DotWeenEnum.h" />
     <ClInclude Include="Source\Enum\DrawEnum.h" />
     <ClInclude Include="Source\Enum\ImguiEnum.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Imgui\imgui_tables.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Source\DebugLogs\DebugLog.cpp" />
+    <ClCompile Include="Source\DebugLogs\PerformanceProfiler.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Shine\MyMath.cpp" />
     <ClCompile Include="Source\Shine\ShineManager.cpp" />

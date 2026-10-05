@@ -7,6 +7,7 @@
 #include "Vector2.h"
 
 #include "MapObjectData.h"
+#include "DebugLogs/PerformanceProfiler.h"
 
 class ShineObject;
 class TestObjectBase;
@@ -164,6 +165,12 @@ private:
 	// ラインid現在最大値
 	int mnLineIdNowMax;
 
+	// 時間計測用
+    PerformanceProfiler mUpdateProfiler;
+    PerformanceProfiler mObjectUpdateProfiler;
+    PerformanceProfiler mShineObjectUpdateProfiler;
+    PerformanceProfiler mCreateShineAreaProfiler;
+
 public:
 	ShineManager();
 	~ShineManager();
@@ -189,6 +196,7 @@ public:
 private:
 	// 光領域の作成
 	void CreateShineArea();
+	std::vector<SHINE_DIRECTION> ConvertTrianglesToShineDirections() const;
 
 	// グリッドの探索
     void CheckShineGrid();
