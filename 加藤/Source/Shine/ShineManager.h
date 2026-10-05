@@ -221,7 +221,7 @@ private:
 	// 描画三角追加
 	void AddDrawTriangleData(Vector2 vertex1, Vector2 vertex2);
 	// 描画三角追加
-	inline void AddDrawTriangleData(SHINE_TRIANGLE shineTriangle) { mstSheineTriangles.push_back(shineTriangle); }
+	inline void AddDrawTriangleData(SHINE_TRIANGLE shineTriangle) { if ((shineTriangle.Vertex1.x == shineTriangle.Vertex2.x) && (shineTriangle.Vertex1.y == shineTriangle.Vertex2.y)) { return; } mstSheineTriangles.push_back(shineTriangle); }
 
 	// DELETE:_ 使用してない関数化してるだけだから使う可能性はある
 	// 障害物との交点を取得
@@ -229,18 +229,6 @@ private:
 
 	// グリッドの光状態を更新
 	void UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShinePos, const std::vector<SHINE_DIRECTION>& shineDirections);
-
-	// 2次元ベクトル同士の外積のZ成分を求める
-	float Cross(const Vector2& a, const Vector2& b);
-
-	// 2本の線分の交点を求める
-	bool GetIntersection(const Vector2 a, const Vector2 b, const Vector2 c, const Vector2 d, Vector2& intersection);
-	
-	// 線分ABの延長線と線分CDの延長線の交点を求める
-	bool GetLineIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection);
-
-	// 2点間の角度を取得します。
-	float GetAngleToPoint(const Vector2& from, const Vector2& to);
 
 	// 光の右と左の方向と交点を算出
 	bool GetShineDirectionIntersection(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float shineAngles[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX]);

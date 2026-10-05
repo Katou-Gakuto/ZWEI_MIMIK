@@ -12,6 +12,7 @@
 
 #include "Master.h"
 
+#include "MyMath.h"
 #include "ShineManager.h"
 #include "ShineObject.h"
 #include "TestObjectBase.h"
@@ -1240,10 +1241,10 @@ void ShineManager::CheckShineGrid()
     // 光源から見て画面の角アングル
     float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX] =
     {
-        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]),
-        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]), 
-        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]), 
-        GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN])
+        MyMath::GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP]),
+        MyMath::GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN]), 
+        MyMath::GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP]), 
+        MyMath::GetAngleToPoint(mstShinePos, displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN])
     };
     
     for (int shineIterator = 0; shineIterator < shineDirections.size(); ++shineIterator)
@@ -1269,8 +1270,6 @@ void ShineManager::CheckShineGrid()
         DEBUG::SaveText("END\n\n", DEBUG::DEBUG_MAP_TYPE::DEBUG_SHINE_POS);
 #endif
 }
-
-bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirection, float left, float right, float top, float bottom);
 
 // グリッドが光範囲内か判定
 SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::vector<SHINE_DIRECTION>& shineDirections, int shineDirectionsIndex)
@@ -1365,8 +1364,8 @@ SHINE_GRID_TYPE ShineManager::JudgeGrid(const Vector2_Int& gridPos, const std::v
     }
 
     
-    if (IsRayIntersectRect(mstShinePos, direction1, left, right, top, bottom) ||
-        IsRayIntersectRect(mstShinePos, direction2, left, right, top, bottom))
+    if (MyMath::IsRayIntersectRect(mstShinePos, direction1, left, right, top, bottom) ||
+        MyMath::IsRayIntersectRect(mstShinePos, direction2, left, right, top, bottom))
     {
         if (mstMapObjectGridData[gridPos.y][gridPos.x].LinePoss.size() > 0)
             return SHINE_GRID_TYPE::SHINE_AND_OBJECT_GRID;
@@ -1462,7 +1461,7 @@ bool ShineManager::HasOtherShineAreaInGrid(const Vector2_Int& gridPos, const std
         }
 
         // 光範囲の境界線がグリッドを通過しているか判定
-        if (IsRayIntersectRect(mstShinePos, direction1, left, right, top, bottom) || IsRayIntersectRect(mstShinePos, direction2, left, right, top, bottom))
+        if (MyMath::IsRayIntersectRect(mstShinePos, direction1, left, right, top, bottom) || MyMath::IsRayIntersectRect(mstShinePos, direction2, left, right, top, bottom))
         {
             return true;
         }
@@ -1495,24 +1494,16 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
                     // --- 1. 光の左端 (leftAngle) を基準とした時計回り相対角度を計算 ---
                     const float leftAngle = mpShineObject->GetShineDirection().leftAngle;
 
-                    // leftAngle を 0 とした時計回り方向への相対角度 (0 ～ 2π) を算出するヘルパー関数
-                    auto GetClockwiseAngleFromLeft = [](float angle, float baseLeft) {
-                        static constexpr float TWO_PI = 6.28318530717958647692f;
-                        float diff = std::fmod(angle - baseLeft, TWO_PI);
-                        if (diff < 0.0f) diff += TWO_PI;
-                        return diff; // 0＝左端、値が大きいほど右側
-                    };
-
                     // a の 2 点のアングル (光源からの相対角度)
-                    const float aAngle1 = GetClockwiseAngleFromLeft(
+                    const float aAngle1 = MyMath::GetClockwiseAngleFromLeft(
                         std::atan2f(a.linePos1.y - mstShinePos.y, a.linePos1.x - mstShinePos.x), leftAngle);
-                    const float aAngle2 = GetClockwiseAngleFromLeft(
+                    const float aAngle2 = MyMath::GetClockwiseAngleFromLeft(
                         std::atan2f(a.linePos2.y - mstShinePos.y, a.linePos2.x - mstShinePos.x), leftAngle);
 
                     // b の 2 点のアングル (光源からの相対角度)
-                    const float bAngle1 = GetClockwiseAngleFromLeft(
+                    const float bAngle1 = MyMath::GetClockwiseAngleFromLeft(
                         std::atan2f(b.linePos1.y - mstShinePos.y, b.linePos1.x - mstShinePos.x), leftAngle);
-                    const float bAngle2 = GetClockwiseAngleFromLeft(
+                    const float bAngle2 = MyMath::GetClockwiseAngleFromLeft(
                         std::atan2f(b.linePos2.y - mstShinePos.y, b.linePos2.x - mstShinePos.x), leftAngle);
 
                     // 各線分の右端アングル (角度が大きいほど右側)
@@ -1635,29 +1626,6 @@ void ShineManager::ShineBlockProcess(std::stack<BLOCK_POS_DATA>& blockPoss, std:
     mstDebugWallLinePointDrawData.push_back(mstSettingDebugWallLineResult);
 }
 
-// leftAngle（光の左端）を基準「0.0」とした時計回り方向への相対角度（0 ～ 2π）を算出する
-static float GetClockwiseAngleFromLeft(float angle, float baseLeft)
-{
-    float diff = std::fmod(angle - baseLeft, DX_TWO_PI_F);
-    if (diff < 0.0f) diff += DX_TWO_PI_F;
-    return diff;
-}
-static float GetSignedAngleFromLeft(float angle, float baseLeft)
-{
-    float diff = std::fmod(angle - baseLeft, DX_TWO_PI_F);
-
-    if (diff > DX_PI_F)
-    {
-        diff -= DX_TWO_PI_F;
-    }
-    else if (diff < -DX_PI_F)
-    {
-        diff += DX_TWO_PI_F;
-    }
-
-    return diff;
-}
-
 // 光域の終端候補を登録する
 void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, const BLOCK_POS_DATA& blockPos, std::vector<SHINE_DIRECTION>& shineDirections)
 {
@@ -1667,25 +1635,25 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
 
     // 障害物の左端・右端から光源への角度を求める
     const float blockLeftAngle =
-        GetAngleToPoint(mstShinePos, blockLinePos.linePos1);
+        MyMath::GetAngleToPoint(mstShinePos, blockLinePos.linePos1);
 
     const float blockRightAngle =
-        GetAngleToPoint(mstShinePos, blockLinePos.linePos2);
+        MyMath::GetAngleToPoint(mstShinePos, blockLinePos.linePos2);
 
     // 光域の左端を基準とした相対角度を求める
     const float blockLeftRel =
-        GetSignedAngleFromLeft(
+        MyMath::GetSignedAngleFromLeft(
             blockLeftAngle,
             currentShineDir.leftAngle);
 
     const float blockRightRel =
-        GetSignedAngleFromLeft(
+        MyMath::GetSignedAngleFromLeft(
             blockRightAngle,
             currentShineDir.leftAngle);
 
     // 現在の光域の角度幅
     const float totalShineWidth =
-        GetSignedAngleFromLeft(
+        MyMath::GetSignedAngleFromLeft(
             currentShineDir.rightAngle,
             currentShineDir.leftAngle);
 
@@ -1717,7 +1685,28 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
     if (crossesLeftEdge || crossesRightEdge)
     {
         const float RAY_LENGTH = 10000.0f;
-     
+
+        const auto IsValidForwardRayHit =
+            [&](const Vector2& hitPos, const Vector2& rayDir)
+            {
+                const Vector2 toHit =
+                {
+                    hitPos.x - mstShinePos.x,
+                    hitPos.y - mstShinePos.y
+                };
+
+                const float forwardDot =
+                    toHit.x * rayDir.x +
+                    toHit.y * rayDir.y;
+
+                const float hitLengthSq =
+                    toHit.x * toHit.x +
+                    toHit.y * toHit.y;
+
+                return forwardDot > 0.0001f &&
+                    hitLengthSq > 0.0001f;
+            };
+
         // 光域の左端を遮っている場合
         if (crossesLeftEdge)
         {
@@ -1732,12 +1721,15 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
 
             Vector2 intersection;
 
-            if (GetIntersection(
+            if (MyMath::GetIntersection(
                     mstShinePos,
                     leftRayEnd,
                     blockLinePos.linePos1,
                     blockLinePos.linePos2,
-                    intersection))
+                    intersection) &&
+                IsValidForwardRayHit(
+                    intersection,
+                    currentShineDir.shineDirectionLeft))
             {
                 // 左端より外側にある方を交点へ置き換える
                 if (blockLeftRel < 0.0f)
@@ -1763,12 +1755,15 @@ void ShineManager::RegisterShineAreaEndPointCandidate(LINE_POS blockLinePos, con
             };
             Vector2 intersection;
 
-            if (GetIntersection(
+            if (MyMath::GetIntersection(
                     mstShinePos,
                     rightRayEnd,
                     blockLinePos.linePos1,
                     blockLinePos.linePos2,
-                    intersection))
+                    intersection) &&
+                IsValidForwardRayHit(
+                    intersection,
+                    currentShineDir.shineDirectionRight))
             {
                 // 右端より外側にある方を交点へ置き換える
                 if (blockLeftRel > totalShineWidth)
@@ -1845,21 +1840,36 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
 
         /*① 線分の両端を光源から見た角度に変換*/
         const float lineAngle1 =
-            GetAngleToPoint(mstShinePos, endPoint.linePos1);
+            MyMath::GetAngleToPoint(mstShinePos, endPoint.linePos1);
 
         const float lineAngle2 =
-            GetAngleToPoint(mstShinePos, endPoint.linePos2);
+            MyMath::GetAngleToPoint(mstShinePos, endPoint.linePos2);
 
         /*② 現在の光領域に対して、この線分が遮る角度範囲を求める*/
         const float lineRelativeAngle1 =
-            GetSignedAngleFromLeft(
+            MyMath::GetSignedAngleFromLeft(
                 lineAngle1,
                 shineDirections.leftAngle);
 
         const float lineRelativeAngle2 =
-            GetSignedAngleFromLeft(
+            MyMath::GetSignedAngleFromLeft(
                 lineAngle2,
                 shineDirections.leftAngle);
+
+        // 端点がほぼ同じ方向を向いている線分は、
+        // ほぼ「線」1本のような退化した三角になるため無視する。
+        // 角やグリッド境界で微細な三角が残るのを防ぐ。
+        constexpr float MIN_SEGMENT_ANGLE = 0.0001f;
+        const float lineAngleSpan =
+            std::fabs(
+                MyMath::GetSignedAngleFromLeft(
+                    lineAngle2,
+                    lineAngle1));
+
+        if (lineAngleSpan <= MIN_SEGMENT_ANGLE)
+        {
+            continue;
+        }
 
         const float blockLeftAngle =
             min(lineRelativeAngle1, lineRelativeAngle2);
@@ -1873,12 +1883,12 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
         for (const SHINE_DIRECTION& currentShineDirection : newShineDirections)
         {
             const float currentLeftAngle =
-                GetSignedAngleFromLeft(
+                MyMath::GetSignedAngleFromLeft(
                     currentShineDirection.leftAngle,
                     shineDirections.leftAngle);
 
             const float currentRightAngle =
-                GetSignedAngleFromLeft(
+                MyMath::GetSignedAngleFromLeft(
                     currentShineDirection.rightAngle,
                     shineDirections.leftAngle);
 
@@ -2048,13 +2058,13 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
                 static_cast<float>(triangle.Vertex3.y));
 
             float angle1 =
-                GetSignedAngleFromLeft(
-                    GetAngleToPoint(origin, vertex2),
+                MyMath::GetSignedAngleFromLeft(
+                    MyMath::GetAngleToPoint(origin, vertex2),
                     shineDirections.leftAngle);
 
             float angle2 =
-                GetSignedAngleFromLeft(
-                    GetAngleToPoint(origin, vertex3),
+                MyMath::GetSignedAngleFromLeft(
+                    MyMath::GetAngleToPoint(origin, vertex3),
                     shineDirections.leftAngle);
 
             if (angle1 > angle2)
@@ -2221,8 +2231,8 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
                 }
 
                 float relativeAngle =
-                    GetSignedAngleFromLeft(
-                        GetAngleToPoint(
+                    MyMath::GetSignedAngleFromLeft(
+                        MyMath::GetAngleToPoint(
                             origin,
                             intersection),
                         shineDirections.leftAngle);
@@ -2375,7 +2385,7 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
             const float middleAngle =
                 (leftAngle + rightAngle) *
                 0.5f;
-            constexpr float MIN_TRIANGLE_ANGLE = 0.0005f;
+            constexpr float MIN_TRIANGLE_ANGLE = 0.00001f;
 
             if (rightAngle - leftAngle <
                 MIN_TRIANGLE_ANGLE)
@@ -2568,8 +2578,39 @@ std::vector<SHINE_DIRECTION> ShineManager::ProcessShineAreaEndPointCandidates(in
                 visibleTriangle.Vertex3.y -
                     visibleTriangle.Vertex1.y);
 
-            if (fabsf(Cross(edge1, edge2)) >
-                0.0001f)
+            // ここでの三角は「光源から見た左右端点を結ぶ」ものなので、
+            // 両端点がほぼ同一方向を向いていると、
+            // 実際には細い線だけが残る退化三角になる。
+            // これを弾かないと、削った光領域の残り判定が残り続けてしまう。
+            const float leftRayAngle =
+                MyMath::GetAngleToPoint(
+                    origin,
+                    leftPoint);
+
+            const float rightRayAngle =
+                MyMath::GetAngleToPoint(
+                    origin,
+                    rightPoint);
+
+            const float wedgeAngle =
+                std::fabs(
+                    MyMath::GetSignedAngleFromLeft(
+                        rightRayAngle,
+                        leftRayAngle));
+
+            const float baseLenSq =
+                (leftPoint.x - rightPoint.x) * (leftPoint.x - rightPoint.x) +
+                (leftPoint.y - rightPoint.y) * (leftPoint.y - rightPoint.y);
+
+            const float triangleArea =
+                fabsf(MyMath::Cross(edge1, edge2));
+
+            constexpr float MIN_VISIBLE_TRIANGLE_AREA = 0.0001f;
+            constexpr float MIN_VISIBLE_TRIANGLE_WEDGE = 0.00001f;
+
+            if (triangleArea > MIN_VISIBLE_TRIANGLE_AREA &&
+                baseLenSq > 0.01f &&
+                wedgeAngle > MIN_VISIBLE_TRIANGLE_WEDGE)
             {
                 visibleTriangles.push_back(
                     visibleTriangle);
@@ -2681,7 +2722,7 @@ void ShineManager::AddVisibleShineTriangles(const SHINE_DIRECTION& shineDirectio
             if (dx * dx + dy * dy > 0.000001f)
             {
                 float relativeAngle = std::fmod(
-                    GetAngleToPoint(origin, point) - shineDirections.leftAngle,
+                    MyMath::GetAngleToPoint(origin, point) - shineDirections.leftAngle,
                     DX_TWO_PI_F);
                 if (relativeAngle < 0.0f)
                 {
@@ -2898,7 +2939,7 @@ void ShineManager::AddVisibleShineTriangles(const SHINE_DIRECTION& shineDirectio
             const Vector2 edge2(
                 visibleTriangle.Vertex3.x - originInt.x,
                 visibleTriangle.Vertex3.y - originInt.y);
-            if (fabsf(Cross(edge1, edge2)) > 0.0001f)
+            if (fabsf(MyMath::Cross(edge1, edge2)) > 0.0001f)
             {
                 visibleTriangles.push_back(visibleTriangle);
             }
@@ -2952,56 +2993,6 @@ static bool IsAngleBetween(float targetAngle, float leftAngle, float rightAngle)
     }
 }
 
-
-static bool IsRayIntersectRect(const Vector2& rayOrigin, const Vector2& rayDirection, float left, float right, float top, float bottom)
-{
-    float tMin = 0.0f;
-    float tMax = FLT_MAX;
-
-    // X方向
-    if (rayDirection.x == 0.0f)
-    {
-        if (rayOrigin.x < left || rayOrigin.x > right)
-            return false;
-    }
-    else
-    {
-        float t1 = (left - rayOrigin.x) / rayDirection.x;
-        float t2 = (right - rayOrigin.x) / rayDirection.x;
-
-        if (t1 > t2)
-            std::swap(t1, t2);
-
-        tMin = max(tMin, t1);
-        tMax = min(tMax, t2);
-
-        if (tMin > tMax)
-            return false;
-    }
-
-    // Y方向
-    if (rayDirection.y == 0.0f)
-    {
-        if (rayOrigin.y < top || rayOrigin.y > bottom)
-            return false;
-    }
-    else
-    {
-        float t1 = (top - rayOrigin.y) / rayDirection.y;
-        float t2 = (bottom - rayOrigin.y) / rayDirection.y;
-
-        if (t1 > t2)
-            std::swap(t1, t2);
-
-        tMin = max(tMin, t1);
-        tMax = min(tMax, t2);
-
-        if (tMin > tMax)
-            return false;
-    }
-
-    return tMax >= 0.0f;
-}
 
 // 指定したグリッドに光が通っているか判定
 bool ShineManager::IsGridInsideShine(const Vector2_Int& gridPos, const SHINE_DIRECTION& shineDirection)
@@ -3075,8 +3066,8 @@ bool ShineManager::IsGridInsideShine(const Vector2_Int& gridPos, const SHINE_DIR
         }
     }
 
-    return IsRayIntersectRect(shinePos, leftDirection, left, right, top, bottom) ||
-           IsRayIntersectRect(shinePos, rightDirection, left, right, top, bottom);
+    return MyMath::IsRayIntersectRect(shinePos, leftDirection, left, right, top, bottom) ||
+           MyMath::IsRayIntersectRect(shinePos, rightDirection, left, right, top, bottom);
 }
 
 std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& nowCheckShinePos, const SHINE_DIRECTION& shineDirection)
@@ -3149,20 +3140,8 @@ std::vector<Vector2_Int> ShineManager::GetShineGridPositions(const Vector2_Int& 
             // 光の左端の方向 (ラジアン)
             const float leftAngle = shineDir.leftAngle; // ※左端角度を取得
 
-            // 左端角度 (leftAngle) からの相対角度を [-π, +π] の範囲で算出する関数
-            // (左端よりわずかに左にあるグリッドが 2π 近くに飛んで末尾に回るのを防ぐ)
-            auto GetSignedAngleFromLeft = [](float angle, float baseLeft) {
-                static constexpr float TWO_PI = 6.28318530717958647692f;
-                static constexpr float PI     = 3.14159265358979323846f;
-
-                float diff = std::fmod(angle - baseLeft, TWO_PI);
-                if (diff > PI)  diff -= TWO_PI;
-                if (diff < -PI) diff += TWO_PI;
-                return diff; // 負の値＝左端よりさらに左、0＝左端ぴったり、正の値＝右方向
-            };
-
-            const float lhsDiff = GetSignedAngleFromLeft(lhsAngle, leftAngle);
-            const float rhsDiff = GetSignedAngleFromLeft(rhsAngle, leftAngle);
+            const float lhsDiff = MyMath::GetSignedAngleFromLeft(lhsAngle, leftAngle);
+            const float rhsDiff = MyMath::GetSignedAngleFromLeft(rhsAngle, leftAngle);
 
             // 左側（値が小さいもの）から右側（値が大きいもの）へ昇順ソート
             return lhsDiff < rhsDiff;
@@ -3431,144 +3410,6 @@ void ShineManager::UpdateGridLightState(std::queue<Vector2_Int>& nextCheckShineP
     // }
 }
 
-// 2次元ベクトル同士の外積のZ成分を求める
-float ShineManager::Cross(const Vector2& src, const Vector2& dst)
-{
-    return src.x * dst.y - src.y * dst.x;
-}
-
-// 2本の線分の交点を求める
-bool ShineManager::GetIntersection(const Vector2 srcA, const Vector2 srcB, const Vector2 dstC, const Vector2 dstD, Vector2& intersection)
-{
-    // 線分srcABの方向ベクトルを求める
-    Vector2 srcAB =
-    {
-        srcB.x - srcA.x,
-        srcB.y - srcA.y
-    };
-
-    // 線分dstCDの方向ベクトルを求める
-    Vector2 dstCD =
-    {
-        dstD.x - dstC.x,
-        dstD.y - dstC.y
-    };
-
-    // srcABとdstCDの外積を求める
-    float denominator = Cross(srcAB, dstCD);
-
-    // 外積が0の場合、2本の線分は平行
-    // 平行な場合は交点を求められない
-    if (fabsf(denominator) < 0.000001f)
-    {
-        return false;
-    }
-
-    // 線分srcABの始点srcAから
-    // 線分dstCDの始点dstCまでのベクトルを求める
-    Vector2 srcAdstC =
-    {
-        dstC.x - srcA.x,
-        dstC.y - srcA.y
-    };
-
-    // 線分srcAB上のどの位置に交点があるかを求める
-    // 0ならsrcA、1ならsrcB、0.5ならsrcAとsrcBの中間
-    float t = Cross(srcAdstC, dstCD) / denominator;
-
-    // 線分dstCD上のどの位置に交点があるかを求める
-    // 0ならdstC、1ならdstD、0.5ならdstCとdstDの中間
-    float u = Cross(srcAdstC, srcAB) / denominator;
-
-    // tが0～1の範囲外なら、交点は線分srcABの外側
-    // uが0～1の範囲外なら、交点は線分dstCDの外側
-    if (t < 0.0f || t > 1.0f ||
-        u < 0.0f || u > 1.0f)
-    {
-        return false;
-    }
-
-    // 線分srcAB上のtの位置から交点の座標を求める
-    intersection =
-    {
-        srcA.x + srcAB.x * t,
-        srcA.y + srcAB.y * t
-    };
-
-    // 線分同士が交差している
-    return true;
-}
-
-// 線分ABの延長線と線分CDの延長線の交点を求める
-bool ShineManager::GetLineIntersection(const Vector2& srcA, const Vector2& srcB, const Vector2& dstC, const Vector2& dstD, Vector2& intersection)
-{
-    // 線分srcABの方向ベクトルを求める
-    Vector2 srcAB =
-    {
-        srcB.x - srcA.x,
-        srcB.y - srcA.y
-    };
-
-    // 線分dstCDの方向ベクトルを求める
-    Vector2 dstCD =
-    {
-        dstD.x - dstC.x,
-        dstD.y - dstC.y
-    };
-
-    // srcABとdstCDの外積を求める
-    float denominator = Cross(srcAB, dstCD);
-
-    // 外積が0の場合、2本の線分は平行
-    // 平行な場合は交点を求められない
-    if (denominator == 0.0f)
-    {
-        return false;
-    }
-
-    // 線分srcABの始点srcAから
-    // 線分dstCDの始点dstCまでのベクトルを求める
-    Vector2 srcAdstC =
-    {
-        dstC.x - srcA.x,
-        dstC.y - srcA.y
-    };
-
-    // 線分srcAB上のどの位置に交点があるかを求める
-    // 0ならsrcA、1ならsrcB、0.5ならsrcAとsrcBの中間
-    float t = Cross(srcAdstC, dstCD) / denominator;
-
-    // 線分dstCD上のどの位置に交点があるかを求める
-    // 0ならdstC、1ならdstD、0.5ならdstCとdstDの中間
-    float u = Cross(srcAdstC, srcAB) / denominator;
-
-    // 線分srcAB上のtの位置から交点の座標を求める
-    intersection =
-    {
-        srcA.x + srcAB.x * t,
-        srcA.y + srcAB.y * t
-    };
-
-    // 線分同士が交差している
-    return true;
-}
-
-// 2点間の角度を取得します。
-float ShineManager::GetAngleToPoint(const Vector2& from, const Vector2& to)
-{
-    const float dx = to.x - from.x;
-    const float dy = to.y - from.y;
-
-    float angle = std::atan2(dy, dx);
-
-    if (angle < 0.0f)
-    {
-        angle += DX_TWO_PI;
-    }
-
-    return angle;
-}
-
 // 光の右と左の方向と交点を算出
 bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float shineAngles[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], int shineAngleNumbers[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], Vector2 intersectionPositions[ANGLE_NUMBER::ANGLE_NUMBER_SHINE_MAX], float displayCornerAngles[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX], const Vector2 displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_MAX])
 {
@@ -3596,7 +3437,7 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_LEFT;
             // 算出
-            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
+            if (!MyMath::GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
             {
@@ -3609,7 +3450,7 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_RIGHT;
             // 算出
-            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN],
+            if (!MyMath::GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
             {
@@ -3622,7 +3463,7 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_UP;
             // 算出
-            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP],
+            if (!MyMath::GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_UP], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_UP],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
             {
@@ -3635,7 +3476,7 @@ bool ShineManager::GetShineDirectionIntersection(const Vector2 shineDirections[A
         {
             shineAngleNumbers[i] = ANGLE_BIT_NUMBER::ANGLE_BIT_NUMBER_DOWN;
             // 算出
-            if (!GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
+            if (!MyMath::GetLineIntersection(displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_RIGHT_DOWN], displayCornerPosition[ANGLE_NUMBER::ANGLE_NUMBER_DISPLAY_LEFT_DOWN],
                                     mstShinePos, mstShinePos + shineDirections[i], 
                                     intersectionPositions[i]))
             {
