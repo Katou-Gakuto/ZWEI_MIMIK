@@ -86,6 +86,16 @@ int BaseSceneManager::Initialize()
 
 int BaseSceneManager::Finalize()
 {
+    // 
+    for (auto &currentScene : this->mpSceneBox)
+    {
+        // 
+        if (currentScene != nullptr)
+        {
+            // 
+            currentScene->Finalize();
+        }
+    }
     return 0;
 }
 

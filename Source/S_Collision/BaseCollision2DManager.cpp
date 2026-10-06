@@ -119,7 +119,9 @@ bool BaseCollision2DManager::CheckHitBaseCollision2DToBaseCollision2D(BaseCollis
     collision2DB->SetBaseParamMySelf();
 
     // 1の中心点→2の中心点の進行ベクトルを取得
-    VECTOR2D distanceVec = collision2DB->GetMovedPos(collision2DB->GetBasePos()) - collision2DA->GetMovedPos(collision2DA->GetBasePos());
+    VECTOR2D distanceVec = 
+        collision2DB->GetMovedPos(collision2DB->GetBasePos()) -
+        collision2DA->GetMovedPos(collision2DA->GetBasePos());
 
     // 二つの円の半径を取得
     float baseRadius = collision2DA->GetBaseRadiusNoSqrt() + collision2DB->GetBaseRadiusNoSqrt();
@@ -185,7 +187,7 @@ bool BaseCollision2DManager::CheckCulling(BaseCollision2D *collision2DA, BaseCol
 }
 
 // 二つの当たり判定のスライド移動を行う関数
-int BaseCollision2DManager::CollisionSlide(BaseCollision2D *collision2DA, BaseCollision2D *collision2DB, const CollisionCheckResult2D &hitResult)
+int BaseCollision2DManager::CollisionSlide(const CollisionCheckResult2D &hitResult, BaseCollision2D *collision2DA, BaseCollision2D *collision2DB)
 {
     // どちらも貫通を許さない場合はスライド移動の処理を行う
     if (collision2DA->GetPenetrate() == false && collision2DB->GetPenetrate() == false)
@@ -194,7 +196,7 @@ int BaseCollision2DManager::CollisionSlide(BaseCollision2D *collision2DA, BaseCo
         float bMoveLate = 0.0f;
 
         // 
-        if (BaseCollision2DManager::GetCollisionMoveLate(collision2DA, collision2DB, hitResult, aMoveLate, bMoveLate))
+        if (BaseCollision2DManager::GetCollisionMoveLate(collision2DA, collision2DB, aMoveLate, bMoveLate))
         {
             // collision2DAのスライド移動を行う
             if (collision2DA->GetHitMove())
@@ -220,7 +222,6 @@ int BaseCollision2DManager::CollisionSlide(BaseCollision2D *collision2DA, BaseCo
 bool BaseCollision2DManager::GetCollisionMoveLate(
     BaseCollision2D *collision2DA,
     BaseCollision2D *collision2DB,
-    const CollisionCheckResult2D &hitResult,
     float &aMoveLate,
     float &bMoveLate)
 {
@@ -417,8 +418,10 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitQuadrangle2DToCollision2D
     case CollisionType::CollisionType_Quadrangle2D:
         temp = BaseCollision2DManager::CheckHitQuadrangle2DToQuadrangle2D(quadrangle2D, static_cast<Quadrangle2D *>(collision));
         break;
+    case CollisionType::CollisionType_Ray2D:
+        temp = BaseCollision2DManager::CheckHitQuadrangle2DToRay2D(quadrangle2D, static_cast<Ray2D *>(collision));
+        break;
     default:
-
         break;
     }
     return temp;
@@ -464,15 +467,21 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitRay2DToCollision2D(Ray2D 
 // 点と点の内外判定と衝突判定を行う関数
 CollisionCheckResult2D BaseCollision2DManager::CheckHitPoint2DToPoint2D(Point2D *point2Da, Point2D *point2Db)
 {
-    // 既に当たってることを確認しているのですぐ値を設定して、計算結果を返す
-    return GetCollisionCheckResult2D(
-        point2Da, 
-        point2Db, 
-        0, 
-        point2Da->GetBasePos() - point2Db->GetBasePos(), 
-        point2Db->GetBasePos() - point2Da->GetBasePos(),
-        VECTOR2D::GetZero(),
-        VECTOR2D::GetZero());
+    // 
+    if (point2Da->GetMovedPos(point2Da->GetBasePos()) == point2Db->GetMovedPos(point2Db->GetBasePos()))
+    {
+        return GetCollisionCheckResult2D(
+            point2Da,
+            point2Db,
+            0,
+            point2Da->GetBasePos() - point2Db->GetBasePos(),
+            point2Db->GetBasePos() - point2Da->GetBasePos(),
+            VECTOR2D::GetZero(),
+            VECTOR2D::GetZero());
+    }
+
+    // 
+    return GetCollisionCheckResult2DZero();
 }
 
 // 点と円の内外判定と衝突判定を行う関数
@@ -987,7 +996,6 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitCircle2DToQuadrangle2D(Ci
     if (BaseCollision2DManager::GetCollisionMoveLate(
         circle2D,
         quadrangle2D,
-        returnValue,
         circleMoveLate,
         quadMoveLate))
     {
@@ -1669,6 +1677,9 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitQuadrangle2DToRay2D(Quadr
     // 四角形の辺をRayに変換する
     quadrangleRay.SetShapeParameter(quadrangle2D->GetVertexPos(0), quadrangle2D->GetVertexPos(1));
 
+    // 四角形の辺をRayに変換する
+    quadrangleRay.SetMoveVec(quadrangle2D->GetMoveVec());
+
     // 四角形の辺と自分のRayが当たっている場合は特別な処理を行う
     temp = BaseCollision2DManager::CheckHitRay2DToRay2D(&quadrangleRay, ray2D);
     if (0 <= temp.mnResultParam)
@@ -2007,10 +2018,10 @@ int BaseCollision2DManager::CheckHitAllMove()
     // 関数の返り値を保持するための変数
     CollisionCheckResult2D temp;
 
-    // 移動する当たり判定を取得する
+    // 前者の当たり判定を取得する
     for (BaseCollision2D *current = this->mpFirstBaseCollision2D; current != nullptr; current = current->GetNextWorld())
     {
-        // 後者のオブジェクトを取得する
+        // 後者の当たり判定を取得する
         for (BaseCollision2D *target = current->GetNextWorld(); target != nullptr; target = target->GetNextWorld())
         {
             // 二つの当たり判定の削除フラグと有効フラグを確認し、問題があった場合は処理を飛ばす
@@ -2029,7 +2040,7 @@ int BaseCollision2DManager::CheckHitAllMove()
             if (0 <= temp.mnResultParam)
             {
                 // 二つの当たり判定のスライド移動を行う
-                BaseCollision2DManager::CollisionSlide(current, target, temp);
+                BaseCollision2DManager::CollisionSlide(temp, current, target);
 
                 // 二つの当たり判定に、衝突したことを知らせる
                 current->HitOnCollision(target);
@@ -2118,33 +2129,71 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitCollision2DToCollision2D(
         return temp;
     }
 
+    // CollisionTypeの数値が低い方の当たり判定
+    BaseCollision2D *checkCollisionA = nullptr;
+
+    // CollisionTypeの数値が高い方の当たり判定
+    BaseCollision2D *checkCollisionB = nullptr;
+
+    // AとBを入れ替えて計算しているか
+    bool swapFlag = false;
+
+    // 緻密な当たり判定の計算に使用する場合は、ColiisionTypeの数値の順番通りに二つの当たり判定を渡してください
+    // (floatで処理するため、浮動小数点数特有の『誤差』の影響を受けやすく、内部のfloat同士の計算結果がブレることがあるため)
+    if (collision2DB->GetCollisionType() < collision2DA->GetCollisionType())
+    {
+        checkCollisionA = collision2DB;
+        checkCollisionB = collision2DA;
+        swapFlag = true;
+    }
+    else
+    {
+        checkCollisionA = collision2DA;
+        checkCollisionB = collision2DB;
+        swapFlag = false;
+    }
+
     // カリング処理をまとめて行い、飛ばすべきでない場合のみ詳しい計算を行う
-    if (BaseCollision2DManager::CheckCulling(collision2DA, collision2DB) == false)
+    if (BaseCollision2DManager::CheckCulling(checkCollisionA, checkCollisionB) == false)
     {
         // まず片方のコリジョンタイプにあった関数に飛ぶ
-        switch (collision2DA->GetCollisionType())
+        switch (checkCollisionA->GetCollisionType())
         {
         case CollisionType::CollisionType_Point2D:
-            temp = BaseCollision2DManager::CheckHitPoint2DToCollision2D(static_cast<Point2D *>(collision2DA), collision2DB);
+            temp = BaseCollision2DManager::CheckHitPoint2DToCollision2D(static_cast<Point2D *>(checkCollisionA), checkCollisionB);
             break;
         case CollisionType::CollisionType_Circle2D:
-            temp = BaseCollision2DManager::CheckHitCircle2DToCollision2D(static_cast<Circle2D *>(collision2DA), collision2DB);
+            temp = BaseCollision2DManager::CheckHitCircle2DToCollision2D(static_cast<Circle2D *>(checkCollisionA), checkCollisionB);
             break;
         case CollisionType::CollisionType_Capsule2D:
-            temp = BaseCollision2DManager::CheckHitCapsule2DToCollision2D(static_cast<Capsule2D *>(collision2DA), collision2DB);
+            temp = BaseCollision2DManager::CheckHitCapsule2DToCollision2D(static_cast<Capsule2D *>(checkCollisionA), checkCollisionB);
             break;
         case CollisionType::CollisionType_Triangle2D:
-            temp = BaseCollision2DManager::CheckHitTriangle2DToCollision2D(static_cast<Triangle2D *>(collision2DA), collision2DB);
+            temp = BaseCollision2DManager::CheckHitTriangle2DToCollision2D(static_cast<Triangle2D *>(checkCollisionA), checkCollisionB);
             break;
         case CollisionType::CollisionType_Quadrangle2D:
-            temp = BaseCollision2DManager::CheckHitQuadrangle2DToCollision2D(static_cast<Quadrangle2D *>(collision2DA), collision2DB);
+            temp = BaseCollision2DManager::CheckHitQuadrangle2DToCollision2D(static_cast<Quadrangle2D *>(checkCollisionA), checkCollisionB);
             break;
         case CollisionType::CollisionType_Ray2D:
-            temp = BaseCollision2DManager::CheckHitRay2DToCollision2D(static_cast<Ray2D *>(collision2DA), collision2DB);
+            temp = BaseCollision2DManager::CheckHitRay2DToCollision2D(static_cast<Ray2D *>(checkCollisionA), checkCollisionB);
             break;
         default:
             break;
         }
+    }
+
+    // 
+    if (0 <= temp.mnResultParam && swapFlag)
+    {
+        // 
+        temp = GetCollisionCheckResult2D(
+            temp.mpCollisionB,
+            temp.mpCollisionA,
+            temp.mnResultParam,
+            temp.mvRepulsionVecB,
+            temp.mvRepulsionVecA,
+            temp.mvHitPos,
+            temp.mvFloatBox);
     }
 
     // 計算結果を返す

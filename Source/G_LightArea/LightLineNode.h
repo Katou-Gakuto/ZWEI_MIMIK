@@ -49,12 +49,21 @@ public:
     // 次のノードが有効かを確認する関数
     bool CheckNext() const;
 
+    // 
+    bool CheckHitEqual(LightLineNode *target) const;
+
 private:
     // 
     void *mpParentObject;
 
     // 光が終わる座標
     VECTOR2D mvEndPos;
+
+    // 
+    BaseCollision *mpHitCollision;
+
+    // 
+    int mnHitParam;
 
     // 次のノードに行くか
     bool mbNext;

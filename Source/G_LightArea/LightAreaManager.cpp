@@ -2,6 +2,8 @@
 
 #include "LightArea.h"
 
+#include "../S_Collision/Point2D.h"
+
 // 
 LightAreaManager::LightAreaManager() :
     mlNode(),
@@ -117,10 +119,16 @@ LightArea *LightAreaManager::SearchArea(int areaIndex)
 int LightAreaManager::CheckInLightArea(const VECTOR2D &pos, std::vector<int> &out)
 {
     // 
+    Point2D tempPoint;
+
+    // 
+    tempPoint.SetShapeParameter(pos);
+
+    // 
     for (uint16_t i = 0; i < this->mnDeactivateStartIndex; i++)
     {
         // 
-        if (this->mlNode[i]->CheckInArea(pos))
+        if (this->mlNode[i]->CheckInArea(tempPoint))
         {
             // 
             out.push_back(i);

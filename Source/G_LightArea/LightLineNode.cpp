@@ -12,6 +12,8 @@
 LightLineNode::LightLineNode(void *parent) :
     mpParentObject(parent),
     mvEndPos(),
+    mpHitCollision(nullptr),
+    mnHitParam(-1),
     mbNext(false),
     mpPrev(nullptr),
     mpNext(nullptr)
@@ -48,6 +50,12 @@ bool LightLineNode::CalculateEndPos(
     CollisionCheckResult2D &tempResultNewr)
 {
     // 
+    this->mpHitCollision = nullptr;
+
+    // 
+    this->mnHitParam = -1;
+
+    // 
     this->mbNext = false;
 
     // 
@@ -75,7 +83,7 @@ bool LightLineNode::CalculateEndPos(
         }
 
         // 当たり判定の計算を行う
-        tempResultCurrent = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempRay, objectCollBox[i]);
+        tempResultCurrent = BaseCollision2DManager::CheckHitCollision2DToCollision2D(objectCollBox[i], &tempRay);
 
         // 当たっていなかった場合は処理を行う
         if (tempResultCurrent.mnResultParam < 0)
@@ -98,14 +106,20 @@ bool LightLineNode::CalculateEndPos(
         if (tempResultNewr.mnResultParam < 0 ||
             start2current.Magnitude() < start2newr.Magnitude())
         {
-            // 
-            wallHit = true;
+            // スタート地点から今回当たった地点までのベクトルを記憶しておく
+            start2newr = start2current;
 
             // 今回の結果をそのまま記憶しておく
             tempResultNewr = tempResultCurrent;
 
-            // スタート地点から今回当たった地点までのベクトルを記憶しておく
-            start2newr = start2current;
+            // 
+            wallHit = true;
+
+            // 
+            this->mpHitCollision = objectCollBox[i];
+
+            // 
+            this->mnHitParam = tempResultNewr.mnResultParam;
         }
     }
 
@@ -113,7 +127,7 @@ bool LightLineNode::CalculateEndPos(
     for (uint32_t i = 0; i < mirrorCollBox.size(); i++)
     {
         // 当たり判定の計算を行う
-        tempResultCurrent = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempRay, mirrorCollBox[i]);
+        tempResultCurrent = BaseCollision2DManager::CheckHitCollision2DToCollision2D(mirrorCollBox[i], &tempRay);
 
         // 当たっていなかった場合は処理を行う
         if (tempResultCurrent.mnResultParam < 0)
@@ -126,7 +140,7 @@ bool LightLineNode::CalculateEndPos(
         start2current = tempResultCurrent.mvHitPos - tempRay.GetStartPos();
 
         // スタート地点からあまりにも近すぎたら処理を行う
-        if (MyFunctions::EqualInRangeF(start2current.Magnitude(), 0.0f, 0.01f))
+        if (MyFunctions::EqualInRangeF(start2current.Magnitude(), 0.0f, 0.001f))
         {
             // 今回は飛ばす
             continue;
@@ -136,18 +150,27 @@ bool LightLineNode::CalculateEndPos(
         if (tempResultNewr.mnResultParam < 0 ||
             start2current.MagnitudeNoSqrt() <= start2newr.MagnitudeNoSqrt())
         {
-            // 今回の結果をそのまま記憶しておく
-            tempResultNewr = tempResultCurrent;
-
             // スタート地点から今回当たった地点までのベクトルを記憶しておく
             start2newr = start2current;
 
-            // 鏡に当たったことを記憶しておく
+            // 今回の結果をそのまま記憶しておく
+            tempResultNewr = tempResultCurrent;
+
+            // 
+            wallHit = true;
+
+            // 
+            this->mpHitCollision = objectCollBox[i];
+
+            // 
+            this->mnHitParam = tempResultNewr.mnResultParam;
+
+            // 
             this->mbNext = true;
         }
     }
 
-    // 今回のレイが何にあたったかで処理を変更する
+    // 今回のレイが何かしらにあたったかで処理を変更する
     if (tempResultNewr.mnResultParam < 0)
     {
         // レイの終点を光の線の終点に記憶しておく
@@ -265,4 +288,13 @@ bool LightLineNode::CheckNext() const
 {
     // 
     return this->mbNext;
+}
+
+// 
+bool LightLineNode::CheckHitEqual(LightLineNode *target) const
+{
+    // 
+    return 
+        this->mpHitCollision == target->mpHitCollision &&
+        this->mnHitParam == target->mnHitParam;
 }

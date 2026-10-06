@@ -4,6 +4,7 @@
 #include "TimeManager.h"
 #include "VECTOR.h"
 
+#include "../A_GameObject/PlayerObject.h"
 #include "../C_Component/Player.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
@@ -30,7 +31,6 @@ CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
 // Master‚ÌŠeƒƒ“ƒo‚ðnew‚·‚éŠÖ”
 int Master::Initialize()
 {
-
     mpEndManager = new EndManager();
     mpTimeManager = new TimeManager(/*/1/*/17/**/);
     mpTimeManager->Initilize();
@@ -48,6 +48,15 @@ int Master::Initialize()
 
     mpLightManager = new LightAreaManager();
 
+    // 
+    GameObject *playerObjectLight = new PlayerObject(1);
+    playerObjectLight->Create();
+    mpPlayerLight = static_cast<PlayerObject *>(playerObjectLight)->GetPlayerComponent();
+
+    GameObject *playerObjectShadow = new PlayerObject(2);
+    playerObjectShadow->Create();
+    mpPlayerShadow = static_cast<PlayerObject *>(playerObjectShadow)->GetPlayerComponent();
+
 
     return 0;
 }
@@ -56,6 +65,12 @@ int Master::Initialize()
 int Master::Finalize()
 {
     mpBaseSceneManager->Finalize();
+
+    GameObject *playerObjectLight = mpPlayerLight->GetMyObject();
+    delete playerObjectLight;
+
+    GameObject *playerObjectShadow = mpPlayerShadow->GetMyObject();
+    delete playerObjectShadow;
 
     // 
     delete mpBaseSceneManager;

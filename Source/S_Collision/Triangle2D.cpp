@@ -38,7 +38,6 @@ int Triangle2D::Draw(const Material2D &color)
 
 int Triangle2D::SetPosToMoveVec()
 {
-
     VECTOR2D moveVec = this->GetMoveVec();
     if (moveVec != VECTOR2D::GetZero())
     {
@@ -63,36 +62,32 @@ int Triangle2D::SetBaseParamMySelf()
     // 値が変わっている可能性がある場合のみ処理を行う
     if (this->GetBasePosUpdateFlag() || this->GetBaseRadiusUpdateFlag())
     {
-        VECTOR2D basePos = VECTOR2D::GetZero();
-        VECTOR2D maxDistance = this->mvVertexPos[1] - this->mvVertexPos[0];
-        float maxMagNoSqrt = maxDistance.MagnitudeNoSqrt();
+        VECTOR2D distance[3];
+        distance[0] = this->mvVertexPos[1] - this->mvVertexPos[0];
+        distance[1] = this->mvVertexPos[2] - this->mvVertexPos[1];
+        distance[2] = this->mvVertexPos[0] - this->mvVertexPos[2];
 
-        VECTOR2D currentDistance = VECTOR2D::GetZero();
-        float currentMagNoSqrt = 0.0f;
-
-        for (int i = 0; i < 3; i++)
+        // 
+        int maxDisntanceIndex = 0;
+        if (distance[maxDisntanceIndex].MagnitudeNoSqrt() < distance[1].MagnitudeNoSqrt())
         {
-            for (int j = i + 1; j < 3; j++)
-            {
-                // 現在のベクトルとそのベクトルの大きさを取得する
-                currentDistance = this->mvVertexPos[j] - this->mvVertexPos[i];
-                currentMagNoSqrt = currentDistance.MagnitudeNoSqrt();
-
-                // 今回のベクトルの大きさが前回のベクトルよりも大きかったら更新処理を行う
-                if (maxMagNoSqrt < currentMagNoSqrt)
-                {
-                    // この図形がすっぽり埋まる円の半径を取得する
-                    maxMagNoSqrt = currentMagNoSqrt;
-                    
-                    // この図形がすっぽり埋まる円の中心点を取得する
-                    basePos = VECTOR2D::GetLerpPos((this->mvVertexPos[i]), (this->mvVertexPos[j]), 0.5f);
-                }
-            }
+            maxDisntanceIndex = 1;
         }
+        if (distance[maxDisntanceIndex].MagnitudeNoSqrt() < distance[2].MagnitudeNoSqrt())
+        {
+            maxDisntanceIndex = 2;
+        }
+
+        // 
+        int startIndex = maxDisntanceIndex;
+        int endIndex = (maxDisntanceIndex + 1) % 3;
+
+        // この図形がすっぽり埋まる円の中心点を取得する
+        VECTOR2D basePos = VECTOR2D::GetLerpPos((this->mvVertexPos[startIndex]), (this->mvVertexPos[endIndex]), 0.5f);
 
         // 計算結果をBaseParamに反映する
         this->SetBasePos(basePos);
-        this->SetBaseRadiusNoSqrt(maxMagNoSqrt);
+        this->SetBaseRadiusNoSqrt(distance->MagnitudeNoSqrt());
 
         // フラグを整える
         this->SetBasePosUpdateFlag(false);
