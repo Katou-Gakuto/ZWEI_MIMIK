@@ -56,6 +56,12 @@
     <Filter Include="Source\Z_Except">
       <UniqueIdentifier>{388da026-9ef7-4495-8ae7-084202acadcb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\H_Katou\DebugLogs\imgui">
+      <UniqueIdentifier>{88fceba7-f0fb-4bb4-a73f-d9a6ba216d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\H_Katou\DebugLogs\imgui\backends">
+      <UniqueIdentifier>{9559afa6-8194-4fdd-85af-321186ee14f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\A_GameObject\GameObject.cpp">
@@ -342,6 +348,33 @@
     </ClCompile>
     <ClCompile Include="Source\A_GameObject\MirrorObject.cpp">
       <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_demo.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_draw.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_tables.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_widgets.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.cpp">
+      <Filter>Source\H_Katou\DebugLogs\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\H_Katou\Singleton\ImguiManager.cpp">
+      <Filter>Source\H_Katou\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Z_Except\DxLibDataManager.cpp">
+      <Filter>Source\Z_Except</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -662,6 +695,42 @@
     </ClInclude>
     <ClInclude Include="Source\A_GameObject\MirrorObject.h">
       <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imconfig.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imgui.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imgui_internal.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_rectpack.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_textedit.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_truetype.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.h">
+      <Filter>Source\H_Katou\DebugLogs\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\Singleton\ImguiManager.h">
+      <Filter>Source\H_Katou\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\Enum\ImguiEnum.h">
+      <Filter>Source\H_Katou\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\Struct\ImguiData.h">
+      <Filter>Source\H_Katou\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Z_Except\DxLibDataManager.h">
+      <Filter>Source\Z_Except</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

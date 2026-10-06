@@ -14,6 +14,14 @@ class KeyState;
 // 光域の管理をするクラス
 class LightAreaManager;
 
+// DXライブラリの情報を持ち管理するクラス(複数に影響するDXライブラリの設定を行うのを主に想定して作成)
+class DxLibDataManager;
+
+#ifdef _DEBUG
+// デバッグ用imguiを管理するクラス
+class ImguiManager;
+#endif
+
 // 
 class Player;
 
@@ -40,6 +48,14 @@ public:
     // キーの情報管理
     static KeyState* mpKeyState;
 
+#ifdef _DEBUG
+    // デバッグ用imgui管理
+    static ImguiManager* mpImguiManager;
+#endif
+
+    // DXライブラリの情報管理
+    static DxLibDataManager* mpDxLibDataManager;
+
     // 
     static Player *mpPlayerLight;
 
@@ -51,6 +67,9 @@ public:
 
     // 
     static CursorMoveSupporter *mpCursorMoveSupporter;
+
+    // DxLibの前の初期化
+    static int DxInitPreInitialize();
 
     // Masterの各メンバをnewする関数
     static int Initialize();

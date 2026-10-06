@@ -133,5 +133,6 @@ int TestScene::Update()
 int TestScene::Draw()
 {
 	this->mpGameObjectManager->Draw();
+	Master::mpLightManager->Draw();
 	return 0;
 }

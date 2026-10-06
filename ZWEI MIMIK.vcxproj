@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用; $(SolutionDir)Source\A_GameObject; $(SolutionDir)Source\B_BehaviorTree; $(SolutionDir)Source\C_Component; $(SolutionDir)Source\E_Scene; $(SolutionDir)Source\F_PuzzleGimmick; $(SolutionDir)Source\G_LightArea; $(SolutionDir)Source\S_Collision; $(SolutionDir)Source\T_Model; $(SolutionDir)Source\Y_Tool; $(SolutionDir)Source\Z_Except; $(SolutionDir)Source\H_Katou; $(SolutionDir)Source\H_Katou\Enum; $(SolutionDir)Source\H_Katou\Singleton; $(SolutionDir)Source\H_Katou\Struct; $(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(SolutionDir)Source\A_GameObject;$(SolutionDir)Source\B_BehaviorTree;$(SolutionDir)Source\C_Component;$(SolutionDir)Source\E_Scene;$(SolutionDir)Source\F_PuzzleGimmick;$(SolutionDir)Source\G_LightArea;$(SolutionDir)Source\S_Collision;$(SolutionDir)Source\T_Model;$(SolutionDir)Source\Y_Tool;$(SolutionDir)Source\Z_Except;$(SolutionDir)Source\H_Katou;$(SolutionDir)Source\H_Katou\Enum;$(SolutionDir)Source\H_Katou\DebugLogs\imgui;$(SolutionDir)Source\H_Katou\DebugLogs\imgui\backends;$(SolutionDir)Source\H_Katou\Singleton;$(SolutionDir)Source\H_Katou\Struct;$(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用; $(SolutionDir)Source\A_GameObject; $(SolutionDir)Source\B_BehaviorTree; $(SolutionDir)Source\C_Component; $(SolutionDir)Source\E_Scene; $(SolutionDir)Source\F_PuzzleGimmick; $(SolutionDir)Source\G_LightArea; $(SolutionDir)Source\S_Collision; $(SolutionDir)Source\T_Model; $(SolutionDir)Source\Y_Tool; $(SolutionDir)Source\Z_Except; $(SolutionDir)Source\H_Katou; $(SolutionDir)Source\H_Katou\Enum; $(SolutionDir)Source\H_Katou\Singleton; $(SolutionDir)Source\H_Katou\Struct; $(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(SolutionDir)Source\A_GameObject;$(SolutionDir)Source\B_BehaviorTree;$(SolutionDir)Source\C_Component;$(SolutionDir)Source\E_Scene;$(SolutionDir)Source\F_PuzzleGimmick;$(SolutionDir)Source\G_LightArea;$(SolutionDir)Source\S_Collision;$(SolutionDir)Source\T_Model;$(SolutionDir)Source\Y_Tool;$(SolutionDir)Source\Z_Except;$(SolutionDir)Source\H_Katou;$(SolutionDir)Source\H_Katou\Enum;$(SolutionDir)Source\H_Katou\DebugLogs\imgui;$(SolutionDir)Source\H_Katou\DebugLogs\imgui\backends;$(SolutionDir)Source\H_Katou\Singleton;$(SolutionDir)Source\H_Katou\Struct;$(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,14 +120,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用; $(SolutionDir)Source\A_GameObject; $(SolutionDir)Source\B_BehaviorTree; $(SolutionDir)Source\C_Component; $(SolutionDir)Source\E_Scene; $(SolutionDir)Source\F_PuzzleGimmick; $(SolutionDir)Source\G_LightArea; $(SolutionDir)Source\S_Collision; $(SolutionDir)Source\T_Model; $(SolutionDir)Source\Y_Tool; $(SolutionDir)Source\Z_Except; $(SolutionDir)Source\H_Katou; $(SolutionDir)Source\H_Katou\Enum; $(SolutionDir)Source\H_Katou\Singleton; $(SolutionDir)Source\H_Katou\Struct; $(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(SolutionDir)Source\A_GameObject;$(SolutionDir)Source\B_BehaviorTree;$(SolutionDir)Source\C_Component;$(SolutionDir)Source\E_Scene;$(SolutionDir)Source\F_PuzzleGimmick;$(SolutionDir)Source\G_LightArea;$(SolutionDir)Source\S_Collision;$(SolutionDir)Source\T_Model;$(SolutionDir)Source\Y_Tool;$(SolutionDir)Source\Z_Except;$(SolutionDir)Source\H_Katou;$(SolutionDir)Source\H_Katou\Enum;$(SolutionDir)Source\H_Katou\DebugLogs\imgui;$(SolutionDir)Source\H_Katou\DebugLogs\imgui\backends;$(SolutionDir)Source\H_Katou\Singleton;$(SolutionDir)Source\H_Katou\Struct;$(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用; $(SolutionDir)Source\A_GameObject; $(SolutionDir)Source\B_BehaviorTree; $(SolutionDir)Source\C_Component; $(SolutionDir)Source\E_Scene; $(SolutionDir)Source\F_PuzzleGimmick; $(SolutionDir)Source\G_LightArea; $(SolutionDir)Source\S_Collision; $(SolutionDir)Source\T_Model; $(SolutionDir)Source\Y_Tool; $(SolutionDir)Source\Z_Except; $(SolutionDir)Source\H_Katou; $(SolutionDir)Source\H_Katou\Enum; $(SolutionDir)Source\H_Katou\Singleton; $(SolutionDir)Source\H_Katou\Struct; $(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(SolutionDir)Source\A_GameObject;$(SolutionDir)Source\B_BehaviorTree;$(SolutionDir)Source\C_Component;$(SolutionDir)Source\E_Scene;$(SolutionDir)Source\F_PuzzleGimmick;$(SolutionDir)Source\G_LightArea;$(SolutionDir)Source\S_Collision;$(SolutionDir)Source\T_Model;$(SolutionDir)Source\Y_Tool;$(SolutionDir)Source\Z_Except;$(SolutionDir)Source\H_Katou;$(SolutionDir)Source\H_Katou\Enum;$(SolutionDir)Source\H_Katou\DebugLogs\imgui;$(SolutionDir)Source\H_Katou\DebugLogs\imgui\backends;$(SolutionDir)Source\H_Katou\Singleton;$(SolutionDir)Source\H_Katou\Struct;$(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,8 +168,16 @@
     <ClCompile Include="Source\G_LightArea\LightAreaManager.cpp" />
     <ClCompile Include="Source\G_LightArea\LightLineNode.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\DebugLog.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_demo.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_tables.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\DrawManager.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\EndManager.cpp" />
+    <ClCompile Include="Source\H_Katou\Singleton\ImguiManager.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\KeyState.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\TimeManager.cpp" />
     <ClCompile Include="Source\H_Katou\Struct\ResourceData.cpp" />
@@ -224,6 +232,7 @@
     <ClCompile Include="Source\Y_Tool\VECTOR_D.cpp" />
     <ClCompile Include="Source\Y_Tool\VoidList.cpp" />
     <ClCompile Include="Source\Z_Except\CursorMoveSupporter.cpp" />
+    <ClCompile Include="Source\Z_Except\DxLibDataManager.cpp" />
     <ClCompile Include="Source\Z_Except\Master.cpp" />
     <ClCompile Include="Source\Z_Except\ResourceManager.cpp" />
   </ItemGroup>
@@ -267,15 +276,26 @@
     <ClInclude Include="Source\G_LightArea\LightAreaManager.h" />
     <ClInclude Include="Source\G_LightArea\LightLineNode.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\DebugLog.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imconfig.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imgui.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imgui_internal.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_textedit.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_truetype.h" />
     <ClInclude Include="Source\H_Katou\Enum\DrawEnum.h" />
+    <ClInclude Include="Source\H_Katou\Enum\ImguiEnum.h" />
     <ClInclude Include="Source\H_Katou\Enum\KeyStateEnum.h" />
     <ClInclude Include="Source\H_Katou\Enum\ResourceEnum.h" />
     <ClInclude Include="Source\H_Katou\Singleton\DrawManager.h" />
     <ClInclude Include="Source\H_Katou\Singleton\EndManager.h" />
+    <ClInclude Include="Source\H_Katou\Singleton\ImguiManager.h" />
     <ClInclude Include="Source\H_Katou\Singleton\KeyState.h" />
     <ClInclude Include="Source\H_Katou\Singleton\TimeManager.h" />
     <ClInclude Include="Source\H_Katou\Struct\BitFlag.h" />
     <ClInclude Include="Source\H_Katou\Struct\DrawData.h" />
+    <ClInclude Include="Source\H_Katou\Struct\ImguiData.h" />
     <ClInclude Include="Source\H_Katou\Struct\ResourceData.h" />
     <ClInclude Include="Source\H_Katou\Struct\TimeData.h" />
     <ClInclude Include="Source\H_Katou\Struct\Vector2.h" />
@@ -341,6 +361,7 @@
     <ClInclude Include="Source\Y_Tool\VECTOR_D.h" />
     <ClInclude Include="Source\Y_Tool\VoidList.h" />
     <ClInclude Include="Source\Z_Except\CursorMoveSupporter.h" />
+    <ClInclude Include="Source\Z_Except\DxLibDataManager.h" />
     <ClInclude Include="Source\Z_Except\Master.h" />
     <ClInclude Include="Source\Z_Except\ResourceManager.h" />
   </ItemGroup>

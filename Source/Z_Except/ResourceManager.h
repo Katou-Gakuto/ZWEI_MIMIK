@@ -19,6 +19,10 @@ public:
 
     //int GetotaResource() { return resourceMapList.size() + graphicResourceMapList.size(); }
 
+public:
+    // リソースファイルの名前
+	static string msResourceFile;
+
 private:
     vector<pair<string, int>>resourceMapList;
     vector<pair<string, int>>graphicResourceMapList;

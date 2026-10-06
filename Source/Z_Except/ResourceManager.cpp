@@ -3,6 +3,8 @@
 #include "../Z_Except/Master.h"
 #include "../T_Model/DXModelAnim.h"
 
+string ResourceManager::msResourceFile = "Resource/";
+
 ResourceManager::ResourceManager()
 {
 }

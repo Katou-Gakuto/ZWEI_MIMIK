@@ -11,6 +11,7 @@
 #include "TimeManager.h"
 
 #ifdef _DEBUG
+#include "ImguiManager.h"
 #include "DebugLogs/DebugLog.h"
 #endif
 
@@ -66,14 +67,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DEBUG::DebugCreateLogFileName(DEBUG::DEBUG_MAP_TYPE::DEBUG_ARRIVAL, { "_Arrival" });
 		DEBUG::DebugLogAddData(DEBUG::DEBUG_PROCESS_TYPE::FUNCTION_CALL, DEBUG::DEBUG_MAP_TYPE::DEBUG_ARRIVAL);//*/
 	}
+
 #endif
 	// DXライブラリ前初期化
 	{
-		// ウインドウモードで起動
-		ChangeWindowMode(true);
-
-		// 画面サイズ
-		SetGraphMode(1280, 960, 32);
+		Master::DxInitPreInitialize();
 	}
 	
 	// DXライブラリ初期化処理
@@ -117,6 +115,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// ↓約17ms経ってるか、とかメッセージの処理とか諸々が終わったよってところから
 		if (Master::mpTimeManager->GetNextUpdateFlag())
 		{
+
+#ifdef _DEBUG
+			Master::mpImguiManager->Update();
+#endif
+
 			// コントローラーのキーの状態を更新
 			Master::mpKeyState->Update();
 
@@ -131,6 +134,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			Master::mpBaseSceneManager->Draw();
 			Master::mpResourceManager->Draw();
 
+
+#ifdef _DEBUG
+			Master::mpImguiManager->Draw();
+#endif
 			ScreenFlip();
 		}
 	}

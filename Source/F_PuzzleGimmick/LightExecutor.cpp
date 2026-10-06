@@ -140,12 +140,12 @@ int LightExecutor::Draw(bool triggerSignal)
         while (true)
         {
             // 
-            int result = DxLib::DrawLine(
-                currentNode->GetMyStartPos().GetX(),
-                currentNode->GetMyStartPos().GetY(),
-                currentNode->GetMyEndPos().GetX(),
-                currentNode->GetMyEndPos().GetY(),
-                0x00ffff);
+            // int result = DxLib::DrawLine(
+            //     currentNode->GetMyStartPos().GetX(),
+            //     currentNode->GetMyStartPos().GetY(),
+            //     currentNode->GetMyEndPos().GetX(),
+            //     currentNode->GetMyEndPos().GetY(),
+            //     0x00ffff);
 
             // 
             if (!currentNode->AccessNext(&nextNode))

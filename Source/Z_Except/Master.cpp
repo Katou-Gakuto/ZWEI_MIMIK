@@ -4,6 +4,12 @@
 #include "TimeManager.h"
 #include "VECTOR.h"
 
+#include "DxLibDataManager.h"
+
+#ifdef _DEBUG
+#include "ImguiManager.h"
+#endif
+
 #include "../C_Component/Player.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
@@ -20,6 +26,11 @@ EndManager* Master::mpEndManager = nullptr;
 TimeManager* Master::mpTimeManager = nullptr;
 ResourceManager *Master::mpResourceManager = nullptr;
 KeyState* Master::mpKeyState = nullptr;
+DxLibDataManager* Master::mpDxLibDataManager = nullptr;
+
+#ifdef _DEBUG
+ImguiManager* Master::mpImguiManager = nullptr;
+#endif
 
 Player* Master::mpPlayerLight = nullptr;
 Player* Master::mpPlayerShadow = nullptr;
@@ -27,10 +38,25 @@ LightAreaManager* Master::mpLightManager = nullptr;
 
 CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
 
+// DxLibの前の初期化
+int Master::DxInitPreInitialize()
+{
+    // ウインドウモードで起動
+    ChangeWindowMode(true);
+
+    // 画面サイズ
+    SetGraphMode(1280, 960, 32);
+
+    mpDxLibDataManager = new DxLibDataManager();
+    mpDxLibDataManager->DxInitPreInitialize();
+
+    return 0;
+}
+
+
 // Masterの各メンバをnewする関数
 int Master::Initialize()
 {
-
     mpEndManager = new EndManager();
     mpTimeManager = new TimeManager(/*/1/*/17/**/);
     mpTimeManager->Initilize();
@@ -49,7 +75,13 @@ int Master::Initialize()
     mpLightManager = new LightAreaManager();
     mpLightManager->Initilize();
 
+#ifdef _DEBUG
+    mpImguiManager = new ImguiManager(false);
+    mpImguiManager->Initilize();
+#endif
 
+    // ラストに初期化して
+    mpDxLibDataManager->Initialize();
     return 0;
 }
 
@@ -58,12 +90,18 @@ int Master::Finalize()
 {
     mpBaseSceneManager->Finalize();
 
-    // 
+    mpImguiManager->Finalize();
+
+    mpDxLibDataManager->Finalize();
+
+    // 削除
+    delete mpImguiManager;
     delete mpBaseSceneManager;
     delete mpEndManager;
     delete mpTimeManager;
 	delete mpResourceManager;
     delete mpKeyState;
+    delete mpDxLibDataManager;
 
     return 0;
 }
