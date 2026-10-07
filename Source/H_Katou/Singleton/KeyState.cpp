@@ -396,24 +396,28 @@ void KeyState::SetKey_ShadowGame()
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::A,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
+					GetSpecialKey_Board(KEY_BOARD_SPECIAL::ENTER),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::A, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::B,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
+					GetSpecialKey_Board(KEY_BOARD_SPECIAL::BACK_SPACE),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::B, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::X,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
+					GetWordKey_Board(KEY_BOARD_WORD::X),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::X, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::Y,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
+					GetWordKey_Board(KEY_BOARD_WORD::Y),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::Y, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
@@ -465,7 +469,7 @@ void KeyState::SetKey_ShadowGame()
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::MOVE,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
 				{
-					(mulShadowGameFlags[(int)FLAG_TYPE::NOW][KEY_PLAYER_NUMBER::PLAYER_NUMBER_1].GetNumber(0xf, KEY_SHADOW_GAME_TYPE::UP) != 0)
+					(mulShadowGameFlags[(int)FLAG_TYPE::NOW][KEY_PLAYER_NUMBER::PLAYER_NUMBER_2].GetNumber(0xf, KEY_SHADOW_GAME_TYPE::UP) != 0)
 				}
 			);
 

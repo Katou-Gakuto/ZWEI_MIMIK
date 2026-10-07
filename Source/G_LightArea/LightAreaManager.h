@@ -14,7 +14,7 @@ class LightArea;
 class LightAreaManager
 {
 public:
-    struct LINE_POS
+    struct LIGHT_LINE_DATA
     {
         VECTOR2D lineOne;
         VECTOR2D lineTwo;
@@ -72,7 +72,7 @@ private:
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
 
     // 片方の点が画面外の場合、画面内に収まる位置まで線分を縮める
-    LINE_POS GetScreenInsideLine(const LINE_POS& linePos);
+    LIGHT_LINE_DATA GetScreenInsideLine(const LIGHT_LINE_DATA& linePos);
 
 private:
     // 
@@ -88,7 +88,7 @@ private:
     MASK_DATA mstMaskData;
 
     // ライトラインポジションデータ
-    std::vector<std::vector<LINE_POS>> mstLightLine;
+    std::vector<std::vector<LIGHT_LINE_DATA>> mstLightLine;
 
     // ライトエリア三角
     VERTEX2D* mstLightAreaTriangleVertex;

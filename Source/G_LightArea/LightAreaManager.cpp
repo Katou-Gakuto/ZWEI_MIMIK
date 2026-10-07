@@ -232,7 +232,7 @@ void LightAreaManager::StartLightDraw()
 void LightAreaManager::LightDraw()
 {
     mstLightLine.clear();
-    std::vector<std::vector<LINE_POS>> lightLine;
+    std::vector<std::vector<LIGHT_LINE_DATA>> lightLine;
     for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
     {
         LightArea *lightArea = this->mlNode[lightAreaIndex];
@@ -254,7 +254,7 @@ void LightAreaManager::LightDraw()
             {
 
                 // 情報保存
-                LINE_POS linePosData;
+                LIGHT_LINE_DATA linePosData;
                 linePosData.lineOne = currentNode->GetMyStartPos();
                 linePosData.lineTwo = currentNode->GetMyEndPos();
                 linePosData = GetScreenInsideLine(linePosData);
@@ -358,6 +358,9 @@ void LightAreaManager::LightDraw()
         {
             // 4頂点入力
             {
+                setBoxPosDatas[0].dif = GetColorU8(255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * 1.0f);
+                setBoxPosDatas[2].dif = GetColorU8(255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * 1.0f);
+
                 setBoxPosDatas[0].pos = VGet(mstLightLine[i][l].lineOne.GetX(), mstLightLine[i][l].lineOne.GetY(), 0.0f);
                 setBoxPosDatas[1].pos = VGet(mstLightLine[i][l].lineTwo.GetX(), mstLightLine[i][l].lineTwo.GetY(), 0.0f);
                 setBoxPosDatas[2].pos = VGet(mstLightLine[i][l + 1].lineOne.GetX(), mstLightLine[i][l + 1].lineOne.GetY(), 0.0f);
@@ -423,9 +426,9 @@ bool LightAreaManager::IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& l
 }
 
 // 片方の点が画面外の場合、画面内に収まる位置まで線分を縮める
-LightAreaManager::LINE_POS LightAreaManager::GetScreenInsideLine(const LINE_POS& linePos)
+LightAreaManager::LIGHT_LINE_DATA LightAreaManager::GetScreenInsideLine(const LIGHT_LINE_DATA& linePos)
 {
-    LINE_POS result = linePos;
+    LIGHT_LINE_DATA result = linePos;
 
     const float screenWidth = mstMaskData.maskSize.GetX();
     const float screenHeight = mstMaskData.maskSize.GetY();
