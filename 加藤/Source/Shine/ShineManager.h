@@ -120,8 +120,8 @@ public:
 	static constexpr int MAP_ARRAY_SIZE_X = 1;
 	static constexpr int MAP_ARRAY_SIZE_Y = 1;
 #else
-	static constexpr int MAP_ARRAY_SIZE_X = /*/3/*/10/**/;
-	static constexpr int MAP_ARRAY_SIZE_Y = /*/3/*/10/**/;
+	static constexpr int MAP_ARRAY_SIZE_X = /*/3/*/15/**/;
+	static constexpr int MAP_ARRAY_SIZE_Y = /*/3/*/15/**/;
 #endif
 
 	const int ONE_GRID_SIZE_X = MAP_SIZE_X / MAP_ARRAY_SIZE_X;

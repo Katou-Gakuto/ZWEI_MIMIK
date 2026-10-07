@@ -83,7 +83,8 @@ int BasePuzzleScene::Finalize()
 int BasePuzzleScene::Update()
 {
     // ポーズ画面に移行するボタンを押している場合は処理を行う
-    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0))
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0) ||
+        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1))
     {
         // 
         this->mbPouse = !this->mbPouse;

@@ -97,7 +97,7 @@ void ShineManager::Init()
     mpObjects.clear();
 
     // ここで生成
-    switch (8)
+    switch (0)
     {
     case 0:
     {
@@ -1703,9 +1703,11 @@ void ShineManager::CreateShineArea()
         DEBUG::SaveText(debugTextStart + "\n\nSTART\n\n", DEBUG::DEBUG_MAP_TYPE::DEBUG_SHINE_POS);
 #endif
 
+for (int i = 0; i < 20; i++)
+{
     // グリッドの探索
     CheckShineGrid();
-
+}
     // 最後に三角を光領域として再構成する。
     // 原点を除いた線分として同一の向きを持つ三角は同一の光領域へ結合する。
     const std::vector<SHINE_DIRECTION> mergedShineDirections = ConvertTrianglesToShineDirections();

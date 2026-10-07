@@ -115,10 +115,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// ↓約17ms経ってるか、とかメッセージの処理とか諸々が終わったよってところから
 		if (Master::mpTimeManager->GetNextUpdateFlag())
 		{
-
-#ifdef _DEBUG
 			Master::mpImguiManager->Update();
-#endif
+
 
 			// コントローラーのキーの状態を更新
 			Master::mpKeyState->Update();
@@ -135,9 +133,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			Master::mpResourceManager->Draw();
 
 
-#ifdef _DEBUG
 			Master::mpImguiManager->Draw();
-#endif
+
 			ScreenFlip();
 		}
 	}

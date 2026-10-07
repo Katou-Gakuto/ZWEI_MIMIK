@@ -168,6 +168,7 @@
     <ClCompile Include="Source\G_LightArea\LightAreaManager.cpp" />
     <ClCompile Include="Source\G_LightArea\LightLineNode.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\DebugLog.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImgui.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="Source\G_LightArea\LightAreaManager.h" />
     <ClInclude Include="Source\G_LightArea\LightLineNode.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\DebugLog.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImgui.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imconfig.h" />

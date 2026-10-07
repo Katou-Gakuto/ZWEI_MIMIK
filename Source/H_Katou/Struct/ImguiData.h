@@ -255,3 +255,161 @@ struct IMGUI_INT_DATA : public IMGUI_TEMPLATE_DATA<int>
         return imguiData;
     }
 };
+
+
+// 1グループのimgui描画情報
+struct IMGUI_GROUP_DATA
+{
+private:
+#ifdef _DEBUG
+    // グループ参照用
+    IMGUI_GROUP_TYPE GroupType = IMGUI_GROUP_TYPE::NONE;
+
+    // グループ名
+    std::string GroupName = "NONE";
+
+    // float情報
+    std::vector<IMGUI_FLOAT_DATA> FloatDatas = {};
+    // int情報
+    std::vector<IMGUI_INT_DATA> IntDatas = {};
+    // 子の情報
+    std::vector<IMGUI_GROUP_DATA> ChildDatas = {};
+#endif
+
+public:
+    /*------------*/
+    /*  【生成】  */
+    /*------------*/
+    static IMGUI_GROUP_DATA GetImguiGroupData(
+        std::string groupName = "NEW GROUP",
+        IMGUI_GROUP_TYPE groupType = IMGUI_GROUP_TYPE::NONE,
+        std::vector<IMGUI_FLOAT_DATA> floatDatas = {},
+        std::vector<IMGUI_INT_DATA> intDatas = {},
+        std::vector<IMGUI_GROUP_DATA> childDatas = {}
+    )
+    {
+        IMGUI_GROUP_DATA imguiGroupData;
+#ifdef _DEBUG
+        imguiGroupData.GroupType = groupType;
+        imguiGroupData.GroupName = groupName;
+        imguiGroupData.FloatDatas = floatDatas;
+        imguiGroupData.IntDatas = intDatas;
+        imguiGroupData.ChildDatas = childDatas;
+#endif
+        return imguiGroupData;
+    }
+
+    /*------------*/
+    /*【リセット】*/
+    /*------------*/
+    /// <summary>情報リセット</summary>
+    void ReSetDatas()
+    {
+#ifdef _DEBUG
+        FloatDatas.clear();
+        IntDatas.clear();
+#endif
+    }
+
+    
+    /*------------*/
+    /*  【追加】  */
+    /*------------*/
+
+    /// <summary>float情報追加</summary>
+    void AddFloatData(IMGUI_FLOAT_DATA imguiFloatData)
+    {
+#ifdef _DEBUG
+        FloatDatas.push_back(imguiFloatData);
+#endif
+    }
+
+    /// <summary>int情報追加</summary>
+    void AddIntData(IMGUI_INT_DATA imguiIntData)
+    {
+#ifdef _DEBUG
+        IntDatas.push_back(imguiIntData);
+#endif
+    }
+
+    /// <summary>子グループ追加</summary>
+    void AddChildData(IMGUI_GROUP_DATA childData)
+    {
+#ifdef _DEBUG
+        ChildDatas.push_back(childData);
+#endif
+    }
+
+    /*------------*/
+    /*  【設定】  */
+    /*------------*/
+    /// <summary>グループ種類設定</summary>
+    void SetGroupType(IMGUI_GROUP_TYPE groupType)
+    {
+#ifdef _DEBUG
+        GroupType = groupType;
+#endif
+    }
+
+    /// <summary>グループ名設定</summary>
+    void SetGroupName(std::string groupName)
+    {
+#ifdef _DEBUG
+        GroupName = groupName;
+#endif
+    }
+
+    /*------------*/
+    /*  【取得】  */
+    /*------------*/
+    /// <summary>グループ種類取得</summary>
+    IMGUI_GROUP_TYPE GetGroupType() const
+    {
+#ifdef _DEBUG
+        return GroupType;
+#else
+        return IMGUI_GROUP_TYPE::NONE;
+#endif
+    }
+
+    /// <summary>グループ名取得</summary>
+    const std::string& GetGroupName() const
+    {
+#ifdef _DEBUG
+        return GroupName;
+#else
+        static const std::string empty = "";
+        return empty;
+#endif
+    }
+
+    /// <summary>float情報取得</summary>
+    std::vector<IMGUI_FLOAT_DATA>* GetFloatDatas()
+    {
+#ifdef _DEBUG
+        return &FloatDatas;
+#else
+        return nullptr;
+#endif
+    }
+
+    /// <summary>int情報取得</summary>
+    std::vector<IMGUI_INT_DATA>* GetIntDatas()
+    {
+#ifdef _DEBUG
+        return &IntDatas;
+#else
+        return nullptr;
+#endif
+    }
+
+    /// <summary>子グループ取得</summary>
+    std::vector<IMGUI_GROUP_DATA>* GetChildDatas()
+    {
+#ifdef _DEBUG
+        return &ChildDatas;
+#else
+        return nullptr;
+#endif
+    }
+};

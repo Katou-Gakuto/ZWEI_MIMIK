@@ -6,9 +6,7 @@
 
 #include "DxLibDataManager.h"
 
-#ifdef _DEBUG
 #include "ImguiManager.h"
-#endif
 
 #include "../A_GameObject/PlayerObject.h"
 #include "../C_Component/Player.h"
@@ -29,9 +27,7 @@ ResourceManager *Master::mpResourceManager = nullptr;
 KeyState* Master::mpKeyState = nullptr;
 DxLibDataManager* Master::mpDxLibDataManager = nullptr;
 
-#ifdef _DEBUG
 ImguiManager* Master::mpImguiManager = nullptr;
-#endif
 
 Player* Master::mpPlayerLight = nullptr;
 Player* Master::mpPlayerShadow = nullptr;
@@ -76,10 +72,10 @@ int Master::Initialize()
     mpLightManager = new LightAreaManager();
     mpLightManager->Initilize();
 
-#ifdef _DEBUG
-    mpImguiManager = new ImguiManager(false);
+    // imguiマネージャー
+    mpImguiManager = new ImguiManager(true);// 使うかどうかのフラグ
     mpImguiManager->Initilize();
-#endif
+
     // 
     GameObject *playerObjectLight = new PlayerObject(1);
     playerObjectLight->Create();
