@@ -80,6 +80,6 @@ private:
     // 
     bool mbOffLight;
 
-    // 
+    // Œõ‚ªˆêŽü‰ñ‚Á‚Ä‚¢‚é
     bool mbFinal2Start;
 };
