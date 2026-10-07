@@ -58,16 +58,36 @@ int BaseCollision2D::SetNextPos(const void *posData)
 
 int BaseCollision2D::WorldConnectMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    auto nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
 
     return nowScene->GetBaseCollision2DManager()->Add(this);
 }
 
 int BaseCollision2D::WorldIsolateMySelf()
 {
+    int resultNum = -1;
     auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    BaseCollision2DManager *manager = nowScene->GetBaseCollision2DManager();
+    if (manager != nullptr)
+    {
+        // 
+        resultNum = manager->IsolateTarget(this);
+    }
 
-    return nowScene->GetBaseCollision2DManager()->IsolateTarget(this);
+    // 
+    if (resultNum != 0)
+    {
+        // 
+        auto oldScene = Master::mpBaseSceneManager->SearchSceneOld();
+        manager = oldScene->GetBaseCollision2DManager();
+        if (manager != nullptr)
+        {
+            // 
+            resultNum = manager->IsolateTarget(this);
+        }
+    }
+
+    return resultNum;
 }
 
 int BaseCollision2D::SetBaseParamMySelf()

@@ -19,6 +19,16 @@ BaseScene::~BaseScene()
         delete this->mpGameObjectManager;
         this->mpGameObjectManager = nullptr;
     }
+    if (this->mpBaseCollision2DManager != nullptr)
+    {
+        delete this->mpBaseCollision2DManager;
+        this->mpBaseCollision2DManager = nullptr;
+    }
+    if (this->mpBaseCollision3DManager != nullptr)
+    {
+        delete this->mpBaseCollision3DManager;
+        this->mpBaseCollision3DManager = nullptr;
+    }
 }
 
 int BaseScene::BaseInitialize()

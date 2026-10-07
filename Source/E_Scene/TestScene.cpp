@@ -181,7 +181,8 @@ int TestScene::Create()
 int TestScene::Initialize()
 {
 	// 
-	Master::mpPlayerLight->GetMyObject2D()->SetPosition(VECTOR2D(200.0f, 200.0f));
+	Master::mpPlayerLight->InitPosition(VECTOR2D(200.0f, 200.0f));
+	Master::mpPlayerShadow->InitPosition(VECTOR2D(300.0f, 200.0f));
 
 	this->mpGameObjectManager->Initialize();
 	return 0;

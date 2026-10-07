@@ -8,9 +8,11 @@
 #include "../A_GameObject/GameObjectManager.h"
 #include "../A_GameObject/PlayerObject.h"
 #include "../C_Component/Player.h"
+#include "../C_Component/GoalObjectController.h"
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../E_Scene/BaseSceneManager.h"
 #include "../H_Katou/Singleton/KeyState.h"
+#include "../Y_Tool/VECTOR.h"
 #include "../Z_Except/Master.h"
 
 // 
@@ -46,11 +48,8 @@ int BasePuzzleScene::Create()
     this->mpGameObjectManager = new GameObjectManager();
     this->mpBaseCollision2DManager = new BaseCollision2DManager();    
     
-    this->mpGameObjectManager->Add(Master::mpPlayerLight->GetMyObject());
-    this->mpGameObjectManager->Add(Master::mpPlayerShadow->GetMyObject());
-
-    // 
-    this->MapCreate();
+    // それぞれのマップを生成する
+    this->MapCreate(*this->mpGameObjectManager);
 
     // 
     return 0;
@@ -58,6 +57,19 @@ int BasePuzzleScene::Create()
 
 int BasePuzzleScene::Initialize()
 {
+    // 
+    VECTOR2D initPosBox[4];
+    this->GetMasterObjectsInitPos(initPosBox[0], initPosBox[1], initPosBox[2], initPosBox[3]);
+
+    // 
+    Master::mpPlayerLight->InitPosition(initPosBox[0]);
+    Master::mpPlayerShadow->InitPosition(initPosBox[1]);
+    Master::mpGoalLight->InitPosition(initPosBox[2]);
+    Master::mpGoalShadow->InitPosition(initPosBox[3]);
+
+    // 
+    this->AddMasterObjects();
+
     // 
     this->mpGameObjectManager->Initialize();
 
@@ -73,7 +85,14 @@ int BasePuzzleScene::Finalize()
     // 
     if (this->mpGameObjectManager != nullptr)
     {
+        // 
         this->mpGameObjectManager->Finalize();
+
+        // 
+        this->mpGameObjectManager->IsolateTarget(Master::mpPlayerLight->GetMyObject());
+        this->mpGameObjectManager->IsolateTarget(Master::mpPlayerShadow->GetMyObject());
+        this->mpGameObjectManager->IsolateTarget(Master::mpGoalLight->GetMyObject());
+        this->mpGameObjectManager->IsolateTarget(Master::mpGoalShadow->GetMyObject());
     }
 
     // 
@@ -82,8 +101,23 @@ int BasePuzzleScene::Finalize()
 
 int BasePuzzleScene::Update()
 {
+    // 
+    if (Master::mpPlayerLight->CheckGoal() &&
+        Master::mpPlayerShadow->CheckGoal())
+    {
+        // 
+        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+
+        // 
+        this->OnResetFlag();
+
+        // 
+        return 0;
+    }
+
     // ポーズ画面に移行するボタンを押している場合は処理を行う
-    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0))
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0) ||
+        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1))
     {
         // 
         this->mbPouse = !this->mbPouse;
@@ -242,4 +276,32 @@ int BasePuzzleScene::Draw()
 
     // 
     return 0;
+}
+
+// 
+SceneTag BasePuzzleScene::StageNum2SceneTag(unsigned long stageNum)
+{
+    // 
+    SceneTag temp = SceneTag::ST_Max;
+    switch (stageNum)
+    {
+    case 0:
+        temp = SceneTag::ST_Puzzle1_1;
+        break;
+
+    default:
+        break;
+    }
+
+    // 
+    return temp;
+}
+
+// 
+void BasePuzzleScene::AddMasterObjects()
+{
+    this->mpGameObjectManager->Add(Master::mpPlayerLight->GetMyObject());
+    this->mpGameObjectManager->Add(Master::mpPlayerShadow->GetMyObject());
+    this->mpGameObjectManager->Add(Master::mpGoalLight->GetMyObject());
+    this->mpGameObjectManager->Add(Master::mpGoalShadow->GetMyObject());
 }

@@ -30,7 +30,8 @@ BaseSceneManager::BaseSceneManager() :
     mnSceneNow(SceneTag::ST_Max),
     mnChangeScene(SceneTag::ST_Title),
     mnResreveScene(SceneTag::ST_Max),
-    mbFlag()
+    mbFlag(),
+    mbNowFinalize(false)
 {
     for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
     {
@@ -137,7 +138,14 @@ int BaseSceneManager::Update()
         // Œ»Ý‚ÌƒV[ƒ“‚ànullptr‚Å‚Í‚È‚­A‚³‚ç‚ÉsceneOld‚Æ‚àˆá‚Á‚Ä‚¢‚½ê‡
         if (sceneNow != nullptr && sceneNow!= sceneOld)
         {
+            // 
+            this->mbNowFinalize = true;
+
+            // 
             sceneOld->BaseFinalize();
+
+            // 
+            this->mbNowFinalize = false;
         }
     }
 
@@ -156,16 +164,64 @@ int BaseSceneManager::Draw()
     return 0;
 }
 
-BaseScene *BaseSceneManager::SearchSceneNow()
+BaseScene *BaseSceneManager::SearchSceneAuto() const
 {
     BaseScene *temp = nullptr;
     for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
     {
-        if (this->mpSceneBox[i] != nullptr &&
-            this->mpSceneBox[i]->GetTag() == this->mnSceneNow)
+        if (this->mpSceneBox[i] != nullptr)
         {
-            temp = this->mpSceneBox[i];
-            break;
+            if (this->mbNowFinalize)
+            {
+                if (this->mpSceneBox[i]->GetTag() == this->mnSceneOld)
+                {
+                    temp = this->mpSceneBox[i];
+                    break;
+                }
+            }
+            else
+            {
+                if (this->mpSceneBox[i]->GetTag() == this->mnSceneNow)
+                {
+                    temp = this->mpSceneBox[i];
+                    break;
+                }
+            }
+
+        }
+    }
+    return temp;
+}
+
+BaseScene *BaseSceneManager::SearchSceneNow() const
+{
+    BaseScene *temp = nullptr;
+    for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
+    {
+        if (this->mpSceneBox[i] != nullptr)
+        {
+            if (this->mpSceneBox[i]->GetTag() == this->mnSceneNow)
+            {
+                temp = this->mpSceneBox[i];
+                break;
+            }
+        }
+    }
+    return temp;
+}
+
+BaseScene *BaseSceneManager::SearchSceneOld() const
+{
+    BaseScene *temp = nullptr;
+    for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
+    {
+        if (this->mpSceneBox[i] != nullptr)
+        {
+            if (this->mpSceneBox[i]->GetTag() == this->mnSceneOld)
+            {
+                temp = this->mpSceneBox[i];
+                break;
+            }
         }
     }
     return temp;

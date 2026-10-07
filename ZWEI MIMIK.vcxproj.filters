@@ -376,6 +376,12 @@
     <ClCompile Include="Source\Z_Except\DxLibDataManager.cpp">
       <Filter>Source\Z_Except</Filter>
     </ClCompile>
+    <ClCompile Include="Source\A_GameObject\GoalObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Component\GoalObjectController.cpp">
+      <Filter>Source\C_Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -731,6 +737,12 @@
     </ClInclude>
     <ClInclude Include="Source\Z_Except\DxLibDataManager.h">
       <Filter>Source\Z_Except</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\GoalObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Component\GoalObjectController.h">
+      <Filter>Source\C_Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

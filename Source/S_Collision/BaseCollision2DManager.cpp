@@ -2248,9 +2248,23 @@ int BaseCollision2DManager::ConnectTarget(BaseCollision2D *prev, BaseCollision2D
 
 int BaseCollision2DManager::IsolateTarget(BaseCollision2D *target)
 {
-    if (mpFirstBaseCollision2D == nullptr)
+    // 
+    bool hit = false;
+    for (BaseCollision2D *current = this->mpFirstBaseCollision2D; current != nullptr; current = current->GetNextWorld())
     {
-        return 0;
+        // 
+        if (current == target)
+        {
+            // 
+            hit = true;
+        }
+    }
+
+    // 
+    if (!hit)
+    {
+        // 
+        return -1;
     }
 
     // ì‹Æ—p•Ï”‚ğ—pˆÓ

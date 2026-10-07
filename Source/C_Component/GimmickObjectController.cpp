@@ -51,7 +51,7 @@ int GimmickObjectController::EarlyUpdate()
     for (uint32_t i = 0; i < this->mlGimmickList.size(); i++)
     {
         // 
-        this->mlGimmickList[i].mpExecutor->LateUpdate((this->mlGimmickList[i].mbTriggerSignal));
+        this->mlGimmickList[i].mpExecutor->EarlyUpdate((this->mlGimmickList[i].mbTriggerSignal));
     }
 
     // 

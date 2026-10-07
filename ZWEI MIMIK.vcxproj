@@ -135,6 +135,7 @@
     <ClCompile Include="Source\A_GameObject\GameObject2D.cpp" />
     <ClCompile Include="Source\A_GameObject\GameObject3D.cpp" />
     <ClCompile Include="Source\A_GameObject\GameObjectManager.cpp" />
+    <ClCompile Include="Source\A_GameObject\GoalObject.cpp" />
     <ClCompile Include="Source\A_GameObject\MirrorObject.cpp" />
     <ClCompile Include="Source\A_GameObject\PlayerObject.cpp" />
     <ClCompile Include="Source\A_GameObject\WallObject.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="Source\C_Component\BaseComponentList.cpp" />
     <ClCompile Include="Source\C_Component\ButtonObjectController.cpp" />
     <ClCompile Include="Source\C_Component\GimmickObjectController.cpp" />
+    <ClCompile Include="Source\C_Component\GoalObjectController.cpp" />
     <ClCompile Include="Source\C_Component\HoldObjectController.cpp" />
     <ClCompile Include="Source\C_Component\Player.cpp" />
     <ClCompile Include="Source\C_Component\MirrorObjectController.cpp" />
@@ -242,6 +244,7 @@
     <ClInclude Include="Source\A_GameObject\GameObject2D.h" />
     <ClInclude Include="Source\A_GameObject\GameObject3D.h" />
     <ClInclude Include="Source\A_GameObject\GameObjectManager.h" />
+    <ClInclude Include="Source\A_GameObject\GoalObject.h" />
     <ClInclude Include="Source\A_GameObject\MirrorObject.h" />
     <ClInclude Include="Source\A_GameObject\PlayerObject.h" />
     <ClInclude Include="Source\A_GameObject\WallObject.h" />
@@ -253,6 +256,7 @@
     <ClInclude Include="Source\C_Component\BaseComponentList.h" />
     <ClInclude Include="Source\C_Component\ButtonObjectController.h" />
     <ClInclude Include="Source\C_Component\GimmickObjectController.h" />
+    <ClInclude Include="Source\C_Component\GoalObjectController.h" />
     <ClInclude Include="Source\C_Component\HoldObjectController.h" />
     <ClInclude Include="Source\C_Component\Player.h" />
     <ClInclude Include="Source\C_Component\MirrorObjectController.h" />

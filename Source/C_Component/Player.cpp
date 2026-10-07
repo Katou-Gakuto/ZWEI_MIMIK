@@ -3,6 +3,7 @@
 #include "Master.h"
 
 #include "../C_Component/BaseComponentList.h"
+#include "../C_Component/GoalObjectController.h"
 #include "../C_Component/HoldObjectController.h"
 
 #include "../E_Scene/BaseScene.h"
@@ -14,7 +15,9 @@
 #include "../T_Model/DXModelAnim.h"
 
 #include "../S_Collision/BaseCollision.h"
+#include "../S_Collision/BaseCollision2DManager.h"
 #include "../S_Collision/BaseCollisionList.h"
+#include "../S_Collision/Point2D.h"
 #include "../S_Collision/Circle2D.h"
 
 
@@ -22,6 +25,7 @@ Player::Player(GameObject* myObject, int playerNumber)
 : BaseComponent(myObject, ComponentTagAndOrder::CTAO_PlayerController)
 , mdBodyCollision()
 , PlayerNum(playerNumber)
+, mbLightSide(playerNumber == 1)
 , mpHold(nullptr)
 {
 }
@@ -58,9 +62,6 @@ int Player::Create()
     obj->AddCollision(body, this->mdBodyCollision);
 
     // 
-    body->WorldConnectMySelf();
-
-    // 
     obj->AddModel(new DXAnimModel(obj), this->mdModelHandle);
    
     // 
@@ -92,12 +93,19 @@ int Player::Initialize()
     bodyCollision->SetShapeParameter(this->Pos, circleRadius * circleRadius);
 
     // 
+    bodyCollision->WorldConnectMySelf();
+
+    // 
     return 0;
 }
 
 
 int Player::Finalize()
 {
+    // 
+    Circle2D *bodyCollision = GetBodyCollision();
+    bodyCollision->WorldIsolateMySelf();
+
     return 0;
 }
 
@@ -261,6 +269,18 @@ int Player::Draw()
             true);
     }
 
+    // 
+    if (this->CheckGoal())
+    {
+        DrawCircle(
+            player->GetPosition().GetX(),
+            player->GetPosition().GetY(),
+            40.0f,
+            0xff0000,
+            false);
+    }
+
+    // 
     return 0;
 }
 
@@ -364,6 +384,64 @@ bool Player::SyncPlayerMoveVec(const VECTOR2D &holdMoveVec)
 
     // 
     list->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &holdMoveVec);
+
+    // 
+    return true;
+}
+
+// 
+bool Player::InitPosition(const VECTOR2D &pos)
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    obj->SetPosition(pos);
+
+    // 
+    return false;
+}
+
+// 
+bool Player::ChangeLightSide()
+{
+    // 
+    this->mbLightSide = !this->mbLightSide;
+
+    // 
+    return true;
+}
+
+// 
+bool Player::CheckGoal() const
+{
+    // 
+    GameObject2D *goalObj = nullptr;
+    if (this->mbLightSide)
+    {
+        goalObj = Master::mpGoalLight->GetMyObject2D();
+    }
+    else
+    {
+        goalObj = Master::mpGoalShadow->GetMyObject2D();
+    }
+
+    // 
+    Point2D goalPoint;
+    goalPoint.SetShapeParameter(goalObj->GetPosition());
+
+    // 
+    auto hitResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&goalPoint, this->GetBodyCollision());
+    if (hitResult.mnResultParam < 0)
+    {
+        // 
+        return false;
+    }
 
     // 
     return true;

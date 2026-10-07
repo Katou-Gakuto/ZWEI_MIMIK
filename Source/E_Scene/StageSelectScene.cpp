@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../E_Scene/BaseSceneManager.h"
+#include "../E_Scene/BasePuzzleScene.h"
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Z_Except/Master.h"
 
@@ -63,8 +64,28 @@ int StageSelectScene::Update()
     if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
     {
+        bool moveTestScene = false;
+        if (moveTestScene)
+        {
+            // 
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test);
+        }
+        else
+        {
+            // 
+            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage));
+        }
+
         // 
-        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test);
+        this->OnResetFlag();
+    }
+
+    // 
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 0) ||
+        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 1))
+    {
+        // 
+        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
 
         // 
         this->OnResetFlag();
@@ -129,6 +150,16 @@ int StageSelectScene::Draw()
     DxLib::DrawString(
         400,
         150 * 2,
+        message.c_str(),
+        GetColor(255, 255, 255));
+
+    // 
+    message = "Title (Pless X Key)";
+
+    // 
+    DxLib::DrawString(
+        400,
+        150 * 3,
         message.c_str(),
         GetColor(255, 255, 255));
 

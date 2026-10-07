@@ -42,6 +42,14 @@ public:
 	VECTOR2D GetPos() const { return Pos; }
 	int GetPlayerNum() const { return PlayerNum; } // 1PÇ©2PÇ©Çï‘Ç∑
 
+    // 
+    bool InitPosition(const VECTOR2D &pos);
+
+    // 
+    bool ChangeLightSide();
+
+    // é©êgÇÃÉSÅ[ÉãÇ…ÇΩÇ«ÇËíÖÇ¢ÇΩÇ©
+    bool CheckGoal() const;
 
 private:
 
@@ -63,6 +71,9 @@ private:
 
     // 
     bool mbHoldFlag;
+
+    // 
+    bool mbLightSide;
 
     // 
     bool CheckHoldNow() const;

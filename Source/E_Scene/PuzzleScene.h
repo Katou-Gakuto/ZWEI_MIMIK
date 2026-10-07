@@ -12,5 +12,11 @@ public:
     ~PuzzleScene1_1();
 
     // 
-    int MapCreate() override;
+    int MapCreate(GameObjectManager &objectManager) override;    
+
+    void GetMasterObjectsInitPos(
+        VECTOR2D &playerLightPos,
+        VECTOR2D &playerShadowPos,
+        VECTOR2D &goalLightPos,
+        VECTOR2D &goalShadowPos);
 };

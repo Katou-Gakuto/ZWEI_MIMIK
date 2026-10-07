@@ -13,6 +13,7 @@ typedef enum ComponentTagAndOrder : unsigned long
 {
     // 最初にオブジェクトそのもの
     CTAO_PlayerController = 0,
+    CTAO_GoalController,
     CTAO_WallController,
     CTAO_MirrorController,
 
@@ -53,6 +54,7 @@ public:
     virtual int Draw();
 
     int BaseInitialize();
+    int BaseFinalize();
 
     void OnDeleteFlag();
 

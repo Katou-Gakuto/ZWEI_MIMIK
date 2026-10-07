@@ -11,7 +11,9 @@
 #endif
 
 #include "../A_GameObject/PlayerObject.h"
+#include "../A_GameObject/GoalObject.h"
 #include "../C_Component/Player.h"
+#include "../C_Component/GoalObjectController.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
 #include "../T_Model/DXModelAnim.h"
@@ -35,6 +37,9 @@ ImguiManager* Master::mpImguiManager = nullptr;
 
 Player* Master::mpPlayerLight = nullptr;
 Player* Master::mpPlayerShadow = nullptr;
+GoalObjectController *Master::mpGoalLight = nullptr;
+GoalObjectController *Master::mpGoalShadow = nullptr;
+
 LightAreaManager* Master::mpLightManager = nullptr;
 
 CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
@@ -89,6 +94,14 @@ int Master::Initialize()
     playerObjectShadow->Create();
     mpPlayerShadow = static_cast<PlayerObject *>(playerObjectShadow)->GetPlayerComponent();
 
+    GameObject *goalObjectLight = new GoalObject(true);
+    goalObjectLight->Create();
+    mpGoalLight = static_cast<GoalObject *>(goalObjectLight)->GetGoalController();
+
+    GameObject *goalObjectShadow = new GoalObject(false);
+    goalObjectShadow->Create();
+    mpGoalShadow = static_cast<GoalObject *>(goalObjectShadow)->GetGoalController();
+
 
     // ÉâÉXÉgÇ…èâä˙âªÇµÇƒ
     mpDxLibDataManager->Initialize();
@@ -101,8 +114,9 @@ int Master::Finalize()
     mpBaseSceneManager->Finalize();
 
     GameObject *playerObjectLight = mpPlayerLight->GetMyObject();
-
     GameObject *playerObjectShadow = mpPlayerShadow->GetMyObject();
+    GameObject *goalObjectLight = mpGoalLight->GetMyObject();
+    GameObject *goalObjectShadow= mpGoalShadow->GetMyObject();
 
     // 
     mpImguiManager->Finalize();
@@ -112,6 +126,8 @@ int Master::Finalize()
     // çÌèú
     delete playerObjectLight;
     delete playerObjectShadow;
+    delete goalObjectLight;
+    delete goalObjectShadow;
     delete mpImguiManager;
     delete mpBaseSceneManager;
     delete mpEndManager;

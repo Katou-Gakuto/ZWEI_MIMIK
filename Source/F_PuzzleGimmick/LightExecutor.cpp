@@ -385,7 +385,7 @@ bool LightExecutor::CalculateLineEndPos()
     std::vector<BaseCollision2D *> objectCollisionBox;
 
     // 
-    BaseScene *nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    BaseScene *nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
     if (nowScene->GetBaseCollision2DManager()->SearchTag(CollisionTag::CollisionTag_Wall, objectCollisionBox) != 0)
     {
         // 

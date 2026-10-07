@@ -23,6 +23,7 @@ private:
     SceneTag mnResreveScene;
     CreateFlag mbFlag;
     VoidList mlUniqueDataList;
+    bool mbNowFinalize;
 
     BaseScene *SearchSceneTag(SceneTag tag);
 
@@ -36,7 +37,9 @@ public:
     int Update();
     int Draw();
 
-    BaseScene *SearchSceneNow();
+    BaseScene *SearchSceneAuto()const;
+    BaseScene *SearchSceneNow()const;
+    BaseScene *SearchSceneOld()const;
 
     SceneTag GetSneceNow() const { return this->mnSceneNow; }
 

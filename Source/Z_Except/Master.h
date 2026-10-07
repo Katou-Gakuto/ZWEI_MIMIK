@@ -26,6 +26,9 @@ class ImguiManager;
 class Player;
 
 // 
+class GoalObjectController;
+
+// 
 class VECTOR2D;
 
 // 
@@ -61,6 +64,12 @@ public:
 
     // 
     static Player *mpPlayerShadow;
+
+    // 
+    static GoalObjectController *mpGoalLight;
+
+    // 
+    static GoalObjectController *mpGoalShadow;
 
     // Manager
     static LightAreaManager *mpLightManager;

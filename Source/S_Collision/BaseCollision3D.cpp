@@ -58,14 +58,14 @@ int BaseCollision3D::SetNextPos(const void *posData)
 
 int BaseCollision3D::WorldConnectMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    auto nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
 
     return nowScene->GetBaseCollision3DManager()->Add(this);
 }
 
 int BaseCollision3D::WorldIsolateMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    auto nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
 
     return nowScene->GetBaseCollision3DManager()->IsolateTarget(this);
 }
