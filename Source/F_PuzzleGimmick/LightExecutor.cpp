@@ -189,14 +189,14 @@ int LightExecutor::Draw(bool triggerSignal)
                     // 
                     // break;
                 }
-
+                
                 // デバッグ用レイの可視化
-                //drawResult = DxLib::DrawLine(
-                //    currentNode->GetMyStartPos().GetX(),
-                //    currentNode->GetMyStartPos().GetY(),
-                //    currentNode->GetMyEndPos().GetX(),
-                //    currentNode->GetMyEndPos().GetY(),
-                //    0x00ffff);
+                drawResult = DxLib::DrawLine(
+                    currentNode->GetMyStartPos().GetX(),
+                    currentNode->GetMyStartPos().GetY(),
+                    currentNode->GetMyEndPos().GetX(),
+                    currentNode->GetMyEndPos().GetY(),
+                    0x00ffff);
 
                 // 
                 if (!currentNode->AccessNext(&nextNode))

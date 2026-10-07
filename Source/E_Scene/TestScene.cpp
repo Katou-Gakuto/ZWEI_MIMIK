@@ -57,9 +57,11 @@ int TestScene::Create()
 		currentObject = new WallObject(false, tempCenter, tempBlockSize);
 		this->mpGameObjectManager->Add(currentObject);
 
+		/*
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 1.0f);
 		currentObject = new WallObject(false, tempCenter, tempBlockSize);
 		this->mpGameObjectManager->Add(currentObject);
+		*/
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 2.0f);
 		currentObject = new WallObject(false, tempCenter, tempBlockSize);
@@ -164,7 +166,7 @@ int TestScene::Create()
 			PuzzleGimmickActiveParam::Create(true, false),
 			gimmickObject,
 			0,
-			500,
+			50,
 			MyFunctions::Deg2Rad(0.0f),
 			MyFunctions::Deg2Rad(360.0f),
 			10000.0f,
