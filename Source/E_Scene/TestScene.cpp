@@ -151,17 +151,11 @@ int TestScene::Create()
 	}
 
 	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 3.0f, tempBlockSize.GetY() * 2.0f);
-	int useLightCount = 1;
-	for (int i = 0; i < useLightCount; i++)
-	{
-		// 
-		if (Master::mpLightManager->SearchArea(i) == nullptr)
-		{
-			// 
-			Master::mpLightManager->AddArea(new LightArea());
-		}
-	}
 
+	// 
+	Master::mpLightManager->ResizeArea(1);
+
+	// 
 	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize);
 	GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
 	gimmickController->AddGimmick(
@@ -193,11 +187,21 @@ int TestScene::Initialize()
 
 int TestScene::Finalize()
 {
-	this->mpGameObjectManager->IsolateTarget(Master::mpPlayerLight->GetMyObject());
-	this->mpGameObjectManager->IsolateTarget(Master::mpPlayerShadow->GetMyObject());
+	if (this->mpGameObjectManager != nullptr)
+	{
+		this->mpGameObjectManager->IsolateTarget(Master::mpPlayerLight->GetMyObject());
+		this->mpGameObjectManager->IsolateTarget(Master::mpPlayerShadow->GetMyObject());
+		this->mpGameObjectManager->Finalize();
+	}
+	if (this->mpBaseCollision2DManager != nullptr)
+	{
+		this->mpBaseCollision2DManager->Finalize();
+	}
+	if (this->mpBaseCollision3DManager != nullptr)
+	{
+		this->mpBaseCollision3DManager;
+	}
 
-	this->mpGameObjectManager->Finalize();
-	this->mpBaseCollision2DManager->Finalize();
 	return 0;
 }
 

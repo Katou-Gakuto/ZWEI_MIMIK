@@ -38,68 +38,6 @@ LightAreaManager::~LightAreaManager()
 }
 
 // 
-int LightAreaManager::AddArea(LightArea *newArea)
-{
-    // 
-    if (newArea == nullptr)
-    {
-        // 
-        return -1;
-    }
-
-    // 
-    int addIndex = this->mnDeactivateStartIndex;
-
-    // 
-    if (this->mlNode.size() == addIndex)
-    {
-        // 
-        this->mlNode.push_back(newArea);
-    }
-    else
-    {
-        // 
-        this->mlNode[addIndex] = newArea;
-    }
-
-    // 
-    this->mnDeactivateStartIndex++;
-
-    // 
-    return addIndex;
-}
-
-// 
-int LightAreaManager::DeleteArea(int areaIndex)
-{
-    // 
-    if (this->mlNode[areaIndex] == nullptr)
-    {
-        // 
-        return 0;
-    }
-
-    // 
-    delete this->mlNode[areaIndex];
-
-    // 
-    this->mlNode[areaIndex] = nullptr;
-
-    // 
-    for (uint16_t i = this->mnDeactivateStartIndex - 1; areaIndex < i; i--)
-    {
-        // 
-        this->mlNode[i - 1] = this->mlNode[i];
-    }
-
-    // 
-    this->mnDeactivateStartIndex--;
-
-    // 
-    return 0;
-}
-
-// 
 LightArea *LightAreaManager::SearchArea(int areaIndex)
 {
     // 
@@ -112,6 +50,42 @@ LightArea *LightAreaManager::SearchArea(int areaIndex)
 
     // 
     return this->mlNode[areaIndex];
+}
+
+// 
+bool LightAreaManager::ResizeArea(uint32_t useAreaCount)
+{
+    // 
+    if (useAreaCount < this->mnDeactivateStartIndex)
+    {
+        // 
+        this->mnDeactivateStartIndex = useAreaCount;
+
+        // 
+        return true;
+    }
+
+    // 
+    if (this->mlNode.size() < useAreaCount)
+    {
+        this->mlNode.resize(useAreaCount);
+    }
+
+    for (uint32_t i = 0; i < useAreaCount; i++)
+    {
+        // 
+        if (this->mlNode[i] == nullptr)
+        {
+            // 
+            this->mlNode[i] = new LightArea();
+        }
+    }
+
+    // 
+    this->mnDeactivateStartIndex = useAreaCount;
+
+    // 
+    return true;
 }
 
 // ‚Ç‚ÌŒõˆæ‚É“ü‚Á‚Ä‚¢‚é‚©‚ğŠm”F‚·‚éŠÖ”

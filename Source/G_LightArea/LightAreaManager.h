@@ -19,13 +19,10 @@ public:
     ~LightAreaManager();
 
     // 
-    int AddArea(LightArea *newArea);
-
-    // 
-    int DeleteArea(int areaIndex);
-
-    // 
     LightArea *SearchArea(int areaIndex);
+
+    // 
+    bool ResizeArea(uint32_t useAreaCount);
 
     // どの光域に入っているかを確認する関数
     // 返り値のintは0で処理の成功の可否、引数のoutは自身が入っているAreaIndexを返す関数
