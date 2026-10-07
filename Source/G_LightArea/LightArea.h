@@ -64,6 +64,9 @@ public:
     // 
     bool OffLight();
 
+    // Œõ‚ªˆêŽü‰ñ‚Á‚Ä‚¢‚é‚©Žæ“¾
+    inline bool GetFinal2Start() const { return mbFinal2Start; }
+
 private:
     // ‚Æ‚è‚ ‚¦‚¸—pˆÓ‚µ‚Ä‚¨‚±‚¤‚©
     std::vector<LightLineNode *> mlLightFirstNode;

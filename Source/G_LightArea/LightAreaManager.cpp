@@ -283,6 +283,69 @@ void LightAreaManager::LightDraw()
                 ++loopCount;
             }
         }
+
+        // 一周しているか
+        if (lightArea->GetFinal2Start() && (0 < lightArea->GetLightLineCount()))
+        {
+            currentNode = lightArea->GetFirstNodeBox()[0];
+            if (currentNode == nullptr)
+            {
+                continue;
+            }
+
+            // ループ数
+            int loopCount = 0;
+            while (true)
+            {
+
+                // 情報保存
+                LIGHT_LINE_DATA linePosData;
+                linePosData.lineOne = currentNode->GetMyStartPos();
+                linePosData.lineTwo = currentNode->GetMyEndPos();
+                linePosData = GetScreenInsideLine(linePosData);
+
+                // このループ数最初の判定なら追加だけして次へ
+                if (mstLightLine.size() <= loopCount)
+                {
+                    // 情報を追加
+                    mstLightLine.push_back({ linePosData });
+                    lightLine.push_back({ linePosData });
+                }
+                // 前に設定したことがあるから調べる
+                else
+                {
+                    /*このif判定順番厳守、配列の参照でエラー出る*/
+                    if (/*二つのラインで四角分がこれまでに作成されているか判定*/
+                        (mstLightLine[loopCount].size() >= 2) &&
+                        /*前の二つのラインを見て今のラインの頂点が両点座標が直線上にあるか判定*/
+                        (IsPointOnLine(mstLightLine[loopCount][mstLightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineOne, mstLightLine[loopCount][mstLightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineOne, linePosData.lineOne) &&
+                            IsPointOnLine(mstLightLine[loopCount][mstLightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineTwo, mstLightLine[loopCount][mstLightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineTwo, linePosData.lineTwo)))
+                    {
+                        // 前回登録した情報を書き換える
+                        mstLightLine[loopCount][mstLightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/] = linePosData;
+                        lightLine[loopCount].push_back(linePosData);
+                    }
+                    else
+                    {
+                        // 情報を追加
+                        mstLightLine[loopCount].push_back(linePosData);
+                        lightLine[loopCount].push_back(linePosData);
+                    }
+                }
+
+                // 次のノードがあるか確認
+                if (!currentNode->AccessNext(&nextNode))
+                {
+                    break;
+                }
+
+                // 次のノード設定
+                currentNode = nextNode;
+
+                // ループ数インクリメント
+                ++loopCount;
+            }
+        }
     }
 
     // 何も登録されていないなら何もしない
@@ -340,8 +403,8 @@ void LightAreaManager::LightDraw()
         {
             // 4頂点入力
             {
-                setBoxPosDatas[0].dif = GetColorU8(255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * 1.0f);
-                setBoxPosDatas[2].dif = GetColorU8(255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * 1.0f);
+                //setBoxPosDatas[0].dif = GetColorU8(255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * 1.0f);
+                //setBoxPosDatas[2].dif = GetColorU8(255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * (static_cast<float>((i * mstLightLine.size()) + l) / static_cast<float>(mstLightLine.size() + mstLightLine[i].size() - 1)), 255 * 1.0f);
 
                 setBoxPosDatas[0].pos = VGet(mstLightLine[i][l].lineOne.GetX(), mstLightLine[i][l].lineOne.GetY(), 0.0f);
                 setBoxPosDatas[1].pos = VGet(mstLightLine[i][l].lineTwo.GetX(), mstLightLine[i][l].lineTwo.GetY(), 0.0f);
