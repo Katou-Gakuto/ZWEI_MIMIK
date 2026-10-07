@@ -71,7 +71,10 @@ int BasePuzzleScene::Initialize()
 int BasePuzzleScene::Finalize()
 {
     // 
-    this->mpGameObjectManager->Finalize();
+    if (this->mpGameObjectManager != nullptr)
+    {
+        this->mpGameObjectManager->Finalize();
+    }
 
     // 
     return 0;

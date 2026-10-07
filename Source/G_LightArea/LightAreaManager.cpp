@@ -10,6 +10,8 @@
 
 #include "ResourceManager.h"
 
+#include "../S_Collision/Point2D.h"
+
 // 
 LightAreaManager::LightAreaManager() :
     mlNode(),
@@ -84,68 +86,6 @@ void LightAreaManager::Draw()
 
 
 // 
-int LightAreaManager::AddArea(LightArea *newArea)
-{
-    // 
-    if (newArea == nullptr)
-    {
-        // 
-        return -1;
-    }
-
-    // 
-    int addIndex = this->mnDeactivateStartIndex;
-
-    // 
-    if (this->mlNode.size() == addIndex)
-    {
-        // 
-        this->mlNode.push_back(newArea);
-    }
-    else
-    {
-        // 
-        this->mlNode[addIndex] = newArea;
-    }
-
-    // 
-    this->mnDeactivateStartIndex++;
-
-    // 
-    return addIndex;
-}
-
-// 
-int LightAreaManager::DeleteArea(int areaIndex)
-{
-    // 
-    if (this->mlNode[areaIndex] == nullptr)
-    {
-        // 
-        return 0;
-    }
-
-    // 
-    delete this->mlNode[areaIndex];
-
-    // 
-    this->mlNode[areaIndex] = nullptr;
-
-    // 
-    for (uint16_t i = this->mnDeactivateStartIndex - 1; areaIndex < i; i--)
-    {
-        // 
-        this->mlNode[i - 1] = this->mlNode[i];
-    }
-
-    // 
-    this->mnDeactivateStartIndex--;
-
-    // 
-    return 0;
-}
-
-// 
 LightArea *LightAreaManager::SearchArea(int areaIndex)
 {
     // 
@@ -160,15 +100,57 @@ LightArea *LightAreaManager::SearchArea(int areaIndex)
     return this->mlNode[areaIndex];
 }
 
+// 
+bool LightAreaManager::ResizeArea(uint32_t useAreaCount)
+{
+    // 
+    if (useAreaCount < this->mnDeactivateStartIndex)
+    {
+        // 
+        this->mnDeactivateStartIndex = useAreaCount;
+
+        // 
+        return true;
+    }
+
+    // 
+    if (this->mlNode.size() < useAreaCount)
+    {
+        this->mlNode.resize(useAreaCount);
+    }
+
+    for (uint32_t i = 0; i < useAreaCount; i++)
+    {
+        // 
+        if (this->mlNode[i] == nullptr)
+        {
+            // 
+            this->mlNode[i] = new LightArea();
+        }
+    }
+
+    // 
+    this->mnDeactivateStartIndex = useAreaCount;
+
+    // 
+    return true;
+}
+
 // どの光域に入っているかを確認する関数
 // 返り値のintは0で処理の成功の可否、引数のoutは自身が入っているAreaIndexを返す関数
 int LightAreaManager::CheckInLightArea(const VECTOR2D &pos, std::vector<int> &out)
 {
     // 
+    Point2D tempPoint;
+
+    // 
+    tempPoint.SetShapeParameter(pos);
+
+    // 
     for (uint16_t i = 0; i < this->mnDeactivateStartIndex; i++)
     {
         // 
-        if (this->mlNode[i]->CheckInArea(pos))
+        if (this->mlNode[i]->CheckInArea(tempPoint))
         {
             // 
             out.push_back(i);

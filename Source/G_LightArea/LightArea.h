@@ -7,6 +7,7 @@ class LightLineNode;
 
 class VECTOR2D;
 class BaseCollision2D;
+class Point2D;
 class Ray2D;
 struct CollisionCheckResult2D;
 
@@ -23,7 +24,7 @@ public:
     ~LightArea();
 
     // 自身の光のレイの角度を設定する関数
-    void SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle);
+    void SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle, bool final2start);
 
     // 自身の光の終了地点を計算し、設定する関数
     // 次のノードにつながる場合はtrueを返す
@@ -37,28 +38,22 @@ public:
         CollisionCheckResult2D &tempResultNewr);
 
     // 
-    uint32_t GetAllNodeCount() const;
-
-    // 
     LightLineNode **GetFirstNodeBox();
 
     // 
     LightLineNode *const *GetFirstNodeBox() const;
 
     // 
-    VECTOR2D *GetLineEndPosBox();
-
-    // 
-    const VECTOR2D *GetLineEndPosBox() const;
-
-    // 
     uint32_t GetLightLineCount() const;
+
+    // 
+    VECTOR2D GetStartPosition() const;
 
     // 
     void SetLightLineCount(uint32_t count);
 
     // 
-    bool CheckInArea(const VECTOR2D &pos) const;
+    bool CheckInArea(Point2D &targetPoint) const;
 
     // 
     bool GetOffLight() const;
@@ -74,9 +69,6 @@ private:
     std::vector<LightLineNode *> mlLightFirstNode;
 
     // 
-    std::vector<VECTOR2D> mlLineEndPosBox;
-
-    // 
     std::vector<float> mlLineAngleBox;
 
     // 
@@ -87,4 +79,7 @@ private:
 
     // 
     bool mbOffLight;
+
+    // 
+    bool mbFinal2Start;
 };

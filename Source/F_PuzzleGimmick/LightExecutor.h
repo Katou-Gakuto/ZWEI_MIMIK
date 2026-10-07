@@ -21,7 +21,8 @@ public:
         uint32_t lineCount,
         float baseAngle,
         float lightAngle,
-        float lightLength);
+        float lightLength,
+        bool final2start);
 
     // デストラクタ
     ~LightExecutor() override;
@@ -45,9 +46,6 @@ public:
     // このライトの光域を計算する関数
     bool CalculateLineEndPos();
 
-    // このライトのレイの終点座標の配列を取得する関数
-    VECTOR2D *GetLineEndPosBox();
-
     // このライトのレイの本数を取得する関数
     uint32_t GetLightLineCount() const;
 
@@ -60,16 +58,31 @@ public:
     // このライトの長さを設定する関数
     void SetLength(float length);
 
+    // このライトの基本角度を設定する関数
+    void SetBaseAngle(float radian);
+
     // このライトの全体の角度を設定する関数
     void SetLightAngle(float radian);
+
+    // 最後の線から最初の線の計算を行う関数
+    void SetFinal2Start(bool flag);
 
 protected:
     // この光域を取得する関数
     LightArea *GetMyLightArea() const;
 
 private:
+    // 
+    GameObject2D *mpParentObject;
+
     // 今ライトが点いているか
     bool mbLightOn;
+
+    // 
+    bool mbParamUpdate;
+
+    // 
+    bool mbFinal2Start;
 
     // 
     int mnAreaIndex;
@@ -85,4 +98,7 @@ private:
 
     // 
     uint32_t mnLineCount;
+
+    // 
+    bool UpdateLightParam();
 };

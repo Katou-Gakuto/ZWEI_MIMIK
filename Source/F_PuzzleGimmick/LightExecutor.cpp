@@ -19,6 +19,8 @@
 
 #include "../Z_Except/Master.h"
 
+int gnDebugTest = 0;
+
 // コンストラクタ
 LightExecutor::LightExecutor(
     PuzzleGimmickActiveParam param,
@@ -27,8 +29,12 @@ LightExecutor::LightExecutor(
     uint32_t lineCount,
     float baseAngle,
     float lightAngle,
-    float lightLength) :
+    float lightLength,
+    bool final2start) :
+    mpParentObject(parentObject),
     mbLightOn(true),
+    mbParamUpdate(false),
+    mbFinal2Start(false),
     mnAreaIndex(lightAreaIndex),
     mnLineCount(lineCount),
     mfBaseAngle(baseAngle),
@@ -37,7 +43,22 @@ LightExecutor::LightExecutor(
     BaseGimmickExecutor(param)
 {
     // 
-    this->GetMyLightArea()->SetParam(parentObject, this->mnLineCount, this->mfBaseAngle, this->mfLightAngle);
+    this->SetLightLineCount(lineCount);
+
+    // 
+    this->SetLength(this->mfLength);
+
+    // 
+    this->SetBaseAngle(this->mfBaseAngle);
+
+    // 
+    this->SetLightAngle(lightAngle);
+
+    // 
+    this->SetFinal2Start(final2start);
+
+    // 
+    this->UpdateLightParam();
 }
 
 // デストラクタ
@@ -96,6 +117,9 @@ int LightExecutor::LateUpdate(bool triggerSignal)
         this->GetMyLightArea()->OnLight();
 
         // 
+        this->UpdateLightParam();
+
+        // 
         this->CalculateLineEndPos();
     }
     else
@@ -120,46 +144,237 @@ int LightExecutor::Draw(bool triggerSignal)
     }
 
     // 
+    size_t firstIndex = 0;
+    size_t secondIndex = 0;
+
+    // 
     LightArea *lightArea = Master::mpLightManager->SearchArea(this->mnAreaIndex);
     LightLineNode *currentNode;
     LightLineNode *nextNode;
 
-    for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
+    // 
+    auto nodeBox = lightArea->GetFirstNodeBox();
+
+    // 
+    int drawResult = 0;
+
+    // 
+    VECTOR2D baseStartPos = lightArea->GetStartPosition();
+
+    // 
+    int drawMode = 0;
+
+    if (drawMode == 0)
     {
         // 
-        currentNode = lightArea->GetFirstNodeBox()[i];
-
-        // 
-        if (currentNode == nullptr)
+        for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
         {
             // 
-            continue;
+            currentNode = lightArea->GetFirstNodeBox()[i];
+
+            // 
+            if (currentNode == nullptr)
+            {
+                // 
+                continue;
+            }
+
+            // 
+            while (true)
+            {
+                // 
+                if (currentNode == lightArea->GetFirstNodeBox()[i] &&
+                    !currentNode->CheckNext())
+                {
+                    // 
+                    // break;
+                }
+
+                // 
+                //drawResult = DxLib::DrawLine(
+                //    currentNode->GetMyStartPos().GetX(),
+                //    currentNode->GetMyStartPos().GetY(),
+                //    currentNode->GetMyEndPos().GetX(),
+                //    currentNode->GetMyEndPos().GetY(),
+                //    0x00ffff);
+
+                // 
+                if (!currentNode->AccessNext(&nextNode))
+                {
+                    // 
+                    break;
+                }
+
+                // 
+                currentNode = nextNode;
+            }
         }
+    }
+    else if (drawMode == 1)
+    {
+
+        // 
+        for (uint32_t i = 0; i < lightArea->GetLightLineCount() - 1; i++)
+        {
+            // 
+            drawResult = DxLib::DrawTriangle(
+                baseStartPos.GetX(),
+                baseStartPos.GetY(),
+                nodeBox[i]->GetMyEndPos().GetX(),
+                nodeBox[i]->GetMyEndPos().GetY(),
+                nodeBox[i + 1]->GetMyEndPos().GetX(),
+                nodeBox[i + 1]->GetMyEndPos().GetY(),
+                0x00ffff,
+                false);
+
+            // 
+            if (drawResult != 0)
+            {
+                // 
+                break;
+            }
+        }
+
+        // 
+        if (drawResult != 0)
+        {
+            // 
+            return drawResult;
+        }
+
+        // 
+        firstIndex = 0;
+
+        // 
+        bool loopFlag = true;
+
+        // 
+        LightLineNode *firstNode = nullptr;
+        LightLineNode *firstNodeNext = nullptr;
+        LightLineNode *secondNode = nullptr;
+        LightLineNode *secondNodeNext = nullptr;
+
+        // 
+        for (size_t i = 0; i < lightArea->GetLightLineCount() - 1; i++)
+        {
+            // 
+            firstNode = nodeBox[i];
+            secondNode = nodeBox[i + 1];
+
+            // 
+            loopFlag = true;
+
+            // 
+            while (loopFlag)
+            {
+                // 
+                firstNode->AccessNext(&firstNodeNext);
+                secondNode->AccessNext(&secondNodeNext);
+
+                // 
+                if (firstNodeNext != nullptr && secondNodeNext != nullptr)
+                {
+                    // 
+                    drawResult = DxLib::DrawQuadrangle(
+                        firstNode->GetMyEndPos().GetX(),
+                        firstNode->GetMyEndPos().GetY(),
+                        secondNode->GetMyEndPos().GetX(),
+                        secondNode->GetMyEndPos().GetY(),
+                        firstNodeNext->GetMyEndPos().GetX(),
+                        firstNodeNext->GetMyEndPos().GetY(),
+                        secondNodeNext->GetMyEndPos().GetX(),
+                        secondNodeNext->GetMyEndPos().GetY(),
+                        0x00ffff,
+                        true);
+
+                    // 
+                    firstNode = firstNodeNext;
+                    secondNode = secondNodeNext;
+                }
+                else if (firstNodeNext != nullptr && secondNodeNext == nullptr)
+                {
+                    // 
+                    drawResult = DxLib::DrawTriangle(
+                        firstNode->GetMyEndPos().GetX(),
+                        firstNode->GetMyEndPos().GetY(),
+                        secondNode->GetMyEndPos().GetX(),
+                        secondNode->GetMyEndPos().GetY(),
+                        firstNodeNext->GetMyEndPos().GetX(),
+                        firstNodeNext->GetMyEndPos().GetY(),
+                        0x00ffff,
+                        true);
+
+                    // 
+                    loopFlag = false;
+                }
+                else if (firstNodeNext == nullptr && secondNodeNext != nullptr)
+                {
+                    // 
+                    drawResult = DxLib::DrawTriangle(
+                        firstNode->GetMyEndPos().GetX(),
+                        firstNode->GetMyEndPos().GetY(),
+                        secondNode->GetMyEndPos().GetX(),
+                        secondNode->GetMyEndPos().GetY(),
+                        secondNodeNext->GetMyEndPos().GetX(),
+                        secondNodeNext->GetMyEndPos().GetY(),
+                        0x00ffff,
+                        true);
+
+                    // 
+                    loopFlag = false;
+                }
+                else
+                {
+                    // 
+                    loopFlag = false;
+                }
+            }
+
+            // 
+            if (drawResult != 0)
+            {
+                // 
+                break;
+            }
+        }
+    }
+    else if (drawMode == 2)
+    {
+        // 
+        currentNode = nodeBox[gnDebugTest];
 
         // 
         while (true)
         {
             // 
-            // int result = DxLib::DrawLine(
-            //     currentNode->GetMyStartPos().GetX(),
-            //     currentNode->GetMyStartPos().GetY(),
-            //     currentNode->GetMyEndPos().GetX(),
-            //     currentNode->GetMyEndPos().GetY(),
-            //     0x00ffff);
+            drawResult = DxLib::DrawLine(
+                currentNode->GetMyStartPos().GetX(),
+                currentNode->GetMyStartPos().GetY(),
+                currentNode->GetMyEndPos().GetX(),
+                currentNode->GetMyEndPos().GetY(),
+                0x00ffff);
 
             // 
-            if (!currentNode->AccessNext(&nextNode))
+            if (currentNode->AccessNext(&nextNode))
+            {
+                // 
+                currentNode = nextNode;
+            }
+            else
             {
                 // 
                 break;
             }
-
-            // 
-            currentNode = nextNode;
         }
+
+        // 
+        gnDebugTest++;
+
+        // 
+        gnDebugTest %= lightArea->GetLightLineCount();
     }
 
-    // 光域のシミュレーターは描画はしません
+    // 
     return 0;
 }
 
@@ -205,13 +420,6 @@ bool LightExecutor::CalculateLineEndPos()
         resultNewr);
 }
 
-// このライトのレイの終点座標の配列を取得する関数
-VECTOR2D *LightExecutor::GetLineEndPosBox()
-{
-    // 
-    return this->GetMyLightArea()->GetLineEndPosBox();
-}
-
 // このライトのレイの本数を取得する関数
 uint32_t LightExecutor::GetLightLineCount() const
 {
@@ -230,19 +438,48 @@ float LightExecutor::GetLength() const
 void LightExecutor::SetLightLineCount(uint32_t count)
 {
     // 
-    this->GetMyLightArea()->SetLightLineCount(count);
+    this->mnLineCount = count;
+
+    // 
+    this->mbParamUpdate = true;
 }
 
 // このライトの長さを設定する関数
 void LightExecutor::SetLength(float length)
 {
     this->mfLength = length;
+
+    // 
+    this->mbParamUpdate = true;
+}
+
+// このライトの基本角度を設定する関数
+void LightExecutor::SetBaseAngle(float radian)
+{
+    // 
+    this->mfBaseAngle = radian;
+
+    // 
+    this->mbParamUpdate = true;
 }
 
 // このライトの全体の角度を設定する関数
 void LightExecutor::SetLightAngle(float radian)
 {
     this->mfLightAngle = radian;
+
+    // 
+    this->mbParamUpdate = true;
+}
+
+// 最後の線から最初の線の計算を行う関数
+void LightExecutor::SetFinal2Start(bool flag)
+{
+    // 
+    this->mbFinal2Start = flag;
+
+    // 
+    this->mbParamUpdate = true;
 }
 
 // 
@@ -250,4 +487,26 @@ LightArea *LightExecutor::GetMyLightArea() const
 {
     // 
     return Master::mpLightManager->SearchArea(this->mnAreaIndex);
+}
+
+// 
+bool LightExecutor::UpdateLightParam()
+{
+    // 
+    if (this->mbParamUpdate)
+    {
+        // 
+        this->GetMyLightArea()->SetParam(
+            this->mpParentObject,
+            this->mnLineCount,
+            this->mfBaseAngle,
+            this->mfLightAngle,
+            this->mbParamUpdate);
+
+        // 
+        this->mbParamUpdate = false;
+    }
+
+    // 
+    return true;
 }

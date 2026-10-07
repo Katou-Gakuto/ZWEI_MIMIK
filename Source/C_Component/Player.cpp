@@ -8,6 +8,8 @@
 #include "../E_Scene/BaseScene.h"
 #include "../E_Scene/BaseSceneManager.h"
 
+#include "../G_LightArea/LightAreaManager.h"
+
 #include "../T_Model/BaseModelList.h"
 #include "../T_Model/DXModelAnim.h"
 
@@ -67,8 +69,11 @@ int Player::Create()
 
 int Player::Initialize()
 {
-    Pos = OldPos;
+    Pos = this->GetMyObject2D()->GetPosition();
+    
+    // Pos = OldPos;
     //if (Master::mpResourceManager != nullptr);
+
 
     DXAnimModel *playerModel = this->GetPlayerModel();
 
@@ -118,6 +123,9 @@ int Player::EarlyUpdate()
 	{
         moveVec.SetX(4);
 	}
+
+    // 
+    moveVec = moveVec.SetMagnitude(4);
 
 	//ƒ{ƒ^ƒ“
 	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::UP, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
@@ -189,11 +197,12 @@ int Player::Draw()
     bool grahpBoxDraw = false;
     bool bodyCircleDraw = true;
 
+    GameObject2D *player = GetMyObject2D();
+
     if (grahpBoxDraw)
     {
         // 
         unsigned int color = 0;
-        GameObject2D *player = GetMyObject2D();
 
         // p1‚©‚Ç‚¤‚©‚Åˆ—‚ð•Ï‚¦‚é
         if (PlayerNum == 1)
@@ -225,6 +234,31 @@ int Player::Draw()
             bodyCollision->GetBaseRadius(),
             0x00ff00,
             false);
+    }
+    
+    // 
+    std::vector<int> inArea;
+    if (Master::mpLightManager->CheckInLightArea(this->GetMyObject2D()->GetPosition(), inArea) != 0)
+    {
+        // 
+        return -1;
+    }
+    
+    // 
+    bool inLightArea = !inArea.empty();
+    
+    // 
+    float lightAreaParam = 30.0f;
+
+    // 
+    if (inLightArea)
+    {
+        DrawCircle(
+            player->GetPosition().GetX(),
+            player->GetPosition().GetY(),
+            lightAreaParam,
+            0xff0000,
+            true);
     }
 
     return 0;

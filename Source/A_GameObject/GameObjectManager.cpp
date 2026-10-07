@@ -470,6 +470,16 @@ int GameObjectManager::ConnectTarget(GameObject *prev, GameObject *target, GameO
 
 int GameObjectManager::IsolateTarget(GameObject *target)
 {
+    if (target == nullptr)
+    {
+        return -1;
+    }
+
+    if (this->mpFirstGameObject == nullptr)
+    {
+        return -1;
+    }
+
     GameObject *prev = target->GetPrev();
     GameObject *next = target->GetNext();
 

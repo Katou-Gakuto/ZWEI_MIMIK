@@ -135,6 +135,7 @@ int WallObjectController::Draw()
     // 
     Quadrangle2D *bodyCollision = this->GetBody();
 
+    /*
     // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
     DxLib::DrawBox(
         bodyCollision->GetVertexPos(0).GetX(),
@@ -143,7 +144,7 @@ int WallObjectController::Draw()
         bodyCollision->GetVertexPos(3).GetY(),
         0xaaaa00,
         true);
-
+        */
     // 
     return 0;
 }

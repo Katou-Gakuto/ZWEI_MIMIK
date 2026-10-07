@@ -36,12 +36,12 @@ private:
     static bool CheckCulling(BaseCollision2D *collision2DA, BaseCollision2D *collision2DB);
 
     // 二つの当たり判定のスライド移動を行う関数
-    static int CollisionSlide(BaseCollision2D *collision2DA, BaseCollision2D *collision2DB, const CollisionCheckResult2D &hitResult);
+    static int CollisionSlide(const CollisionCheckResult2D &hitResult, BaseCollision2D *collision2DA, BaseCollision2D *collision2DB);
 
     // 二つの当たり判定のスライド移動を行う関数
-    static bool GetCollisionMoveLate(BaseCollision2D *collision2DA,
+    static bool GetCollisionMoveLate(
+        BaseCollision2D *collision2DA,
         BaseCollision2D *collision2DB,
-        const CollisionCheckResult2D &hitResult,
         float &aMoveLate,
         float &bMoveLate);
 
@@ -148,7 +148,7 @@ public:
     // 
     int SearchTag(CollisionTag tag, std::vector<BaseCollision2D *> &out);
 
-    // 謎の当たり判定と謎の当たり判定の衝突確認を行う関数
+    // 当たり判定と当たり判定の衝突確認を行う関数
     static CollisionCheckResult2D CheckHitCollision2DToCollision2D(BaseCollision2D *collision2DA, BaseCollision2D *collision2DB);
 
     int Add(BaseCollision2D *target);

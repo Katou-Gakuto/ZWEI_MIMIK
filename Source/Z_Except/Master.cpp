@@ -10,6 +10,7 @@
 #include "ImguiManager.h"
 #endif
 
+#include "../A_GameObject/PlayerObject.h"
 #include "../C_Component/Player.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
@@ -79,6 +80,15 @@ int Master::Initialize()
     mpImguiManager = new ImguiManager(false);
     mpImguiManager->Initilize();
 #endif
+    // 
+    GameObject *playerObjectLight = new PlayerObject(1);
+    playerObjectLight->Create();
+    mpPlayerLight = static_cast<PlayerObject *>(playerObjectLight)->GetPlayerComponent();
+
+    GameObject *playerObjectShadow = new PlayerObject(2);
+    playerObjectShadow->Create();
+    mpPlayerShadow = static_cast<PlayerObject *>(playerObjectShadow)->GetPlayerComponent();
+
 
     // ƒ‰ƒXƒg‚É‰Šú‰»‚µ‚Ä
     mpDxLibDataManager->Initialize();
@@ -90,11 +100,18 @@ int Master::Finalize()
 {
     mpBaseSceneManager->Finalize();
 
+    GameObject *playerObjectLight = mpPlayerLight->GetMyObject();
+
+    GameObject *playerObjectShadow = mpPlayerShadow->GetMyObject();
+
+    // 
     mpImguiManager->Finalize();
 
     mpDxLibDataManager->Finalize();
 
     // íœ
+    delete playerObjectLight;
+    delete playerObjectShadow;
     delete mpImguiManager;
     delete mpBaseSceneManager;
     delete mpEndManager;
