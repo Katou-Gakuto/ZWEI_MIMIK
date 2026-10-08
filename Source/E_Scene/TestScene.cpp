@@ -153,24 +153,78 @@ int TestScene::Create()
 	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 3.0f, tempBlockSize.GetY() * 2.0f);
 
 	// 
-	Master::mpLightManager->ResizeArea(1);
+	Master::mpLightManager->ResizeArea(3);
 
 	// 
-	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize);
-	GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
-	gimmickController->AddGimmick(
-		new ButtonTrigger,
-		new LightExecutor(
-			PuzzleGimmickActiveParam::Create(true, false),
-			gimmickObject,
-			0,
-			500,
-			MyFunctions::Deg2Rad(0.0f),
-			MyFunctions::Deg2Rad(360.0f),
-			10000.0f,
-			true));
+	{
+		WallObject *gimmickObject = new WallObject(true, VECTOR2D(350.0f, 300.0f), tempBlockSize);
+		GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
+		gimmickController->AddGimmick(
+			new ButtonTrigger,
+			new LightExecutor(
+				PuzzleGimmickActiveParam::Create(true, false),
+				gimmickObject,
+				0,
+				100,
+				MyFunctions::Deg2Rad(150.0f),
+				MyFunctions::Deg2Rad(45.0f),
+				10000.0f,
+				false));
 
-	this->mpGameObjectManager->Add(gimmickObject);
+		this->mpGameObjectManager->Add(gimmickObject);
+
+		LightArea* lightArea = Master::mpLightManager->SearchArea(0);
+		if (lightArea != nullptr)
+		{
+			lightArea->SetLightColor(0xff0000);
+		}
+	}
+	{
+		WallObject *gimmickObject = new WallObject(true, VECTOR2D(800.0f, 335.0f), tempBlockSize);
+		GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
+		gimmickController->AddGimmick(
+			new ButtonTrigger,
+			new LightExecutor(
+				PuzzleGimmickActiveParam::Create(true, false),
+				gimmickObject,
+				1,
+				100,
+				MyFunctions::Deg2Rad(360.0f - 150.0f),
+				MyFunctions::Deg2Rad(45.0f),
+				10000.0f,
+				false));
+
+		this->mpGameObjectManager->Add(gimmickObject);
+
+		LightArea* lightArea = Master::mpLightManager->SearchArea(1);
+		if (lightArea != nullptr)
+		{
+			lightArea->SetLightColor(0x00ff00);
+		}
+	}
+	{
+		WallObject *gimmickObject = new WallObject(true, VECTOR2D(525.0f, 700.0f), tempBlockSize);
+		GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
+		gimmickController->AddGimmick(
+			new ButtonTrigger,
+			new LightExecutor(
+				PuzzleGimmickActiveParam::Create(true, false),
+				gimmickObject,
+				2,
+				100,
+				MyFunctions::Deg2Rad(90.0f),
+				MyFunctions::Deg2Rad(45.0f),
+				10000.0f,
+				false));
+
+		this->mpGameObjectManager->Add(gimmickObject);
+
+		LightArea* lightArea = Master::mpLightManager->SearchArea(2);
+		if (lightArea != nullptr)
+		{
+			lightArea->SetLightColor(0x0000ff);
+		}
+	}
 
 	this->mpGameObjectManager->Create();
 	return 0;

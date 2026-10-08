@@ -29,6 +29,9 @@ public:
 	// 新しく描画するディスプレイのサイズを設定
 	void SettingNewDisplaySize(VECTOR2D newDisplaySize);
 
+	// ディスプレイのサイズ取得
+	inline VECTOR2D GetDisplaySize() const { return mstDisplaySize; }
+
 	/*----------------------------------*/
 	/*【ウィンドウプロシージャ使用関数】*/
 	/*----------------------------------*/

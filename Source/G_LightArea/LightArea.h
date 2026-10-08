@@ -1,21 +1,28 @@
 #pragma once
 
+
 #include <cstdint>
 #include <vector>
 
+#include "VECTOR.h"
+
+#include "DxLib.h"
+
 class LightLineNode;
 
-class VECTOR2D;
 class BaseCollision2D;
 class Point2D;
 class Ray2D;
 struct CollisionCheckResult2D;
 
-// TODO:_ライト
-
 // 
 class LightArea
 {
+    struct LIGHT_DATA
+    {
+        VECTOR2D lineOne;
+        VECTOR2D lineTwo;
+    };
 public:
     // 
     LightArea();
@@ -64,8 +71,21 @@ public:
     // 
     bool OffLight();
 
-    // 光が一周回っているか取得
-    inline bool GetFinal2Start() const { return mbFinal2Start; }
+    // 光の色設定
+    // 0xffffffで色決めれる
+    void SetLightColor(uint32_t lightColor) { mnLightColor = lightColor; }
+    // 光の色取得
+    uint32_t GetLightColor() { return mnLightColor; }
+
+    // ライトエリアの描画
+    void DrawLightArea();
+
+private:
+    // 指定した2点を通る直線上に点があるかを判定
+    bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
+
+    // 片方の点が画面外の場合、画面内に収まる位置まで線分を縮める
+    LIGHT_DATA GetScreenInsideLine(const LIGHT_DATA& linePos);
 
 private:
     // とりあえず用意しておこうか
@@ -85,4 +105,16 @@ private:
 
     // 光が一周回っている
     bool mbFinal2Start;
+
+    // 光の色
+    uint32_t mnLightColor = 0xffffff;
+
+    // ライトラインポジションデータ
+    std::vector<std::vector<LIGHT_DATA>> mstLightLine;
+
+    // ライトエリア三角
+    VERTEX2D* mstLightAreaTriangleVertex;
+
+    // 前の三角の配列数
+    int mnPreLightAreaTriangleVertexIndexCount;
 };

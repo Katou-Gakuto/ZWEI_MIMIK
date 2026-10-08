@@ -6,11 +6,15 @@
 
 namespace DebugVariableToImgui
 {
+
+
     namespace PrivateVariable
     {
         //inline std::vector<>
     }
 
+
+    
     namespace PrivateFunction
     {
         void Update();

@@ -396,28 +396,28 @@ void KeyState::SetKey_ShadowGame()
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::A,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
-					GetSpecialKey_Board(KEY_BOARD_SPECIAL::ENTER),
+					GetSpecialKey_Board(KEY_BOARD_SPECIAL::ENTER) && !GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::A, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::B,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
-					GetSpecialKey_Board(KEY_BOARD_SPECIAL::BACK_SPACE),
+					GetSpecialKey_Board(KEY_BOARD_SPECIAL::BACK_SPACE) && !GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::B, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::X,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
-					GetWordKey_Board(KEY_BOARD_WORD::X),
+					GetWordKey_Board(KEY_BOARD_WORD::X) && !GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::X, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::Y,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
 				{
-					GetWordKey_Board(KEY_BOARD_WORD::Y),
+					GetWordKey_Board(KEY_BOARD_WORD::Y) && !GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::Y, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
@@ -477,42 +477,32 @@ void KeyState::SetKey_ShadowGame()
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::A,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
 				{
+					GetSpecialKey_Board(KEY_BOARD_SPECIAL::ENTER) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::A, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::B,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
 				{
+					GetSpecialKey_Board(KEY_BOARD_SPECIAL::BACK_SPACE) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::B, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::X,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
 				{
+					GetWordKey_Board(KEY_BOARD_WORD::X) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::X, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
 				}
 				);
 			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::Y,
 				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
 				{
+					GetWordKey_Board(KEY_BOARD_WORD::Y) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::Y, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
 				}
 				);
 		}
-
-		// テスト用
-		{
-			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::TEST_1,
-				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
-				{
-					GetWordKey_Board(KEY_BOARD_WORD::T)
-				}
-			);
-		}
-
-		/*
-		* ここに追加
-		*/
 	}
 
 	// downとupを設定

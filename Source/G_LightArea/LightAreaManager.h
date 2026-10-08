@@ -14,10 +14,13 @@ class LightArea;
 class LightAreaManager
 {
 public:
-    struct LIGHT_LINE_DATA
+    // DELETE:_ 消す
+    struct LIGHT_DATA
     {
         VECTOR2D lineOne;
         VECTOR2D lineTwo;
+
+        uint32_t lightColor;
     };
 private:
 
@@ -55,6 +58,9 @@ public:
     // スクリーンサイズ変更
     void ScreenSizeChange();
 
+    // ライトエリア用画像ハンドル取得
+    inline int GetLightAreaGraphHandle() const { return mnLightAreaGraphHandle; }
+
 private:
     // ライト描画開始時処理
     void StartLightDraw();
@@ -65,12 +71,6 @@ private:
     // ライト描画終了時処理
     void EndLightDraw();
 
-    // 指定した2点を通る直線上に点があるかを判定
-    bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
-
-    // 片方の点が画面外の場合、画面内に収まる位置まで線分を縮める
-    LIGHT_LINE_DATA GetScreenInsideLine(const LIGHT_LINE_DATA& linePos);
-
 private:
     // 
     std::vector<LightArea *> mlNode;
@@ -79,16 +79,10 @@ private:
     uint16_t mnDeactivateStartIndex;
 
     // ライトスクリーンハンドル
-    int LightScreenHandle;
+    std::vector<int> mnLightScreenHandle;
 
     // マスクデータ
     MASK_DATA mstMaskData;
-
-    // ライトラインポジションデータ
-    std::vector<std::vector<LIGHT_LINE_DATA>> mstLightLine;
-
-    // ライトエリア三角
-    VERTEX2D* mstLightAreaTriangleVertex;
 
     // ライトエリア画像ハンドル
     int mnLightAreaGraphHandle;

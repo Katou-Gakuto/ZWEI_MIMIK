@@ -6,6 +6,18 @@ enum class IMGUI_GROUP_TYPE
     TEST_1,
     TEST_2,
     TEST_3,
+    TEST_4,
+    TEST_5,
+    TEST_6,
+    TEST_7,
+    TEST_8,
+    TEST_9,
+    TEST_10,
+    TEST_11,
+    TEST_12,
+    TEST_13,
+    TEST_14,
+    TEST_15,
     MAX
 };
 

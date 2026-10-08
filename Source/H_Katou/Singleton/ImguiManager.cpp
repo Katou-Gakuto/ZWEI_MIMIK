@@ -90,6 +90,7 @@ void ImguiManager::Update()
     {
         DrawGroupImgui(mstImguiGroupDatas[i]);
     }
+    mstImguiGroupDatas.clear();
 
     DEBUG::SaveText("CLICK");
     if (ImGui::Button("Test Button"))
@@ -477,16 +478,23 @@ void ImguiManager::DeleteImguiGroup(IMGUI_GROUP_TYPE groupType)
             // 配列の最後を現在指しているなら親を調べる対象に変更
             if (nextCheckDatas->size() <= (currentGroupTypeIndexs[currentGroupTypeIndexs.size() - 1] + 1))
             {
-                TemporarySaveImguiGroupDatas.pop_back();
-                currentGroupTypeIndexs.pop_back();
-
-                if (currentGroupTypeIndexs.size() == 0)
+                while (true)
                 {
+                    TemporarySaveImguiGroupDatas.pop_back();
+                    currentGroupTypeIndexs.pop_back();
+                    if (currentGroupTypeIndexs.size() == 0)
+                    {
+                        return;
+                    }
+                    nextCheckDatas = TemporarySaveImguiGroupDatas[TemporarySaveImguiGroupDatas.size() - 1];
+
+                    if (nextCheckDatas->size() <= (currentGroupTypeIndexs[currentGroupTypeIndexs.size() - 1] + 1))
+                    {
+                        continue;
+                    }
+
                     break;
                 }
-
-                nextCheckDatas = TemporarySaveImguiGroupDatas[TemporarySaveImguiGroupDatas.size() - 1];
-                continue;
             }
 
             // 参照ナンバーを増やす
@@ -769,16 +777,25 @@ ImguiManager::CURRENT_GROUP_TYPE_DATA ImguiManager::SearchImguiGroupData(IMGUI_G
             // 配列の最後を現在指しているなら親を調べる対象に変更
             if (nextCheckDatas->size() <= (currentGroupTypeData.CurrentGroupTypeIndexs[currentGroupTypeData.CurrentGroupTypeIndexs.size() - 1] + 1))
             {
-                TemporarySaveImguiGroupDatas.pop_back();
-                currentGroupTypeData.CurrentGroupTypeIndexs.pop_back();
-                if (currentGroupTypeData.CurrentGroupTypeIndexs.size() == 0)
+                while (true)
                 {
-                    *imguiGroupData = nullptr;
-                    currentGroupTypeData.CurrentGroupType = IMGUI_GROUP_TYPE::NONE;
+                    TemporarySaveImguiGroupDatas.pop_back();
+                    currentGroupTypeData.CurrentGroupTypeIndexs.pop_back();
+                    if (currentGroupTypeData.CurrentGroupTypeIndexs.size() == 0)
+                    {
+                        *imguiGroupData = nullptr;
+                        currentGroupTypeData.CurrentGroupType = IMGUI_GROUP_TYPE::NONE;
+                        return CURRENT_GROUP_TYPE_DATA();
+                    }
+                    nextCheckDatas = TemporarySaveImguiGroupDatas[TemporarySaveImguiGroupDatas.size() - 1];
+
+                    if (nextCheckDatas->size() <= (currentGroupTypeData.CurrentGroupTypeIndexs[currentGroupTypeData.CurrentGroupTypeIndexs.size() - 1] + 1))
+                    {
+                        continue;
+                    }
+
                     break;
                 }
-                nextCheckDatas = TemporarySaveImguiGroupDatas[TemporarySaveImguiGroupDatas.size() - 1];
-                continue;
             }
 
             // 参照ナンバーを増やす
