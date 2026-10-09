@@ -501,7 +501,7 @@ bool LightExecutor::UpdateLightParam()
             this->mnLineCount,
             this->mfBaseAngle,
             this->mfLightAngle,
-            this->mbParamUpdate);
+            this->mbFinal2Start);// HACK:_ ここmbParamUpdateだったけど変えた、川田に確認
 
         // 
         this->mbParamUpdate = false;

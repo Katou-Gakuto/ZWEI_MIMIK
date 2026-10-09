@@ -34,12 +34,6 @@ private:
         std::vector<int> CurrentGroupTypeIndexs;
     };
 private:
-    // IMGUIデータ float
-    std::vector<IMGUI_FLOAT_DATA> mstImguiFloatDatas;
-
-    // IMGUIデータ int
-    std::vector<IMGUI_INT_DATA> mstImguiIntDatas;
-
     // IMGUIグループデータ
     std::vector<IMGUI_GROUP_DATA> mstImguiGroupDatas;
     

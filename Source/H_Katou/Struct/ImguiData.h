@@ -6,6 +6,148 @@
 
 #include "imgui.h"
 
+
+/* 変数データ(ポインタ) */
+struct IMGUI_VARIABLE_POITER_DATA
+{
+public:
+    // コンストラクタ
+    IMGUI_VARIABLE_POITER_DATA();
+    IMGUI_VARIABLE_POITER_DATA(char* value);
+    IMGUI_VARIABLE_POITER_DATA(unsigned char* value);
+    IMGUI_VARIABLE_POITER_DATA(short* value);
+    IMGUI_VARIABLE_POITER_DATA(unsigned short* value);
+    IMGUI_VARIABLE_POITER_DATA(int* value);
+    IMGUI_VARIABLE_POITER_DATA(unsigned int* value);
+    IMGUI_VARIABLE_POITER_DATA(long* value);
+    IMGUI_VARIABLE_POITER_DATA(unsigned long* value);
+    IMGUI_VARIABLE_POITER_DATA(long long* value);
+    IMGUI_VARIABLE_POITER_DATA(unsigned long long* value);
+    IMGUI_VARIABLE_POITER_DATA(float* value);
+    IMGUI_VARIABLE_POITER_DATA(double* value);
+    IMGUI_VARIABLE_POITER_DATA(long double* value);
+
+    // コピー・ムーブ
+    IMGUI_VARIABLE_POITER_DATA(const IMGUI_VARIABLE_POITER_DATA& other);
+    IMGUI_VARIABLE_POITER_DATA(IMGUI_VARIABLE_POITER_DATA&& other);
+    IMGUI_VARIABLE_POITER_DATA& operator=(const IMGUI_VARIABLE_POITER_DATA& other);
+    IMGUI_VARIABLE_POITER_DATA& operator=(IMGUI_VARIABLE_POITER_DATA&& other);
+
+    // デストラクタ
+    ~IMGUI_VARIABLE_POITER_DATA();
+
+    // 値の代入
+    IMGUI_VARIABLE_POITER_DATA& operator=(char value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(short value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(int value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(long value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(long long value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(float value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(double value);
+
+    // 値の取得
+    void GetValueToChar(char& charValue) const;
+    void GetValueToShort(short& shortValue) const;
+    void GetValueToInt(int& intValue) const;
+    void GetValueToLong(long& longValue) const;
+    void GetValueToLongLong(long long& longlongValue) const;
+    void GetValueToFloat(float& floatValue) const;
+    void GetValueToDouble(double& doubleValue) const;
+
+    // インクリメント・デクリメント
+    IMGUI_VARIABLE_POITER_DATA& operator++();
+    IMGUI_VARIABLE_POITER_DATA& operator--();
+
+    const void* GetPointer() const;
+
+    char* CharValue;                            //                 char型変数へのポインタ
+    unsigned char* UnsignedCharValue;           // unsigned        char型変数へのポインタ
+    short* ShortValue;                          //                short型変数へのポインタ
+    unsigned short* UnsignedShortValue;         // unsigned       short型変数へのポインタ
+    int* IntValue;                              //                  int型変数へのポインタ
+    unsigned int* UnsignedIntValue;             // unsigned         int型変数へのポインタ
+    long* LongValue;                            //                 long型変数へのポインタ
+    unsigned long* UnsignedLongValue;           // unsigned        long型変数へのポインタ
+    long long* LongLongValue;                   //          long   long型変数へのポインタ
+    unsigned long long* UnsignedLongLongValue;  // unsigned long   long型変数へのポインタ
+    float* FloatValue;                          //                float型変数へのポインタ
+    double* DoubleValue;                        //               double型変数へのポインタ
+    long double* LongDoubleValue;               //          long double型変数へのポインタ
+
+    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
+};
+
+/*変数データ(値)*/
+struct IMGUI_VARIABLE_DATA
+{
+public:
+    // コンストラクタ
+    IMGUI_VARIABLE_DATA();
+    IMGUI_VARIABLE_DATA(char value);
+    IMGUI_VARIABLE_DATA(unsigned char value);
+    IMGUI_VARIABLE_DATA(short value);
+    IMGUI_VARIABLE_DATA(unsigned short value);
+    IMGUI_VARIABLE_DATA(int value);
+    IMGUI_VARIABLE_DATA(unsigned int value);
+    IMGUI_VARIABLE_DATA(long value);
+    IMGUI_VARIABLE_DATA(unsigned long value);
+    IMGUI_VARIABLE_DATA(long long value);
+    IMGUI_VARIABLE_DATA(unsigned long long value);
+    IMGUI_VARIABLE_DATA(float value);
+    IMGUI_VARIABLE_DATA(double value);
+    IMGUI_VARIABLE_DATA(long double value);
+
+    // コピー・ムーブ
+    IMGUI_VARIABLE_DATA(const IMGUI_VARIABLE_DATA& other);
+    IMGUI_VARIABLE_DATA(IMGUI_VARIABLE_DATA&& other);
+    IMGUI_VARIABLE_DATA& operator=(const IMGUI_VARIABLE_DATA& other);
+    IMGUI_VARIABLE_DATA& operator=(IMGUI_VARIABLE_DATA&& other);
+
+    // デストラクタ
+    ~IMGUI_VARIABLE_DATA();
+
+    // 値の代入
+    IMGUI_VARIABLE_DATA& operator=(char value);
+    IMGUI_VARIABLE_DATA& operator=(short value);
+    IMGUI_VARIABLE_DATA& operator=(int value);
+    IMGUI_VARIABLE_DATA& operator=(long value);
+    IMGUI_VARIABLE_DATA& operator=(long long value);
+    IMGUI_VARIABLE_DATA& operator=(float value);
+    IMGUI_VARIABLE_DATA& operator=(double value);
+
+    // 値の取得
+    void GetValueToChar(char& charValue) const;
+    void GetValueToShort(short& shortValue) const;
+    void GetValueToInt(int& intValue) const;
+    void GetValueToLong(long& longValue) const;
+    void GetValueToLongLong(long long& longlongValue) const;
+    void GetValueToFloat(float& floatValue) const;
+    void GetValueToDouble(double& doubleValue) const;
+
+    // インクリメント・デクリメント
+    IMGUI_VARIABLE_DATA& operator++();
+    IMGUI_VARIABLE_DATA& operator--();
+
+    const void* GetPointer() const;
+
+    char CharValue;                            //                 char型変数へのポインタ
+    unsigned char UnsignedCharValue;           // unsigned        char型変数へのポインタ
+    short ShortValue;                          //                short型変数へのポインタ
+    unsigned short UnsignedShortValue;         // unsigned       short型変数へのポインタ
+    int IntValue;                              //                  int型変数へのポインタ
+    unsigned int UnsignedIntValue;             // unsigned         int型変数へのポインタ
+    long LongValue;                            //                 long型変数へのポインタ
+    unsigned long UnsignedLongValue;           // unsigned        long型変数へのポインタ
+    long long LongLongValue;                   //          long   long型変数へのポインタ
+    unsigned long long UnsignedLongLongValue;  // unsigned long   long型変数へのポインタ
+    float FloatValue;                          //                float型変数へのポインタ
+    double DoubleValue;                        //               double型変数へのポインタ
+    long double LongDoubleValue;               //          long double型変数へのポインタ
+
+    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
+};
+
+
 template<typename VariableType>
 struct IMGUI_TEMPLATE_DATA
 {

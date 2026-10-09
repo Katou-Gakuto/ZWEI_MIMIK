@@ -24,8 +24,6 @@ ImguiManager::ImguiManager(bool isImguiExecute)
 , mbIsImguiExecute(isImguiExecute)
 , mstCurrentGroupTypeData()
 {
-    mstImguiFloatDatas.clear();
-    mstImguiIntDatas.clear();
     mstImguiGroupDatas.clear();
 }
 
@@ -96,16 +94,6 @@ void ImguiManager::Update()
     if (ImGui::Button("Test Button"))
     {
         DEBUG::SaveText("CLICK\n\n");
-    }
-
-    for (int i = 0; i < mstImguiFloatDatas.size(); i++)
-    {
-        DrawFloatImgui(mstImguiFloatDatas[i]);
-    }
-
-    for (int i = 0; i < mstImguiIntDatas.size(); i++)
-    {
-        DrawIntImgui(mstImguiIntDatas[i]);
     }
 #endif
 }

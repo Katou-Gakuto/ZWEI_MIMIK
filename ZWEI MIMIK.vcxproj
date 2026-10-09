@@ -181,6 +181,7 @@
     <ClCompile Include="Source\H_Katou\Singleton\ImguiManager.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\KeyState.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\TimeManager.cpp" />
+    <ClCompile Include="Source\H_Katou\Struct\ImguiData.cpp" />
     <ClCompile Include="Source\H_Katou\Struct\ResourceData.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\S_Collision\BaseCollision.cpp" />

@@ -286,8 +286,8 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
         }
         else
         {
-            // 
-            if (this->mlLightFirstNode.size() - 1 < i)
+            // HACK:_ ここ(this->mlLightFirstNode.size() - 1 < i)を(this->mlLightFirstNode.size() - 1 < (i + 1))に変えた川田に確認
+            if (this->mlLightFirstNode.size() - 1 < (i + 1))
             {
                 // 
                 break;
@@ -622,6 +622,17 @@ void LightArea::DrawLightArea()
     }
     // 設定した3角を全部描画
     DxLib::DrawPolygon2D(mstLightAreaTriangleVertex, lightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE); 
+
+
+    //  for (size_t i = 0; i < mstLightLine.size(); ++i)
+    //  {
+    //      for (size_t l = 0; l < mstLightLine[i].size(); ++l)
+    //      {
+    //          DrawLine(mstLightLine[i][l].lineOne.GetX(), mstLightLine[i][l].lineOne.GetY(),
+    //              mstLightLine[i][l].lineTwo.GetX(), mstLightLine[i][l].lineTwo.GetY(),
+    //                   0xffffff);
+    //      }
+    //  }
 }
 
 // 指定した2点を通る直線上に点があるかを判定

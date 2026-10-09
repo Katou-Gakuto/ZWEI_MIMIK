@@ -11,13 +11,6 @@ enum class IMGUI_GROUP_TYPE
     TEST_6,
     TEST_7,
     TEST_8,
-    TEST_9,
-    TEST_10,
-    TEST_11,
-    TEST_12,
-    TEST_13,
-    TEST_14,
-    TEST_15,
     MAX
 };
 
@@ -36,4 +29,23 @@ enum class IMGUI_TYPE
     INPUT3,
     INPUT4,
     ANGLE,
+};
+
+/* ïœêîÇÃå^ */
+enum class IMGUI_VARIABLE_TYPE
+{
+    NONE,
+    CHAR,               //                 charå^
+    UNSIGNED_CHAR,      // unsigned        charå^
+    SHORT,              //                shortå^
+    UNSIGNED_SHORT,     // unsigned       shortå^
+    INT,                //                  intå^
+    UNSIGNED_INT,       // unsigned         intå^
+    LONG,               //                 longå^
+    UNSIGNED_LONG,      // unsigned        longå^
+    LONG_LONG,          //          long   longå^
+    UNSIGNED_long_LONG, // unsigned long   longå^
+    FLOAT,              //                floatå^
+    DOUBLE,             //               doubleå^
+    LONG_DOUBLE,        //          long doubleå^
 };

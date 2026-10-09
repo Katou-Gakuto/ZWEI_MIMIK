@@ -379,6 +379,9 @@
     <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImgui.cpp">
       <Filter>Source\H_Katou\DebugLogs</Filter>
     </ClCompile>
+    <ClCompile Include="Source\H_Katou\Struct\ImguiData.cpp">
+      <Filter>Source\H_Katou\Struct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
