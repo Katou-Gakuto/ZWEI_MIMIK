@@ -34,7 +34,7 @@ enum class IMGUI_TYPE
 /* ïœêîÇÃå^ */
 enum class IMGUI_VARIABLE_TYPE
 {
-    NONE,
+    NONE = 0,
     CHAR,               //                 charå^
     UNSIGNED_CHAR,      // unsigned        charå^
     SHORT,              //                shortå^
@@ -48,4 +48,26 @@ enum class IMGUI_VARIABLE_TYPE
     FLOAT,              //                floatå^
     DOUBLE,             //               doubleå^
     LONG_DOUBLE,        //          long doubleå^
+};
+
+#define IMGUI_VARIABLE_INTEGER 1
+#define IMGUI_VARIABLE_MINORITY 0
+
+/*ïœêîêÆêîï™óﬁ(0 == ïÇìÆè¨êî, 1 == êÆêî, -1 == NONE)*/
+enum class IMGUI_VARIABLE_INTEGER_TYPE
+{
+    NONE = -1,
+    CHAR = IMGUI_VARIABLE_INTEGER,                  //                 charå^
+    UNSIGNED_CHAR = IMGUI_VARIABLE_INTEGER,         // unsigned        charå^
+    SHORT = IMGUI_VARIABLE_INTEGER,                 //                shortå^
+    UNSIGNED_SHORT = IMGUI_VARIABLE_INTEGER,        // unsigned       shortå^
+    INT = IMGUI_VARIABLE_INTEGER,                   //                  intå^
+    UNSIGNED_INT = IMGUI_VARIABLE_INTEGER,          // unsigned         intå^
+    LONG = IMGUI_VARIABLE_INTEGER,                  //                 longå^
+    UNSIGNED_LONG = IMGUI_VARIABLE_INTEGER,         // unsigned        longå^
+    LONG_LONG = IMGUI_VARIABLE_INTEGER,             //          long   longå^
+    UNSIGNED_LONG_LONG = IMGUI_VARIABLE_INTEGER,    // unsigned long   longå^
+    FLOAT = IMGUI_VARIABLE_MINORITY,                //                floatå^
+    DOUBLE = IMGUI_VARIABLE_MINORITY,               //               doubleå^
+    LONG_DOUBLE = IMGUI_VARIABLE_MINORITY,          //          long doubleå^
 };

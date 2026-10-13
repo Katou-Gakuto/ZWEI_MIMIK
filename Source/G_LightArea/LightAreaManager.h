@@ -13,15 +13,6 @@ class LightArea;
 // 
 class LightAreaManager
 {
-public:
-    // DELETE:_ è¡Ç∑
-    struct LIGHT_DATA
-    {
-        VECTOR2D lineOne;
-        VECTOR2D lineTwo;
-
-        uint32_t lightColor;
-    };
 private:
 
     struct MASK_DATA

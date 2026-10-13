@@ -286,7 +286,6 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
         }
         else
         {
-            // HACK:_ ‚±‚±(this->mlLightFirstNode.size() - 1 < i)‚ð(this->mlLightFirstNode.size() - 1 < (i + 1))‚É•Ï‚¦‚½ì“c‚ÉŠm”F
             if (this->mlLightFirstNode.size() - 1 < (i + 1))
             {
                 // 
