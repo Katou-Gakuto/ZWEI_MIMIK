@@ -4,238 +4,70 @@
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA()
 : VariableType(IMGUI_VARIABLE_TYPE::NONE)
 , CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(char* value)
 : VariableType(IMGUI_VARIABLE_TYPE::CHAR)
 , CharValue(value)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned char* value)
 : VariableType(IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR)
-, CharValue(nullptr)
 , UnsignedCharValue(value)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(short* value)
 : VariableType(IMGUI_VARIABLE_TYPE::SHORT)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
 , ShortValue(value)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned short* value)
 : VariableType(IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
 , UnsignedShortValue(value)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(int* value)
 : VariableType(IMGUI_VARIABLE_TYPE::INT)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
 , IntValue(value)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned int* value)
 : VariableType(IMGUI_VARIABLE_TYPE::UNSIGNED_INT)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
 , UnsignedIntValue(value)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long* value)
 : VariableType(IMGUI_VARIABLE_TYPE::LONG)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
 , LongValue(value)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned long* value)
 : VariableType(IMGUI_VARIABLE_TYPE::UNSIGNED_LONG)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
 , UnsignedLongValue(value)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long long* value)
 : VariableType(IMGUI_VARIABLE_TYPE::LONG_LONG)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
 , LongLongValue(value)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned long long* value)
-: VariableType(IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
+: VariableType(IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG)
 , UnsignedLongLongValue(value)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(float* value)
 : VariableType(IMGUI_VARIABLE_TYPE::FLOAT)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
 , FloatValue(value)
-, DoubleValue(nullptr)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(double* value)
 : VariableType(IMGUI_VARIABLE_TYPE::DOUBLE)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
 , DoubleValue(value)
-, LongDoubleValue(nullptr)
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long double* value)
 : VariableType(IMGUI_VARIABLE_TYPE::LONG_DOUBLE)
-, CharValue(nullptr)
-, UnsignedCharValue(nullptr)
-, ShortValue(nullptr)
-, UnsignedShortValue(nullptr)
-, IntValue(nullptr)
-, UnsignedIntValue(nullptr)
-, LongValue(nullptr)
-, UnsignedLongValue(nullptr)
-, LongLongValue(nullptr)
-, UnsignedLongLongValue(nullptr)
-, FloatValue(nullptr)
-, DoubleValue(nullptr)
 , LongDoubleValue(value)
 {
 }
@@ -243,56 +75,179 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long double* value)
 // コピー・ムーブ
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(const IMGUI_VARIABLE_POITER_DATA& other)
 : VariableType(other.VariableType)
-, CharValue(other.CharValue)
-, UnsignedCharValue(other.UnsignedCharValue)
-, ShortValue(other.ShortValue)
-, UnsignedShortValue(other.UnsignedShortValue)
-, IntValue(other.IntValue)
-, UnsignedIntValue(other.UnsignedIntValue)
-, LongValue(other.LongValue)
-, UnsignedLongValue(other.UnsignedLongValue)
-, LongLongValue(other.LongLongValue)
-, UnsignedLongLongValue(other.UnsignedLongLongValue)
-, FloatValue(other.FloatValue)
-, DoubleValue(other.DoubleValue)
-, LongDoubleValue(other.LongDoubleValue)
 {
+    switch (other.VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        this->CharValue = other.CharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        this->UnsignedCharValue = other.UnsignedCharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        this->ShortValue = other.ShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        this->UnsignedShortValue = other.UnsignedShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        this->IntValue = other.IntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        this->UnsignedIntValue = other.UnsignedIntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        this->LongValue = other.LongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        this->UnsignedLongValue = other.UnsignedLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        this->LongLongValue = other.LongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        this->UnsignedLongLongValue = other.UnsignedLongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        this->FloatValue = other.FloatValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        this->DoubleValue = other.DoubleValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        this->LongDoubleValue = other.LongDoubleValue;
+        break;
+    }
 }
 
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(IMGUI_VARIABLE_POITER_DATA&& other)
 : VariableType(other.VariableType)
-, CharValue(other.CharValue)
-, UnsignedCharValue(other.UnsignedCharValue)
-, ShortValue(other.ShortValue)
-, UnsignedShortValue(other.UnsignedShortValue)
-, IntValue(other.IntValue)
-, UnsignedIntValue(other.UnsignedIntValue)
-, LongValue(other.LongValue)
-, UnsignedLongValue(other.UnsignedLongValue)
-, LongLongValue(other.LongLongValue)
-, UnsignedLongLongValue(other.UnsignedLongLongValue)
-, FloatValue(other.FloatValue)
-, DoubleValue(other.DoubleValue)
-, LongDoubleValue(other.LongDoubleValue)
 {
+    switch (other.VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        this->CharValue = other.CharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        this->UnsignedCharValue = other.UnsignedCharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        this->ShortValue = other.ShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        this->UnsignedShortValue = other.UnsignedShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        this->IntValue = other.IntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        this->UnsignedIntValue = other.UnsignedIntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        this->LongValue = other.LongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        this->UnsignedLongValue = other.UnsignedLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        this->LongLongValue = other.LongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        this->UnsignedLongLongValue = other.UnsignedLongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        this->FloatValue = other.FloatValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        this->DoubleValue = other.DoubleValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        this->LongDoubleValue = other.LongDoubleValue;
+        break;
+    }
 }
 
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(const IMGUI_VARIABLE_POITER_DATA& other)
 {
     this->VariableType = other.VariableType;
-    this->CharValue = other.CharValue;
-    this->UnsignedCharValue = other.UnsignedCharValue;
-    this->ShortValue = other.ShortValue;
-    this->UnsignedShortValue = other.UnsignedShortValue;
-    this->IntValue = other.IntValue;
-    this->UnsignedIntValue = other.UnsignedIntValue;
-    this->LongValue = other.LongValue;
-    this->UnsignedLongValue = other.UnsignedLongValue;
-    this->LongLongValue = other.LongLongValue;
-    this->UnsignedLongLongValue = other.UnsignedLongLongValue;
-    this->FloatValue = other.FloatValue;
-    this->DoubleValue = other.DoubleValue;
-    this->LongDoubleValue = other.LongDoubleValue;
+    switch (other.VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        this->CharValue = other.CharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        this->UnsignedCharValue = other.UnsignedCharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        this->ShortValue = other.ShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        this->UnsignedShortValue = other.UnsignedShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        this->IntValue = other.IntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        this->UnsignedIntValue = other.UnsignedIntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        this->LongValue = other.LongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        this->UnsignedLongValue = other.UnsignedLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        this->LongLongValue = other.LongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        this->UnsignedLongLongValue = other.UnsignedLongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        this->FloatValue = other.FloatValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        this->DoubleValue = other.DoubleValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        this->LongDoubleValue = other.LongDoubleValue;
+        break;
+    }
 
     return *this;
 }
@@ -300,19 +255,60 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(const IMGUI_VA
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(IMGUI_VARIABLE_POITER_DATA&& other)
 {
     this->VariableType = other.VariableType;
-    this->CharValue = other.CharValue;
-    this->UnsignedCharValue = other.UnsignedCharValue;
-    this->ShortValue = other.ShortValue;
-    this->UnsignedShortValue = other.UnsignedShortValue;
-    this->IntValue = other.IntValue;
-    this->UnsignedIntValue = other.UnsignedIntValue;
-    this->LongValue = other.LongValue;
-    this->UnsignedLongValue = other.UnsignedLongValue;
-    this->LongLongValue = other.LongLongValue;
-    this->UnsignedLongLongValue = other.UnsignedLongLongValue;
-    this->FloatValue = other.FloatValue;
-    this->DoubleValue = other.DoubleValue;
-    this->LongDoubleValue = other.LongDoubleValue;
+    switch (other.VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        this->CharValue = other.CharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        this->UnsignedCharValue = other.UnsignedCharValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        this->ShortValue = other.ShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        this->UnsignedShortValue = other.UnsignedShortValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        this->IntValue = other.IntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        this->UnsignedIntValue = other.UnsignedIntValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        this->LongValue = other.LongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        this->UnsignedLongValue = other.UnsignedLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        this->LongLongValue = other.LongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        this->UnsignedLongLongValue = other.UnsignedLongLongValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        this->FloatValue = other.FloatValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        this->DoubleValue = other.DoubleValue;
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        this->LongDoubleValue = other.LongDoubleValue;
+        break;
+    }
 
     return *this;
 }
@@ -373,7 +369,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(char value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -445,7 +441,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(short value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -517,7 +513,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(int value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -589,7 +585,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(long value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -661,7 +657,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(long value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -733,7 +729,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(float value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -805,7 +801,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(double value)
         *this->LongLongValue = static_cast<long long>(value);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         *this->UnsignedLongLongValue = static_cast<unsigned long long>(value);
         break;
@@ -879,7 +875,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToChar(char& charValue) const
         charValue = static_cast<char>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         charValue = static_cast<char>(*this->UnsignedLongLongValue);
         break;
@@ -950,7 +946,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToShort(short& shortValue) const
         shortValue = static_cast<short>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         shortValue = static_cast<short>(*this->UnsignedLongLongValue);
         break;
@@ -1021,7 +1017,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToInt(int& intValue) const
         intValue = static_cast<int>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         intValue = static_cast<int>(*this->UnsignedLongLongValue);
         break;
@@ -1092,7 +1088,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLong(long& longValue) const
         longValue = static_cast<long>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         longValue = static_cast<long>(*this->UnsignedLongLongValue);
         break;
@@ -1163,7 +1159,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLongLong(long long& longlongValue) co
         longlongValue = static_cast<long long>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         longlongValue = static_cast<long long>(*this->UnsignedLongLongValue);
         break;
@@ -1234,7 +1230,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToFloat(float& floatValue) const
         floatValue = static_cast<float>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         floatValue = static_cast<float>(*this->UnsignedLongLongValue);
         break;
@@ -1305,7 +1301,7 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToDouble(double& doubleValue) const
         doubleValue = static_cast<double>(*this->LongLongValue);
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         doubleValue = static_cast<double>(*this->UnsignedLongLongValue);
         break;
@@ -1378,7 +1374,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator++()
         this->LongLongValue++;
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         this->UnsignedLongLongValue++;
         break;
@@ -1451,7 +1447,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator--()
         this->LongLongValue--;
         break;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         this->UnsignedLongLongValue--;
         break;
@@ -1516,7 +1512,7 @@ const void* IMGUI_VARIABLE_POITER_DATA::GetPointer() const
         if (this->LongLongValue == nullptr) { break; }
         return this->LongLongValue;
         
-    case IMGUI_VARIABLE_TYPE::UNSIGNED_long_LONG:
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
         if (this->UnsignedLongLongValue == nullptr) { break; }
         return this->UnsignedLongLongValue;
         

@@ -60,19 +60,22 @@ public:
 
     const void* GetPointer() const;
 
-    char* CharValue;                            //                 char型変数へのポインタ
-    unsigned char* UnsignedCharValue;           // unsigned        char型変数へのポインタ
-    short* ShortValue;                          //                short型変数へのポインタ
-    unsigned short* UnsignedShortValue;         // unsigned       short型変数へのポインタ
-    int* IntValue;                              //                  int型変数へのポインタ
-    unsigned int* UnsignedIntValue;             // unsigned         int型変数へのポインタ
-    long* LongValue;                            //                 long型変数へのポインタ
-    unsigned long* UnsignedLongValue;           // unsigned        long型変数へのポインタ
-    long long* LongLongValue;                   //          long   long型変数へのポインタ
-    unsigned long long* UnsignedLongLongValue;  // unsigned long   long型変数へのポインタ
-    float* FloatValue;                          //                float型変数へのポインタ
-    double* DoubleValue;                        //               double型変数へのポインタ
-    long double* LongDoubleValue;               //          long double型変数へのポインタ
+    union
+    {
+        char* CharValue;                            //                 char型変数へのポインタ
+        unsigned char* UnsignedCharValue;           // unsigned        char型変数へのポインタ
+        short* ShortValue;                          //                short型変数へのポインタ
+        unsigned short* UnsignedShortValue;         // unsigned       short型変数へのポインタ
+        int* IntValue;                              //                  int型変数へのポインタ
+        unsigned int* UnsignedIntValue;             // unsigned         int型変数へのポインタ
+        long* LongValue;                            //                 long型変数へのポインタ
+        unsigned long* UnsignedLongValue;           // unsigned        long型変数へのポインタ
+        long long* LongLongValue;                   //          long   long型変数へのポインタ
+        unsigned long long* UnsignedLongLongValue;  // unsigned long   long型変数へのポインタ
+        float* FloatValue;                          //                float型変数へのポインタ
+        double* DoubleValue;                        //               double型変数へのポインタ
+        long double* LongDoubleValue;               //          long double型変数へのポインタ
+    };
 
     IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 };
@@ -130,20 +133,22 @@ public:
 
     const void* GetPointer() const;
 
-    char CharValue;                            //                 char型変数へのポインタ
-    unsigned char UnsignedCharValue;           // unsigned        char型変数へのポインタ
-    short ShortValue;                          //                short型変数へのポインタ
-    unsigned short UnsignedShortValue;         // unsigned       short型変数へのポインタ
-    int IntValue;                              //                  int型変数へのポインタ
-    unsigned int UnsignedIntValue;             // unsigned         int型変数へのポインタ
-    long LongValue;                            //                 long型変数へのポインタ
-    unsigned long UnsignedLongValue;           // unsigned        long型変数へのポインタ
-    long long LongLongValue;                   //          long   long型変数へのポインタ
-    unsigned long long UnsignedLongLongValue;  // unsigned long   long型変数へのポインタ
-    float FloatValue;                          //                float型変数へのポインタ
-    double DoubleValue;                        //               double型変数へのポインタ
-    long double LongDoubleValue;               //          long double型変数へのポインタ
-
+    union
+    {
+        char CharValue;                            //                 char型変数へのポインタ
+        unsigned char UnsignedCharValue;           // unsigned        char型変数へのポインタ
+        short ShortValue;                          //                short型変数へのポインタ
+        unsigned short UnsignedShortValue;         // unsigned       short型変数へのポインタ
+        int IntValue;                              //                  int型変数へのポインタ
+        unsigned int UnsignedIntValue;             // unsigned         int型変数へのポインタ
+        long LongValue;                            //                 long型変数へのポインタ
+        unsigned long UnsignedLongValue;           // unsigned        long型変数へのポインタ
+        long long LongLongValue;                   //          long   long型変数へのポインタ
+        unsigned long long UnsignedLongLongValue;  // unsigned long   long型変数へのポインタ
+        float FloatValue;                          //                float型変数へのポインタ
+        double DoubleValue;                        //               double型変数へのポインタ
+        long double LongDoubleValue;               //          long double型変数へのポインタ
+    };
     IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 };
 

@@ -44,7 +44,7 @@ enum class IMGUI_VARIABLE_TYPE
     LONG,               //                 longå^
     UNSIGNED_LONG,      // unsigned        longå^
     LONG_LONG,          //          long   longå^
-    UNSIGNED_long_LONG, // unsigned long   longå^
+    UNSIGNED_LONG_LONG, // unsigned long   longå^
     FLOAT,              //                floatå^
     DOUBLE,             //               doubleå^
     LONG_DOUBLE,        //          long doubleå^
