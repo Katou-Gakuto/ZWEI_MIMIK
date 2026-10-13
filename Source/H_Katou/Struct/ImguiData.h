@@ -6,6 +6,8 @@
 
 #include "imgui.h"
 
+struct IMGUI_VARIABLE_POITER_DATA;
+struct IMGUI_VARIABLE_DATA;
 
 /* 変数データ(ポインタ) */
 struct IMGUI_VARIABLE_POITER_DATA
@@ -13,19 +15,19 @@ struct IMGUI_VARIABLE_POITER_DATA
 public:
     // コンストラクタ
     IMGUI_VARIABLE_POITER_DATA();
-    IMGUI_VARIABLE_POITER_DATA(char* value);
-    IMGUI_VARIABLE_POITER_DATA(unsigned char* value);
-    IMGUI_VARIABLE_POITER_DATA(short* value);
-    IMGUI_VARIABLE_POITER_DATA(unsigned short* value);
-    IMGUI_VARIABLE_POITER_DATA(int* value);
-    IMGUI_VARIABLE_POITER_DATA(unsigned int* value);
-    IMGUI_VARIABLE_POITER_DATA(long* value);
-    IMGUI_VARIABLE_POITER_DATA(unsigned long* value);
-    IMGUI_VARIABLE_POITER_DATA(long long* value);
-    IMGUI_VARIABLE_POITER_DATA(unsigned long long* value);
-    IMGUI_VARIABLE_POITER_DATA(float* value);
-    IMGUI_VARIABLE_POITER_DATA(double* value);
-    IMGUI_VARIABLE_POITER_DATA(long double* value);
+    IMGUI_VARIABLE_POITER_DATA(char* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::CHAR);
+    IMGUI_VARIABLE_POITER_DATA(unsigned char* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR);
+    IMGUI_VARIABLE_POITER_DATA(short* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::SHORT);
+    IMGUI_VARIABLE_POITER_DATA(unsigned short* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT);
+    IMGUI_VARIABLE_POITER_DATA(int* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::INT);
+    IMGUI_VARIABLE_POITER_DATA(unsigned int* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_INT);
+    IMGUI_VARIABLE_POITER_DATA(long* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::LONG);
+    IMGUI_VARIABLE_POITER_DATA(unsigned long* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_LONG);
+    IMGUI_VARIABLE_POITER_DATA(long long* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::LONG_LONG);
+    IMGUI_VARIABLE_POITER_DATA(unsigned long long* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG);
+    IMGUI_VARIABLE_POITER_DATA(float* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::FLOAT);
+    IMGUI_VARIABLE_POITER_DATA(double* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::DOUBLE);
+    IMGUI_VARIABLE_POITER_DATA(long double* value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::LONG_DOUBLE);
 
     // コピー・ムーブ
     IMGUI_VARIABLE_POITER_DATA(const IMGUI_VARIABLE_POITER_DATA& other);
@@ -44,6 +46,7 @@ public:
     IMGUI_VARIABLE_POITER_DATA& operator=(long long value);
     IMGUI_VARIABLE_POITER_DATA& operator=(float value);
     IMGUI_VARIABLE_POITER_DATA& operator=(double value);
+    IMGUI_VARIABLE_POITER_DATA& operator=(const IMGUI_VARIABLE_DATA& valueData);
 
     // 値の取得
     void GetValueToChar(char& charValue) const;
@@ -59,6 +62,8 @@ public:
     IMGUI_VARIABLE_POITER_DATA& operator--();
 
     const void* GetPointer() const;
+
+    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 
     union
     {
@@ -76,8 +81,6 @@ public:
         double* DoubleValue;                        //               double型変数へのポインタ
         long double* LongDoubleValue;               //          long double型変数へのポインタ
     };
-
-    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 };
 
 /*変数データ(値)*/
@@ -86,19 +89,19 @@ struct IMGUI_VARIABLE_DATA
 public:
     // コンストラクタ
     IMGUI_VARIABLE_DATA();
-    IMGUI_VARIABLE_DATA(char value);
-    IMGUI_VARIABLE_DATA(unsigned char value);
-    IMGUI_VARIABLE_DATA(short value);
-    IMGUI_VARIABLE_DATA(unsigned short value);
-    IMGUI_VARIABLE_DATA(int value);
-    IMGUI_VARIABLE_DATA(unsigned int value);
-    IMGUI_VARIABLE_DATA(long value);
-    IMGUI_VARIABLE_DATA(unsigned long value);
-    IMGUI_VARIABLE_DATA(long long value);
-    IMGUI_VARIABLE_DATA(unsigned long long value);
-    IMGUI_VARIABLE_DATA(float value);
-    IMGUI_VARIABLE_DATA(double value);
-    IMGUI_VARIABLE_DATA(long double value);
+    IMGUI_VARIABLE_DATA(char value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::CHAR);
+    IMGUI_VARIABLE_DATA(unsigned char value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR);
+    IMGUI_VARIABLE_DATA(short value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::SHORT);
+    IMGUI_VARIABLE_DATA(unsigned short value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT);
+    IMGUI_VARIABLE_DATA(int value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::INT);
+    IMGUI_VARIABLE_DATA(unsigned int value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_INT);
+    IMGUI_VARIABLE_DATA(long value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::LONG);
+    IMGUI_VARIABLE_DATA(unsigned long value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_LONG);
+    IMGUI_VARIABLE_DATA(long long value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::LONG_LONG);
+    IMGUI_VARIABLE_DATA(unsigned long long value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG);
+    IMGUI_VARIABLE_DATA(float value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::FLOAT);
+    IMGUI_VARIABLE_DATA(double value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::DOUBLE);
+    IMGUI_VARIABLE_DATA(long double value, IMGUI_VARIABLE_TYPE variableType = IMGUI_VARIABLE_TYPE::LONG_DOUBLE);
 
     // コピー・ムーブ
     IMGUI_VARIABLE_DATA(const IMGUI_VARIABLE_DATA& other);
@@ -117,6 +120,7 @@ public:
     IMGUI_VARIABLE_DATA& operator=(long long value);
     IMGUI_VARIABLE_DATA& operator=(float value);
     IMGUI_VARIABLE_DATA& operator=(double value);
+    IMGUI_VARIABLE_DATA& operator=(const IMGUI_VARIABLE_POITER_DATA& poiterData);
 
     // 値の取得
     void GetValueToChar(char& charValue) const;
@@ -132,6 +136,8 @@ public:
     IMGUI_VARIABLE_DATA& operator--();
 
     const void* GetPointer() const;
+
+    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 
     union
     {
@@ -149,55 +155,50 @@ public:
         double DoubleValue;                        //               double型変数へのポインタ
         long double LongDoubleValue;               //          long double型変数へのポインタ
     };
-    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 };
 
 
-template<typename VariableType>
-struct IMGUI_TEMPLATE_DATA
+struct IMGUI_CONTROL_VARIABLE
 {
 public:
 #ifdef _DEBUG
     static constexpr int IMGUI_VARIABLE_MAX = 4;
 
-    std::vector<VariableType*> VariableDatas = {};    // 変数ポインタ
+    std::vector<IMGUI_VARIABLE_POITER_DATA> VariableDatas = {};
 
-    VariableType PreVariable[IMGUI_VARIABLE_MAX];    // 前の変数
+    IMGUI_VARIABLE_DATA PreVariable[IMGUI_VARIABLE_MAX];
+    IMGUI_VARIABLE_DATA ChangeVariable[IMGUI_VARIABLE_MAX];
 
-    VariableType ChangeVariable[IMGUI_VARIABLE_MAX]; // 変更用変数
+    float Speed = 1.0f;
+    float Step = 0.0f;
+    float StepFast = 0.0f;
 
-    float Speed = 1.0f; // ドラッグ時の変化速度
+    IMGUI_VARIABLE_DATA Min;
+    IMGUI_VARIABLE_DATA Max;
 
-    float Step = 0.0f;      // 刻み幅
-    float StepFast = 0.0f;  // Ctrl押しながらの刻み幅
+    std::string Label = "NONE";
+    std::string Format = "%.6f";
 
-    VariableType Min = 0.0f;  // 最小値
-    VariableType Max = 0.0f;  // 最大値
-    
-    std::string Label = "NONE";  // ラベル
-    std::string Format = "%.6f"; // 表示数字
-
-    ImGuiSliderFlags Flag = 0;  // オプションフラグ
-
-    IMGUI_TYPE ImguiType = IMGUI_TYPE::SLIDER1; // Imgui種類
-
-    bool AddNumberDrawFlag = true; // 追加Imguiナンバー用フラグ
-
+    ImGuiSliderFlags Flag = 0;
+    IMGUI_TYPE ImguiType = IMGUI_TYPE::SLIDER1;
+    bool AddNumberDrawFlag = true;
 #endif
-    IMGUI_TEMPLATE_DATA()
+
+    // コンストラクタ
+    IMGUI_CONTROL_VARIABLE()
 #ifdef _DEBUG
-    : Speed(1.0f)
-    , Step(0.0f)
-    , StepFast(0.0f)
-    , Min((VariableType)0)
-    , Max((VariableType)0)
-    , Label("NONE")
-    , Format("%.6f")
-    , Flag(0)
-    , ImguiType(IMGUI_TYPE::SLIDER1)
-    , PreVariable()
-    , ChangeVariable()
-    , AddNumberDrawFlag(true)
+        : Speed(1.0f)
+        , Step(0.0f)
+        , StepFast(0.0f)
+        , Min()
+        , Max()
+        , Label("NONE")
+        , Format("%.6f")
+        , Flag(0)
+        , ImguiType(IMGUI_TYPE::SLIDER1)
+        , PreVariable()
+        , ChangeVariable()
+        , AddNumberDrawFlag(true)
 #endif
     {
 #ifdef _DEBUG
@@ -205,199 +206,311 @@ public:
 #endif
     }
 
-    IMGUI_TEMPLATE_DATA(
-                        std::vector<VariableType*> variableDatas,
-                        VariableType* preVariable,
-                        VariableType* changeVariable,
-                        float speed = 1.0f,
-                        float step = 0.0f,
-                        float stepFast = 0.0f,
-                        VariableType min = (VariableType)0,
-                        VariableType max = (VariableType)0,
-                        std::string label = "NONE",
-                        std::string format = "%.6f",
-                        ImGuiSliderFlags flag = 0,
-                        IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-                        bool addNumberFlag = true
-                        )
+    // コピーコンストラクタ
+    IMGUI_CONTROL_VARIABLE(const IMGUI_CONTROL_VARIABLE& other)
 #ifdef _DEBUG
-    : Speed(speed)
-    , Step(step)
-    , StepFast(stepFast)
-    , Min(min)
-    , Max(max)
-    , Label(label)
-    , Format(format)
-    , Flag(flag)
-    , ImguiType(imguiType)
-    , VariableDatas(variableDatas)
-    ,AddNumberDrawFlag(addNumberFlag)
+    : VariableDatas(other.VariableDatas)
+    , Speed(other.Speed)
+    , Step(other.Step)
+    , StepFast(other.StepFast)
+    , Min(other.Min)
+    , Max(other.Max)
+    , Label(other.Label)
+    , Format(other.Format)
+    , Flag(other.Flag)
+    , ImguiType(other.ImguiType)
+    , AddNumberDrawFlag(other.AddNumberDrawFlag)
 #endif
     {
 #ifdef _DEBUG
         for (int i = 0; i < IMGUI_VARIABLE_MAX; i++)
         {
-            PreVariable[i] = preVariable[i];
-            ChangeVariable[i] = changeVariable[i];
+            PreVariable[i] = other.PreVariable[i];
+            ChangeVariable[i] = other.ChangeVariable[i];
         }
 #endif
     }
 
-    /*------------*/
-    /*【リセット】*/
-    /*------------*/
-    /// <summary>変数リセット</summary>
+    // 引数付きコンストラクタ
+    IMGUI_CONTROL_VARIABLE(
+        const std::vector<IMGUI_VARIABLE_POITER_DATA>& variableDatas,
+        const IMGUI_VARIABLE_DATA* preVariable,
+        const IMGUI_VARIABLE_DATA* changeVariable,
+        float speed = 1.0f,
+        float step = 0.0f,
+        float stepFast = 0.0f,
+        IMGUI_VARIABLE_DATA min = IMGUI_VARIABLE_DATA(),
+        IMGUI_VARIABLE_DATA max = IMGUI_VARIABLE_DATA(),
+        const std::string& label = "NONE",
+        const std::string& format = "%.6f",
+        ImGuiSliderFlags flag = 0,
+        IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
+        bool addNumberFlag = true
+    )
+#ifdef _DEBUG
+        : VariableDatas(variableDatas)
+        , Speed(speed)
+        , Step(step)
+        , StepFast(stepFast)
+        , Min(min)
+        , Max(max)
+        , Label(label)
+        , Format(format)
+        , Flag(flag)
+        , ImguiType(imguiType)
+        , AddNumberDrawFlag(addNumberFlag)
+#endif
+    {
+#ifdef _DEBUG
+        for (int i = 0; i < IMGUI_VARIABLE_MAX; i++)
+        {
+            PreVariable[i] = (preVariable != nullptr)  ? preVariable[i] : IMGUI_VARIABLE_DATA();
+
+            ChangeVariable[i] = (changeVariable != nullptr) ? changeVariable[i] : IMGUI_VARIABLE_DATA();
+        }
+#endif
+    }
+
+
+    // ポインタが保持している値を取得
+    static IMGUI_VARIABLE_DATA GetVariableValue(const IMGUI_VARIABLE_POITER_DATA& data)
+    {
+#ifdef _DEBUG
+        switch (data.VariableType)
+        {
+        case IMGUI_VARIABLE_TYPE::CHAR:
+            return IMGUI_VARIABLE_DATA(*data.CharValue);
+
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+            return IMGUI_VARIABLE_DATA(*data.UnsignedCharValue);
+
+        case IMGUI_VARIABLE_TYPE::SHORT:
+            return IMGUI_VARIABLE_DATA(*data.ShortValue);
+
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+            return IMGUI_VARIABLE_DATA(*data.UnsignedShortValue);
+
+        case IMGUI_VARIABLE_TYPE::INT:
+            return IMGUI_VARIABLE_DATA(*data.IntValue);
+
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+            return IMGUI_VARIABLE_DATA(*data.UnsignedIntValue);
+
+        case IMGUI_VARIABLE_TYPE::LONG:
+            return IMGUI_VARIABLE_DATA(*data.LongValue);
+
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+            return IMGUI_VARIABLE_DATA(*data.UnsignedLongValue);
+
+        case IMGUI_VARIABLE_TYPE::LONG_LONG:
+            return IMGUI_VARIABLE_DATA(*data.LongLongValue);
+
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+            return IMGUI_VARIABLE_DATA(*data.UnsignedLongLongValue);
+
+        case IMGUI_VARIABLE_TYPE::FLOAT:
+            return IMGUI_VARIABLE_DATA(*data.FloatValue);
+
+        case IMGUI_VARIABLE_TYPE::DOUBLE:
+            return IMGUI_VARIABLE_DATA(*data.DoubleValue);
+
+        case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+            return IMGUI_VARIABLE_DATA(*data.LongDoubleValue);
+        }
+#endif
+        return IMGUI_VARIABLE_DATA();
+    }
+
+    // 変数を追加
+    template<typename T>
+    void AddVariable(T* src)
+    {
+#ifdef _DEBUG
+        if (src == nullptr ||
+            VariableDatas.size() >= IMGUI_VARIABLE_MAX)
+        {
+            return;
+        }
+
+        VariableDatas.emplace_back(src);
+
+        const int index = static_cast<int>(VariableDatas.size() - 1);
+
+        PreVariable[index] =
+            GetVariableValue(VariableDatas[index]);
+
+        ChangeVariable[index] = PreVariable[index];
+#endif
+    }
+
+    // 変数リセット
     void ReSetVariable()
     {
 #ifdef _DEBUG
         VariableDatas.clear();
+
+        for (int i = 0; i < IMGUI_VARIABLE_MAX; i++)
+        {
+            PreVariable[i] = IMGUI_VARIABLE_DATA();
+            ChangeVariable[i] = IMGUI_VARIABLE_DATA();
+        }
 #endif
     }
 
-    /*--------*/
-    /*【設定】*/
-    /*--------*/
-    /// <summary>変数設定</summary>
-    void AddVariable(VariableType *src) {
-#ifdef _DEBUG
-        VariableDatas.push_back(src);
-#endif
-    }
-
-    /// <summary>速度設定</summary>
-    void SetSpeed(float speed) {
+    // 速度設定
+    void SetSpeed(float speed)
+    {
 #ifdef _DEBUG
         Speed = speed;
 #endif
     }
 
-    /// <summary>刻み幅設定</summary>
-    void SetStep(float step) {
+    // 刻み幅設定
+    void SetStep(float step)
+    {
 #ifdef _DEBUG
         Step = step;
 #endif
     }
-    /// <summary>刻み幅(ctrl)設定</summary>
-    void SetStepFast(float stepFast) {
+
+    // Ctrl押下時の刻み幅設定
+    void SetStepFast(float stepFast)
+    {
 #ifdef _DEBUG
         StepFast = stepFast;
 #endif
     }
 
-    /// <summary>最低値設定</summary>
-    void SetMin(VariableType min) {
+    // 最小値設定
+    template<typename T>
+    void SetMin(T min)
+    {
 #ifdef _DEBUG
-        Min = min;
-#endif
-    }
-    /// <summary>最大値設定</summary>
-    void SetMax(VariableType max) {
-#ifdef _DEBUG
-        Max = max;
+        Min = IMGUI_VARIABLE_DATA(min);
 #endif
     }
 
-    /// <summary>ラベル設定</summary>
-    void SetLabel(std::string label) {
+    // 最大値設定
+    template<typename T>
+    void SetMax(T max)
+    {
+#ifdef _DEBUG
+        Max = IMGUI_VARIABLE_DATA(max);
+#endif
+    }
+
+    // ラベル設定
+    void SetLabel(const std::string& label)
+    {
 #ifdef _DEBUG
         Label = label;
 #endif
     }
-    /// <summary>フォーマット設定</summary>
-    void SetFormat(std::string format) {
+
+    // フォーマット設定
+    void SetFormat(const std::string& format)
+    {
 #ifdef _DEBUG
         Format = format;
 #endif
     }
 
-    /// <summary>オプションフラグ設定</summary>
-    void SetFlag(ImGuiSliderFlags flag) {
+    // オプションフラグ設定
+    void SetFlag(ImGuiSliderFlags flag)
+    {
 #ifdef _DEBUG
         Flag = flag;
 #endif
     }
 
-    /// <summary>Imgui種類設定</summary>
-    void SetImguiType(IMGUI_TYPE imguiType) {
+    // ImGui種類設定
+    void SetImguiType(IMGUI_TYPE imguiType)
+    {
 #ifdef _DEBUG
-        ImguiType = imguiType;    
+        ImguiType = imguiType;
 #endif
     }
 
-    /// <summary>追加Imguiナンバー用フラグ設定</summary>
+    // 追加ナンバー描画フラグ設定
     void SetAddNumberFlag(bool addNumberDrawFlag)
     {
 #ifdef _DEBUG
         AddNumberDrawFlag = addNumberDrawFlag;
 #endif
     }
-};
 
-// float
-struct IMGUI_FLOAT_DATA : public IMGUI_TEMPLATE_DATA<float>
-{
-    static IMGUI_FLOAT_DATA GetImguiData(
-        std::vector<float*> variableDatas,
+
+
+    // float用データ生成
+    static IMGUI_CONTROL_VARIABLE GetImguiData(
+        const std::vector<float*>& variableDatas,
         float speed = 1.0f,
         float step = 0.0f,
         float stepFast = 0.0f,
         float min = -1.0f,
         float max = 1.0f,
-        std::string label = "NONE",
-        std::string format = "%.6f",
+        const std::string& label = "NONE",
+        const std::string& format = "%.6f",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
         bool addNumberDrawFlag = true
     )
     {
-        IMGUI_FLOAT_DATA imguiData;
+        IMGUI_CONTROL_VARIABLE imguiData;
 #ifdef _DEBUG
-        imguiData.VariableDatas = variableDatas;
+
         imguiData.Speed = speed;
         imguiData.Step = step;
         imguiData.StepFast = stepFast;
-        imguiData.Min = min;
-        imguiData.Max = max;
+        imguiData.Min = IMGUI_VARIABLE_DATA(min, IMGUI_VARIABLE_TYPE::FLOAT);
+        imguiData.Max = IMGUI_VARIABLE_DATA(max, IMGUI_VARIABLE_TYPE::FLOAT);
         imguiData.Label = label;
         imguiData.Format = format;
         imguiData.Flag = flag;
         imguiData.ImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+
+        for (float* variable : variableDatas)
+        {
+            imguiData.AddVariable(variable);
+        }
 #endif
+
         return imguiData;
     }
-};
 
-// int
-struct IMGUI_INT_DATA : public IMGUI_TEMPLATE_DATA<int>
-{
-    static IMGUI_INT_DATA GetImguiData(
-        std::vector<int*> variableDatas,
+    // int用データ生成
+    static IMGUI_CONTROL_VARIABLE GetImguiData(
+        const std::vector<int*>& variableDatas,
         float speed = 1.0f,
         float step = 1.0f,
         float stepFast = 1.0f,
         int min = -1,
         int max = 1,
-        std::string label = "NONE",
-        std::string format = "%d",
+        const std::string& label = "NONE",
+        const std::string& format = "%d",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
         bool addNumberDrawFlag = true
     )
     {
-        IMGUI_INT_DATA imguiData;
+        IMGUI_CONTROL_VARIABLE imguiData;
 #ifdef _DEBUG
-        imguiData.VariableDatas = variableDatas;
         imguiData.Speed = speed;
         imguiData.Step = step;
         imguiData.StepFast = stepFast;
-        imguiData.Min = min;
-        imguiData.Max = max;
+        imguiData.Min = IMGUI_VARIABLE_DATA(min, IMGUI_VARIABLE_TYPE::INT);
+        imguiData.Max = IMGUI_VARIABLE_DATA(max, IMGUI_VARIABLE_TYPE::INT);
         imguiData.Label = label;
         imguiData.Format = format;
         imguiData.Flag = flag;
         imguiData.ImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+
+        for (int* variable : variableDatas)
+        {
+            imguiData.AddVariable(variable);
+        }
 #endif
         return imguiData;
     }
@@ -415,10 +528,8 @@ private:
     // グループ名
     std::string GroupName = "NONE";
 
-    // float情報
-    std::vector<IMGUI_FLOAT_DATA> FloatDatas = {};
-    // int情報
-    std::vector<IMGUI_INT_DATA> IntDatas = {};
+    // Imgui管理変数情報
+    std::vector<IMGUI_CONTROL_VARIABLE> ImguiControlVariableDatas = {};
     // 子の情報
     std::vector<IMGUI_GROUP_DATA> ChildDatas = {};
 #endif
@@ -430,8 +541,7 @@ public:
     static IMGUI_GROUP_DATA GetImguiGroupData(
         std::string groupName = "NEW GROUP",
         IMGUI_GROUP_TYPE groupType = IMGUI_GROUP_TYPE::NONE,
-        std::vector<IMGUI_FLOAT_DATA> floatDatas = {},
-        std::vector<IMGUI_INT_DATA> intDatas = {},
+        std::vector<IMGUI_CONTROL_VARIABLE> imguiControlVariableDatas = {},
         std::vector<IMGUI_GROUP_DATA> childDatas = {}
     )
     {
@@ -439,8 +549,7 @@ public:
 #ifdef _DEBUG
         imguiGroupData.GroupType = groupType;
         imguiGroupData.GroupName = groupName;
-        imguiGroupData.FloatDatas = floatDatas;
-        imguiGroupData.IntDatas = intDatas;
+        imguiGroupData.ImguiControlVariableDatas = imguiControlVariableDatas;
         imguiGroupData.ChildDatas = childDatas;
 #endif
         return imguiGroupData;
@@ -453,8 +562,7 @@ public:
     void ReSetDatas()
     {
 #ifdef _DEBUG
-        FloatDatas.clear();
-        IntDatas.clear();
+        ImguiControlVariableDatas.clear();
 #endif
     }
 
@@ -463,19 +571,11 @@ public:
     /*  【追加】  */
     /*------------*/
 
-    /// <summary>float情報追加</summary>
-    void AddFloatData(IMGUI_FLOAT_DATA imguiFloatData)
+    /// <summary>Imgui管理変数情報追加</summary>
+    void AddImguiControlVariableData(IMGUI_CONTROL_VARIABLE imguiControlVariableData)
     {
 #ifdef _DEBUG
-        FloatDatas.push_back(imguiFloatData);
-#endif
-    }
-
-    /// <summary>int情報追加</summary>
-    void AddIntData(IMGUI_INT_DATA imguiIntData)
-    {
-#ifdef _DEBUG
-        IntDatas.push_back(imguiIntData);
+        ImguiControlVariableDatas.push_back(imguiControlVariableData);
 #endif
     }
 
@@ -530,21 +630,11 @@ public:
 #endif
     }
 
-    /// <summary>float情報取得</summary>
-    std::vector<IMGUI_FLOAT_DATA>* GetFloatDatas()
+    /// <summary>imgui管理変数情報取得</summary>
+    std::vector<IMGUI_CONTROL_VARIABLE>* GetImguiControlVariableDatas()
     {
 #ifdef _DEBUG
-        return &FloatDatas;
-#else
-        return nullptr;
-#endif
-    }
-
-    /// <summary>int情報取得</summary>
-    std::vector<IMGUI_INT_DATA>* GetIntDatas()
-    {
-#ifdef _DEBUG
-        return &IntDatas;
+        return &ImguiControlVariableDatas;
 #else
         return nullptr;
 #endif
