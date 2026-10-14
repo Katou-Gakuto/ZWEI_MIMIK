@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#include "BitFlag.h"
+
 #include "ImguiEnum.h"
 
 #include "imgui.h"
@@ -725,6 +727,94 @@ public:
 };
 
 
+
+// Imguiのボタン描画用構造体
+struct IMGUI_BUTTON_CONTROL_VARIABLE
+{
+#ifdef _DEBUG
+    // ボタン種類
+    IMGUI_BUTTON_TYPE ButtonType;
+ 
+    // ボタンラベル
+    std::string Label;
+    // 押すキーの文字列
+    std::string PressKeyString = "NONE";
+    // url
+    std::string Url = "https://github.com/Katou-Gakuto";
+
+    // Imguiのenumのフラグ(ImGuiDir, ImGuiButtonFlags, ImGuiColorEditFlags, ImGuiSelectableFlags, ImGuiTabItemFlags)
+    int ImGuiEnumFlags;
+    
+    // 描画サイズ
+    ImVec2 Size;
+    // 色
+    ImVec4 Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    // 描画フラグ
+    bool DrawFlag;
+
+    // ボタンフラグ
+    bool ButtonFlag;
+    // 引数ボタンフラグ
+    bool ArgumentButtonFlag;
+    // ボタンビットフラグ
+    BIT_FLAG<unsigned int> ButtonBitFlag;
+    // ボタンビットフラグの値
+    unsigned int ButtonBitFlagValue = 0;
+#endif
+};
+
+// imguiのレイアウト描画用構造体
+struct IMGUI_LAYOUT_CONTROL
+{
+#ifdef _DEBUG
+    IMGUI_LAYOUT_TYPE LayoutType; // レイアウトの処理種別
+
+    const char* Text = nullptr; // 表示文字列、フォーマット文字列、見出し名、ツリー名、列名など
+    int Count = 0; // 要素数、列数、スタイル復元数など
+    int Index = 0; // 列番号など
+    unsigned int UserID = 0; // ユーザー識別用ID
+
+    ImVec2 Size = ImVec2(0.0f, 0.0f); // 領域サイズ、空白サイズ、スタイル値など
+    float Width = 0.0f; // UI項目や列の幅
+    float Spacing = -1.0f; // 項目間の間隔
+    float MinHeight = 0.0f; // 行の最小高さ
+
+    //==================================================
+    // テキスト関連
+    //==================================================
+
+    IMGUI_VARIABLE_DATA Varable; // 変数の値
+
+    //==================================================
+    // 子領域関連
+    //==================================================
+
+    ImGuiChildFlags ChildFlags = ImGuiChildFlags_None; // 子領域の設定
+    ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_None; // 子領域のウィンドウ設定
+
+    //==================================================
+    // 折りたたみ・ツリー関連
+    //==================================================
+
+    ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_None; // ツリー項目の設定
+    bool DefaultOpen = false; // 次のツリー項目を開いた状態にするか
+
+    //==================================================
+    // 表関連
+    //==================================================
+
+    ImGuiTableFlags TableFlags = ImGuiTableFlags_None; // 表の設定
+    ImGuiTableColumnFlags TableColumnFlags = ImGuiTableColumnFlags_None; // 表の列設定
+
+    //==================================================
+    // スタイル関連
+    //==================================================
+
+    ImGuiStyleVar StyleVar = ImGuiStyleVar_ItemSpacing; // 変更するスタイル項目
+    ImGuiCol StyleColor = ImGuiCol_Text; // 変更する色の項目
+    ImVec4 Color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 変更する色（RGBA）
+    #endif
+};
 
 // 1グループのimgui描画情報
 struct IMGUI_GROUP_DATA

@@ -21,6 +21,254 @@
 
 int gnDebugTest = 0;
 
+#include "ImguiManager.h"
+//==================================================
+// ImguiManager ボタンテスト用変数
+//==================================================
+IMGUI_BUTTON_CONTROL_VARIABLE testButton1;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton2;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton3;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton4;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton5;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton6;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton7;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton8;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton9;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton10;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton11;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton12;
+IMGUI_BUTTON_CONTROL_VARIABLE testButton13;
+//==================================================
+// ImguiManager ボタンテスト用変数の初期化
+//==================================================
+void InitializeTestAllButtonImgui()
+{
+    //==================================================
+    // 1. 標準ボタン
+    //==================================================
+    testButton1.ButtonType = IMGUI_BUTTON_TYPE::BUTTON;
+    testButton1.Label = "Normal Button";
+    testButton1.Size = ImVec2(150.0f, 30.0f);
+
+    //==================================================
+    // 2. 小型ボタン
+    //==================================================
+    testButton2.ButtonType = IMGUI_BUTTON_TYPE::SMALL_BUTTON;
+    testButton2.Label = "Small Button";
+
+    //==================================================
+    // 3. 矢印ボタン
+    //==================================================
+    testButton3.ButtonType = IMGUI_BUTTON_TYPE::ARROW_BUTTON;
+    testButton3.Label = "Arrow";
+    testButton3.ImGuiEnumFlags = ImGuiDir_Right;
+
+    //==================================================
+    // 4. 透明ボタン
+    //==================================================
+    testButton4.ButtonType = IMGUI_BUTTON_TYPE::INVISIBLE_BUTTON;
+    testButton4.Label = "Invisible";
+    testButton4.Size = ImVec2(150.0f, 30.0f);
+    testButton4.ImGuiEnumFlags = ImGuiButtonFlags_None;
+
+    //==================================================
+    // 5. チェックボックス
+    //==================================================
+    testButton5.ButtonType = IMGUI_BUTTON_TYPE::CHECK_BOX;
+    testButton5.Label = "Check Box";
+    testButton5.ButtonFlag = false;
+
+    //==================================================
+    // 6. ビットフラグ用チェックボックス
+    //==================================================
+    testButton6.ButtonType = IMGUI_BUTTON_TYPE::CHECK_BOX_FLAGS;
+    testButton6.Label = "Flag Bit";
+    testButton6.ButtonBitFlag.flags = 0;
+    testButton6.ButtonBitFlagValue = 1u;
+
+    //==================================================
+    // 7. ラジオボタン
+    //==================================================
+    testButton7.ButtonType = IMGUI_BUTTON_TYPE::RADIO_BUTTON;
+    testButton7.Label = "Radio Button";
+    testButton7.ButtonFlag = false;
+
+    //==================================================
+    // 8. 色ボタン
+    //==================================================
+    testButton8.ButtonType = IMGUI_BUTTON_TYPE::COLOR_BUTTON;
+    testButton8.Label = "Color Button";
+    testButton8.Color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
+    testButton8.Size = ImVec2(100.0f, 30.0f);
+    testButton8.ImGuiEnumFlags = ImGuiColorEditFlags_None;
+
+    //==================================================
+    // 9. 選択可能項目
+    //==================================================
+    testButton9.ButtonType = IMGUI_BUTTON_TYPE::SELECTABLE;
+    testButton9.Label = "Selectable Item";
+    testButton9.ButtonFlag = false;
+    testButton9.ImGuiEnumFlags = ImGuiSelectableFlags_None;
+
+    //==================================================
+    // 10. メニュー項目
+    //==================================================
+    testButton10.ButtonType = IMGUI_BUTTON_TYPE::MENU_ITEM;
+    testButton10.Label = "Menu Item";
+    testButton10.PressKeyString = "Ctrl+T";
+    testButton10.DrawFlag = true;
+
+    //==================================================
+    // 11. タブバー内のボタン
+    //==================================================
+    testButton11.ButtonType = IMGUI_BUTTON_TYPE::TABITEM_BUTTON;
+    testButton11.Label = "Tab Action";
+    testButton11.ImGuiEnumFlags = ImGuiTabItemFlags_None;
+
+    //==================================================
+    // 12. テキストリンク
+    //==================================================
+    testButton12.ButtonType = IMGUI_BUTTON_TYPE::TEXT_LINK;
+    testButton12.Label = "Text Link";
+
+    //==================================================
+    // 13. URLを開くテキストリンク
+    //==================================================
+    testButton13.ButtonType = IMGUI_BUTTON_TYPE::TEXT_LINK_OPEN_URL;
+    testButton13.Label = "Open OpenAI Website";
+    testButton13.Url = "https://openai.com/";
+}
+//==================================================
+// ImguiManager ボタンテスト
+//==================================================
+void TestAllButtonImgui()
+{
+    //==================================================
+    // 1. 標準ボタン
+    //==================================================
+    ImGui::Text(u8"1. BUTTON試し");
+    Master::mpImguiManager->DrawButtonImgui(testButton1);
+    ImGui::SameLine();
+    ImGui::Text("Pressed: %s",
+        testButton1.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 2. 小型ボタン
+    //==================================================
+    ImGui::Text("2. SMALL_BUTTON");
+    Master::mpImguiManager->DrawButtonImgui(testButton2);
+    ImGui::SameLine();
+    ImGui::Text("Pressed: %s",
+        testButton2.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 3. 矢印ボタン
+    //==================================================
+    ImGui::Text("3. ARROW_BUTTON");
+    Master::mpImguiManager->DrawButtonImgui(testButton3);
+    ImGui::SameLine();
+    ImGui::Text("Pressed: %s",
+        testButton3.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 4. 透明ボタン
+    //==================================================
+    ImGui::Text("4. INVISIBLE_BUTTON");
+    Master::mpImguiManager->DrawButtonImgui(testButton4);
+    ImGui::SameLine();
+    ImGui::Text("Pressed: %s",
+        testButton4.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 5. チェックボックス
+    //==================================================
+    ImGui::Text("5. CHECK_BOX");
+    Master::mpImguiManager->DrawButtonImgui(testButton5);
+    ImGui::SameLine();
+    ImGui::Text("Changed: %s",
+        testButton5.ArgumentButtonFlag ? "true" : "false");
+    ImGui::SameLine();
+    ImGui::Text("State: %s",
+        testButton5.ButtonFlag ? "ON" : "OFF");
+
+    //==================================================
+    // 6. ビットフラグ用チェックボックス
+    //==================================================
+    ImGui::Text("6. CHECK_BOX_FLAGS");
+    Master::mpImguiManager->DrawButtonImgui(testButton6);
+    ImGui::SameLine();
+    ImGui::Text("Flags: %u",
+        testButton6.ButtonBitFlag.flags);
+
+    //==================================================
+    // 7. ラジオボタン
+    //==================================================
+    ImGui::Text("7. RADIO_BUTTON");
+    Master::mpImguiManager->DrawButtonImgui(testButton7);
+    ImGui::SameLine();
+    ImGui::Text("Changed: %s",
+        testButton7.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 8. 色ボタン
+    //==================================================
+    ImGui::Text("8. COLOR_BUTTON");
+    Master::mpImguiManager->DrawButtonImgui(testButton8);
+    ImGui::SameLine();
+    ImGui::Text("Pressed: %s",
+        testButton8.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 9. 選択可能項目
+    //==================================================
+    ImGui::Text("9. SELECTABLE");
+    Master::mpImguiManager->DrawButtonImgui(testButton9);
+    ImGui::SameLine();
+    ImGui::Text("Selected: %s",
+        testButton9.ButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 10. メニュー項目
+    //==================================================
+    ImGui::Text("10. MENU_ITEM");
+    if (ImGui::BeginMenu("Test Menu"))
+    {
+        Master::mpImguiManager->DrawButtonImgui(testButton10);
+        ImGui::EndMenu();
+    }
+    ImGui::Text("Selected: %s",
+        testButton10.ButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 11. タブバー内のボタン
+    //==================================================
+    ImGui::Text("11. TABITEM_BUTTON");
+    if (ImGui::BeginTabBar("TestTabBar"))
+    {
+        Master::mpImguiManager->DrawButtonImgui(testButton11);
+        ImGui::SameLine();
+        ImGui::Text("Pressed: %s",
+            testButton11.ArgumentButtonFlag ? "true" : "false");
+
+        ImGui::EndTabBar();
+    }
+
+    //==================================================
+    // 12. テキストリンク
+    //==================================================
+    ImGui::Text("12. TEXT_LINK");
+    Master::mpImguiManager->DrawButtonImgui(testButton12);
+    ImGui::SameLine();
+    ImGui::Text("Pressed: %s",
+        testButton12.ArgumentButtonFlag ? "true" : "false");
+
+    //==================================================
+    // 13. URLを開くテキストリンク
+    //==================================================
+    ImGui::Text("13. TEXT_LINK_OPEN_URL");
+    Master::mpImguiManager->DrawButtonImgui(testButton13);
+}
+
 // コンストラクタ
 LightExecutor::LightExecutor(
     PuzzleGimmickActiveParam param,
@@ -42,6 +290,7 @@ LightExecutor::LightExecutor(
     mfLength(lightLength),
     BaseGimmickExecutor(param)
 {
+    InitializeTestAllButtonImgui();
     // 
     this->SetLightLineCount(lineCount);
 
@@ -87,11 +336,16 @@ int LightExecutor::EarlyUpdate(bool triggerSignal)
     // 
     return 0;
 }
-
+bool flag = false;
 // ギミックの内容を実行する関数
 // ※GameObject::Update()のタイミングで呼ばれます
 int LightExecutor::Update(bool triggerSignal)
 {
+    if (!flag)
+    {
+        TestAllButtonImgui();
+        flag = true;
+    }
     // 
     if (this->GetActiveParam().GetSignalNot())
     {
@@ -110,6 +364,7 @@ int LightExecutor::Update(bool triggerSignal)
 // ※GameObject::LateUpdate()のタイミングで呼ばれます
 int LightExecutor::LateUpdate(bool triggerSignal)
 {
+    flag = false;
     // 
     if (this->mbLightOn)
     {

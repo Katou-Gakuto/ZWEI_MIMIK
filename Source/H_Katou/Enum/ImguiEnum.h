@@ -71,3 +71,85 @@ enum class IMGUI_VARIABLE_INTEGER_TYPE
     DOUBLE = IMGUI_VARIABLE_MINORITY,               //               double型
     LONG_DOUBLE = IMGUI_VARIABLE_MINORITY,          //          long double型
 };
+
+/*ボタン種類*/
+enum class IMGUI_BUTTON_TYPE
+{
+    NONE = 0,
+    BUTTON,
+    SMALL_BUTTON,
+    ARROW_BUTTON,
+    INVISIBLE_BUTTON,
+    CHECK_BOX,
+    CHECK_BOX_FLAGS,
+    RADIO_BUTTON,
+    COLOR_BUTTON,
+    SELECTABLE,
+    MENU_ITEM,
+    TABITEM_BUTTON,
+    TEXT_LINK,
+    TEXT_LINK_OPEN_URL,
+};
+
+/*レイアウト種類*/
+enum class IMGUI_LAYOUT_TYPE
+{
+    NONE = 0,
+    IMGUI_LAYOUT_TEXT,                      // Text()
+    IMGUI_LAYOUT_TEXT_FORMAT,               // Text()（フォーマット付き）
+
+    IMGUI_LAYOUT_SAME_LINE,                 // SameLine()
+    IMGUI_LAYOUT_SEPARATOR,                 // Separator()
+    IMGUI_LAYOUT_SPACING,                   // Spacing()
+
+    //==================================================
+    // レイアウト・配置関連
+    //==================================================
+    IMGUI_LAYOUT_NEW_LINE,                  // NewLine()
+    IMGUI_LAYOUT_INDENT,                    // Indent()
+    IMGUI_LAYOUT_UNINDENT,                  // Unindent()
+    IMGUI_LAYOUT_DUMMY,                     // Dummy()
+    IMGUI_LAYOUT_SET_NEXT_ITEM_WIDTH,        // SetNextItemWidth()
+    IMGUI_LAYOUT_PUSH_ITEM_WIDTH,            // PushItemWidth()
+    IMGUI_LAYOUT_POP_ITEM_WIDTH,             // PopItemWidth()
+    IMGUI_LAYOUT_ALIGN_TEXT_TO_FRAME_PADDING,// AlignTextToFramePadding()
+    IMGUI_LAYOUT_SET_NEXT_ITEM_OPEN,         // SetNextItemOpen()
+
+    //==================================================
+    // グループ関連
+    //==================================================
+    IMGUI_LAYOUT_BEGIN_GROUP,                // BeginGroup()
+    IMGUI_LAYOUT_END_GROUP,                  // EndGroup()
+
+    //==================================================
+    // 子領域関連
+    //==================================================
+    IMGUI_LAYOUT_BEGIN_CHILD,                // BeginChild()
+    IMGUI_LAYOUT_END_CHILD,                  // EndChild()
+
+    //==================================================
+    // 折りたたみ・ツリー関連
+    //==================================================
+    IMGUI_LAYOUT_COLLAPSING_HEADER,          // CollapsingHeader()
+    IMGUI_LAYOUT_TREE_NODE,                  // TreeNode()
+    IMGUI_LAYOUT_TREE_POP,                   // TreePop()
+
+    //==================================================
+    // 表関連
+    //==================================================
+    IMGUI_LAYOUT_BEGIN_TABLE,                // BeginTable()
+    IMGUI_LAYOUT_TABLE_SETUP_COLUMN,         // TableSetupColumn()
+    IMGUI_LAYOUT_TABLE_HEADERS_ROW,          // TableHeadersRow()
+    IMGUI_LAYOUT_TABLE_NEXT_ROW,             // TableNextRow()
+    IMGUI_LAYOUT_TABLE_NEXT_COLUMN,          // TableNextColumn()
+    IMGUI_LAYOUT_TABLE_SET_COLUMN_INDEX,     // TableSetColumnIndex()
+    IMGUI_LAYOUT_END_TABLE,                  // EndTable()
+
+    //==================================================
+    // スタイル関連
+    //==================================================
+    IMGUI_LAYOUT_PUSH_STYLE_VAR,             // PushStyleVar()
+    IMGUI_LAYOUT_POP_STYLE_VAR,              // PopStyleVar()
+    IMGUI_LAYOUT_PUSH_STYLE_COLOR,           // PushStyleColor()
+    IMGUI_LAYOUT_POP_STYLE_COLOR,            // PopStyleColor()
+};

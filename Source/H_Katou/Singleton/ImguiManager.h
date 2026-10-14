@@ -92,6 +92,13 @@ public:
 private:
     /*Imguui描画*/
     void DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlVariableData);
+// DELETE:_ 削除
+public:
+    /*ボタンimgui描画*/
+    void DrawButtonImgui(IMGUI_BUTTON_CONTROL_VARIABLE& imguiButtonControlVariableData);
+
+    /*レイアウトimgui描画*/
+    void DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData);
 
     /*Imguiグループ描画*/
     void DrawGroupImgui(IMGUI_GROUP_DATA imguiGroupData);

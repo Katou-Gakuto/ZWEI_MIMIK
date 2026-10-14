@@ -45,6 +45,8 @@ void ImguiManager::Initilize()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
+    io.Fonts->AddFontFromFileTTF("Resource/imgui/BIZ_UDGothic/BIZUDGothic-Regular.ttf", 16.0f);
+
     ImGui::StyleColorsDark();
 
     ImGui_ImplWin32_Init(DxLib::GetMainWindowHandle());
@@ -81,15 +83,16 @@ void ImguiManager::Update()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
     ImGui::ShowDemoWindow();
+    
     mnAddNumber = 0;
-
     // グループ
     for (int i = 0; i < mstImguiGroupDatas.size(); i++)
     {
         DrawGroupImgui(mstImguiGroupDatas[i]);
     }
+    
     mstImguiGroupDatas.clear();
-
+ImGui::TextLinkOpenURL("TEST", "https://github.com/Katou-Gakuto/ZWEI_MIMIK");
     DEBUG::SaveText("CLICK");
     if (ImGui::Button("Test Button"))
     {
@@ -655,6 +658,246 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
         imguiControlVariableData.VariableDatas[i] = imguiControlVariableData.ChangeVariable[i];
 
         imguiControlVariableData.PreVariable[i] = IMGUI_CONTROL_VARIABLE::GetVariableValue(imguiControlVariableData.VariableDatas[i]);
+    }
+#endif
+}
+
+
+/*ボタンimgui描画*/
+void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL_VARIABLE& imguiButtonControlVariableData)
+{
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+    bool buttonFlag = false;
+    switch (imguiButtonControlVariableData.ButtonType)
+    {    
+    case IMGUI_BUTTON_TYPE::BUTTON:
+        buttonFlag = ImGui::Button(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Size);//	標準的な四角いボタン。サイズを指定できる
+        break;
+
+    case IMGUI_BUTTON_TYPE::SMALL_BUTTON:
+        buttonFlag = ImGui::SmallButton(imguiButtonControlVariableData.Label.c_str());//	小さいボタン。文字列の横などに置きやすい
+        break;
+
+    case IMGUI_BUTTON_TYPE::ARROW_BUTTON:
+        buttonFlag = ImGui::ArrowButton(imguiButtonControlVariableData.Label.c_str(), (ImGuiDir)imguiButtonControlVariableData.ImGuiEnumFlags);//	矢印を表示する四角いボタン。上下左右などの方向を指定
+        break;
+
+    case IMGUI_BUTTON_TYPE::INVISIBLE_BUTTON:
+        buttonFlag = ImGui::InvisibleButton(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Size, imguiButtonControlVariableData.ImGuiEnumFlags);//	見た目を描画しないボタン。独自の見た目やクリック判定を作る土台
+        break;
+
+    case IMGUI_BUTTON_TYPE::CHECK_BOX:
+        buttonFlag = ImGui::Checkbox(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	チェックボックス。クリックで bool の ON/OFF を切り替える
+        break;
+
+    case IMGUI_BUTTON_TYPE::CHECK_BOX_FLAGS:
+        buttonFlag = ImGui::CheckboxFlags(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonBitFlag.flags, imguiButtonControlVariableData.ButtonBitFlagValue);//	ビットフラグ用チェックボックス。チェック状態に応じて指定したビットを設定・解除する
+        break;
+
+    case IMGUI_BUTTON_TYPE::RADIO_BUTTON:
+        buttonFlag = ImGui::RadioButton(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	ラジオボタン。複数候補から一つを選択する用途
+        break;
+
+    case IMGUI_BUTTON_TYPE::COLOR_BUTTON:
+        buttonFlag = ImGui::ColorButton(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Color, imguiButtonControlVariableData.ImGuiEnumFlags, imguiButtonControlVariableData.Size);//	色見本をボタンとして表示
+        break;
+
+    case IMGUI_BUTTON_TYPE::SELECTABLE:
+        buttonFlag = ImGui::Selectable(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ImGuiEnumFlags, imguiButtonControlVariableData.Size);//	選択可能な項目。選択状態に応じて背景が変わり、リスト項目などに使える
+        break;
+
+    case IMGUI_BUTTON_TYPE::MENU_ITEM:
+        buttonFlag = ImGui::MenuItem(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.PressKeyString.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.DrawFlag);//	メニュー内の項目。選択やチェック付き項目に使う
+        break;
+
+    case IMGUI_BUTTON_TYPE::TABITEM_BUTTON:
+        buttonFlag = ImGui::TabItemButton(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.ImGuiEnumFlags);//	タブバー内に配置するボタン。タブ選択とは異なる用途にも使える
+        break;
+
+    case IMGUI_BUTTON_TYPE::TEXT_LINK:
+        buttonFlag = ImGui::TextLink(imguiButtonControlVariableData.Label.c_str());//	リンク風の文字列ボタン。クリックされたかを取得する
+        break;
+
+    case IMGUI_BUTTON_TYPE::TEXT_LINK_OPEN_URL:
+        buttonFlag = ImGui::TextLinkOpenURL(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Url.c_str());//	URLを開くリンク風ボタン
+        break;
+
+    default:
+        return;
+    }
+
+    imguiButtonControlVariableData.ArgumentButtonFlag = buttonFlag;
+#endif
+}
+
+// レイアウトimgui描画
+void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
+{
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+
+    switch (imguiLayoutControlData.LayoutType)
+    {
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TEXT:
+        ImGui::Text(u8"");// 指定したテキストを表示
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TEXT_FORMAT:
+        ImGui::Text(u8"%d", 0);// 指定したテキストを表示(フォーマット付き)
+        break;
+
+    
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SAME_LINE:
+        ImGui::SameLine(0.0f, -1.0f);// 次のUI要素を同じ行に配置
+        break;
+
+    
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SEPARATOR:
+        ImGui::Separator();// 水平線を描画して区切る
+        break;
+
+    
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SPACING:
+        ImGui::Spacing();// UI要素間に空白を追加
+        break;
+    //==================================================
+    // レイアウト・配置関連
+    //==================================================
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NEW_LINE:
+        ImGui::NewLine();// 改行する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_INDENT:
+        ImGui::Indent(0.0f);// 描画位置を右にずらす
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_UNINDENT:
+        ImGui::Unindent(0.0f);// Indent() でずらした描画位置を戻す
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DUMMY:
+        ImGui::Dummy(ImVec2(10.0f, 10.0f));// 指定したサイズの空白領域を作る
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SET_NEXT_ITEM_WIDTH:
+        ImGui::SetNextItemWidth(200.0f);// 次に描画する入力項目などの幅を指定する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_PUSH_ITEM_WIDTH:
+        ImGui::PushItemWidth(200.0f);// 入力項目の幅を設定する（複数項目に適用）
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_ITEM_WIDTH:
+        ImGui::PopItemWidth();// PushItemWidth() で設定した幅を元に戻す
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_ALIGN_TEXT_TO_FRAME_PADDING:
+        ImGui::AlignTextToFramePadding();// 文字をフレーム付き UI の高さに合わせる
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SET_NEXT_ITEM_OPEN:
+        ImGui::SetNextItemOpen(true, 0);// 次のツリー項目などを開いた状態に設定する
+        break;
+
+    //==================================================
+    // グループ関連
+    //==================================================
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_GROUP:
+        ImGui::BeginGroup();// 複数の UI 項目をひとつのグループとして扱う
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_GROUP:
+        ImGui::EndGroup();// BeginGroup() で開始したグループを終了する
+        break;
+
+    //==================================================
+    // 子領域関連
+    //==================================================
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_CHILD:
+        ImGui::BeginChild("Child", ImVec2(200.0f, 100.0f), 0, 0);// 独立した子領域を作る。サイズやスクロール領域を指定できる
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_CHILD:
+        ImGui::EndChild();// BeginChild() で開始した子領域を終了する
+        break;
+
+    //==================================================
+    // 折りたたみ・ツリー関連
+    //==================================================
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_COLLAPSING_HEADER:
+        ImGui::CollapsingHeader("Header", 0);// クリックで開閉できる見出しを表示する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_NODE:
+        ImGui::TreeNode("Node");// ツリー項目を表示する。開いている間だけ子項目を描画できる
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_POP:
+        ImGui::TreePop();// TreeNode() で開始したツリー階層を終了する
+        break;
+
+    //==================================================
+    // 表関連
+    //==================================================
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_TABLE:
+        ImGui::BeginTable("Table", 2, 0, ImVec2(0, 0), 0.0f);// 表を開始する。列数を指定する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_SETUP_COLUMN:
+        ImGui::TableSetupColumn("Column", 0, 0.0f, 0u);// 列の名前や幅などを設定する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_HEADERS_ROW:
+        ImGui::TableHeadersRow();// 列の見出し行を表示する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_NEXT_ROW:
+        ImGui::TableNextRow(0, 0.0f);// 表の次の行へ移動する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_NEXT_COLUMN:
+        ImGui::TableNextColumn();// 表の次の列へ移動する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_SET_COLUMN_INDEX:
+        ImGui::TableSetColumnIndex(0);// 指定した列へ移動する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TABLE:
+        ImGui::EndTable();// BeginTable() で開始した表を終了する
+        break;
+
+    //==================================================
+    // 表示制御・レイアウト補助
+    //==================================================
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_PUSH_STYLE_VAR:
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4.0f, 4.0f));// UI 項目間の余白など、指定したスタイル値を一時的に変更する
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_VAR:
+        ImGui::PopStyleVar();// PushStyleVar() で変更したスタイル値を元に戻す
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_PUSH_STYLE_COLOR:
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));// 指定した色を一時的に変更する
+            break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_COLOR:
+            ImGui::PopStyleColor();// PushStyleColor() で変更した色を元に戻す
+            break;
     }
 #endif
 }
