@@ -1,5 +1,9 @@
 #include "ImguiData.h"
 
+/*-----------------------------------------------------------------------*/
+/*                         変数データ(ポインタ)                          */
+/*-----------------------------------------------------------------------*/
+
 // コンストラクタ
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA()
 : VariableType(IMGUI_VARIABLE_TYPE::NONE)
@@ -1660,7 +1664,76 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToChar(char& charValue) const
         break;
     }
 }
-
+void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedChar(unsigned char& unsignedCharValue) const
+{
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        if (this->CharValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        if (this->UnsignedCharValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        if (this->ShortValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        if (this->UnsignedShortValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        if (this->IntValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        if (this->UnsignedIntValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        if (this->LongValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        if (this->UnsignedLongValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        if (this->LongLongValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        if (this->UnsignedLongLongValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        if (this->FloatValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        if (this->DoubleValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        if (this->LongDoubleValue == nullptr) { break; }
+        unsignedCharValue = static_cast<unsigned char>(*this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_POITER_DATA::GetValueToShort(short& shortValue) const
 {
     switch (VariableType)
@@ -1731,7 +1804,76 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToShort(short& shortValue) const
         break;
     }
 }
-
+void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedShort(unsigned short& unsignedShortValue) const
+{
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        if (this->CharValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        if (this->UnsignedCharValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        if (this->ShortValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        if (this->UnsignedShortValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        if (this->IntValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        if (this->UnsignedIntValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        if (this->LongValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        if (this->UnsignedLongValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        if (this->LongLongValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        if (this->UnsignedLongLongValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        if (this->FloatValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        if (this->DoubleValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        if (this->LongDoubleValue == nullptr) { break; }
+        unsignedShortValue = static_cast<unsigned short>(*this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_POITER_DATA::GetValueToInt(int& intValue) const
 {
     switch (VariableType)
@@ -1802,7 +1944,76 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToInt(int& intValue) const
         break;
     }
 }
-
+void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedInt(unsigned int& unsignedIntValue) const
+{
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        if (this->CharValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        if (this->UnsignedCharValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        if (this->ShortValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        if (this->UnsignedShortValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        if (this->IntValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        if (this->UnsignedIntValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        if (this->LongValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        if (this->UnsignedLongValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        if (this->LongLongValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        if (this->UnsignedLongLongValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        if (this->FloatValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        if (this->DoubleValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        if (this->LongDoubleValue == nullptr) { break; }
+        unsignedIntValue = static_cast<unsigned int>(*this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_POITER_DATA::GetValueToLong(long& longValue) const
 {
     switch (VariableType)
@@ -1873,7 +2084,76 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLong(long& longValue) const
         break;
     }
 }
-
+void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedLong(unsigned long& unsignedLongValue) const
+{
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        if (this->CharValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        if (this->UnsignedCharValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        if (this->ShortValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        if (this->UnsignedShortValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        if (this->IntValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        if (this->UnsignedIntValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        if (this->LongValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        if (this->UnsignedLongValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        if (this->LongLongValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        if (this->UnsignedLongLongValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        if (this->FloatValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        if (this->DoubleValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        if (this->LongDoubleValue == nullptr) { break; }
+        unsignedLongValue = static_cast<unsigned long>(*this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_POITER_DATA::GetValueToLongLong(long long& longlongValue) const
 {
     switch (VariableType)
@@ -1944,7 +2224,76 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLongLong(long long& longlongValue) co
         break;
     }
 }
-
+void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedLongLong(unsigned long long& unsignedLongLongValue) const
+{
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        if (this->CharValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        if (this->UnsignedCharValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        if (this->ShortValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        if (this->UnsignedShortValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        if (this->IntValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        if (this->UnsignedIntValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        if (this->LongValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        if (this->UnsignedLongValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        if (this->LongLongValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        if (this->UnsignedLongLongValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        if (this->FloatValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        if (this->DoubleValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        if (this->LongDoubleValue == nullptr) { break; }
+        unsignedLongLongValue = static_cast<unsigned long long>(*this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_POITER_DATA::GetValueToFloat(float& floatValue) const
 {
     switch (VariableType)
@@ -2086,7 +2435,76 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToDouble(double& doubleValue) const
         break;
     }
 }
-
+void IMGUI_VARIABLE_POITER_DATA::GetValueToLongDouble(long double& longDoubleValue) const
+{
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        if (this->CharValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        if (this->UnsignedCharValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        if (this->ShortValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        if (this->UnsignedShortValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        if (this->IntValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        if (this->UnsignedIntValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        if (this->LongValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        if (this->UnsignedLongValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        if (this->LongLongValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        if (this->UnsignedLongLongValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        if (this->FloatValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        if (this->DoubleValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        if (this->LongDoubleValue == nullptr) { break; }
+        longDoubleValue = static_cast<long double>(*this->LongDoubleValue);
+        break;
+    }
+}
 
 // インクリメント・デクリメント
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator++()
@@ -2297,6 +2715,9 @@ const void* IMGUI_VARIABLE_POITER_DATA::GetPointer() const
 }
 
 
+/*-----------------------------------------------------------------------*/
+/*                            変数データ(値)                             */
+/*-----------------------------------------------------------------------*/
 
 // コンストラクタ
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA()
@@ -3854,7 +4275,64 @@ void IMGUI_VARIABLE_DATA::GetValueToChar(char& charValue) const
         break;
     }
 }
+void IMGUI_VARIABLE_DATA::GetValueToUnsignedChar(unsigned char& unsignedCharValue) const
+{
 
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        unsignedCharValue = static_cast<unsigned char>(this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        unsignedCharValue = static_cast<unsigned char>(this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        unsignedCharValue = static_cast<unsigned char>(this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        unsignedCharValue = static_cast<unsigned char>(this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        unsignedCharValue = static_cast<unsigned char>(this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        unsignedCharValue = static_cast<unsigned char>(this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        unsignedCharValue = static_cast<unsigned char>(this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        unsignedCharValue = static_cast<unsigned char>(this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        unsignedCharValue = static_cast<unsigned char>(this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        unsignedCharValue = static_cast<unsigned char>(this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        unsignedCharValue = static_cast<unsigned char>(this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        unsignedCharValue = static_cast<unsigned char>(this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        unsignedCharValue = static_cast<unsigned char>(this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_DATA::GetValueToShort(short& shortValue) const
 {
     switch (VariableType)
@@ -3912,7 +4390,64 @@ void IMGUI_VARIABLE_DATA::GetValueToShort(short& shortValue) const
         break;
     }
 }
+void IMGUI_VARIABLE_DATA::GetValueToUnsignedShort(unsigned short& unsignedShortValue) const
+{
 
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        unsignedShortValue = static_cast<unsigned short>(this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        unsignedShortValue = static_cast<unsigned short>(this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        unsignedShortValue = static_cast<unsigned short>(this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        unsignedShortValue = static_cast<unsigned short>(this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        unsignedShortValue = static_cast<unsigned short>(this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        unsignedShortValue = static_cast<unsigned short>(this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        unsignedShortValue = static_cast<unsigned short>(this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        unsignedShortValue = static_cast<unsigned short>(this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        unsignedShortValue = static_cast<unsigned short>(this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        unsignedShortValue = static_cast<unsigned short>(this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        unsignedShortValue = static_cast<unsigned short>(this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        unsignedShortValue = static_cast<unsigned short>(this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        unsignedShortValue = static_cast<unsigned short>(this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_DATA::GetValueToInt(int& intValue) const
 {
     switch (VariableType)
@@ -3970,7 +4505,64 @@ void IMGUI_VARIABLE_DATA::GetValueToInt(int& intValue) const
         break;
     }
 }
+void IMGUI_VARIABLE_DATA::GetValueToUnsignedInt(unsigned int& unsignedIntValue) const
+{
 
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        unsignedIntValue = static_cast<unsigned int>(this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        unsignedIntValue = static_cast<unsigned int>(this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        unsignedIntValue = static_cast<unsigned int>(this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        unsignedIntValue = static_cast<unsigned int>(this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        unsignedIntValue = static_cast<unsigned int>(this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        unsignedIntValue = static_cast<unsigned int>(this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        unsignedIntValue = static_cast<unsigned int>(this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        unsignedIntValue = static_cast<unsigned int>(this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        unsignedIntValue = static_cast<unsigned int>(this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        unsignedIntValue = static_cast<unsigned int>(this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        unsignedIntValue = static_cast<unsigned int>(this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        unsignedIntValue = static_cast<unsigned int>(this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        unsignedIntValue = static_cast<unsigned int>(this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_DATA::GetValueToLong(long& longValue) const
 {
     switch (VariableType)
@@ -4028,7 +4620,64 @@ void IMGUI_VARIABLE_DATA::GetValueToLong(long& longValue) const
         break;
     }
 }
+void IMGUI_VARIABLE_DATA::GetValueToUnsignedLong(unsigned long& unsignedLongValue) const
+{
 
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        unsignedLongValue = static_cast<unsigned long>(this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        unsignedLongValue = static_cast<unsigned long>(this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        unsignedLongValue = static_cast<unsigned long>(this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        unsignedLongValue = static_cast<unsigned long>(this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        unsignedLongValue = static_cast<unsigned long>(this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        unsignedLongValue = static_cast<unsigned long>(this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        unsignedLongValue = static_cast<unsigned long>(this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        unsignedLongValue = static_cast<unsigned long>(this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        unsignedLongValue = static_cast<unsigned long>(this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        unsignedLongValue = static_cast<unsigned long>(this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        unsignedLongValue = static_cast<unsigned long>(this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        unsignedLongValue = static_cast<unsigned long>(this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        unsignedLongValue = static_cast<unsigned long>(this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_DATA::GetValueToLongLong(long long& longlongValue) const
 {
     switch (VariableType)
@@ -4086,7 +4735,64 @@ void IMGUI_VARIABLE_DATA::GetValueToLongLong(long long& longlongValue) const
         break;
     }
 }
+void IMGUI_VARIABLE_DATA::GetValueToUnsignedLongLong(unsigned long long& unsignedLongLongValue) const
+{
 
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        unsignedLongLongValue = static_cast<unsigned long long>(this->LongDoubleValue);
+        break;
+    }
+}
 void IMGUI_VARIABLE_DATA::GetValueToFloat(float& floatValue) const
 {
     switch (VariableType)
@@ -4144,7 +4850,6 @@ void IMGUI_VARIABLE_DATA::GetValueToFloat(float& floatValue) const
         break;
     }
 }
-
 void IMGUI_VARIABLE_DATA::GetValueToDouble(double& doubleValue) const
 {
     switch (VariableType)
@@ -4202,7 +4907,64 @@ void IMGUI_VARIABLE_DATA::GetValueToDouble(double& doubleValue) const
         break;
     }
 }
+void IMGUI_VARIABLE_DATA::GetValueToLongDouble(long double& doubleValue) const
+{
 
+    switch (VariableType)
+    {
+    case IMGUI_VARIABLE_TYPE::CHAR:
+        doubleValue = static_cast<long double>(this->CharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        doubleValue = static_cast<long double>(this->UnsignedCharValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::SHORT:
+        doubleValue = static_cast<long double>(this->ShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        doubleValue = static_cast<long double>(this->UnsignedShortValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::INT:
+        doubleValue = static_cast<long double>(this->IntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        doubleValue = static_cast<long double>(this->UnsignedIntValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG:
+        doubleValue = static_cast<long double>(this->LongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        doubleValue = static_cast<long double>(this->UnsignedLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        doubleValue = static_cast<long double>(this->LongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        doubleValue = static_cast<long double>(this->UnsignedLongLongValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::FLOAT:
+        doubleValue = static_cast<long double>(this->FloatValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::DOUBLE:
+        doubleValue = static_cast<long double>(this->DoubleValue);
+        break;
+        
+    case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        doubleValue = static_cast<long double>(this->LongDoubleValue);
+        break;
+    }
+}
 
 // インクリメント・デクリメント
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator++()
@@ -4371,4 +5133,135 @@ const void* IMGUI_VARIABLE_DATA::GetPointer() const
     }
 
     return nullptr;
+}
+
+
+
+
+/*-----------------------------------------------------------------------*/
+/*                      imgui全種類描画用1つ分情報                       */
+/*-----------------------------------------------------------------------*/
+// コンストラクタ
+IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA()
+: MyImguiDrawMode(IMGUI_DRAW_MODE::NONE)
+{
+}
+
+IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_VARIABLE_CONTROL value)
+: MyImguiDrawMode(IMGUI_DRAW_MODE::VARIABLE)
+, ImguiVariableControl(value)
+{
+}
+
+IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_BUTTON_CONTROL value)
+: MyImguiDrawMode(IMGUI_DRAW_MODE::BUTTON)
+, ImguiButtonControl(value)
+{
+}
+
+IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_LAYOUT_CONTROL value)
+: MyImguiDrawMode(IMGUI_DRAW_MODE::LAYOUT)
+, ImguiLayoutControl(value)
+{
+}
+
+// コピー・ムーブコンストラクタ
+IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(const IMGUI_ALL_DRAW_ONE_DATA& other)
+: MyImguiDrawMode(other.MyImguiDrawMode)
+, ImguiVariableControl(other.ImguiVariableControl)
+, ImguiButtonControl(other.ImguiButtonControl)
+, ImguiLayoutControl(other.ImguiLayoutControl)
+{
+}
+
+IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_ALL_DRAW_ONE_DATA&& other)
+: MyImguiDrawMode(other.MyImguiDrawMode)
+, ImguiVariableControl(other.ImguiVariableControl)
+, ImguiButtonControl(other.ImguiButtonControl)
+, ImguiLayoutControl(other.ImguiLayoutControl)
+{
+}
+
+// コピー代入演算子
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_ALL_DRAW_ONE_DATA& other)
+{
+    if (this != &other)
+    {
+        MyImguiDrawMode = other.MyImguiDrawMode;
+        ImguiVariableControl = other.ImguiVariableControl;
+        ImguiButtonControl = other.ImguiButtonControl;
+        ImguiLayoutControl = other.ImguiLayoutControl;
+    }
+
+    return *this;
+}
+
+// ムーブ代入演算子
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_ALL_DRAW_ONE_DATA&& other)
+{
+    if (this != &other)
+    {
+        MyImguiDrawMode = other.MyImguiDrawMode;
+        ImguiVariableControl = other.ImguiVariableControl;
+        ImguiButtonControl = other.ImguiButtonControl;
+        ImguiLayoutControl = other.ImguiLayoutControl;
+    }
+
+    return *this;
+}
+
+// デストラクタ
+IMGUI_ALL_DRAW_ONE_DATA::~IMGUI_ALL_DRAW_ONE_DATA()
+{
+}
+
+// 変数コントロール代入
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_VARIABLE_CONTROL& other)
+{
+    MyImguiDrawMode = IMGUI_DRAW_MODE::VARIABLE;
+    ImguiVariableControl = other;
+
+    return *this;
+}
+
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_VARIABLE_CONTROL&& other)
+{
+    MyImguiDrawMode = IMGUI_DRAW_MODE::VARIABLE;
+    ImguiVariableControl = other;
+
+    return *this;
+}
+
+// ボタンコントロール代入
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_BUTTON_CONTROL& other)
+{
+    MyImguiDrawMode = IMGUI_DRAW_MODE::BUTTON;
+    ImguiButtonControl = other;
+
+    return *this;
+}
+
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_BUTTON_CONTROL&& other)
+{
+    MyImguiDrawMode = IMGUI_DRAW_MODE::BUTTON;
+    ImguiButtonControl = other;
+
+    return *this;
+}
+
+// レイアウトコントロール代入
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_LAYOUT_CONTROL& other)
+{
+    MyImguiDrawMode = IMGUI_DRAW_MODE::LAYOUT;
+    ImguiLayoutControl = other;
+
+    return *this;
+}
+
+IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_LAYOUT_CONTROL&& other)
+{
+    MyImguiDrawMode = IMGUI_DRAW_MODE::LAYOUT;
+    ImguiLayoutControl = other;
+
+    return *this;
 }

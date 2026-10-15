@@ -4,6 +4,9 @@
 
 #include "ImguiData.h"
 
+#include <d3d11.h>
+#pragma comment(lib, "d3d11.lib")
+
 // TODO:_ 最終的にはプロジェクトから外す
 /*
     【使用方法】
@@ -24,6 +27,7 @@
 class ImguiManager
 {
 private:
+#ifdef _DEBUG
     // 登録中グループ関連の情報
     struct CURRENT_GROUP_TYPE_DATA
     {
@@ -45,6 +49,15 @@ private:
 
     // imgui実行フラグ
     bool mbIsImguiExecute;
+
+    // ツリーの開閉状態管理
+    std::vector<bool> mbLayoutDrawFlags;
+
+    // 初期化時に一度だけ作成
+    ID3D11Texture2D* mdCopyTexture = nullptr;
+    ID3D11ShaderResourceView* mbCopySRV = nullptr;
+
+#endif
 public:
 
     ImguiManager(bool isImguiExecute);
@@ -61,14 +74,14 @@ public:
     void Draw();
 
     /// <summary>Imgui追加描画</summary>
-    void AddDrawImgui(IMGUI_CONTROL_VARIABLE imguiControlVariableData);
+    void AddDrawImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData);
 
     /// <summary>Imguiグループ追加描画(全部)</summary>
     void AddDrawImguiGroup(IMGUI_GROUP_DATA imguiGroupData);
     /// <summary>Imguiグループ追加描画(引数参照)</summary>
-    void AddDrawImguiGroup(IMGUI_CONTROL_VARIABLE imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName = "NEW_GROUP");
+    void AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName = "NEW_GROUP");
     /// <summary>Imguiグループ追加描画(参照) ※StartGroupを読んでから使用してください</summary>
-    void AddDrawImguiGroup(IMGUI_CONTROL_VARIABLE imguiControlVariableData);
+    void AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData);
 
     /// <summary>Imguiグループ参照先設定開始 ※設定が終わったらEndGroupを読んでください</summary>
     void StartGroup(IMGUI_GROUP_TYPE groupType, std::string groupName = "NEW_GROUP");
@@ -91,14 +104,17 @@ public:
 
 private:
     /*Imguui描画*/
-    void DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlVariableData);
+    void DrawControlVariableImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData);
 // DELETE:_ 削除
 public:
     /*ボタンimgui描画*/
-    void DrawButtonImgui(IMGUI_BUTTON_CONTROL_VARIABLE& imguiButtonControlVariableData);
+    void DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVariableData);
 
     /*レイアウトimgui描画*/
     void DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData);
+
+    /*現在のレイアウト内を描画できるか*/
+    bool IsLayoutDrawEnabled() const;
 
     /*Imguiグループ描画*/
     void DrawGroupImgui(IMGUI_GROUP_DATA imguiGroupData);
@@ -111,6 +127,11 @@ public:
 
     /*変数型を整数か浮動小数の変換*/
     IMGUI_VARIABLE_INTEGER_TYPE ChangeVariableTypeToVariableIntegerType(IMGUI_VARIABLE_TYPE variableType);
+
+    /*ゲーム画面描画用変数初期化*/
+    void InitDrawGameDisplayToImguiVariable();
+    /*ゲーム画面描画*/
+    void DrawGameDisplayToImgui();
 };
 /*
 構造体作成
@@ -127,7 +148,7 @@ const char* label, float* v, float v_speed, float v_min, float v_max, const char
 // 1. 通常のfloat
 //================================================================================
 Master::mpImguiManager->AddDrawImgui(
-    IMGUI_CONTROL_VARIABLE::GetImguiData(
+    IMGUI_VARIABLE_CONTROL::GetImguiData(
         { &testSize },
         0.1f,
         0.1f,
@@ -147,7 +168,7 @@ Master::mpImguiManager->AddDrawImgui(
 // 2. 通常のint
 //================================================================================
 Master::mpImguiManager->AddDrawImgui(
-    IMGUI_CONTROL_VARIABLE::GetImguiData(
+    IMGUI_VARIABLE_CONTROL::GetImguiData(
         {
             &mstMiniMapDrawGraphData[0].pos.x,
             &mstMiniMapDrawGraphData[0].pos.y,
@@ -184,7 +205,7 @@ Master::mpImguiManager->AddDrawImguiGroup(
 // 4. グループにfloatを登録
 //================================================================================
 Master::mpImguiManager->AddDrawImguiGroup(
-    IMGUI_CONTROL_VARIABLE::GetImguiData(
+    IMGUI_VARIABLE_CONTROL::GetImguiData(
         { &testSize },
         0.1f,
         0.1f,
@@ -211,7 +232,7 @@ Master::mpImguiManager->StartGroup(
 );
 
 Master::mpImguiManager->AddDrawImguiGroup(
-    IMGUI_CONTROL_VARIABLE::GetImguiData(
+    IMGUI_VARIABLE_CONTROL::GetImguiData(
         { &testSize },
         0.1f,
         0.1f,
@@ -296,7 +317,7 @@ void TestImgui()
     // 1. 通常のImGui登録
     //==================================================
     Master::mpImguiManager->AddDrawImgui(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat1 },
             1.0f,
             0.1f,
@@ -306,7 +327,7 @@ void TestImgui()
             "TestFloat1"));
 
     Master::mpImguiManager->AddDrawImgui(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt1 },
             1.0f,
             1.0f,
@@ -324,7 +345,7 @@ void TestImgui()
         "CreateGroup");
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat2 },
             1.0f,
             0.1f,
@@ -335,7 +356,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_1);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt2 },
             1.0f,
             1.0f,
@@ -354,7 +375,7 @@ void TestImgui()
         "StartGroup");
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat3 },
             1.0f,
             0.1f,
@@ -364,7 +385,7 @@ void TestImgui()
             "TestFloat3"));
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt3 },
             1.0f,
             1.0f,
@@ -384,7 +405,7 @@ void TestImgui()
         "AutoCreateGroup");
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat4 },
             1.0f,
             0.1f,
@@ -394,7 +415,7 @@ void TestImgui()
             "TestFloat4"));
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt4 },
             1.0f,
             1.0f,
@@ -424,7 +445,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_5);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat5_1 },
             1.0f,
             0.1f,
@@ -435,7 +456,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_4);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt5_1 },
             1.0f,
             1.0f,
@@ -446,7 +467,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_4);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat5_2 },
             1.0f,
             0.1f,
@@ -457,7 +478,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_5);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt5_2 },
             1.0f,
             1.0f,
@@ -468,7 +489,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_5);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat5_3 },
             1.0f,
             0.1f,
@@ -479,7 +500,7 @@ void TestImgui()
         IMGUI_GROUP_TYPE::TEST_6);
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt5_3 },
             1.0f,
             1.0f,
@@ -499,7 +520,7 @@ void TestImgui()
             IMGUI_GROUP_TYPE::TEST_7);
 
     testGroupData.AddImguiControlVariableData(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat6 },
             1.0f,
             0.1f,
@@ -509,7 +530,7 @@ void TestImgui()
             "TestFloat6"));
 
     testGroupData.AddImguiControlVariableData(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt6 },
             1.0f,
             1.0f,
@@ -525,7 +546,7 @@ void TestImgui()
     // 7. グループを指定して自動作成
     //==================================================
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testFloat10 },
             1.0f,
             0.1f,
@@ -537,7 +558,7 @@ void TestImgui()
         "AutoCreateByAdd");
 
     Master::mpImguiManager->AddDrawImguiGroup(
-        IMGUI_CONTROL_VARIABLE::GetImguiData(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
             { &testInt10 },
             1.0f,
             1.0f,

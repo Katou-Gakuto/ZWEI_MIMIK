@@ -131,6 +131,7 @@ enum class IMGUI_LAYOUT_TYPE
     // 折りたたみ・ツリー関連
     //==================================================
     IMGUI_LAYOUT_COLLAPSING_HEADER,          // CollapsingHeader()
+    IMGUI_LAYOUT_END_COLLAPSING_HEADER,      // 閉じるだけ
     IMGUI_LAYOUT_TREE_NODE,                  // TreeNode()
     IMGUI_LAYOUT_TREE_POP,                   // TreePop()
 
@@ -152,4 +153,13 @@ enum class IMGUI_LAYOUT_TYPE
     IMGUI_LAYOUT_POP_STYLE_VAR,              // PopStyleVar()
     IMGUI_LAYOUT_PUSH_STYLE_COLOR,           // PushStyleColor()
     IMGUI_LAYOUT_POP_STYLE_COLOR,            // PopStyleColor()
+};
+
+
+enum class IMGUI_DRAW_MODE
+{
+    NONE = 0,
+    VARIABLE,
+    BUTTON,
+    LAYOUT,
 };

@@ -10,6 +10,7 @@
 
 struct IMGUI_VARIABLE_POITER_DATA;
 struct IMGUI_VARIABLE_DATA;
+struct IMGUI_LAYOUT_CONTROL;
 
 /* 変数データ(ポインタ) */
 struct IMGUI_VARIABLE_POITER_DATA
@@ -52,20 +53,24 @@ public:
 
     // 値の取得
     void GetValueToChar(char& charValue) const;
+    void GetValueToUnsignedChar(unsigned char& unsignedCharValue) const;
     void GetValueToShort(short& shortValue) const;
+    void GetValueToUnsignedShort(unsigned short& unsignedShortValue) const;
     void GetValueToInt(int& intValue) const;
+    void GetValueToUnsignedInt(unsigned int& unsignedIntValue) const;
     void GetValueToLong(long& longValue) const;
+    void GetValueToUnsignedLong(unsigned long& unsignedLongValue) const;
     void GetValueToLongLong(long long& longlongValue) const;
+    void GetValueToUnsignedLongLong(unsigned long long& unsignedLongLongValue) const;
     void GetValueToFloat(float& floatValue) const;
     void GetValueToDouble(double& doubleValue) const;
+    void GetValueToLongDouble(long double& longDoubleValue) const;
 
     // インクリメント・デクリメント
     IMGUI_VARIABLE_POITER_DATA& operator++();
     IMGUI_VARIABLE_POITER_DATA& operator--();
 
     const void* GetPointer() const;
-
-    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 
     union
     {
@@ -83,8 +88,9 @@ public:
         double* DoubleValue;                        //               double型変数へのポインタ
         long double* LongDoubleValue;               //          long double型変数へのポインタ
     };
-};
 
+    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
+};
 /*変数データ(値)*/
 struct IMGUI_VARIABLE_DATA
 {
@@ -126,20 +132,24 @@ public:
 
     // 値の取得
     void GetValueToChar(char& charValue) const;
+    void GetValueToUnsignedChar(unsigned char& unsignedCharValue) const;
     void GetValueToShort(short& shortValue) const;
+    void GetValueToUnsignedShort(unsigned short& unsignedShortValue) const;
     void GetValueToInt(int& intValue) const;
+    void GetValueToUnsignedInt(unsigned int& unsignedIntValue) const;
     void GetValueToLong(long& longValue) const;
+    void GetValueToUnsignedLong(unsigned long& unsignedLongValue) const;
     void GetValueToLongLong(long long& longlongValue) const;
+    void GetValueToUnsignedLongLong(unsigned long long& unsignedLongLongValue) const;
     void GetValueToFloat(float& floatValue) const;
     void GetValueToDouble(double& doubleValue) const;
+    void GetValueToLongDouble(long double& longDoubleValue) const;
 
     // インクリメント・デクリメント
     IMGUI_VARIABLE_DATA& operator++();
     IMGUI_VARIABLE_DATA& operator--();
 
     const void* GetPointer() const;
-
-    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 
     union
     {
@@ -157,12 +167,14 @@ public:
         double DoubleValue;                        //               double型変数へのポインタ
         long double LongDoubleValue;               //          long double型変数へのポインタ
     };
+
+    IMGUI_VARIABLE_TYPE VariableType; // 変数の型
 };
 
 
 
 // Imguiの変数描画用構造体
-struct IMGUI_CONTROL_VARIABLE
+struct IMGUI_VARIABLE_CONTROL
 {
 public:
 #ifdef _DEBUG
@@ -177,29 +189,34 @@ public:
     float Step = 0.0f;
     float StepFast = 0.0f;
 
-    IMGUI_VARIABLE_DATA Min[IMGUI_VARIABLE_MAX];
-    IMGUI_VARIABLE_DATA Max[IMGUI_VARIABLE_MAX];
+    IMGUI_VARIABLE_DATA VariableMin;
+    IMGUI_VARIABLE_DATA VariableMax;
 
-    std::string Label = "NONE";
+    std::string VariableLabel = "NONE";
     std::string Format = "%.6f";
 
-    ImGuiSliderFlags Flag = 0;
-    IMGUI_TYPE ImguiType = IMGUI_TYPE::SLIDER1;
+    ImGuiSliderFlags VariableFlag = 0;
+    IMGUI_TYPE VariableImguiType = IMGUI_TYPE::SLIDER1;
     bool AddNumberDrawFlag = true;
+
+    // 描画前にやるレイアウト描画
+    std::vector<IMGUI_LAYOUT_CONTROL> VariableBeforeImguiLayoutControl;
+    // 描画後にやるレイアウト描画
+    std::vector<IMGUI_LAYOUT_CONTROL> VariableAfterImguiLayoutControl;
 #endif
 
     // コンストラクタ
-    IMGUI_CONTROL_VARIABLE()
+    IMGUI_VARIABLE_CONTROL()
 #ifdef _DEBUG
         : Speed(1.0f)
         , Step(0.0f)
         , StepFast(0.0f)
-        , Min()
-        , Max()
-        , Label("NONE")
+        , VariableMin(IMGUI_VARIABLE_DATA())
+        , VariableMax(IMGUI_VARIABLE_DATA())
+        , VariableLabel("NONE")
         , Format("%.6f")
-        , Flag(0)
-        , ImguiType(IMGUI_TYPE::SLIDER1)
+        , VariableFlag(0)
+        , VariableImguiType(IMGUI_TYPE::SLIDER1)
         , PreVariable()
         , ChangeVariable()
         , AddNumberDrawFlag(true)
@@ -211,34 +228,25 @@ public:
     }
 
     // コピーコンストラクタ
-    IMGUI_CONTROL_VARIABLE(const IMGUI_CONTROL_VARIABLE& other)
+    IMGUI_VARIABLE_CONTROL(const IMGUI_VARIABLE_CONTROL& other)
 #ifdef _DEBUG
         : VariableDatas(other.VariableDatas)
         , Speed(other.Speed)
         , Step(other.Step)
         , StepFast(other.StepFast)
-        , Min()
-        , Max()
-        , Label(other.Label)
+        , VariableMin(other.VariableMin)
+        , VariableMax(other.VariableMax)
+        , VariableLabel(other.VariableLabel)
         , Format(other.Format)
-        , Flag(other.Flag)
-        , ImguiType(other.ImguiType)
+        , VariableFlag(other.VariableFlag)
+        , VariableImguiType(other.VariableImguiType)
         , AddNumberDrawFlag(other.AddNumberDrawFlag)
 #endif
     {
-#ifdef _DEBUG
-        for (int i = 0; i < IMGUI_VARIABLE_MAX; i++)
-        {
-            PreVariable[i] = other.PreVariable[i];
-            ChangeVariable[i] = other.ChangeVariable[i];
-            Min[i] = other.Min[i];
-            Max[i] = other.Max[i];
-        }
-#endif
     }
 
     // 引数付きコンストラクタ
-    IMGUI_CONTROL_VARIABLE(
+    IMGUI_VARIABLE_CONTROL(
         const std::vector<IMGUI_VARIABLE_POITER_DATA>& variableDatas,
         const IMGUI_VARIABLE_DATA* preVariable,
         const IMGUI_VARIABLE_DATA* changeVariable,
@@ -258,12 +266,12 @@ public:
         , Speed(speed)
         , Step(step)
         , StepFast(stepFast)
-        , Min()
-        , Max()
-        , Label(label)
+        , VariableMin()
+        , VariableMax()
+        , VariableLabel(label)
         , Format(format)
-        , Flag(flag)
-        , ImguiType(imguiType)
+        , VariableFlag(flag)
+        , VariableImguiType(imguiType)
         , AddNumberDrawFlag(addNumberFlag)
 #endif
     {
@@ -280,163 +288,152 @@ public:
                 ? changeVariable[i]
                 : IMGUI_VARIABLE_DATA();
 
-            // 引数の範囲を各変数の型に合わせる
-            if (i < static_cast<int>(VariableDatas.size()))
-            {
-                IMGUI_VARIABLE_DATA minData(min);
-                IMGUI_VARIABLE_DATA maxData(max);
+        }
+        
+        // 引数の範囲を各変数の型に合わせる
+        if (0 < static_cast<int>(VariableDatas.size()))
+        {
+            IMGUI_VARIABLE_DATA minData(min);
+            IMGUI_VARIABLE_DATA maxData(max);
 
-                switch (VariableDatas[i].VariableType)
-                {
-                case IMGUI_VARIABLE_TYPE::CHAR:
-                {
-                    char minValue;
-                    char maxValue;
-                    minData.GetValueToChar(minValue);
-                    maxData.GetValueToChar(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
-                {
-                    char minValue;
-                    char maxValue;
-                    minData.GetValueToChar(minValue);
-                    maxData.GetValueToChar(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned char>(minValue));
-                    Max[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned char>(maxValue));
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::SHORT:
-                {
-                    short minValue;
-                    short maxValue;
-                    minData.GetValueToShort(minValue);
-                    maxData.GetValueToShort(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
-                {
-                    short minValue;
-                    short maxValue;
-                    minData.GetValueToShort(minValue);
-                    maxData.GetValueToShort(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned short>(minValue));
-                    Max[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned short>(maxValue));
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::INT:
-                {
-                    int minValue;
-                    int maxValue;
-                    minData.GetValueToInt(minValue);
-                    maxData.GetValueToInt(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
-                {
-                    int minValue;
-                    int maxValue;
-                    minData.GetValueToInt(minValue);
-                    maxData.GetValueToInt(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned int>(minValue));
-                    Max[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned int>(maxValue));
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::LONG:
-                {
-                    long minValue;
-                    long maxValue;
-                    minData.GetValueToLong(minValue);
-                    maxData.GetValueToLong(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
-                {
-                    long minValue;
-                    long maxValue;
-                    minData.GetValueToLong(minValue);
-                    maxData.GetValueToLong(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned long>(minValue));
-                    Max[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned long>(maxValue));
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::LONG_LONG:
-                {
-                    long long minValue;
-                    long long maxValue;
-                    minData.GetValueToLongLong(minValue);
-                    maxData.GetValueToLongLong(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
-                {
-                    long long minValue;
-                    long long maxValue;
-                    minData.GetValueToLongLong(minValue);
-                    maxData.GetValueToLongLong(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned long long>(minValue));
-                    Max[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<unsigned long long>(maxValue));
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::FLOAT:
-                {
-                    float minValue;
-                    float maxValue;
-                    minData.GetValueToFloat(minValue);
-                    maxData.GetValueToFloat(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::DOUBLE:
-                {
-                    double minValue;
-                    double maxValue;
-                    minData.GetValueToDouble(minValue);
-                    maxData.GetValueToDouble(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(minValue);
-                    Max[i] = IMGUI_VARIABLE_DATA(maxValue);
-                    break;
-                }
-                case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
-                {
-                    double minValue;
-                    double maxValue;
-                    minData.GetValueToDouble(minValue);
-                    maxData.GetValueToDouble(maxValue);
-                    Min[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<long double>(minValue));
-                    Max[i] = IMGUI_VARIABLE_DATA(
-                        static_cast<long double>(maxValue));
-                    break;
-                }
-                }
-            }
-            else
+            switch (VariableDatas[0].VariableType)
             {
-                Min[i] = min;
-                Max[i] = max;
+            case IMGUI_VARIABLE_TYPE::CHAR:
+            {
+                char minValue;
+                char maxValue;
+                minData.GetValueToChar(minValue);
+                maxData.GetValueToChar(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
             }
+            case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+            {
+                unsigned char minValue;
+                unsigned char maxValue;
+                minData.GetValueToUnsignedChar(minValue);
+                maxData.GetValueToUnsignedChar(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::SHORT:
+            {
+                short minValue;
+                short maxValue;
+                minData.GetValueToShort(minValue);
+                maxData.GetValueToShort(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+            {
+                unsigned short minValue;
+                unsigned short maxValue;
+                minData.GetValueToUnsignedShort(minValue);
+                maxData.GetValueToUnsignedShort(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::INT:
+            {
+                int minValue;
+                int maxValue;
+                minData.GetValueToInt(minValue);
+                maxData.GetValueToInt(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+            {
+                unsigned int minValue;
+                unsigned int maxValue;
+                minData.GetValueToUnsignedInt(minValue);
+                maxData.GetValueToUnsignedInt(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::LONG:
+            {
+                long minValue;
+                long maxValue;
+                minData.GetValueToLong(minValue);
+                maxData.GetValueToLong(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+            {
+                unsigned long minValue;
+                unsigned long maxValue;
+                minData.GetValueToUnsignedLong(minValue);
+                maxData.GetValueToUnsignedLong(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::LONG_LONG:
+            {
+                long long minValue;
+                long long maxValue;
+                minData.GetValueToLongLong(minValue);
+                maxData.GetValueToLongLong(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+            {
+                unsigned long long minValue;
+                unsigned long long maxValue;
+                minData.GetValueToUnsignedLongLong(minValue);
+                maxData.GetValueToUnsignedLongLong(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::FLOAT:
+            {
+                float minValue;
+                float maxValue;
+                minData.GetValueToFloat(minValue);
+                maxData.GetValueToFloat(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::DOUBLE:
+            {
+                double minValue;
+                double maxValue;
+                minData.GetValueToDouble(minValue);
+                maxData.GetValueToDouble(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+            {
+                long double minValue;
+                long double maxValue;
+                minData.GetValueToLongDouble(minValue);
+                maxData.GetValueToLongDouble(maxValue);
+                VariableMin = IMGUI_VARIABLE_DATA(minValue);
+                VariableMax = IMGUI_VARIABLE_DATA(maxValue);
+                break;
+            }
+            }
+        }
+        else
+        {
+            VariableMin = min;
+            VariableMax = max;
         }
 #endif
     }
@@ -523,8 +520,6 @@ public:
         {
             PreVariable[i] = IMGUI_VARIABLE_DATA();
             ChangeVariable[i] = IMGUI_VARIABLE_DATA();
-            Min[i] = IMGUI_VARIABLE_DATA();
-            Max[i] = IMGUI_VARIABLE_DATA();
         }
 #endif
     }
@@ -558,9 +553,9 @@ public:
     void SetMin(T min)
     {
 #ifdef _DEBUG
-        for (size_t i = 0; i < VariableDatas.size(); i++)
+        if (0 < VariableDatas.size())
         {
-            Min[i] = IMGUI_VARIABLE_DATA(min, VariableDatas[i].VariableType);
+            VariableMin = IMGUI_VARIABLE_DATA(min, VariableDatas[0].VariableType);
         }
 #endif
     }
@@ -570,9 +565,9 @@ public:
     void SetMax(T max)
     {
 #ifdef _DEBUG
-        for (size_t i = 0; i < VariableDatas.size(); i++)
+        if (0 < VariableDatas.size())
         {
-            Max[i] = IMGUI_VARIABLE_DATA(max, VariableDatas[i].VariableType);
+            VariableMax = IMGUI_VARIABLE_DATA(max, VariableDatas[0].VariableType);
         }
 #endif
     }
@@ -581,7 +576,7 @@ public:
     void SetLabel(const std::string& label)
     {
 #ifdef _DEBUG
-        Label = label;
+        VariableLabel = label;
 #endif
     }
 
@@ -597,7 +592,7 @@ public:
     void SetFlag(ImGuiSliderFlags flag)
     {
 #ifdef _DEBUG
-        Flag = flag;
+        VariableFlag = flag;
 #endif
     }
 
@@ -605,7 +600,7 @@ public:
     void SetImguiType(IMGUI_TYPE imguiType)
     {
 #ifdef _DEBUG
-        ImguiType = imguiType;
+        VariableImguiType = imguiType;
 #endif
     }
 
@@ -618,7 +613,7 @@ public:
     }
 
     // float用データ生成
-    static IMGUI_CONTROL_VARIABLE GetImguiData(
+    static IMGUI_VARIABLE_CONTROL GetImguiData(
         const std::vector<float*>& variableDatas,
         float speed = 1.0f,
         float step = 0.0f,
@@ -632,16 +627,16 @@ public:
         bool addNumberDrawFlag = true
     )
     {
-        IMGUI_CONTROL_VARIABLE imguiData;
+        IMGUI_VARIABLE_CONTROL imguiData;
 
 #ifdef _DEBUG
         imguiData.Speed = speed;
         imguiData.Step = step;
         imguiData.StepFast = stepFast;
-        imguiData.Label = label;
+        imguiData.VariableLabel = label;
         imguiData.Format = format;
-        imguiData.Flag = flag;
-        imguiData.ImguiType = imguiType;
+        imguiData.VariableFlag = flag;
+        imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
 
         for (float* variable : variableDatas)
@@ -656,7 +651,7 @@ public:
     }
 
     // int用データ生成
-    static IMGUI_CONTROL_VARIABLE GetImguiData(
+    static IMGUI_VARIABLE_CONTROL GetImguiData(
         const std::vector<int*>& variableDatas,
         float speed = 1.0f,
         float step = 1.0f,
@@ -670,16 +665,16 @@ public:
         bool addNumberDrawFlag = true
     )
     {
-        IMGUI_CONTROL_VARIABLE imguiData;
+        IMGUI_VARIABLE_CONTROL imguiData;
 
 #ifdef _DEBUG
         imguiData.Speed = speed;
         imguiData.Step = step;
         imguiData.StepFast = stepFast;
-        imguiData.Label = label;
+        imguiData.VariableLabel = label;
         imguiData.Format = format;
-        imguiData.Flag = flag;
-        imguiData.ImguiType = imguiType;
+        imguiData.VariableFlag = flag;
+        imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
 
         for (int* variable : variableDatas)
@@ -695,7 +690,7 @@ public:
     }
 
     // 汎用データ生成
-    static IMGUI_CONTROL_VARIABLE GetImguiData(
+    static IMGUI_VARIABLE_CONTROL GetImguiData(
         const std::vector<IMGUI_VARIABLE_POITER_DATA>& variableDatas,
         float speed = 1.0f,
         float step = 1.0f,
@@ -707,16 +702,16 @@ public:
         bool addNumberDrawFlag = true
     )
     {
-        IMGUI_CONTROL_VARIABLE imguiData;
+        IMGUI_VARIABLE_CONTROL imguiData;
 
 #ifdef _DEBUG
         imguiData.Speed = speed;
         imguiData.Step = step;
         imguiData.StepFast = stepFast;
-        imguiData.Label = label;
+        imguiData.VariableLabel = label;
         imguiData.Format = format;
-        imguiData.Flag = flag;
-        imguiData.ImguiType = imguiType;
+        imguiData.VariableFlag = flag;
+        imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
 
         imguiData.VariableDatas = variableDatas;
@@ -729,28 +724,36 @@ public:
 
 
 // Imguiのボタン描画用構造体
-struct IMGUI_BUTTON_CONTROL_VARIABLE
+struct IMGUI_BUTTON_CONTROL
 {
 #ifdef _DEBUG
     // ボタン種類
     IMGUI_BUTTON_TYPE ButtonType;
  
     // ボタンラベル
-    std::string Label;
+    std::string ButtonLabel;
     // 押すキーの文字列
     std::string PressKeyString = "NONE";
     // url
     std::string Url = "https://github.com/Katou-Gakuto";
 
-    // Imguiのenumのフラグ(ImGuiDir, ImGuiButtonFlags, ImGuiColorEditFlags, ImGuiSelectableFlags, ImGuiTabItemFlags)
-    int ImGuiEnumFlags;
+    // ImGuiのenum設定値
+    union
+    {
+        int ButtonImGuiEnumFlags;
+        ImGuiDir ButtonDir;
+        ImGuiButtonFlags ButtonFlags;
+        ImGuiColorEditFlags ButtonColorEditFlags;
+        ImGuiSelectableFlags ButtonSelectableFlags;
+        ImGuiTabItemFlags ButtonTabItemFlags;
+    };
     
     // 描画サイズ
-    ImVec2 Size;
+    ImVec2 ButtonSize;
     // 色
-    ImVec4 Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    ImVec4 ButtonColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     // 描画フラグ
-    bool DrawFlag;
+    bool ButtonDrawFlag;
 
     // ボタンフラグ
     bool ButtonFlag;
@@ -760,6 +763,11 @@ struct IMGUI_BUTTON_CONTROL_VARIABLE
     BIT_FLAG<unsigned int> ButtonBitFlag;
     // ボタンビットフラグの値
     unsigned int ButtonBitFlagValue = 0;
+
+    // 描画前にやるレイアウト描画
+    std::vector<IMGUI_LAYOUT_CONTROL> ButtonBeforeImguiLayoutControl;
+    // 描画後にやるレイアウト描画
+    std::vector<IMGUI_LAYOUT_CONTROL> ButtonAfterImguiLayoutControl;
 #endif
 };
 
@@ -769,51 +777,85 @@ struct IMGUI_LAYOUT_CONTROL
 #ifdef _DEBUG
     IMGUI_LAYOUT_TYPE LayoutType; // レイアウトの処理種別
 
-    const char* Text = nullptr; // 表示文字列、フォーマット文字列、見出し名、ツリー名、列名など
-    int Count = 0; // 要素数、列数、スタイル復元数など
-    int Index = 0; // 列番号など
-    unsigned int UserID = 0; // ユーザー識別用ID
+    std::string LayoutText; // 表示文字列、フォーマット文字列、見出し名、ツリー名、列名など
+    int LayoutCount = 0; // 要素数、列数、スタイル復元数など
+    int LayoutIndex = 0; // 列番号など
+    unsigned int LayoutUserID = 0; // ユーザー識別用ID
 
-    ImVec2 Size = ImVec2(0.0f, 0.0f); // 領域サイズ、空白サイズ、スタイル値など
-    float Width = 0.0f; // UI項目や列の幅
-    float Spacing = -1.0f; // 項目間の間隔
-    float MinHeight = 0.0f; // 行の最小高さ
+    ImVec2 LayoutSize = ImVec2(0.0f, 0.0f); // 領域サイズ、空白サイズ、スタイル値など
+    float LayoutWidth = 0.0f; // UI項目や列の幅
+    float LayoutSpacing = -1.0f; // 項目間の間隔
+    float LayoutMinHeight = 0.0f; // 行の最小高さ
+
+    // ImGuiのenum設定値
+    union
+    {
+        int LayoutImguiEnumFlags = 0;
+        ImGuiTreeNodeFlags LayoutTreeNodeFlags; // = ImGuiTreeNodeFlags_None; ツリー項目の設定
+        ImGuiTableFlags LayoutTableFlags; // = ImGuiTableFlags_None; 表の設定
+        ImGuiTableColumnFlags LayoutTableColumnFlags; // = ImGuiTableColumnFlags_None; 表の列設定
+        ImGuiStyleVar LayoutStyleVar; // = ImGuiStyleVar_ItemSpacing; 変更するスタイル項目
+        ImGuiCol LayoutStyleColor; // = ImGuiCol_Text; 変更する色の項目
+    };
 
     //==================================================
     // テキスト関連
     //==================================================
 
-    IMGUI_VARIABLE_DATA Varable; // 変数の値
+    IMGUI_VARIABLE_DATA LayoutVarable; // 変数の値
 
     //==================================================
     // 子領域関連
     //==================================================
-
-    ImGuiChildFlags ChildFlags = ImGuiChildFlags_None; // 子領域の設定
-    ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_None; // 子領域のウィンドウ設定
+    ImGuiChildFlags LayoutChildFlags = ImGuiChildFlags_None; // 子領域の設定
+    ImGuiWindowFlags LayoutWindowFlags = ImGuiWindowFlags_None; // 子領域のウィンドウ設定
 
     //==================================================
     // 折りたたみ・ツリー関連
     //==================================================
 
-    ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_None; // ツリー項目の設定
-    bool DefaultOpen = false; // 次のツリー項目を開いた状態にするか
+    bool LayoutDefaultOpen = false; // 次のツリー項目を開いた状態にするか
 
-    //==================================================
-    // 表関連
-    //==================================================
 
-    ImGuiTableFlags TableFlags = ImGuiTableFlags_None; // 表の設定
-    ImGuiTableColumnFlags TableColumnFlags = ImGuiTableColumnFlags_None; // 表の列設定
 
     //==================================================
     // スタイル関連
     //==================================================
 
-    ImGuiStyleVar StyleVar = ImGuiStyleVar_ItemSpacing; // 変更するスタイル項目
-    ImGuiCol StyleColor = ImGuiCol_Text; // 変更する色の項目
-    ImVec4 Color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 変更する色（RGBA）
+    ImVec4 LayoutColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 変更する色（RGBA）
     #endif
+};
+
+
+// imgui全種類描画用1つ分情報
+struct IMGUI_ALL_DRAW_ONE_DATA
+{
+    IMGUI_DRAW_MODE MyImguiDrawMode;
+
+    IMGUI_VARIABLE_CONTROL ImguiVariableControl;
+    IMGUI_BUTTON_CONTROL   ImguiButtonControl;
+    IMGUI_LAYOUT_CONTROL   ImguiLayoutControl;
+
+    IMGUI_ALL_DRAW_ONE_DATA();
+    IMGUI_ALL_DRAW_ONE_DATA(IMGUI_VARIABLE_CONTROL value);
+    IMGUI_ALL_DRAW_ONE_DATA(IMGUI_BUTTON_CONTROL value);
+    IMGUI_ALL_DRAW_ONE_DATA(IMGUI_LAYOUT_CONTROL value);
+
+    // コピー・ムーブ
+    IMGUI_ALL_DRAW_ONE_DATA(const IMGUI_ALL_DRAW_ONE_DATA& other);
+    IMGUI_ALL_DRAW_ONE_DATA(IMGUI_ALL_DRAW_ONE_DATA&& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(const IMGUI_ALL_DRAW_ONE_DATA& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(IMGUI_ALL_DRAW_ONE_DATA&& other);
+
+    // デストラクタ
+    ~IMGUI_ALL_DRAW_ONE_DATA();
+
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(const IMGUI_VARIABLE_CONTROL& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(IMGUI_VARIABLE_CONTROL&& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(const IMGUI_BUTTON_CONTROL& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(IMGUI_BUTTON_CONTROL&& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(const IMGUI_LAYOUT_CONTROL& other);
+    IMGUI_ALL_DRAW_ONE_DATA& operator=(IMGUI_LAYOUT_CONTROL&& other);
 };
 
 // 1グループのimgui描画情報
@@ -828,7 +870,7 @@ private:
     std::string GroupName = "NONE";
 
     // Imgui管理変数情報
-    std::vector<IMGUI_CONTROL_VARIABLE> ImguiControlVariableDatas = {};
+    std::vector<IMGUI_ALL_DRAW_ONE_DATA> ImguiControlVariableDatas = {};
     // 子の情報
     std::vector<IMGUI_GROUP_DATA> ChildDatas = {};
 #endif
@@ -840,7 +882,7 @@ public:
     static IMGUI_GROUP_DATA GetImguiGroupData(
         std::string groupName = "NEW GROUP",
         IMGUI_GROUP_TYPE groupType = IMGUI_GROUP_TYPE::NONE,
-        std::vector<IMGUI_CONTROL_VARIABLE> imguiControlVariableDatas = {},
+        std::vector<IMGUI_ALL_DRAW_ONE_DATA> imguiControlVariableDatas = {},
         std::vector<IMGUI_GROUP_DATA> childDatas = {}
     )
     {
@@ -848,7 +890,12 @@ public:
 #ifdef _DEBUG
         imguiGroupData.GroupType = groupType;
         imguiGroupData.GroupName = groupName;
-        imguiGroupData.ImguiControlVariableDatas = imguiControlVariableDatas;
+        imguiGroupData.ImguiControlVariableDatas.clear();
+        imguiGroupData.ImguiControlVariableDatas.resize(imguiControlVariableDatas.size());
+        for (int i = 0; i < imguiControlVariableDatas.size(); ++i)
+        {
+            imguiGroupData.ImguiControlVariableDatas[i] = imguiControlVariableDatas[i];
+        }
         imguiGroupData.ChildDatas = childDatas;
 #endif
         return imguiGroupData;
@@ -871,7 +918,7 @@ public:
     /*------------*/
 
     /// <summary>Imgui管理変数情報追加</summary>
-    void AddImguiControlVariableData(IMGUI_CONTROL_VARIABLE imguiControlVariableData)
+    void AddImguiControlVariableData(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData)
     {
 #ifdef _DEBUG
         ImguiControlVariableDatas.push_back(imguiControlVariableData);
@@ -930,7 +977,7 @@ public:
     }
 
     /// <summary>imgui管理変数情報取得</summary>
-    std::vector<IMGUI_CONTROL_VARIABLE>* GetImguiControlVariableDatas()
+    std::vector<IMGUI_ALL_DRAW_ONE_DATA>* GetImguiControlVariableDatas()
     {
 #ifdef _DEBUG
         return &ImguiControlVariableDatas;

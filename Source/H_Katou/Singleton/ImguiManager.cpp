@@ -13,6 +13,11 @@
 
 #include "ImguiManager.h"
 
+/*画面サイズ取得用*/
+#include "Master.h"
+#include "DxLibDataManager.h"
+/*----------------*/
+
 #ifdef _DEBUG
 #include "DebugLogs/DebugLog.h"
 
@@ -30,6 +35,7 @@ ImguiManager::ImguiManager(bool isImguiExecute)
 ImguiManager::~ImguiManager()
 {
 }
+
 // 初期化
 void ImguiManager::Initilize()
 {
@@ -44,6 +50,7 @@ void ImguiManager::Initilize()
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     io.Fonts->AddFontFromFileTTF("Resource/imgui/BIZ_UDGothic/BIZUDGothic-Regular.ttf", 16.0f);
 
@@ -51,6 +58,8 @@ void ImguiManager::Initilize()
 
     ImGui_ImplWin32_Init(DxLib::GetMainWindowHandle());
     ImGui_ImplDX11_Init((ID3D11Device*)DxLib::GetUseDirect3D11Device(), (ID3D11DeviceContext*)DxLib::GetUseDirect3D11DeviceContext());
+
+    InitDrawGameDisplayToImguiVariable();
 #endif
 }
 
@@ -83,7 +92,7 @@ void ImguiManager::Update()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
     ImGui::ShowDemoWindow();
-    
+
     mnAddNumber = 0;
     // グループ
     for (int i = 0; i < mstImguiGroupDatas.size(); i++)
@@ -109,6 +118,8 @@ void ImguiManager::Draw()
     {
         return;
     }
+
+    DrawGameDisplayToImgui();
     
     // ImGui フレーム終了と描画
     ImGui::Render();
@@ -121,7 +132,7 @@ void ImguiManager::Draw()
 
 
 // Imgui追加描画
-void ImguiManager::AddDrawImgui(IMGUI_CONTROL_VARIABLE imguiControlVariableData)
+void ImguiManager::AddDrawImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -131,7 +142,7 @@ void ImguiManager::AddDrawImgui(IMGUI_CONTROL_VARIABLE imguiControlVariableData)
     
     if (imguiControlVariableData.AddNumberDrawFlag == true)
     {
-        imguiControlVariableData.Label = imguiControlVariableData.Label + "_" + std::to_string(mnAddNumber);
+        imguiControlVariableData.VariableLabel = imguiControlVariableData.VariableLabel + "_" + std::to_string(mnAddNumber);
     }
     ++mnAddNumber;
     DrawControlVariableImgui(imguiControlVariableData);
@@ -152,7 +163,7 @@ void ImguiManager::AddDrawImguiGroup(IMGUI_GROUP_DATA imguiGroupData)
 }
 
 // Imguiグループ追加描画(引数参照)
-void ImguiManager::AddDrawImguiGroup(IMGUI_CONTROL_VARIABLE imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName)
+void ImguiManager::AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -180,7 +191,7 @@ void ImguiManager::AddDrawImguiGroup(IMGUI_CONTROL_VARIABLE imguiControlVariable
 }
 
 // Imguiグループ追加描画(参照) ※StartGroupを読んでから使用してください
-void ImguiManager::AddDrawImguiGroup(IMGUI_CONTROL_VARIABLE imguiControlVariableData)
+void ImguiManager::AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -432,7 +443,7 @@ void ImguiManager::DeleteImguiGroup(IMGUI_GROUP_TYPE groupType)
 }
 
 // Imguui描画
-void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlVariableData)
+void ImguiManager::DrawControlVariableImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute ||
@@ -443,7 +454,7 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
 
     for (int i = 0; i < imguiControlVariableData.VariableDatas.size(); i++)
     {
-        if (i >= IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX)
+        if (i >= IMGUI_VARIABLE_CONTROL::IMGUI_VARIABLE_MAX)
         {
             break;
         }
@@ -454,7 +465,7 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
             int currentValue = 0;
             int previousValue = 0;
             int changeValue = 0;
-            IMGUI_CONTROL_VARIABLE::GetVariableValue(imguiControlVariableData.VariableDatas[i]).GetValueToInt(currentValue);
+            IMGUI_VARIABLE_CONTROL::GetVariableValue(imguiControlVariableData.VariableDatas[i]).GetValueToInt(currentValue);
 
             imguiControlVariableData.PreVariable[i].GetValueToInt(previousValue);
             imguiControlVariableData.ChangeVariable[i].GetValueToInt(changeValue);
@@ -472,7 +483,7 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
             float previousValue = 0.0f;
             float changeValue = 0.0f;
 
-            IMGUI_CONTROL_VARIABLE::GetVariableValue(imguiControlVariableData.VariableDatas[i]).GetValueToFloat(currentValue);
+            IMGUI_VARIABLE_CONTROL::GetVariableValue(imguiControlVariableData.VariableDatas[i]).GetValueToFloat(currentValue);
 
             imguiControlVariableData.PreVariable[i].GetValueToFloat(previousValue);
             imguiControlVariableData.ChangeVariable[i].GetValueToFloat(changeValue);
@@ -487,73 +498,71 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
     }
 
     // ImGuiに渡す連続した描画用配列
-    int changeInt[IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX] = {};
-    float changeFloat[IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX] = {};
-
-    int minInt[IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX] = {};
-    int maxInt[IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX] = {};
-
-    float minFloat[IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX] = {};
-    float maxFloat[IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX] = {};
+    int changeInt[IMGUI_VARIABLE_CONTROL::IMGUI_VARIABLE_MAX] = {};
+    float changeFloat[IMGUI_VARIABLE_CONTROL::IMGUI_VARIABLE_MAX] = {};
 
     for (int i = 0; i < imguiControlVariableData.VariableDatas.size(); i++)
     {
-        if (i >= IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX)
+        if (i >= IMGUI_VARIABLE_CONTROL::IMGUI_VARIABLE_MAX)
         {
             break;
         }
 
         imguiControlVariableData.ChangeVariable[i].GetValueToInt(changeInt[i]);
         imguiControlVariableData.ChangeVariable[i].GetValueToFloat(changeFloat[i]);
-
-        imguiControlVariableData.Min[i].GetValueToInt(minInt[i]);
-        imguiControlVariableData.Max[i].GetValueToInt(maxInt[i]);
-
-        imguiControlVariableData.Min[i].GetValueToFloat(minFloat[i]);
-        imguiControlVariableData.Max[i].GetValueToFloat(maxFloat[i]);
     }
+
+    int minInt;
+    int maxInt;
+    float minFloat;
+    float maxFloat;
+
+    imguiControlVariableData.VariableMin.GetValueToInt(minInt);
+    imguiControlVariableData.VariableMax.GetValueToInt(maxInt);
+    imguiControlVariableData.VariableMin.GetValueToFloat(minFloat);
+    imguiControlVariableData.VariableMax.GetValueToFloat(maxFloat);
 
     const int drawVariableType = static_cast<int>(ChangeVariableTypeToVariableIntegerType(imguiControlVariableData.VariableDatas[0].VariableType));
 
-    const char* label = imguiControlVariableData.Label.c_str();
+    const char* label = imguiControlVariableData.VariableLabel.c_str();
     const char* format = imguiControlVariableData.Format.c_str();
-    const ImGuiSliderFlags flag = imguiControlVariableData.Flag;
+    const ImGuiSliderFlags flag = imguiControlVariableData.VariableFlag;
 
     switch (drawVariableType)
     {
     case IMGUI_VARIABLE_INTEGER:
-        switch (imguiControlVariableData.ImguiType)
+        switch (imguiControlVariableData.VariableImguiType)
         {
         case IMGUI_TYPE::SLIDER1:
-            ImGui::SliderInt(label, changeInt, minInt[0], maxInt[0], format, flag);
+            ImGui::SliderInt(label, changeInt, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::SLIDER2:
-            ImGui::SliderInt2(label, changeInt, minInt[0], maxInt[0], format, flag);
+            ImGui::SliderInt2(label, changeInt, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::SLIDER3:
-            ImGui::SliderInt3(label, changeInt, minInt[0], maxInt[0], format, flag);
+            ImGui::SliderInt3(label, changeInt, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::SLIDER4:
-            ImGui::SliderInt4(label, changeInt, minInt[0], maxInt[0], format, flag);
+            ImGui::SliderInt4(label, changeInt, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG1:
-            ImGui::DragInt(label, changeInt, imguiControlVariableData.Speed, minInt[0], maxInt[0], format, flag);
+            ImGui::DragInt(label, changeInt, imguiControlVariableData.Speed, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG2:
-            ImGui::DragInt2(label, changeInt, imguiControlVariableData.Speed, minInt[0], maxInt[0], format, flag);
+            ImGui::DragInt2(label, changeInt, imguiControlVariableData.Speed, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG3:
-            ImGui::DragInt3(label, changeInt, imguiControlVariableData.Speed, minInt[0], maxInt[0], format, flag);
+            ImGui::DragInt3(label, changeInt, imguiControlVariableData.Speed, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG4:
-            ImGui::DragInt4(label, changeInt, imguiControlVariableData.Speed, minInt[0], maxInt[0], format, flag);
+            ImGui::DragInt4(label, changeInt, imguiControlVariableData.Speed, minInt, maxInt, format, flag);
             break;
 
         case IMGUI_TYPE::INPUT1:
@@ -578,38 +587,38 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
         break;
 
     case IMGUI_VARIABLE_MINORITY:
-        switch (imguiControlVariableData.ImguiType)
+        switch (imguiControlVariableData.VariableImguiType)
         {
         case IMGUI_TYPE::SLIDER1:
-            ImGui::SliderFloat(label, changeFloat, minFloat[0], maxFloat[0], format, flag);
+            ImGui::SliderFloat(label, changeFloat, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::SLIDER2:
-            ImGui::SliderFloat2(label, changeFloat, minFloat[0], maxFloat[0], format, flag);
+            ImGui::SliderFloat2(label, changeFloat, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::SLIDER3:
-            ImGui::SliderFloat3(label, changeFloat, minFloat[0], maxFloat[0], format, flag);
+            ImGui::SliderFloat3(label, changeFloat, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::SLIDER4:
-            ImGui::SliderFloat4(label, changeFloat, minFloat[0], maxFloat[0], format, flag);
+            ImGui::SliderFloat4(label, changeFloat, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG1:
-            ImGui::DragFloat(label, changeFloat, imguiControlVariableData.Speed, minFloat[0], maxFloat[0], format, flag);
+            ImGui::DragFloat(label, changeFloat, imguiControlVariableData.Speed, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG2:
-            ImGui::DragFloat2(label, changeFloat, imguiControlVariableData.Speed, minFloat[0], maxFloat[0], format, flag);
+            ImGui::DragFloat2(label, changeFloat, imguiControlVariableData.Speed, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG3:
-            ImGui::DragFloat3(label, changeFloat, imguiControlVariableData.Speed, minFloat[0], maxFloat[0], format, flag);
+            ImGui::DragFloat3(label, changeFloat, imguiControlVariableData.Speed, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::DRAG4:
-            ImGui::DragFloat4(label, changeFloat, imguiControlVariableData.Speed, minFloat[0], maxFloat[0], format, flag);
+            ImGui::DragFloat4(label, changeFloat, imguiControlVariableData.Speed, minFloat, maxFloat, format, flag);
             break;
 
         case IMGUI_TYPE::INPUT1:
@@ -629,7 +638,7 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
             break;
 
         case IMGUI_TYPE::ANGLE:
-            ImGui::SliderAngle(label, changeFloat, minFloat[0], maxFloat[0], format, flag);
+            ImGui::SliderAngle(label, changeFloat, minFloat, maxFloat, format, flag);
             break;
 
         default:
@@ -641,7 +650,7 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
     // 描画結果を構造体へ戻す
     for (int i = 0; i < imguiControlVariableData.VariableDatas.size(); i++)
     {
-        if (i >= IMGUI_CONTROL_VARIABLE::IMGUI_VARIABLE_MAX)
+        if (i >= IMGUI_VARIABLE_CONTROL::IMGUI_VARIABLE_MAX)
         {
             break;
         }
@@ -657,14 +666,14 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_CONTROL_VARIABLE imguiControlV
 
         imguiControlVariableData.VariableDatas[i] = imguiControlVariableData.ChangeVariable[i];
 
-        imguiControlVariableData.PreVariable[i] = IMGUI_CONTROL_VARIABLE::GetVariableValue(imguiControlVariableData.VariableDatas[i]);
+        imguiControlVariableData.PreVariable[i] = IMGUI_VARIABLE_CONTROL::GetVariableValue(imguiControlVariableData.VariableDatas[i]);
     }
 #endif
 }
 
 
 /*ボタンimgui描画*/
-void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL_VARIABLE& imguiButtonControlVariableData)
+void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVariableData)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -675,55 +684,55 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL_VARIABLE& imguiButtonCon
     switch (imguiButtonControlVariableData.ButtonType)
     {    
     case IMGUI_BUTTON_TYPE::BUTTON:
-        buttonFlag = ImGui::Button(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Size);//	標準的な四角いボタン。サイズを指定できる
+        buttonFlag = ImGui::Button(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonSize);//	標準的な四角いボタン。サイズを指定できる
         break;
 
     case IMGUI_BUTTON_TYPE::SMALL_BUTTON:
-        buttonFlag = ImGui::SmallButton(imguiButtonControlVariableData.Label.c_str());//	小さいボタン。文字列の横などに置きやすい
+        buttonFlag = ImGui::SmallButton(imguiButtonControlVariableData.ButtonLabel.c_str());//	小さいボタン。文字列の横などに置きやすい
         break;
 
     case IMGUI_BUTTON_TYPE::ARROW_BUTTON:
-        buttonFlag = ImGui::ArrowButton(imguiButtonControlVariableData.Label.c_str(), (ImGuiDir)imguiButtonControlVariableData.ImGuiEnumFlags);//	矢印を表示する四角いボタン。上下左右などの方向を指定
+        buttonFlag = ImGui::ArrowButton(imguiButtonControlVariableData.ButtonLabel.c_str(), (ImGuiDir)imguiButtonControlVariableData.ButtonDir);//	矢印を表示する四角いボタン。上下左右などの方向を指定
         break;
 
     case IMGUI_BUTTON_TYPE::INVISIBLE_BUTTON:
-        buttonFlag = ImGui::InvisibleButton(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Size, imguiButtonControlVariableData.ImGuiEnumFlags);//	見た目を描画しないボタン。独自の見た目やクリック判定を作る土台
+        buttonFlag = ImGui::InvisibleButton(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonSize, imguiButtonControlVariableData.ButtonFlags);//	見た目を描画しないボタン。独自の見た目やクリック判定を作る土台
         break;
 
     case IMGUI_BUTTON_TYPE::CHECK_BOX:
-        buttonFlag = ImGui::Checkbox(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	チェックボックス。クリックで bool の ON/OFF を切り替える
+        buttonFlag = ImGui::Checkbox(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	チェックボックス。クリックで bool の ON/OFF を切り替える
         break;
 
     case IMGUI_BUTTON_TYPE::CHECK_BOX_FLAGS:
-        buttonFlag = ImGui::CheckboxFlags(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonBitFlag.flags, imguiButtonControlVariableData.ButtonBitFlagValue);//	ビットフラグ用チェックボックス。チェック状態に応じて指定したビットを設定・解除する
+        buttonFlag = ImGui::CheckboxFlags(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonBitFlag.flags, imguiButtonControlVariableData.ButtonBitFlagValue);//	ビットフラグ用チェックボックス。チェック状態に応じて指定したビットを設定・解除する
         break;
 
     case IMGUI_BUTTON_TYPE::RADIO_BUTTON:
-        buttonFlag = ImGui::RadioButton(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	ラジオボタン。複数候補から一つを選択する用途
+        buttonFlag = ImGui::RadioButton(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	ラジオボタン。複数候補から一つを選択する用途
         break;
 
     case IMGUI_BUTTON_TYPE::COLOR_BUTTON:
-        buttonFlag = ImGui::ColorButton(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Color, imguiButtonControlVariableData.ImGuiEnumFlags, imguiButtonControlVariableData.Size);//	色見本をボタンとして表示
+        buttonFlag = ImGui::ColorButton(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonColor, imguiButtonControlVariableData.ButtonColorEditFlags, imguiButtonControlVariableData.ButtonSize);//	色見本をボタンとして表示
         break;
 
     case IMGUI_BUTTON_TYPE::SELECTABLE:
-        buttonFlag = ImGui::Selectable(imguiButtonControlVariableData.Label.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ImGuiEnumFlags, imguiButtonControlVariableData.Size);//	選択可能な項目。選択状態に応じて背景が変わり、リスト項目などに使える
+        buttonFlag = ImGui::Selectable(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ButtonSelectableFlags, imguiButtonControlVariableData.ButtonSize);//	選択可能な項目。選択状態に応じて背景が変わり、リスト項目などに使える
         break;
 
     case IMGUI_BUTTON_TYPE::MENU_ITEM:
-        buttonFlag = ImGui::MenuItem(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.PressKeyString.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.DrawFlag);//	メニュー内の項目。選択やチェック付き項目に使う
+        buttonFlag = ImGui::MenuItem(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.PressKeyString.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ButtonDrawFlag);//	メニュー内の項目。選択やチェック付き項目に使う
         break;
 
     case IMGUI_BUTTON_TYPE::TABITEM_BUTTON:
-        buttonFlag = ImGui::TabItemButton(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.ImGuiEnumFlags);//	タブバー内に配置するボタン。タブ選択とは異なる用途にも使える
+        buttonFlag = ImGui::TabItemButton(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonTabItemFlags);//	タブバー内に配置するボタン。タブ選択とは異なる用途にも使える
         break;
 
     case IMGUI_BUTTON_TYPE::TEXT_LINK:
-        buttonFlag = ImGui::TextLink(imguiButtonControlVariableData.Label.c_str());//	リンク風の文字列ボタン。クリックされたかを取得する
+        buttonFlag = ImGui::TextLink(imguiButtonControlVariableData.ButtonLabel.c_str());//	リンク風の文字列ボタン。クリックされたかを取得する
         break;
 
     case IMGUI_BUTTON_TYPE::TEXT_LINK_OPEN_URL:
-        buttonFlag = ImGui::TextLinkOpenURL(imguiButtonControlVariableData.Label.c_str(), imguiButtonControlVariableData.Url.c_str());//	URLを開くリンク風ボタン
+        buttonFlag = ImGui::TextLinkOpenURL(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.Url.c_str());//	URLを開くリンク風ボタン
         break;
 
     default:
@@ -742,20 +751,140 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     {
         return;
     }
+    
+    // 描画できない範囲にいる場合
+    if (!IsLayoutDrawEnabled())
+    {
+        switch (imguiLayoutControlData.LayoutType)
+        {
+        // 内側のレイアウトも閉じた状態として記録
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_NODE:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_COLLAPSING_HEADER:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_TABLE:
+            mbLayoutDrawFlags.push_back(false);
+            return;
+
+        // 閉じた範囲を終了
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_POP:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_COLLAPSING_HEADER:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TABLE:
+            if (!mbLayoutDrawFlags.empty())
+            {
+                mbLayoutDrawFlags.pop_back();
+            }
+            return;
+
+        default:
+            return;
+        }
+    }
 
     switch (imguiLayoutControlData.LayoutType)
     {
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TEXT:
-        ImGui::Text(u8"");// 指定したテキストを表示
+        ImGui::Text(imguiLayoutControlData.LayoutText.c_str()); // 指定したテキストを表示
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TEXT_FORMAT:
-        ImGui::Text(u8"%d", 0);// 指定したテキストを表示(フォーマット付き)
+        switch (imguiLayoutControlData.LayoutVarable.VariableType)
+        {
+        case IMGUI_VARIABLE_TYPE::CHAR:
+        {
+            char value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToChar(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_CHAR:
+        {
+            unsigned char value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToUnsignedChar(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::SHORT:
+        {
+            short value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToShort(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_SHORT:
+        {
+            unsigned short value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToUnsignedShort(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::INT:
+        {
+            int value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToInt(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_INT:
+        {
+            unsigned int value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToUnsignedInt(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::LONG:
+        {
+            long value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToLong(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG:
+        {
+            unsigned long value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToUnsignedLong(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::LONG_LONG:
+        {
+            long long value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToLongLong(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::UNSIGNED_LONG_LONG:
+        {
+            unsigned long long value = 0;
+            imguiLayoutControlData.LayoutVarable.GetValueToUnsignedLongLong(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::FLOAT:
+        {
+            float value = 0.0f;
+            imguiLayoutControlData.LayoutVarable.GetValueToFloat(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::DOUBLE:
+        {
+            double value = 0.0;
+            imguiLayoutControlData.LayoutVarable.GetValueToDouble(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
+        {
+            long double value = 0.0;
+            imguiLayoutControlData.LayoutVarable.GetValueToLongDouble(value);
+            ImGui::Text(imguiLayoutControlData.LayoutText.c_str(), value); // フォーマット付きテキストを表示
+            break;
+        }
+        }
         break;
 
     
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SAME_LINE:
-        ImGui::SameLine(0.0f, -1.0f);// 次のUI要素を同じ行に配置
+        ImGui::SameLine(imguiLayoutControlData.LayoutWidth, imguiLayoutControlData.LayoutSpacing); // 次のUI要素を同じ行に配置
         break;
 
     
@@ -776,23 +905,23 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_INDENT:
-        ImGui::Indent(0.0f);// 描画位置を右にずらす
+        ImGui::Indent(imguiLayoutControlData.LayoutWidth); // 描画位置を右にずらす
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_UNINDENT:
-        ImGui::Unindent(0.0f);// Indent() でずらした描画位置を戻す
+        ImGui::Unindent(imguiLayoutControlData.LayoutWidth); // 描画位置を戻す
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DUMMY:
-        ImGui::Dummy(ImVec2(10.0f, 10.0f));// 指定したサイズの空白領域を作る
+        ImGui::Dummy(imguiLayoutControlData.LayoutSize); // 指定したサイズの空白領域を作る
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SET_NEXT_ITEM_WIDTH:
-        ImGui::SetNextItemWidth(200.0f);// 次に描画する入力項目などの幅を指定する
+        ImGui::SetNextItemWidth(imguiLayoutControlData.LayoutWidth); // 次の入力項目などの幅を指定
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_PUSH_ITEM_WIDTH:
-        ImGui::PushItemWidth(200.0f);// 入力項目の幅を設定する（複数項目に適用）
+        ImGui::PushItemWidth(imguiLayoutControlData.LayoutWidth); // 入力項目の幅を設定
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_ITEM_WIDTH:
@@ -804,7 +933,7 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_SET_NEXT_ITEM_OPEN:
-        ImGui::SetNextItemOpen(true, 0);// 次のツリー項目などを開いた状態に設定する
+        ImGui::SetNextItemOpen(imguiLayoutControlData.LayoutDefaultOpen, imguiLayoutControlData.LayoutCount); // 次のツリー項目の開閉状態を設定
         break;
 
     //==================================================
@@ -824,7 +953,7 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     //==================================================
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_CHILD:
-        ImGui::BeginChild("Child", ImVec2(200.0f, 100.0f), 0, 0);// 独立した子領域を作る。サイズやスクロール領域を指定できる
+        ImGui::BeginChild(imguiLayoutControlData.LayoutText.c_str(), imguiLayoutControlData.LayoutSize, imguiLayoutControlData.LayoutChildFlags, imguiLayoutControlData.LayoutWindowFlags); // 子領域を開始
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_CHILD:
@@ -836,15 +965,36 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     //==================================================
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_COLLAPSING_HEADER:
-        ImGui::CollapsingHeader("Header", 0);// クリックで開閉できる見出しを表示する
+    {
+        bool isHeaderOpen = ImGui::CollapsingHeader(imguiLayoutControlData.LayoutText.c_str(), imguiLayoutControlData.LayoutWindowFlags); // 折りたたみ可能な見出しを表示
+
+        mbLayoutDrawFlags.push_back(isHeaderOpen);
+    }
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_COLLAPSING_HEADER:
+        if (!mbLayoutDrawFlags.empty())
+        {
+            mbLayoutDrawFlags.pop_back();
+        }
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_NODE:
-        ImGui::TreeNode("Node");// ツリー項目を表示する。開いている間だけ子項目を描画できる
+    {
+        // ツリー項目を表示し、開閉状態を保存
+        bool isTreeOpen = ImGui::TreeNode(imguiLayoutControlData.LayoutText.c_str());// ツリー項目を表示
+
+        mbLayoutDrawFlags.push_back(isTreeOpen);
+    }
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_POP:
-        ImGui::TreePop();// TreeNode() で開始したツリー階層を終了する
+        if (!mbLayoutDrawFlags.empty())
+        {
+            // 開いているツリーだけ終了
+            ImGui::TreePop();
+            mbLayoutDrawFlags.pop_back();
+        }
         break;
 
     //==================================================
@@ -852,31 +1002,40 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     //==================================================
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_TABLE:
-        ImGui::BeginTable("Table", 2, 0, ImVec2(0, 0), 0.0f);// 表を開始する。列数を指定する
+    {
+        bool isTableOpen = ImGui::BeginTable(imguiLayoutControlData.LayoutText.c_str(), imguiLayoutControlData.LayoutCount, imguiLayoutControlData.LayoutTableFlags, imguiLayoutControlData.LayoutSize, imguiLayoutControlData.LayoutWidth); // 表を開始
+
+        mbLayoutDrawFlags.push_back(isTableOpen);
+    }
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_SETUP_COLUMN:
-        ImGui::TableSetupColumn("Column", 0, 0.0f, 0u);// 列の名前や幅などを設定する
+        ImGui::TableSetupColumn(imguiLayoutControlData.LayoutText.c_str(), imguiLayoutControlData.LayoutTableColumnFlags, imguiLayoutControlData.LayoutWidth, imguiLayoutControlData.LayoutUserID); // 列の設定
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_HEADERS_ROW:
-        ImGui::TableHeadersRow();// 列の見出し行を表示する
+        ImGui::TableHeadersRow(); // 列の見出し行を表示
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_NEXT_ROW:
-        ImGui::TableNextRow(0, 0.0f);// 表の次の行へ移動する
+        ImGui::TableNextRow(imguiLayoutControlData.LayoutCount, imguiLayoutControlData.LayoutMinHeight); // 次の行へ移動
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_NEXT_COLUMN:
-        ImGui::TableNextColumn();// 表の次の列へ移動する
+        ImGui::TableNextColumn(); // 次の列へ移動
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TABLE_SET_COLUMN_INDEX:
-        ImGui::TableSetColumnIndex(0);// 指定した列へ移動する
+        ImGui::TableSetColumnIndex(imguiLayoutControlData.LayoutIndex); // 指定した列へ移動
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TABLE:
-        ImGui::EndTable();// BeginTable() で開始した表を終了する
+    if (!mbLayoutDrawFlags.empty())
+    {
+        // 開始できたテーブルだけ終了
+        ImGui::EndTable();// 表を終了
+        mbLayoutDrawFlags.pop_back();
+    }
         break;
 
     //==================================================
@@ -884,21 +1043,31 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     //==================================================
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_PUSH_STYLE_VAR:
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4.0f, 4.0f));// UI 項目間の余白など、指定したスタイル値を一時的に変更する
+        ImGui::PushStyleVar(imguiLayoutControlData.LayoutStyleVar, imguiLayoutControlData.LayoutSize); // スタイル値を一時変更
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_VAR:
-        ImGui::PopStyleVar();// PushStyleVar() で変更したスタイル値を元に戻す
+        ImGui::PopStyleVar(); // スタイル値を元に戻す
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_PUSH_STYLE_COLOR:
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));// 指定した色を一時的に変更する
-            break;
+        ImGui::PushStyleColor(imguiLayoutControlData.LayoutStyleColor, imguiLayoutControlData.LayoutColor); // スタイル色を一時変更
+        break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_COLOR:
-            ImGui::PopStyleColor();// PushStyleColor() で変更した色を元に戻す
+        ImGui::PopStyleColor(); // スタイル色を元に戻す
             break;
     }
+#endif
+}
+
+// 現在のレイアウト内を描画できるか
+bool ImguiManager::IsLayoutDrawEnabled() const
+{
+#ifdef _DEBUG
+    return mbLayoutDrawFlags.empty() || mbLayoutDrawFlags.back();
+#else
+    return true;
 #endif
 }
 
@@ -917,7 +1086,8 @@ void ImguiManager::DrawGroupImgui(IMGUI_GROUP_DATA imguiGroupData)
         // imguiControlVariable描画
         for (int i = 0; i < imguiGroupData.GetImguiControlVariableDatas()->size(); i++)
         {
-            this->DrawControlVariableImgui((*imguiGroupData.GetImguiControlVariableDatas())[i]);
+            // TODO:_ 分岐
+            this->DrawControlVariableImgui((*imguiGroupData.GetImguiControlVariableDatas())[i].ImguiVariableControl);
         }
 
         // 子グループ描画
@@ -1098,6 +1268,53 @@ IMGUI_VARIABLE_INTEGER_TYPE ImguiManager::ChangeVariableTypeToVariableIntegerTyp
         default:
             return IMGUI_VARIABLE_INTEGER_TYPE::NONE;
     }
+}
+
+// ゲーム画面描画用変数初期化
+void ImguiManager::InitDrawGameDisplayToImguiVariable()
+{
+    D3D11_TEXTURE2D_DESC desc{};
+    ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
+    ID3D11Device* device = static_cast<ID3D11Device*>(const_cast<void*>(GetUseDirect3D11Device()));
+
+    if (backBuffer && device)
+    {
+        backBuffer->GetDesc(&desc);
+
+        // コピー先はシェーダーから読み取れるテクスチャ
+        desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        desc.MiscFlags = 0;
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.CPUAccessFlags = 0;
+
+        if (SUCCEEDED(device->CreateTexture2D(&desc, nullptr, &mdCopyTexture)))
+        {
+            device->CreateShaderResourceView(mdCopyTexture, nullptr, &mbCopySRV);
+        }
+    }
+}
+
+// ゲーム画面描画
+void ImguiManager::DrawGameDisplayToImgui()
+{
+    // TODO:_ ドッキングしてもエラー出ないようにする
+    // TODO:_ ドッキングしたら描画されている画面サイズ変更するようにする
+
+    ImVec2 displaySize = ImVec2(Master::mpDxLibDataManager->GetDisplaySize().GetX(), Master::mpDxLibDataManager->GetDisplaySize().GetY());
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+    ImGui::SetNextWindowSize(displaySize, ImGuiCond_Once);// 画面サイズを設定
+    ImGui::Begin("DxLibDraw", nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+    ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
+    ID3D11DeviceContext* context = static_cast<ID3D11DeviceContext*>(const_cast<void*>(GetUseDirect3D11DeviceContext()));
+
+    if (context && backBuffer && mdCopyTexture && mbCopySRV)
+    {
+        context->CopyResource(mdCopyTexture, backBuffer);
+
+        // TODO:_ 個々のデフォルトで変更できるようにする
+        ImGui::Image((ImTextureID)mbCopySRV, displaySize);
+    }
+    ImGui::End();
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp

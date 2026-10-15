@@ -46,7 +46,7 @@ void GameObject::SetActiveBit(bool flag)
     }
     else
     {
-        this->mcBitFlag &= ~(1 << GOBF::GOBF_ActiveFlag);
+        this->mcBitFlag &= ~GOBF::GOBF_ActiveFlag;
     }
 }
 
@@ -58,7 +58,7 @@ void GameObject::SetStopBit(bool flag)
     }
     else
     {
-        this->mcBitFlag &= ~(1 << GOBF::GOBF_StopFlag);
+        this->mcBitFlag &= ~GOBF::GOBF_StopFlag;
     }
 }
 
@@ -70,7 +70,7 @@ void GameObject::SetDrawBit(bool flag)
     }
     else
     {
-        this->mcBitFlag &= ~(1 << GOBF::GOBF_DrawFlag);
+        this->mcBitFlag &= ~GOBF::GOBF_DrawFlag;
     }
 }
 
