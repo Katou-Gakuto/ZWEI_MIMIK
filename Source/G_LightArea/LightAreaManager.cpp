@@ -150,6 +150,13 @@ int LightAreaManager::CheckInLightArea(const VECTOR2D &pos, std::vector<int> &ou
     for (uint16_t i = 0; i < this->mnDeactivateStartIndex; i++)
     {
         // 
+        if (this->mlNode[i]->GetOffLight())
+        {
+            // 
+            continue;
+        }
+
+        // 
         if (this->mlNode[i]->CheckInArea(tempPoint))
         {
             // 

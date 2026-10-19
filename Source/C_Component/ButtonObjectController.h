@@ -8,12 +8,19 @@
 
 #include "../Y_Tool/VECTOR.h"
 
+class Quadrangle2D;
+
 // 
 class ButtonObjectController : public BaseComponent
 {
 public:
     // 
-    ButtonObjectController(GameObject *myObject, const VECTOR2D &localLeftUp, const VECTOR2D &localRightDown);
+    ButtonObjectController(
+        GameObject *myObject,
+        bool onePush,
+        uint32_t onFrameCount,
+        const VECTOR2D &center,
+        const VECTOR2D &blockSize);
 
     // 
     ~ButtonObjectController() override;
@@ -28,13 +35,10 @@ public:
     int Draw() override;
 
     // 現在このボタンはONの状態なのか
-    bool CheckButtonSignal() const;
+    bool GetNowState() const;
 
     // 現在このボタンの上にプレイヤーがいるのか
     bool GetLightSide() const;
-
-    // 現在このボタンの上にプレイヤーがいるのか
-    bool CheckOnPlayer() const;
 
 private:
     // 現在スイッチがONになっているか
@@ -49,22 +53,33 @@ private:
     // 現在スイッチは光域に位置しているのか
     bool mbLightSide;
 
+    // 
+    bool mbOnPlayer;
+
     // ここが0以外の値になっていたらこのフレーム分だけONになり、後は自動でOFFになるという設定
     uint32_t mnOnFrameCount;
 
-    // 現在ONになってから何フレーム経ったかを記憶する変数
+    // 現在の状態になってから何フレーム経ったかを記憶する変数
     uint32_t mnNowFrameCount;
 
     // 
-    VECTOR2D mvLeftUp;
+    VECTOR2D mvCenterPos;
 
     // 
-    VECTOR2D mvRightDown;
+    VECTOR2D mvBlockSize;
 
     // 
-    CollisionHandle mbBody;
+    CollisionHandle mdBody;
+
+    // 現在このボタンの上にプレイヤーがいるのか
+    bool CheckOnPlayer() const;
+
+    // 
+    void UpdateNowState();
 
     // 
     void CheckLightSide();
 
+    // 
+    Quadrangle2D *GetBody() const;
 };

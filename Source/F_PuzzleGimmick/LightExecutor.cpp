@@ -43,7 +43,7 @@ LightExecutor::LightExecutor(
     BaseGimmickExecutor(param)
 {
     // 
-    this->SetLightLineCount(lineCount);
+    this->SetLightLineCount(this->mnLineCount);
 
     // 
     this->SetLength(this->mfLength);
@@ -52,10 +52,10 @@ LightExecutor::LightExecutor(
     this->SetBaseAngle(this->mfBaseAngle);
 
     // 
-    this->SetLightAngle(lightAngle);
+    this->SetLightAngle(this->mfLightAngle);
 
     // 
-    this->SetFinal2Start(final2start);
+    this->SetFinal2Start(this->mbFinal2Start);
 
     // 
     this->UpdateLightParam();
@@ -128,6 +128,13 @@ int LightExecutor::LateUpdate(bool triggerSignal)
         this->GetMyLightArea()->OffLight();
     }
 
+    // 
+    return 0;
+}
+
+// “–‚½‚è”»’è‚É‚æ‚éƒMƒ~ƒbƒN‚Ì•Ï‰»‚É‘Î‰ž‚³‚¹‚éŠÖ”
+int LightExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
+{
     // 
     return 0;
 }
@@ -501,7 +508,7 @@ bool LightExecutor::UpdateLightParam()
             this->mnLineCount,
             this->mfBaseAngle,
             this->mfLightAngle,
-            this->mbParamUpdate);
+            this->mbFinal2Start);
 
         // 
         this->mbParamUpdate = false;

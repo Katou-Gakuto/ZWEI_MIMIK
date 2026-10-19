@@ -112,6 +112,8 @@ public:
     void SetActiveFlag(bool active)                         { this->mbActiveFlag = active; }
     void OnDeleteFlag()                                     { this->mbDeleteFlag = true; }
     void SetPenetrate(bool flag)                            { this->mbPenetrate = flag; }
+    void SetHitMove(bool flag)                              { this->mbHitMove = flag; }
+    void SetMoveLate(float late)                            { this->mfMoveLate = late; }
 
     GameObject *GetMyObject()                       const   { return this->mpMyObject; }
     GameObject2D *GetMyObject2D() const;

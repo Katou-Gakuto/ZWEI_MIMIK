@@ -39,8 +39,10 @@ int TestScene::Create()
 
 	GameObject2D *currentObject = nullptr;
 
+	/*
 	this->mpGameObjectManager->Add(Master::mpPlayerLight->GetMyObject());
 	this->mpGameObjectManager->Add(Master::mpPlayerShadow->GetMyObject());
+	*/
 
 	const VECTOR2D tempBlockSize = VECTOR2D(150.0f, 150.0f);
 	const VECTOR2D tempCenterStart = (tempBlockSize * 0.5f) + (tempBlockSize * 0.5f);
@@ -180,9 +182,6 @@ int TestScene::Create()
 
 int TestScene::Initialize()
 {
-	// 
-	Master::mpPlayerLight->InitPosition(VECTOR2D(200.0f, 200.0f));
-	Master::mpPlayerShadow->InitPosition(VECTOR2D(300.0f, 200.0f));
 
 	this->mpGameObjectManager->Initialize();
 	return 0;
@@ -192,8 +191,6 @@ int TestScene::Finalize()
 {
 	if (this->mpGameObjectManager != nullptr)
 	{
-		this->mpGameObjectManager->IsolateTarget(Master::mpPlayerLight->GetMyObject());
-		this->mpGameObjectManager->IsolateTarget(Master::mpPlayerShadow->GetMyObject());
 		this->mpGameObjectManager->Finalize();
 	}
 	if (this->mpBaseCollision2DManager != nullptr)

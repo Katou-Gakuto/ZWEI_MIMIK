@@ -10,8 +10,17 @@ enum SceneTag : unsigned char
     ST_StageSelect,
     ST_Option,
 
-    ST_Test,
     ST_Puzzle1_1,
+    ST_Puzzle1_2,
+    ST_Puzzle1_3,
+    ST_Puzzle1_4,
+    ST_Puzzle1_5,
+    ST_Puzzle1_6,
+    ST_Puzzle1_7,
+    ST_Puzzle1_8,
+    ST_Puzzle1_9,
+
+    ST_Test,
 
     ST_Max,
 };

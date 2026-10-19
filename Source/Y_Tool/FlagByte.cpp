@@ -46,6 +46,19 @@ FlagByte::FlagByte() :
 
 }
 
+FlagByte::FlagByte(bool bit0, bool bit1, bool bit2, bool bit3, bool bit4, bool bit5, bool bit6, bool bit7) :
+    mcOneByte(0x00)
+{
+    (*this)[0] = bit0;
+    (*this)[1] = bit1;
+    (*this)[2] = bit2;
+    (*this)[3] = bit3;
+    (*this)[4] = bit4;
+    (*this)[5] = bit5;
+    (*this)[6] = bit6;
+    (*this)[7] = bit7;
+}
+
 FlagByte::FlagByte(unsigned char bitData) :
     mcOneByte(bitData)
 {

@@ -15,6 +15,9 @@ protected:
 	// 
 	VECTOR2D mvBlockSize;
 
+	// 
+	GimmickObjectController *mpTempGimmickPtr;
+
 public:
 	WallObject(bool gimmick, const VECTOR2D &leftUp, const VECTOR2D &rightDown);
 	virtual ~WallObject() override;

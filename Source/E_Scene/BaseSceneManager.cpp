@@ -45,6 +45,13 @@ BaseSceneManager::~BaseSceneManager()
     {
         if (this->mpSceneBox[i] != nullptr)
         {
+            this->mpSceneBox[i]->BaseFinalize();
+        }
+    }
+    for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
+    {
+        if (this->mpSceneBox[i] != nullptr)
+        {
             delete this->mpSceneBox[i];
             this->mpSceneBox[i] = nullptr;
         }
@@ -64,8 +71,18 @@ int BaseSceneManager::Create()
         this->mpSceneBox[SceneTag::ST_Title] = new TitleScene();
         this->mpSceneBox[SceneTag::ST_StageSelect] = new StageSelectScene();
         this->mpSceneBox[SceneTag::ST_Option] = new OptionScene();
-        this->mpSceneBox[SceneTag::ST_Test] = new TestScene();
+
         this->mpSceneBox[SceneTag::ST_Puzzle1_1] = new PuzzleScene1_1();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_2] = new PuzzleScene1_2();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_3] = new PuzzleScene1_3();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_4] = new PuzzleScene1_4();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_5] = new PuzzleScene1_5();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_6] = new PuzzleScene1_6();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_7] = new PuzzleScene1_7();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_8] = new PuzzleScene1_8();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_9] = new PuzzleScene1_9();
+
+        this->mpSceneBox[SceneTag::ST_Test] = new TestScene();
 
         // シーンで共有するデータ
         this->mlUniqueDataList.Add(new SceneTag, CSDN::CSDN_SceneTag_BattleMode);
@@ -226,6 +243,21 @@ BaseScene *BaseSceneManager::SearchSceneOld() const
     }
     return temp;
 }
+
+BaseScene *BaseSceneManager::SearchScene(int sceneTag)const
+{
+    // 
+    if (sceneTag < 0 ||
+        SceneTag::ST_Max <= sceneTag)
+    {
+        // 
+        return nullptr;
+    }
+
+    // 
+    return this->mpSceneBox[sceneTag];
+}
+
 
 void *BaseSceneManager::GetCSD(CSDN number)
 {

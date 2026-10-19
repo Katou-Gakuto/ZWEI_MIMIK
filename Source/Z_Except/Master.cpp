@@ -16,6 +16,7 @@
 #include "../C_Component/GoalObjectController.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
+#include "../E_Scene/BasePuzzleScene.h"
 #include "../T_Model/DXModelAnim.h"
 #include "../Z_Except/CursorMoveSupporter.h"
 #include "../Z_Except/ResourceManager.h"
@@ -35,14 +36,33 @@ DxLibDataManager* Master::mpDxLibDataManager = nullptr;
 ImguiManager* Master::mpImguiManager = nullptr;
 #endif
 
-Player* Master::mpPlayerLight = nullptr;
-Player* Master::mpPlayerShadow = nullptr;
-GoalObjectController *Master::mpGoalLight = nullptr;
-GoalObjectController *Master::mpGoalShadow = nullptr;
-
 LightAreaManager* Master::mpLightManager = nullptr;
 
 CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
+
+// 
+Player *Master::GetPlayerController(int playerNumber)
+{
+    auto autoScene = mpBaseSceneManager->SearchSceneAuto();
+    if (autoScene->GetTag() < SceneTag::ST_Puzzle1_1)
+    {
+        return nullptr;
+    }
+
+    return (static_cast<BasePuzzleScene *>(autoScene))->GetPlayer(playerNumber);
+}
+
+// 
+GoalObjectController *Master::GetGoalController(bool lightSide)
+{
+    auto autoScene = mpBaseSceneManager->SearchSceneAuto();
+    if (autoScene->GetTag() < SceneTag::ST_Puzzle1_1)
+    {
+        return nullptr;
+    }
+
+    return (static_cast<BasePuzzleScene *>(autoScene))->GetGoal(lightSide);
+}
 
 // DxLibÇÃëOÇÃèâä˙âª
 int Master::DxInitPreInitialize()
@@ -85,23 +105,6 @@ int Master::Initialize()
     mpImguiManager = new ImguiManager(false);
     mpImguiManager->Initilize();
 #endif
-    // 
-    GameObject *playerObjectLight = new PlayerObject(1);
-    playerObjectLight->Create();
-    mpPlayerLight = static_cast<PlayerObject *>(playerObjectLight)->GetPlayerComponent();
-
-    GameObject *playerObjectShadow = new PlayerObject(2);
-    playerObjectShadow->Create();
-    mpPlayerShadow = static_cast<PlayerObject *>(playerObjectShadow)->GetPlayerComponent();
-
-    GameObject *goalObjectLight = new GoalObject(true);
-    goalObjectLight->Create();
-    mpGoalLight = static_cast<GoalObject *>(goalObjectLight)->GetGoalController();
-
-    GameObject *goalObjectShadow = new GoalObject(false);
-    goalObjectShadow->Create();
-    mpGoalShadow = static_cast<GoalObject *>(goalObjectShadow)->GetGoalController();
-
 
     // ÉâÉXÉgÇ…èâä˙âªÇµÇƒ
     mpDxLibDataManager->Initialize();
@@ -113,21 +116,12 @@ int Master::Finalize()
 {
     mpBaseSceneManager->Finalize();
 
-    GameObject *playerObjectLight = mpPlayerLight->GetMyObject();
-    GameObject *playerObjectShadow = mpPlayerShadow->GetMyObject();
-    GameObject *goalObjectLight = mpGoalLight->GetMyObject();
-    GameObject *goalObjectShadow= mpGoalShadow->GetMyObject();
-
     // 
     mpImguiManager->Finalize();
 
     mpDxLibDataManager->Finalize();
 
     // çÌèú
-    delete playerObjectLight;
-    delete playerObjectShadow;
-    delete goalObjectLight;
-    delete goalObjectShadow;
     delete mpImguiManager;
     delete mpBaseSceneManager;
     delete mpEndManager;

@@ -45,7 +45,26 @@ public:
     // 
     static SceneTag StageNum2SceneTag(unsigned long stageNum);
 
+    // 
+    Player *GetPlayer(int playerNumber)const;
+
+    // 
+    GoalObjectController *GetGoal(bool lightSide)const;
+
+
 private:
+    // 
+    Player *mpPlayerLight;
+
+    // 
+    Player *mpPlayerShadow;
+
+    // 
+    GoalObjectController *mpGoalLight;
+
+    // 
+    GoalObjectController *mpGoalShadow;
+
     // 
     bool mbPouse;
 
@@ -57,4 +76,7 @@ private:
 
     // 
     void AddMasterObjects();
+
+    // 
+    int PouseUpdate();
 };

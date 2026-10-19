@@ -9,7 +9,7 @@
 Capsule3D::Capsule3D() :
     mvCenterLineStartPos(VECTOR3D::GetZero()),
     mvCenterLineEndPos(VECTOR3D::GetZero()),
-    mfCenterLineRadiusSqrt(0.0f),
+    mfCenterLineRadius(0.0f),
     BaseCollision3D(nullptr, CollisionType::CollisionType_Capsule3D, CollisionTag_Checker, CollisionNorm::CollisionNorm_Out, true, false, 0.0f)
 {
 
@@ -21,7 +21,7 @@ Capsule3D::Capsule3D(
     bool penetrate, bool hitMove, float moveLate) :
     mvCenterLineStartPos(startPos),
     mvCenterLineEndPos(endPos),
-    mfCenterLineRadiusSqrt(radius),
+    mfCenterLineRadius(radius),
     BaseCollision3D(myObject, CollisionType::CollisionType_Capsule3D, tag, normNum, penetrate, hitMove, moveLate)
 {
     this->SetBaseParamMySelf();
@@ -190,10 +190,9 @@ int Capsule3D::SetBaseParamMySelf()
     if (this->GetBaseRadiusUpdateFlag())
     {
         // カプセルを包む円の半径を取得する
-        float radiusNoSqrt =
-            ((this->mvCenterLineEndPos - this->mvCenterLineStartPos) * 0.5f).MagnitudeNoSqrt() +
-            (this->mfCenterLineRadiusSqrt * this->mfCenterLineRadiusSqrt);
-        this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+        float radius =
+            ((this->mvCenterLineEndPos - this->mvCenterLineStartPos) * 0.5f).Magnitude() + (this->mfCenterLineRadius);
+        this->SetBaseRadius(radius);
 
         // フラグを整える
         this->SetBaseRadiusUpdateFlag(false);
@@ -206,43 +205,43 @@ int Capsule3D::GetAABB(AABB3D &out)
 {
     if (this->mvCenterLineStartPos.GetX() < this->mvCenterLineEndPos.GetX())
     {
-        out.mvMinPos.SetX(this->mvCenterLineStartPos.GetX() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetX(this->mvCenterLineEndPos.GetX() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetX(this->mvCenterLineStartPos.GetX() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetX(this->mvCenterLineEndPos.GetX() + this->mfCenterLineRadius);
     }
     else
     {
-        out.mvMinPos.SetX(this->mvCenterLineEndPos.GetX() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetX(this->mvCenterLineStartPos.GetX() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetX(this->mvCenterLineEndPos.GetX() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetX(this->mvCenterLineStartPos.GetX() + this->mfCenterLineRadius);
     }
     if (this->mvCenterLineStartPos.GetY() < this->mvCenterLineEndPos.GetY())
     {
-        out.mvMinPos.SetY(this->mvCenterLineStartPos.GetY() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetY(this->mvCenterLineEndPos.GetY() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetY(this->mvCenterLineStartPos.GetY() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetY(this->mvCenterLineEndPos.GetY() + this->mfCenterLineRadius);
     }
     else
     {
-        out.mvMinPos.SetY(this->mvCenterLineEndPos.GetY() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetY(this->mvCenterLineStartPos.GetY() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetY(this->mvCenterLineEndPos.GetY() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetY(this->mvCenterLineStartPos.GetY() + this->mfCenterLineRadius);
     }
     if (this->mvCenterLineStartPos.GetZ() < this->mvCenterLineEndPos.GetZ())
     {
-        out.mvMinPos.SetZ(this->mvCenterLineStartPos.GetZ() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetZ(this->mvCenterLineEndPos.GetZ() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetZ(this->mvCenterLineStartPos.GetZ() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetZ(this->mvCenterLineEndPos.GetZ() + this->mfCenterLineRadius);
     }
     else
     {
-        out.mvMinPos.SetZ(this->mvCenterLineEndPos.GetZ() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetZ(this->mvCenterLineStartPos.GetZ() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetZ(this->mvCenterLineEndPos.GetZ() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetZ(this->mvCenterLineStartPos.GetZ() + this->mfCenterLineRadius);
     }
     out.mvMoveVec = this->GetMoveVec();
     return 0;
 }
 
-void Capsule3D::SetShapeParameter(const VECTOR3D &startPos, const VECTOR3D &endPos, float radiusNoSqrt)
+void Capsule3D::SetShapeParameter(const VECTOR3D &startPos, const VECTOR3D &endPos, float radius)
 {
     this->mvCenterLineStartPos = startPos;
     this->mvCenterLineEndPos = endPos;
-    this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+    this->SetBaseRadius(radius);
 
     // 値の変更があったことを記憶しておく
     this->SetBasePosUpdateFlag(true);

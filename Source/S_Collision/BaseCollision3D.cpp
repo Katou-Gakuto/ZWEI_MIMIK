@@ -10,7 +10,7 @@ BaseCollision3D::BaseCollision3D(
     GameObject *object, CollisionType type, CollisionTag tag, CollisionNorm normNum,
     bool penetrate, bool hitMove, float moveLate) :
     mvBasePos(VECTOR3D::GetZero()),
-    mfBaseRadiusNoSqrt(0.0f),
+    mfBaseRadius(0.0f),
     mbBasePosUpdateFlag(true),
     mbBaseRadiusUpdateFlag(true),
     mvMoveVec(VECTOR3D::GetZero()),

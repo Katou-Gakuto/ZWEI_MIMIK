@@ -18,7 +18,7 @@ Circle2D::Circle2D(
     BaseCollision2D(myObject, CollisionType::CollisionType_Circle2D, tag, normNum, penetrate, hitMove, moveLate)
 {
     this->SetBasePos(pos);
-    this->SetBaseRadiusSqrt(radiusSqrt);
+    this->SetBaseRadius(radiusSqrt);
 }
 
 Circle2D::~Circle2D()
@@ -49,93 +49,162 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
     if (this == result.mpCollisionA)
     {
         VECTOR2D myMoveVec = this->GetMoveVec();
-        if (result.mpCollisionB->GetCollisionType() == CollisionType::CollisionType_Quadrangle2D)
+        if (result.mpCollisionB->GetCollisionType() == CollisionType::CollisionType_Circle2D)
         {
-            VECTOR2D sideNormVec = (result.mvRepulsionVecA).Normalize();
+            VECTOR2D sideNormVec = result.mvRepulsionVecA.Normalize();
+
             if (1.0f < moveLate)
             {
                 // 自分じゃない方の当たり判定の移動ベクトルを取得する
-                VECTOR2D targetMoveVec = static_cast<Quadrangle2D *>(result.mpCollisionB)->GetMoveVec();
+                VECTOR2D targetMoveVec = static_cast<Circle2D *>(result.mpCollisionB)->GetMoveVec();
 
-                // スライドの進行ベクトルを取得
+                // スライドの進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルにスライドに進行ベクトルと、相手の移動ベクトルを加えて、新しい移動の進行ベクトルを取得する
+                // 新しい移動の進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + slideVec + (targetMoveVec * (moveLate - 1.0f));
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
             {
-                // 壁ずり移動の進行ベクトル保持する変数
+                // 壁ずり移動の進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルから壁の法線成分を抜いた新しい進行ベクトルを取得する
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + (slideVec * moveLate);
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                }
+            }
+        }
+        else if (result.mpCollisionB->GetCollisionType() == CollisionType::CollisionType_Quadrangle2D)
+        {
+            VECTOR2D sideNormVec = result.mvRepulsionVecA.Normalize();
+
+            // 円と四角形の衝突による位置補正量を取得する
+            VECTOR2D correctionVec = result.mvFloatBox;
+
+            if (1.0f < moveLate)
+            {
+                // 自分じゃない方の当たり判定の移動ベクトルを取得する
+                VECTOR2D targetMoveVec =  static_cast<Quadrangle2D *>(result.mpCollisionB)->GetMoveVec();
+
+                // スライドの進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
+
+                // 新しい移動の進行ベクトルを取得する
+                VECTOR2D newMoveVec = myMoveVec + slideVec + (targetMoveVec * (moveLate - 1.0f));
+
+                // 位置補正量を移動ベクトルに反映する
+                newMoveVec += correctionVec;
+
+                // 自身の移動ベクトルを更新する
+                this->SetMoveVec(newMoveVec);
+
+                if (this->GetMyObject2D() != nullptr)
+                {
+                    // オブジェクトの移動ベクトルを更新する
+                    this->GetMyObject2D()->SetMoveVec(newMoveVec);
+
+                    // オブジェクトの当たり判定全ての移動ベクトルを更新する
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                }
+            }
+            else
+            {
+                // 壁ずり移動の進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
+
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
+                VECTOR2D newMoveVec = myMoveVec + (slideVec * moveLate);
+
+                // 位置補正量を移動ベクトルに反映する
+                newMoveVec += correctionVec;
+
+                // 自身の移動ベクトルを更新する
+                this->SetMoveVec(newMoveVec);
+
+                if (this->GetMyObject2D() != nullptr)
+                {
+                    // オブジェクトの移動ベクトルを更新する
+                    this->GetMyObject2D()->SetMoveVec(newMoveVec);
+
+                    // オブジェクトの当たり判定全ての移動ベクトルを更新する
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }
         else if (result.mpCollisionB->GetCollisionType() == CollisionType::CollisionType_Ray2D)
         {
-            VECTOR2D sideNormVec = (result.mvRepulsionVecA).Normalize();
+            VECTOR2D sideNormVec = result.mvRepulsionVecA.Normalize();
+
             if (1.0f < moveLate)
             {
                 // 自分じゃない方の当たり判定の移動ベクトルを取得する
                 VECTOR2D targetMoveVec = static_cast<Ray2D *>(result.mpCollisionB)->GetMoveVec();
 
-                // スライドの進行ベクトルを取得
+                // スライドの進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルにスライドに進行ベクトルと、相手の移動ベクトルを加えて、新しい移動の進行ベクトルを取得する
+                // 新しい移動の進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + slideVec + (targetMoveVec * (moveLate - 1.0f));
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
             {
-                // 壁ずり移動の進行ベクトル保持する変数
+                // 壁ずり移動の進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルから壁の法線成分を抜いた新しい進行ベクトルを取得する
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + (slideVec * moveLate);
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }
@@ -143,49 +212,110 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
     else if (this == result.mpCollisionB)
     {
         VECTOR2D myMoveVec = this->GetMoveVec();
-        if (result.mpCollisionA->GetCollisionType() == CollisionType::CollisionType_Quadrangle2D)
+        if (result.mpCollisionA->GetCollisionType() == CollisionType::CollisionType_Circle2D)
+        {
+            VECTOR2D sideNormVec = result.mvRepulsionVecB.Normalize();
+            if (1.0f < moveLate)
+            {
+                // 自分じゃない方の当たり判定の移動ベクトルを取得する
+                VECTOR2D targetMoveVec = static_cast<Circle2D *>(result.mpCollisionA)->GetMoveVec();
+
+                // スライドの進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
+
+                // 新しい移動の進行ベクトルを取得する
+                VECTOR2D newMoveVec = myMoveVec + slideVec + (targetMoveVec * (moveLate - 1.0f));
+
+                // 自身の移動ベクトルを更新する
+                this->SetMoveVec(newMoveVec);
+
+                if (this->GetMyObject2D() != nullptr)
+                {
+                    // オブジェクトの移動ベクトルを更新する
+                    this->GetMyObject2D()->SetMoveVec(newMoveVec);
+
+                    // オブジェクトの当たり判定全ての移動ベクトルを更新する
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                }
+            }
+            else
+            {
+                // 壁ずり移動の進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
+
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
+                VECTOR2D newMoveVec = myMoveVec + (slideVec * moveLate);
+
+                // 自身の移動ベクトルを更新する
+                this->SetMoveVec(newMoveVec);
+
+                if (this->GetMyObject2D() != nullptr)
+                {
+                    // オブジェクトの移動ベクトルを更新する
+                    this->GetMyObject2D()->SetMoveVec(newMoveVec);
+
+                    // オブジェクトの当たり判定全ての移動ベクトルを更新する
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                }
+            }
+        }
+        else if (result.mpCollisionA->GetCollisionType() == CollisionType::CollisionType_Quadrangle2D)
         {
             VECTOR2D sideNormVec = result.mvRepulsionVecB.Normalize();
 
+            // 円と四角形の衝突による位置補正量を取得する
+            VECTOR2D correctionVec = result.mvFloatBox;
             if (1.0f < moveLate)
             {
                 // 自分じゃない方の当たり判定の移動ベクトルを取得する
                 VECTOR2D targetMoveVec = static_cast<Quadrangle2D *>(result.mpCollisionA)->GetMoveVec();
 
-                // スライドの進行ベクトルを取得
+                // スライドの進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルにスライドに進行ベクトルと、相手の移動ベクトルを加えて、新しい移動の進行ベクトルを取得する
+                // 新しい移動の進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + slideVec + (targetMoveVec * (moveLate - 1.0f));
+
+                // 位置補正量を移動ベクトルに反映する
+                newMoveVec += correctionVec;
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
             {
-                // 壁ずり移動の進行ベクトル保持する変数
+                // 壁ずり移動の進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルから壁の法線成分を抜いた新しい進行ベクトルを取得する
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + (slideVec * moveLate);
+
+                // 位置補正量を移動ベクトルに反映する
+                newMoveVec += correctionVec;
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }
@@ -198,40 +328,44 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                 // 自分じゃない方の当たり判定の移動ベクトルを取得する
                 VECTOR2D targetMoveVec = static_cast<Ray2D *>(result.mpCollisionA)->GetMoveVec();
 
-                // スライドの進行ベクトルを取得
+                // スライドの進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルにスライドに進行ベクトルと、相手の移動ベクトルを加えて、新しい移動の進行ベクトルを取得する
+                // 新しい移動の進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + slideVec + (targetMoveVec * (moveLate - 1.0f));
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
             {
-                // 壁ずり移動の進行ベクトル保持する変数
+                // 壁ずり移動の進行ベクトルを取得する
                 VECTOR2D slideVec = VECTOR2D::GetSlide(myMoveVec, sideNormVec);
 
-                // 現在の移動の進行ベクトルから壁の法線成分を抜いた新しい進行ベクトルを取得する
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
                 VECTOR2D newMoveVec = myMoveVec + (slideVec * moveLate);
 
                 // 自身の移動ベクトルを更新する
                 this->SetMoveVec(newMoveVec);
+
                 if (this->GetMyObject2D() != nullptr)
                 {
                     // オブジェクトの移動ベクトルを更新する
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()
+                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }
@@ -258,8 +392,8 @@ int Circle2D::GetAABB(AABB2D &out)
     return 0;
 }
 
-void Circle2D::SetShapeParameter(const VECTOR2D &pos, float radiusNoSqrt)
+void Circle2D::SetShapeParameter(const VECTOR2D &pos, float radius)
 {
     this->SetBasePos(pos);
-    this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+    this->SetBaseRadius(radius);
 }

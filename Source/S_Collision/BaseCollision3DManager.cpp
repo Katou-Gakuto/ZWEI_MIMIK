@@ -17,8 +17,11 @@ CollisionCheckResult3D calcRayInfCilinder(
     const VECTOR3D &rayVec,
     const VECTOR3D &centerLinePos1,
     const VECTOR3D &centerLinePos2,
-    float radiusNoSqrt)
+    float radius)
 {
+    // 
+    float radiusNoSqrt = radius * radius;
+
     // 返り値
     CollisionCheckResult3D temp = GetCollisionCheckResult3DZero();
 
@@ -199,10 +202,10 @@ bool BaseCollision3DManager::CheckHitBaseCollision3DToBaseCollision3D(BaseCollis
     VECTOR3D distanceVec = collision3DB->GetMovedPos(collision3DB->GetBasePos()) - collision3DA->GetMovedPos(collision3DA->GetBasePos());
 
     // 二つの円の半径を取得
-    float baseRadiusNoSqrt = collision3DA->GetBaseRadiusNoSqrt() + collision3DB->GetBaseRadiusNoSqrt();
+    float baseRadius = collision3DA->GetBaseRadius() + collision3DB->GetBaseRadius();
 
     // 進行ベクトルと二つの円の半径を比較し、進行ベクトルの方が小さかったらfalseを返す
-    if (distanceVec.MagnitudeNoSqrt() <= baseRadiusNoSqrt)
+    if (distanceVec.MagnitudeNoSqrt() <= baseRadius * baseRadius)
     {
         return true;
     }
@@ -675,7 +678,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitPoint3DToCapsule3D(Point3
         if (startToNewr.MagnitudeNoSqrt() <= startToEnd.MagnitudeNoSqrt())
         {
             // カプセルのセンターベクトル内に線上最近点があったということで、作業用のスフィアの値を設定する
-            capsuleCircle2D.SetShapeParameter(newrPos, capsule3D->GetBaseRadiusNoSqrt());
+            capsuleCircle2D.SetShapeParameter(newrPos, capsule3D->GetBaseRadius());
             temp = BaseCollision3DManager::CheckHitPoint3DToSphere3D(point3D, &capsuleCircle2D);
             if (0 <= temp.mnResultParam)
             {
@@ -692,7 +695,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitPoint3DToCapsule3D(Point3
         else
         {
             // カプセルのセンターベクトル内に線上最近点はなかったということで、+方向の端点とスフィアで当たり判定を計算する
-            capsuleCircle2D.SetShapeParameter(capsule3D->GetMovedPos(capsule3D->GetEndPos()), capsule3D->GetBaseRadiusNoSqrt());
+            capsuleCircle2D.SetShapeParameter(capsule3D->GetMovedPos(capsule3D->GetEndPos()), capsule3D->GetBaseRadius());
             temp = BaseCollision3DManager::CheckHitPoint3DToSphere3D(point3D, &capsuleCircle2D);
             if (0 <= temp.mnResultParam)
             {
@@ -936,7 +939,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToSphere3D(Sphere
     CollisionCheckResult3D temp = GetCollisionCheckResult3DZero();
 
     // 二つの円の半径を取得
-    float baseRadiusNoSqrt = sphere3Da->GetBaseRadiusNoSqrt() + sphere3Db->GetBaseRadiusNoSqrt();
+    float baseRadius = sphere3Da->GetBaseRadius() + sphere3Db->GetBaseRadius();
 
     VECTOR3D movedSpherePosA = sphere3Da->GetMovedPos(sphere3Da->GetBasePos());
     VECTOR3D movedSpherePosB = sphere3Db->GetMovedPos(sphere3Db->GetBasePos());
@@ -945,7 +948,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToSphere3D(Sphere
     VECTOR3D distanceVec = movedSpherePosB - movedSpherePosA;
 
     // 二つの円の半径と進行ベクトルを比較し、二つの円の半径のほうが小さかったらfalseを返す
-    if (distanceVec.MagnitudeNoSqrt() <= baseRadiusNoSqrt)
+    if (distanceVec.MagnitudeNoSqrt() <= baseRadius * baseRadius)
     {
         temp = GetCollisionCheckResult3D(
             sphere3Da,
@@ -1004,7 +1007,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToCapsule3D(Spher
             if (startToNewr.MagnitudeNoSqrt() <= startToEnd.MagnitudeNoSqrt())
             {
                 // カプセルのセンターベクトル内に線上最近点があったということで、作業用のスフィアの値を設定する
-                capsuleCircle2D.SetShapeParameter(newrPos, capsule3D->GetBaseRadiusNoSqrt());
+                capsuleCircle2D.SetShapeParameter(newrPos, capsule3D->GetBaseRadius());
                 temp = BaseCollision3DManager::CheckHitSphere3DToSphere3D(sphere3D, &capsuleCircle2D);
                 if (0 <= temp.mnResultParam)
                 {
@@ -1026,7 +1029,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToCapsule3D(Spher
             else
             {
                 // カプセルのセンターベクトル内に線上最近点はなかったということで、+方向の端点とスフィアで当たり判定を計算する
-                capsuleCircle2D.SetShapeParameter(capsule3D->GetMovedPos(capsule3D->GetEndPos()), capsule3D->GetBaseRadiusNoSqrt());
+                capsuleCircle2D.SetShapeParameter(capsule3D->GetMovedPos(capsule3D->GetEndPos()), capsule3D->GetBaseRadius());
                 temp = BaseCollision3DManager::CheckHitSphere3DToSphere3D(sphere3D, &capsuleCircle2D);
                 if (0 <= temp.mnResultParam)
                 {
@@ -1044,7 +1047,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToCapsule3D(Spher
             break;
         case -1:
             // 線上最近点がマイナス方向にあるため、-方向の端点とスフィアで当たり判定を計算する
-            capsuleCircle2D.SetShapeParameter(capsule3D->GetMovedPos(capsule3D->GetStartPos()), capsule3D->GetBaseRadiusNoSqrt());
+            capsuleCircle2D.SetShapeParameter(capsule3D->GetMovedPos(capsule3D->GetStartPos()), capsule3D->GetBaseRadius());
             temp = BaseCollision3DManager::CheckHitSphere3DToSphere3D(sphere3D, &capsuleCircle2D);
             if (0 <= temp.mnResultParam)
             {
@@ -1107,7 +1110,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToTriangle3D(Sphe
         float newrMagnitude = VECTOR3D::GetPointToPlaneDistance(centerPos, triangleVertex, triangleNorm);
 
         // 返り値を設定する
-        if (newrMagnitude <= sphere3D->GetBaseRadius())
+        if (newrMagnitude <= sphere3D->GetBaseRadius() * sphere3D->GetBaseRadius())
         {
             VECTOR3D hitPos = sphere3D->GetBasePos() - triangleNorm.SetMagnitude(newrMagnitude);
             returnValue = GetCollisionCheckResult3D(
@@ -1275,7 +1278,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToRay3D(Sphere3D 
 
     float a = VECTOR3D::Dot(lineVec, lineVec);
     float b = VECTOR3D::Dot(lineVec, centerPos);
-    float c = VECTOR3D::Dot(centerPos, centerPos) - sphere3D->GetBaseRadiusNoSqrt();
+    float c = VECTOR3D::Dot(centerPos, centerPos) - sphere3D->GetBaseRadius() * sphere3D->GetBaseRadius();
     do
     {
         if (a == 0.0f)
@@ -1288,7 +1291,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitSphere3DToRay3D(Sphere3D 
         if (s < 0.0f)
         {
             // 衝突していない
-            break;;
+            break;
         }
 
         s = sqrtf(s);
@@ -1449,10 +1452,10 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitCapsule3DToCapsule3D(Caps
     // 計算用のスフィアを作る * 2
     Sphere3D sphere3Da;
     sphere3Da.SetBasePos(sphere3DPos);
-    sphere3Da.SetBaseRadiusSqrt(radius);
+    sphere3Da.SetBaseRadius(radius);
     Sphere3D sphere3Db;
     sphere3Db.SetBasePos(sphereToCapsuleNewrPointPos);
-    sphere3Db.SetBaseRadiusSqrt(targetCapsule.GetBaseRadius());
+    sphere3Db.SetBaseRadius(targetCapsule.GetBaseRadius());
 
     // スフィアとスフィアの計算をし、結果をtempに代入する
     temp = BaseCollision3DManager::CheckHitSphere3DToSphere3D(&sphere3Da, &sphere3Db);
@@ -1487,7 +1490,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitCapsule3DToTriangle3D(Cap
     VECTOR3D vertex0 = triangle3D->GetMovedPos(triangle3D->GetVertexPos(0));
     VECTOR3D vertex1 = triangle3D->GetMovedPos(triangle3D->GetVertexPos(1));
     VECTOR3D vertex2 = triangle3D->GetMovedPos(triangle3D->GetVertexPos(2));
-    float radius = capsule3D->GetCenterRadiusSqrt();
+    float radius = capsule3D->GetBaseRadius();
 
     // カプセルの軸と三角形の最短距離を取得する
     float dist = VECTOR3D::GetSegmentToTriangleNewrPos(startPos, endPos, vertex0, vertex1, vertex2, closestSeg, closestTri);
@@ -1774,10 +1777,10 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitCapsule3DToRay3D(Capsule3
 
     // 作業用変数
     Sphere3D capsuleStartSphere;
-    capsuleStartSphere.SetShapeParameter(capsule3D->GetStartPos(), capsule3D->GetBaseRadiusNoSqrt());
+    capsuleStartSphere.SetShapeParameter(capsule3D->GetStartPos(), capsule3D->GetBaseRadius());
     capsuleStartSphere.SetMoveVec(capsule3D->GetMoveVec());
     Sphere3D capsuleEndSphere;
-    capsuleEndSphere.SetShapeParameter(capsule3D->GetEndPos(), capsule3D->GetCenterRadiusSqrt());
+    capsuleEndSphere.SetShapeParameter(capsule3D->GetEndPos(), capsule3D->GetBaseRadius());
     capsuleEndSphere.SetMoveVec(capsule3D->GetMoveVec());
 
     // Q1の検査
@@ -1911,7 +1914,7 @@ CollisionCheckResult3D BaseCollision3DManager::CheckHitCapsule3DToRay3D(Capsule3
         }
 
         // Q2が円柱上にある事が確定
-        temp2 = calcRayInfCilinder(rayStart, rayVec, capsuleStart, capsuleEnd, capsule3D->GetBaseRadiusNoSqrt());
+        temp2 = calcRayInfCilinder(rayStart, rayVec, capsuleStart, capsuleEnd, capsule3D->GetBaseRadius());
         returnValue = GetCollisionCheckResult3D(
             capsule3D,
             ray3D,

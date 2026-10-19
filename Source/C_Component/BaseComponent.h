@@ -16,6 +16,7 @@ typedef enum ComponentTagAndOrder : unsigned long
     CTAO_GoalController,
     CTAO_WallController,
     CTAO_MirrorController,
+    CTAO_LightController,
 
     // ここからギミックトリガー関連
     CTAO_ButtonController,

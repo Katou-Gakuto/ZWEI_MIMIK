@@ -3,7 +3,7 @@
 Capsule2D::Capsule2D() :
     mvCenterLineStartPos(VECTOR2D::GetZero()),
     mvCenterLineEndPos(VECTOR2D::GetZero()),
-    mfCenterLineRadiusSqrt(0.0f),
+    mfCenterLineRadius(0.0f),
     BaseCollision2D(nullptr, CollisionType::CollisionType_Capsule2D, CollisionTag_Checker, CollisionNorm::CollisionNorm_Out, true, false, 0.0f)
 {
 
@@ -15,7 +15,7 @@ Capsule2D::Capsule2D(
     bool penetrate, bool hitMove, float moveLate):
     mvCenterLineStartPos(startPos),
     mvCenterLineEndPos(endPos),
-    mfCenterLineRadiusSqrt(radius),
+    mfCenterLineRadius(radius),
     BaseCollision2D(myObject, CollisionType::CollisionType_Capsule2D, tag, normNum, penetrate, hitMove, moveLate)
 {
     // BaseParamを更新する
@@ -69,10 +69,9 @@ int Capsule2D::SetBaseParamMySelf()
     if (this->GetBaseRadiusUpdateFlag())
     {
         // カプセルを包む円の半径を取得する
-        float radiusNoSqrt =
-            ((this->mvCenterLineEndPos - this->mvCenterLineStartPos) * 0.5f).MagnitudeNoSqrt() +
-            (this->mfCenterLineRadiusSqrt * this->mfCenterLineRadiusSqrt);
-        this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+        float radius = 
+            ((this->mvCenterLineEndPos - this->mvCenterLineStartPos) * 0.5f).Magnitude() + (this->mfCenterLineRadius);
+        this->SetBaseRadius(radius);
 
         // フラグを整える
         this->SetBaseRadiusUpdateFlag(false);
@@ -85,33 +84,33 @@ int Capsule2D::GetAABB(AABB2D &out)
 {
     if (this->mvCenterLineStartPos.GetX() < this->mvCenterLineEndPos.GetX())
     {
-        out.mvMinPos.SetX(this->mvCenterLineStartPos.GetX() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetX(this->mvCenterLineEndPos.GetX() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetX(this->mvCenterLineStartPos.GetX() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetX(this->mvCenterLineEndPos.GetX() + this->mfCenterLineRadius);
     }
     else
     {
-        out.mvMinPos.SetX(this->mvCenterLineEndPos.GetX() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetX(this->mvCenterLineStartPos.GetX() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetX(this->mvCenterLineEndPos.GetX() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetX(this->mvCenterLineStartPos.GetX() + this->mfCenterLineRadius);
     }
     if (this->mvCenterLineStartPos.GetY() < this->mvCenterLineEndPos.GetY())
     {
-        out.mvMinPos.SetY(this->mvCenterLineStartPos.GetY() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetY(this->mvCenterLineEndPos.GetY() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetY(this->mvCenterLineStartPos.GetY() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetY(this->mvCenterLineEndPos.GetY() + this->mfCenterLineRadius);
     }
     else
     {
-        out.mvMinPos.SetY(this->mvCenterLineEndPos.GetY() - this->mfCenterLineRadiusSqrt);
-        out.mvMaxPos.SetY(this->mvCenterLineStartPos.GetY() + this->mfCenterLineRadiusSqrt);
+        out.mvMinPos.SetY(this->mvCenterLineEndPos.GetY() - this->mfCenterLineRadius);
+        out.mvMaxPos.SetY(this->mvCenterLineStartPos.GetY() + this->mfCenterLineRadius);
     }
     out.mvMoveVec = this->GetMoveVec();
     return 0;
 }
 
-void Capsule2D::SetShapeParameter(const VECTOR2D &startPos, const VECTOR2D &endPos, float radiusNoSqrt)
+void Capsule2D::SetShapeParameter(const VECTOR2D &startPos, const VECTOR2D &endPos, float radius)
 {
     this->mvCenterLineEndPos = endPos;
-    this->SetBasePos(startPos);
-    this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+    this->mvCenterLineStartPos = startPos;
+    this->mfCenterLineRadius = radius;
 
     // 値の変更があったことを記憶しておく
     this->SetBasePosUpdateFlag(true);

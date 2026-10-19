@@ -38,6 +38,13 @@ int RotateExecutor::LateUpdate(bool triggerSignal)
     return 0;
 }
 
+// 当たり判定によるギミックの変化に対応させる関数
+int RotateExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
+{
+    // 
+    return 0;
+}
+
 // ギミック内容を描画する関数
 // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
 int RotateExecutor::Draw(bool triggerSignal)

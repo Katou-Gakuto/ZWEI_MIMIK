@@ -42,6 +42,73 @@ public:
     // 
     bool AddGimmick(BaseGimmickTrigger *gimmickTrigger, BaseGimmickExecutor *gimmickExecutor);
 
+    // 
+    template<class Trigger>
+    std::vector<Trigger *> SearchGimmickTrigger() const
+    {
+        // 
+        Trigger *current = nullptr;
+
+        // 
+        std::vector<Trigger *> outBox;
+
+        // 
+        for (size_t i = 0; i < this->mlGimmickList.size(); i++)
+        {
+            // 
+            current = dynamic_cast<Trigger *>(this->mlGimmickList[i].mpTrigger);
+
+            // 
+            if (current == nullptr)
+            {
+                continue;
+            }
+
+            // 
+            outBox.push_back(current);
+        }
+
+        // 
+        return outBox;
+    }
+
+    // 
+    template<class Executor>
+    std::vector<Executor *> SearchGimmickExecutor() const
+    {
+        // 
+        Executor *current = nullptr;
+
+        // 
+        std::vector<Executor *> outBox;
+
+        // 
+        for (size_t i = 0; i < this->mlGimmickList.size(); i++)
+        {
+            // 
+            current = dynamic_cast<Executor *>(this->mlGimmickList[i].mpExecutor);
+
+            // 
+            if (current == nullptr)
+            {
+                continue;
+            }
+
+            // 
+            outBox.push_back(current);
+        }
+
+        // 
+        return outBox;
+    }
+
+    // 
+    PuzzleGimmickData *GetGimmickBox() { return this->mlGimmickList.data(); }
+    const PuzzleGimmickData *GetGimmickBox() const { return this->mlGimmickList.data(); }
+
+    // 
+    size_t GetGimmickCount() const { return this->mlGimmickList.size(); }
+
 private:
     // 
     std::vector<PuzzleGimmickData> mlGimmickList;

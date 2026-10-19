@@ -59,23 +59,17 @@ public:
     // DXƒ‰ƒCƒuƒ‰ƒŠ‚Ìî•ñŠÇ—
     static DxLibDataManager* mpDxLibDataManager;
 
-    // 
-    static Player *mpPlayerLight;
-
-    // 
-    static Player *mpPlayerShadow;
-
-    // 
-    static GoalObjectController *mpGoalLight;
-
-    // 
-    static GoalObjectController *mpGoalShadow;
-
     // Manager
     static LightAreaManager *mpLightManager;
 
     // 
     static CursorMoveSupporter *mpCursorMoveSupporter;
+
+    // 
+    static Player *GetPlayerController(int playerNumber);
+
+    // 
+    static GoalObjectController *GetGoalController(bool lightSide);
 
     // DxLib‚Ì‘O‚Ì‰Šú‰»
     static int DxInitPreInitialize();
