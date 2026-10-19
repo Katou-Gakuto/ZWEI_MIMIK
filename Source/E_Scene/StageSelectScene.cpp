@@ -8,6 +8,7 @@
 #include "../E_Scene/BasePuzzleScene.h"
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Z_Except/Master.h"
+#include "DrawSystem.h"
 
 // 
 StageSelectScene::StageSelectScene() :
@@ -127,9 +128,8 @@ int StageSelectScene::Update()
 int StageSelectScene::Draw()
 {
     // 
-    DxLib::DrawString(
-        0,
-        0,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(0, 0),
         "STAGE SELECT SCENE",
         GetColor(255, 255, 255));
 
@@ -137,9 +137,8 @@ int StageSelectScene::Draw()
     std::string message = "Unlock Stage Count : " + std::to_string(this->mnUnlockStageCount);
 
     // 
-    DxLib::DrawString(
-        400,
-        150 * 1,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 150 * 1),
         message.c_str(),
         GetColor(255, 255, 255));
 
@@ -147,9 +146,8 @@ int StageSelectScene::Draw()
     message = "Current Select Stage : " + std::to_string(this->mnCurrentStage);
 
     // 
-    DxLib::DrawString(
-        400,
-        150 * 2,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 150 * 2),
         message.c_str(),
         GetColor(255, 255, 255));
 
@@ -157,9 +155,8 @@ int StageSelectScene::Draw()
     message = "Title (Pless X Key)";
 
     // 
-    DxLib::DrawString(
-        400,
-        150 * 3,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 150 * 3),
         message.c_str(),
         GetColor(255, 255, 255));
 

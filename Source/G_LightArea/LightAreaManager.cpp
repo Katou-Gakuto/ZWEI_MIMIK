@@ -78,6 +78,8 @@ void LightAreaManager::Initilize()
 // シーン毎初期化
 void LightAreaManager::SceneInit()
 {
+
+    // TODO:_ ライトオブジェクト取得
     for (int nodeIterator = 0; nodeIterator < mlNode.size(); ++nodeIterator)
     {
         mlNode[nodeIterator]->Init();

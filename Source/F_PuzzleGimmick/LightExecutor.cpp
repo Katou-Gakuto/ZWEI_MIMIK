@@ -18,6 +18,7 @@
 #include "../Y_Tool/MyFunctions.h"
 
 #include "../Z_Except/Master.h"
+#include "DrawSystem.h"
 
 int gnDebugTest = 0;
 
@@ -1177,6 +1178,8 @@ int LightExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hit
 // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
 int LightExecutor::Draw(bool triggerSignal)
 {
+    int number = 0;
+    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
     // 
     if (!this->mbLightOn)
     {
@@ -1232,11 +1235,9 @@ int LightExecutor::Draw(bool triggerSignal)
                 }
                 
                 // デバッグ用レイの可視化
-                drawResult = DxLib::DrawLine(
-                    currentNode->GetMyStartPos().GetX(),
-                    currentNode->GetMyStartPos().GetY(),
-                    currentNode->GetMyEndPos().GetX(),
-                    currentNode->GetMyEndPos().GetY(),
+                drawResult = DRAW_SYSTEM::DrawLine(
+                    currentNode->GetMyStartPos(),
+                    currentNode->GetMyEndPos(),
                     0x00ffff);
                 // 
                 if (!currentNode->AccessNext(&nextNode))
@@ -1249,7 +1250,7 @@ int LightExecutor::Draw(bool triggerSignal)
                 currentNode = nextNode;
             }
         }
-                   // Master::mpImguiManager->DrawGameDisplayToImgui("Draw");
+    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
     }
     else if (drawMode == 1)
     {
@@ -1258,13 +1259,10 @@ int LightExecutor::Draw(bool triggerSignal)
         for (uint32_t i = 0; i < lightArea->GetLightLineCount() - 1; i++)
         {
             // 
-            drawResult = DxLib::DrawTriangle(
-                baseStartPos.GetX(),
-                baseStartPos.GetY(),
-                nodeBox[i]->GetMyEndPos().GetX(),
-                nodeBox[i]->GetMyEndPos().GetY(),
-                nodeBox[i + 1]->GetMyEndPos().GetX(),
-                nodeBox[i + 1]->GetMyEndPos().GetY(),
+            drawResult = DRAW_SYSTEM::DrawTriangle(
+                baseStartPos,
+                nodeBox[i]->GetMyEndPos(),
+                nodeBox[i + 1]->GetMyEndPos(),
                 0x00ffff,
                 false);
 
@@ -1276,6 +1274,7 @@ int LightExecutor::Draw(bool triggerSignal)
             }
         }
 
+    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
         // 
         if (drawResult != 0)
         {
@@ -1316,15 +1315,11 @@ int LightExecutor::Draw(bool triggerSignal)
                 if (firstNodeNext != nullptr && secondNodeNext != nullptr)
                 {
                     // 
-                    drawResult = DxLib::DrawQuadrangle(
-                        firstNode->GetMyEndPos().GetX(),
-                        firstNode->GetMyEndPos().GetY(),
-                        secondNode->GetMyEndPos().GetX(),
-                        secondNode->GetMyEndPos().GetY(),
-                        firstNodeNext->GetMyEndPos().GetX(),
-                        firstNodeNext->GetMyEndPos().GetY(),
-                        secondNodeNext->GetMyEndPos().GetX(),
-                        secondNodeNext->GetMyEndPos().GetY(),
+                    drawResult = DRAW_SYSTEM::DrawQuadrangle(
+                        firstNode->GetMyEndPos(),
+                        secondNode->GetMyEndPos(),
+                        firstNodeNext->GetMyEndPos(),
+                        secondNodeNext->GetMyEndPos(),
                         0x00ffff,
                         true);
 
@@ -1335,13 +1330,10 @@ int LightExecutor::Draw(bool triggerSignal)
                 else if (firstNodeNext != nullptr && secondNodeNext == nullptr)
                 {
                     // 
-                    drawResult = DxLib::DrawTriangle(
-                        firstNode->GetMyEndPos().GetX(),
-                        firstNode->GetMyEndPos().GetY(),
-                        secondNode->GetMyEndPos().GetX(),
-                        secondNode->GetMyEndPos().GetY(),
-                        firstNodeNext->GetMyEndPos().GetX(),
-                        firstNodeNext->GetMyEndPos().GetY(),
+                    drawResult = DRAW_SYSTEM::DrawTriangle(
+                        firstNode->GetMyEndPos(),
+                        secondNode->GetMyEndPos(),
+                        firstNodeNext->GetMyEndPos(),
                         0x00ffff,
                         true);
 
@@ -1351,13 +1343,10 @@ int LightExecutor::Draw(bool triggerSignal)
                 else if (firstNodeNext == nullptr && secondNodeNext != nullptr)
                 {
                     // 
-                    drawResult = DxLib::DrawTriangle(
-                        firstNode->GetMyEndPos().GetX(),
-                        firstNode->GetMyEndPos().GetY(),
-                        secondNode->GetMyEndPos().GetX(),
-                        secondNode->GetMyEndPos().GetY(),
-                        secondNodeNext->GetMyEndPos().GetX(),
-                        secondNodeNext->GetMyEndPos().GetY(),
+                    drawResult = DRAW_SYSTEM::DrawTriangle(
+                        firstNode->GetMyEndPos(),
+                        secondNode->GetMyEndPos(),
+                        secondNodeNext->GetMyEndPos(),
                         0x00ffff,
                         true);
 
@@ -1370,6 +1359,7 @@ int LightExecutor::Draw(bool triggerSignal)
                     loopFlag = false;
                 }
             }
+    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
 
             // 
             if (drawResult != 0)
@@ -1388,11 +1378,9 @@ int LightExecutor::Draw(bool triggerSignal)
         while (true)
         {
             // 
-            drawResult = DxLib::DrawLine(
-                currentNode->GetMyStartPos().GetX(),
-                currentNode->GetMyStartPos().GetY(),
-                currentNode->GetMyEndPos().GetX(),
-                currentNode->GetMyEndPos().GetY(),
+            drawResult = DRAW_SYSTEM::DrawLine(
+                currentNode->GetMyStartPos(),
+                currentNode->GetMyEndPos(),
                 0x00ffff);
 
             // 
@@ -1407,6 +1395,7 @@ int LightExecutor::Draw(bool triggerSignal)
                 break;
             }
         }
+    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
 
         // 
         gnDebugTest++;

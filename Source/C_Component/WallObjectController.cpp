@@ -6,7 +6,7 @@
 
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Quadrangle2D.h"
-
+#include "DrawSystem.h"
 
 WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &centerPos, const VECTOR2D &blockSize) :
     mvCenterPosInit(centerPos),
@@ -137,11 +137,9 @@ int WallObjectController::Draw()
 
     /**/
     // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
-    DxLib::DrawBox(
-        bodyCollision->GetVertexPos(0).GetX(),
-        bodyCollision->GetVertexPos(0).GetY(),
-        bodyCollision->GetVertexPos(3).GetX(),
-        bodyCollision->GetVertexPos(3).GetY(),
+    DRAW_SYSTEM::DrawBox(
+        bodyCollision->GetVertexPos(0),
+        bodyCollision->GetVertexPos(3),
         0xaaaa00,
         true);
         //*/

@@ -16,7 +16,7 @@
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Y_Tool/VECTOR.h"
 #include "../Z_Except/Master.h"
-
+#include "DrawSystem.h"
 // 
 CursorMoveData BasePuzzleScene::smdMoveData;
 
@@ -187,9 +187,8 @@ int BasePuzzleScene::Update()
 int BasePuzzleScene::Draw()
 {
     // 
-    DxLib::DrawString(
-        0,
-        0,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(0, 0),
         "BASE PUZZLE SCENE",
         GetColor(255, 255, 255));
 
@@ -200,9 +199,8 @@ int BasePuzzleScene::Draw()
     if (this->mbPouse)
     {
         // 
-        DxLib::DrawString(
-            500,
-            60 + 120 * 0,
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(500, 60 + 120 * 0),
             "POUSE MENU",
             GetColor(255, 255, 255));
 
@@ -246,9 +244,8 @@ int BasePuzzleScene::Draw()
             }
 
             // 
-            DxLib::DrawString(
-                400,
-                60 + 120 * i,
+            DRAW_SYSTEM::DrawString(
+                VECTOR2D(400, 60 + 120 * i),
                 message.c_str(),
                 GetColor(255, 255, 255));
         }

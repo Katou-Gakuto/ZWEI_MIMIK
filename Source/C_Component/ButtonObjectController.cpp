@@ -18,6 +18,8 @@
 
 #include "../Z_Except/Master.h"
 
+#include "DrawSystem.h"
+
 // 
 ButtonObjectController::ButtonObjectController(
     GameObject *myObject,
@@ -157,11 +159,9 @@ int ButtonObjectController::Draw()
     }
 
     // 
-    DxLib::DrawBox(
-        body->GetVertexPos(0).GetX(),
-        body->GetVertexPos(0).GetY(),
-        body->GetVertexPos(3).GetX(),
-        body->GetVertexPos(3).GetY(),
+    DRAW_SYSTEM::DrawBox(
+        body->GetVertexPos(0),
+        body->GetVertexPos(3),
         0x0000ff,
         false);
 

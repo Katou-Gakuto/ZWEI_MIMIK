@@ -7,7 +7,7 @@
 #include "../H_Katou/Singleton/KeyState.h"
 
 #include "../Z_Except/Master.h"
-
+#include "DrawSystem.h"
 // 
 OptionScene::OptionScene() :
     mnVolumeBGM(0xaf),
@@ -59,16 +59,14 @@ int OptionScene::Update()
 int OptionScene::Draw()
 {
     // 
-    DxLib::DrawString(
-        0,
-        0,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(0, 0),
         "OPTION SCENE",
         GetColor(255, 255, 255));
 
     // 
-    DxLib::DrawString(
-        400,
-        400,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 400),
         "PRESS X KEY",
         GetColor(255, 255, 255));
 

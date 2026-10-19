@@ -12,6 +12,7 @@
 #include "Master.h"
 #include "DxLibDataManager.h"
 #include "LightAreaManager.h"
+#include "DrawSystem.h"
 
 // 
 LightArea::LightArea() :
@@ -34,8 +35,9 @@ LightArea::~LightArea()
 }
 
 // 初期化(シーン開始時)
-void LightArea::Init()
+void LightArea::Init(void *parentObject)
 {
+    this->mpParentObject = parentObject;
     for (int lightNodeIterator = 0; lightNodeIterator < mlLightFirstNode.size(); ++lightNodeIterator)
     {
         mlLightFirstNode[lightNodeIterator]->Init(this->mpParentObject);
@@ -636,7 +638,7 @@ void LightArea::DrawLightArea()
         }
     }
     // 設定した3角を全部描画
-    DxLib::DrawPolygon2D(mstLightAreaTriangleVertex, lightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE); 
+    DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, lightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle()); 
 
 
     //  for (size_t i = 0; i < mstLightLine.size(); ++i)
