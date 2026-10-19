@@ -391,6 +391,15 @@
     <ClCompile Include="Source\C_Component\HoldObjectController.cpp">
       <Filter>Source\C_Component</Filter>
     </ClCompile>
+    <ClCompile Include="Source\F_PuzzleGimmick\TeleportExecutor.cpp">
+      <Filter>Source\F_PuzzleGimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\A_GameObject\TeleportObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Component\TeleportObjectController.cpp">
+      <Filter>Source\C_Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -763,6 +772,15 @@
       <Filter>Source\C_Component</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Component\HoldObjectController.h">
+      <Filter>Source\C_Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\F_PuzzleGimmick\TeleportExecutor.h">
+      <Filter>Source\F_PuzzleGimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\TeleportObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Component\TeleportObjectController.h">
       <Filter>Source\C_Component</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,7 +16,7 @@ GoalObject::~GoalObject()
 int GoalObject::Create()
 {
     // 
-    this->AddComponent(new GoalObjectController(this, this->mbPlayerLight));
+    this->AddComponent(new GoalObjectController(this, this->mbPlayerLight, 50.0f));
 
     // 
     return 0;

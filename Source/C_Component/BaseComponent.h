@@ -18,8 +18,8 @@ typedef enum ComponentTagAndOrder : unsigned long
     CTAO_MirrorController,
     CTAO_LightController,
 
-    // ここからギミックトリガー関連
     CTAO_ButtonController,
+    CTAO_TeleportController,
     CTAO_HoldController,
 
     // ここがギミック本体

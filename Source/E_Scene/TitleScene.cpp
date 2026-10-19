@@ -184,7 +184,8 @@ int TitleScene::UpdateModeSelect()
     if (this->mbLogoPhase)
     {
         // 適当なキーが押されていたら処理を行う
-        if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, 0))
+        if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
         {
             // 
             this->mbLogoPhase = false;

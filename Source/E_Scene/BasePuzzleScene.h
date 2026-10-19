@@ -69,14 +69,35 @@ private:
     bool mbPouse;
 
     // 
+    bool mbGoal;
+
+    // 
+    bool mbFailed;
+
+    // 
     int mnCursorPos;
 
     // 
     static CursorMoveData smdMoveData;
 
     // 
-    void AddMasterObjects();
+    void CreateAndAddMastObject();
 
     // 
     int PouseUpdate();
+
+    // 
+    int PouseDraw();
+
+    // 
+    int ResultUpdate();
+
+    // 
+    int ResultDraw();
+
+    // 
+    int FailedUpdate();
+
+    // 
+    int FailedDraw();
 };

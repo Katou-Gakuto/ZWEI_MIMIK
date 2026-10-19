@@ -12,6 +12,7 @@ enum GameObjectTag : unsigned long
     GOT_Wall,
     GOT_Light,
     GOT_Button,
+    GOT_Teleport,
 
     GOT_Max,
 };

@@ -29,15 +29,20 @@
 
 const int debugNum = 5;
 
-Player::Player(GameObject* myObject, int playerNumber)
-: BaseComponent(myObject, ComponentTagAndOrder::CTAO_PlayerController)
-, mdBodyCollision()
-, mnPlayerNum(playerNumber)
-, mfSwingDegree(1.0f)
-, mfNowSwingRadian(0.0f)
-, mfMoveMagnitude(4)
-, mbLightSide(playerNumber == 1)
-, mpHold(nullptr)
+Player::Player(GameObject *myObject, int playerNumber) :
+    mnPlayerNum(playerNumber),
+    PlayerGraphHandle(),
+    mfSwingDegree(1.0f),
+    mfNowSwingRadian(0.0f),
+    mfMoveMagnitude(4),
+    mpHold(nullptr),
+    mdBodyCollision(),
+    mdModelHandle(),
+    mbHoldFlag(false),
+    mbSwingFlag(false),
+    mbLightSide(playerNumber == 1),
+    mbInLightArea(false),
+    BaseComponent(myObject, ComponentTagAndOrder::CTAO_PlayerController)
 {
 }
 
@@ -104,6 +109,12 @@ int Player::Initialize()
 
     // 
     bodyCollision->WorldConnectMySelf();
+
+    // 
+    this->mbInLightArea = this->mbLightSide;
+
+    // 
+    this->mpHold = nullptr;
 
     // 
     return 0;
@@ -241,6 +252,14 @@ int Player::LateUpdate()
     }
 
     // 
+    int result = this->UpdateInLightArea();
+    if (result != 0)
+    {
+        // 
+        return result;
+    }
+
+    // 
     return 0;
 }
 
@@ -251,24 +270,29 @@ int Player::Draw()
     bool bodyCircleDraw = true;
 
     GameObject2D *player = GetMyObject2D();
+    if (player == nullptr)
+    {
+        // 
+        return -1;
+    }
+
+    // 
+    unsigned int color = 0;
+
+    // p1かどうかで処理を変える
+    if (mnPlayerNum == 1)
+    {
+        // プレイヤー1の場合は赤色で描画
+        color = 0xff0000;
+    }
+    else
+    {
+        // プレイヤー2の場合は青色で描画
+        color = 0x0000ff;
+    }
 
     if (grahpBoxDraw)
     {
-        // 
-        unsigned int color = 0;
-
-        // p1かどうかで処理を変える
-        if (mnPlayerNum == 1)
-        {
-            // プレイヤー1の場合は赤色で描画
-            color = 0xff0000;
-        }
-        else
-        {
-            // プレイヤー2の場合は青色で描画
-            color = 0x0000ff;
-        }
-
         // 描画を行う
         DrawBox(player->GetPosition().GetX() - (Master::PlayerSizeXY / 2),
             player->GetPosition().GetY() - (Master::PlayerSizeXY / 2),
@@ -286,20 +310,20 @@ int Player::Draw()
             bodyCollision->GetBasePos().GetX(),
             bodyCollision->GetBasePos().GetY(),
             bodyCollision->GetBaseRadius(),
-            0x00ff00,
+            color,
             false);
     }
 
     // Aボタンを押していたら円を描画する
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, this->mnPlayerNum - 1))
     {
-        // ホールドの大体の範囲である円を白色で描画する
+        // ホールドの大体の範囲である円を緑色で描画する
         Circle2D *bodyCollision = GetBodyCollision();
         DrawCircle(
             bodyCollision->GetBasePos().GetX(),
             bodyCollision->GetBasePos().GetY(),
             bodyCollision->GetBaseRadius() + (this->mfMoveMagnitude * 1.5f),
-            0xffffff,
+            0x00ff00,
             false);
     }
     
@@ -326,17 +350,6 @@ int Player::Draw()
             lightAreaParam,
             0xff0000,
             true);
-    }
-
-    // 
-    if (this->CheckGoal())
-    {
-        DrawCircle(
-            player->GetPosition().GetX(),
-            player->GetPosition().GetY(),
-            40.0f,
-            0xff0000,
-            false);
     }
 
     // 
@@ -659,6 +672,11 @@ bool Player::InitPosition(const VECTOR2D &pos)
     obj->SetPosition(pos);
 
     // 
+    Circle2D *bodyCollision = GetBodyCollision();
+    float circleRadius = 20.0f;
+    bodyCollision->SetShapeParameter(pos, circleRadius);
+
+    // 
     return false;
 }
 
@@ -672,28 +690,10 @@ bool Player::ChangeLightSide()
     return true;
 }
 
-// 
-bool Player::CheckGoal() const
+bool Player::GetInLightArea() const
 {
     // 
-    GameObject2D *goalObj = nullptr;
-    
-    goalObj = Master::GetGoalController(this->mbLightSide)->GetMyObject2D();
-
-    // 
-    Point2D goalPoint;
-    goalPoint.SetShapeParameter(goalObj->GetPosition());
-
-    // 
-    auto hitResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&goalPoint, this->GetBodyCollision());
-    if (hitResult.mnResultParam < 0)
-    {
-        // 
-        return false;
-    }
-
-    // 
-    return true;
+    return this->mbInLightArea;
 }
 
 // 
@@ -758,3 +758,30 @@ void Player::SetHoldLightRadian()
         }
     }
 }
+
+// 
+int Player::UpdateInLightArea()
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    std::vector<int> hitArea;
+    if (Master::mpLightManager->CheckInLightArea(obj->GetPosition(), hitArea) != 0)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    this->mbInLightArea = !(hitArea.empty());
+
+    // 
+    return 0;
+}
+

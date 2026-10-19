@@ -1,8 +1,15 @@
 #include "RouteMoveExecutor.h"
 
 #include "../A_GameObject/GameObject2D.h"
+#include "../A_GameObject/LightObject.h"
+
+#include "../C_Component/GimmickObjectController.h"
+
+#include "../F_PuzzleGimmick/LightExecutor.h"
 
 #include "../S_Collision/BaseCollisionList.h"
+
+#include "../Y_Tool/MyFunctions.h"
 
 // コンストラクタ
 RouteData::RouteData(RouteOffMode offMode, bool loop) :
@@ -35,8 +42,55 @@ int RouteData::Add(const RouteKeyFrame keyFrame)
     return 0;
 }
 
+// フレームに合わせた回転量を取得する関数
+float RouteData::GetTargetFrameRad(uint32_t frameCount) const
+{
+    float rad;
+
+    // 
+    uint32_t current = 0;
+
+    // 
+    for (uint32_t i = 0; i < this->mlKeyFramesBox.size() - 1; i++)
+    {
+        // 
+        if (this->mlKeyFramesBox[i].mnFrameCount <= frameCount &&
+            frameCount < this->mlKeyFramesBox[i + 1].mnFrameCount)
+        {
+            // 
+            current = i;
+
+            // 
+            break;
+        }
+    }
+
+    // 
+    uint32_t currentAnimLength =
+        this->mlKeyFramesBox[current + 1].mnFrameCount - this->mlKeyFramesBox[current].mnFrameCount;
+
+    // 
+    uint32_t frameInCurrentAnim = currentAnimLength - frameCount;
+
+    // 今回の目的の場所みたいな
+    float targetTimming = 0.0f;
+
+    // 0除算の回避
+    if (frameInCurrentAnim != 0)
+    {
+        // 
+        targetTimming = static_cast<float>(frameInCurrentAnim) / static_cast<float>(currentAnimLength);
+    }
+
+    // 
+    return MyFunctions::GetFloatLerp(
+        this->mlKeyFramesBox[current].mfRadian,
+        this->mlKeyFramesBox[current + 1].mfRadian,
+        targetTimming);
+}
+
 // フレームに合わせた座標を取得する関数
-VECTOR2D RouteData::GetMovedPos(uint32_t frameCount) const
+VECTOR2D RouteData::GetTargetFramePos(uint32_t frameCount) const
 {
     // 
     uint32_t current = 0;
@@ -232,7 +286,10 @@ int RouteMoveExecutor::Update(bool triggerSignal)
         }
 
         // 
-        VECTOR2D nextPos = this->mdMoveData.GetMovedPos(this->mnFrameCount);
+        float nextRadian = this->mdMoveData.GetTargetFrameRad(this->mnFrameCount);
+
+        // 
+        VECTOR2D nextPos = this->mdMoveData.GetTargetFramePos(this->mnFrameCount);
 
         // 
         if (this->mpMyObject->GetPosition() != nextPos)
@@ -254,6 +311,37 @@ int RouteMoveExecutor::Update(bool triggerSignal)
 
         // 
         list->SetCollisionNextPos(CollisionDimension::CollisionDimension_2D, &nextPos);
+
+        // 
+        if (this->mpMyObject->GetObjectTag() == GameObjectTag::GOT_Light)
+        {
+            // 
+            LightObject *lightObject = static_cast<LightObject *>(this->mpMyObject);
+
+            // 
+            auto gimmick = lightObject->GetGimmickController();
+            if (gimmick == nullptr)
+            {
+                return -1;
+            }
+
+            // 
+            auto box = gimmick->GetGimmickBox();
+            auto count = gimmick->GetGimmickCount();
+            for (size_t i = 0; i < count; i++)
+            {
+                // 
+                LightExecutor *lightExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
+                if (lightExecutor == nullptr)
+                {
+                    // 
+                    continue;
+                }
+
+                // 
+                lightExecutor->SetBaseAngle(nextRadian);
+            }
+        }
     }
 
     // 

@@ -120,49 +120,85 @@ int BaseSceneManager::Finalize()
 int BaseSceneManager::Update()
 {
     // シーンを変えるかを記憶しておくフラグ
-    bool sceneChangeFlag = this->mnSceneNow != this->mnChangeScene;
+    bool sceneChangeFlag = this->mnChangeScene != SceneTag::ST_Max;
+
+    // 変更先のシーンが現在のシーンと同じかを記憶しておく
+    bool equalChange = this->mnSceneNow == this->mnChangeScene;
 
     // シーンを変えるなら前回のシーンと現在のシーンを更新する
-    if (sceneChangeFlag)
+    if (sceneChangeFlag && !equalChange)
     {
         this->mnSceneOld = this->mnSceneNow;
         this->mnSceneNow = this->mnChangeScene;
     }
 
-    // 前回のシーンと今回のシーンを取得する
-    BaseScene *sceneOld = this->SearchSceneTag(this->mnSceneOld);
+    // 今回のシーンを取得する
     BaseScene *sceneNow = this->SearchSceneTag(this->mnSceneNow);
 
-    // 今回のシーンがnullptrでないなら処理をおコアぬ
-    if (sceneNow != nullptr)
+    // 前回のシーンを取得する
+    BaseScene *sceneOld = this->SearchSceneTag(this->mnSceneOld);
+    
+    // 
+    if (equalChange)
     {
-        // シーンが変わったタイミングなら今回のシーンにInitializeをかける
-        if (sceneChangeFlag)
+        // 
+        if (sceneNow == nullptr)
         {
-            sceneNow->BaseInitialize();
+            // 
+            return -1;
         }
 
-        // 今回のシーンに更新をかける
+        // 
+        this->mbNowFinalize = true;
+
+        // 
+        sceneNow->BaseFinalize();
+
+        // 
+        this->mbNowFinalize = false;
+
+        // 
+        sceneNow->BaseInitialize();
+
+        // 
         sceneNow->Update();
+
+        // 
+        this->mnChangeScene = SceneTag::ST_Max;
     }
-
-    // シーンが変わったタイミングかつ、前回のシーンがnullptrでないなら前回のシーンにFinalizeをかける
-    if (sceneChangeFlag && sceneOld != nullptr)
+    else
     {
-        // シーンを変えたことを書いておく
-        this->mnChangeScene = this->mnSceneNow;
-
-        // 現在のシーンもnullptrではなく、さらにsceneOldとも違っていた場合
-        if (sceneNow != nullptr && sceneNow!= sceneOld)
+        // 今回のシーンがnullptrでないなら処理をおコアぬ
+        if (sceneNow != nullptr)
         {
-            // 
-            this->mbNowFinalize = true;
+            // シーンが変わったタイミングなら今回のシーンにInitializeをかける
+            if (sceneChangeFlag)
+            {
+                sceneNow->BaseInitialize();
+            }
 
-            // 
-            sceneOld->BaseFinalize();
+            // 今回のシーンに更新をかける
+            sceneNow->Update();
+        }
 
-            // 
-            this->mbNowFinalize = false;
+        // シーンが変わったタイミングかつ、前回のシーンがnullptrでないなら前回のシーンにFinalizeをかける
+        if (sceneChangeFlag && sceneOld != nullptr)
+        {
+            // シーンを変えたことを書いておく
+            this->mnChangeScene = SceneTag::ST_Max;
+
+            // 現在のシーンもnullptrではなく、さらにsceneOldとも違っていた場合
+            if (sceneNow != nullptr && sceneNow != sceneOld)
+            {
+                // 
+                this->mbNowFinalize = true;
+
+                // 
+                sceneOld->BaseFinalize();
+
+                // 
+                this->mbNowFinalize = false;
+            }
         }
     }
 

@@ -9,7 +9,7 @@ class GoalObjectController : public BaseComponent
 {
 public:
     // 
-    GoalObjectController(GameObject *myObject, bool playerLight);
+    GoalObjectController(GameObject *myObject, bool playerLight, float goalRadius);
     virtual ~GoalObjectController();
 
     int Create() override;
@@ -24,7 +24,19 @@ public:
     // 
     bool InitPosition(const VECTOR2D &initPos);
 
+    // 
+    bool UpdateInPlayer();
+
+    // 
+    bool GetInPlayer() const;
+
 private:
     // 光域のプレイヤーのゴールか
     bool mbPlayerLight;
+
+    // 
+    bool mbInPlayer;
+
+    // 
+    float mfGoalRadius;
 };

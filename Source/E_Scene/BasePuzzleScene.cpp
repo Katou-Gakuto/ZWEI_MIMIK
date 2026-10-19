@@ -10,6 +10,7 @@
 #include "../A_GameObject/GoalObject.h"
 #include "../C_Component/Player.h"
 #include "../C_Component/GoalObjectController.h"
+#include "../G_LightArea/LightAreaManager.h"
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../E_Scene/BaseSceneManager.h"
 #include "../H_Katou/Singleton/KeyState.h"
@@ -25,6 +26,8 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mpGoalLight(nullptr),
     mpGoalShadow(nullptr),
     mbPouse(false),
+    mbGoal(false),
+    mbFailed(false),
     mnCursorPos(0),
     BaseScene(tag)
 {
@@ -53,30 +56,11 @@ int BasePuzzleScene::Create()
     this->mpGameObjectManager = new GameObjectManager();
     this->mpBaseCollision2DManager = new BaseCollision2DManager();    
 
-    // 
-    GameObject2D *currentObject = nullptr;
-    currentObject = new PlayerObject(1);
-    currentObject->Initialize();
-    currentObject->Finalize();
-    this->mpPlayerLight = (static_cast<PlayerObject *>(currentObject))->GetPlayerComponent();
-
-    currentObject = new PlayerObject(2);
-    currentObject->Initialize();
-    currentObject->Finalize();
-    this->mpPlayerShadow = (static_cast<PlayerObject *>(currentObject))->GetPlayerComponent();
-
-    currentObject = new GoalObject(true);
-    currentObject->Initialize();
-    currentObject->Finalize();
-    this->mpGoalLight = (static_cast<GoalObject *>(currentObject))->GetGoalController();
-
-    currentObject = new GoalObject(false);
-    currentObject->Initialize();
-    currentObject->Finalize();
-    this->mpGoalShadow = (static_cast<GoalObject *>(currentObject))->GetGoalController();
-
     // それぞれのマップを生成する
     this->MapCreate(*this->mpGameObjectManager);
+
+    // 
+    this->CreateAndAddMastObject();
 
     // 
     return 0;
@@ -95,13 +79,16 @@ int BasePuzzleScene::Initialize()
     this->mpGoalShadow->InitPosition(initPosBox[3]);
 
     // 
-    this->AddMasterObjects();
-
-    // 
     this->mpGameObjectManager->Initialize();
 
     // 
     this->mbPouse = false;
+
+    // 
+    this->mbGoal = false;
+
+    // 
+    this->mbFailed = false;
 
     // 
     return 0;
@@ -123,17 +110,34 @@ int BasePuzzleScene::Finalize()
 int BasePuzzleScene::Update()
 {
     // 
-    if (this->mpPlayerLight->CheckGoal() &&
-        this->mpPlayerShadow->CheckGoal())
+    if (this->mbFailed)
     {
         // 
-        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
-
+        return this->FailedUpdate();
+    }
+    // 
+    if (this->mbGoal)
+    {
         // 
-        this->OnResetFlag();
+        return this->ResultUpdate();
+    }
 
+    // 
+    this->mbFailed = 
+        this->mpPlayerLight->GetInLightArea() == false ||
+        this->mpPlayerShadow->GetInLightArea() == true;
+    if (this->mbFailed)
+    {
         // 
-        return 0;
+        return this->FailedUpdate();
+    }
+
+    // 
+    this->mbGoal = this->mpGoalLight->GetInPlayer() && this->mpGoalShadow->GetInPlayer();
+    if (this->mbGoal)
+    {
+        // 
+        return this->ResultUpdate();
     }
 
     // ポーズ画面に移行するボタンを押している場合は処理を行う
@@ -142,39 +146,40 @@ int BasePuzzleScene::Update()
     {
         // 
         this->mbPouse = !this->mbPouse;
+
+        // 
+        this->mnCursorPos = 0;
     }
 
     // 
     if (this->mbPouse)
     {
-        this->PouseUpdate();
+        return this->PouseUpdate();
     }
-    else
-    {
-        // ここでMoveVecを0にしておく
-        this->mpGameObjectManager->ResetMoveVec();
 
-        // 先にやりたい処理
-        this->mpGameObjectManager->EarlyUpdate();
+    // ここでMoveVecを0にしておく
+    this->mpGameObjectManager->ResetMoveVec();
 
-        // 通常処理
-        this->mpGameObjectManager->Update();
+    // 先にやりたい処理
+    this->mpGameObjectManager->EarlyUpdate();
 
-        // 当たり判定の計算 + スライド移動 + 当たり判定のイベント通知
-        this->mpBaseCollision2DManager->CheckHitAllMove();
+    // 通常処理
+    this->mpGameObjectManager->Update();
 
-        // ゲームオブジェクトの座標を更新
-        this->mpGameObjectManager->SetPositionToMoveVec();
+    // 当たり判定の計算 + スライド移動 + 当たり判定のイベント通知
+    this->mpBaseCollision2DManager->CheckHitAllMove();
 
-        // 当たり判定の座標を更新
-        this->mpGameObjectManager->SetCollisionPosToCollisionMoveVec();
+    // ゲームオブジェクトの座標を更新
+    this->mpGameObjectManager->SetPositionToMoveVec();
 
-        // 座標更新後の処理
-        this->mpGameObjectManager->LateUpdate();
+    // 当たり判定の座標を更新
+    this->mpGameObjectManager->SetCollisionPosToCollisionMoveVec();
 
-        // モデルの更新処理
-        this->mpGameObjectManager->UpdateModel();
-    }
+    // 座標更新後の処理
+    this->mpGameObjectManager->LateUpdate();
+
+    // モデルの更新処理
+    this->mpGameObjectManager->UpdateModel();
 
     // 成功を返す
     return 0;
@@ -196,58 +201,21 @@ int BasePuzzleScene::Draw()
     if (this->mbPouse)
     {
         // 
-        DxLib::DrawString(
-            500,
-            60 + 120 * 0,
-            "POUSE MENU",
-            GetColor(255, 255, 255));
+        this->PouseDraw();
+    }
 
+    // 
+    if (this->mbGoal)
+    {
         // 
-        std::string message;
+        this->ResultDraw();
+    }
 
+    // 
+    if (this->mbFailed)
+    {
         // 
-        for (int i = 0; i < PouseMenu::PouseMenu_Max; i++)
-        {
-            // 
-            if (this->mnCursorPos == i)
-            {
-                message = "⇒";
-            }
-            else
-            {
-                message = "　";
-            }
-
-            // 
-            message += " ";
-
-            // 
-            switch (i)
-            {
-            case PouseMenu::PouseMenu_Option:
-                message += "OPTION";
-                break;
-            case PouseMenu::PouseMenu_Retry:
-                message += "RETRY";
-                break;
-            case PouseMenu::PouseMenu_StageSelect:
-                message += "STAGE SELECT";
-                break;
-            case PouseMenu::PouseMenu_Title:
-                message += "TITLE";
-                break;
-            default:
-                message += "bgbgbgbgbgbgbgbgbgbgbg";
-                break;
-            }
-
-            // 
-            DxLib::DrawString(
-                400,
-                60 + 120 * i,
-                message.c_str(),
-                GetColor(255, 255, 255));
-        }
+        this->FailedDraw();
     }
 
     // 
@@ -322,8 +290,31 @@ GoalObjectController *BasePuzzleScene::GetGoal(bool lightSide)const
 }
 
 // 
-void BasePuzzleScene::AddMasterObjects()
+void BasePuzzleScene::CreateAndAddMastObject()
 {
+    // 
+    GameObject2D *currentObject = nullptr;
+    currentObject = new PlayerObject(1);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mpPlayerLight = (static_cast<PlayerObject *>(currentObject))->GetPlayerComponent();
+
+    currentObject = new PlayerObject(2);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mpPlayerShadow = (static_cast<PlayerObject *>(currentObject))->GetPlayerComponent();
+
+    currentObject = new GoalObject(true);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mpGoalLight = (static_cast<GoalObject *>(currentObject))->GetGoalController();
+
+    currentObject = new GoalObject(false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mpGoalShadow = (static_cast<GoalObject *>(currentObject))->GetGoalController();
+
+    // 
     this->mpGameObjectManager->Add(this->mpPlayerLight->GetMyObject());
     this->mpGameObjectManager->Add(this->mpPlayerShadow->GetMyObject());
     this->mpGameObjectManager->Add(this->mpGoalLight->GetMyObject());
@@ -342,6 +333,7 @@ int BasePuzzleScene::PouseUpdate()
         {
         case PouseMenu::PouseMenu_Option:
             Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
+            Master::mpBaseSceneManager->SetResreveScene(this->GetTag());
             break;
         case PouseMenu::PouseMenu_Retry:
             Master::mpBaseSceneManager->ChangeScene(this->GetTag());
@@ -380,6 +372,128 @@ int BasePuzzleScene::PouseUpdate()
         this->mnCursorPos %= PouseMenu::PouseMenu_Max;
     }
 
+    // 
+    return 0;
+}
+
+// 
+int BasePuzzleScene::PouseDraw()
+{
+    // 
+    DxLib::DrawString(
+        500,
+        60 + 120 * 0,
+        "POUSE MENU",
+        GetColor(255, 255, 255));
+
+    // 
+    std::string message;
+
+    // 
+    for (int i = 0; i < PouseMenu::PouseMenu_Max; i++)
+    {
+        // 
+        if (this->mnCursorPos == i)
+        {
+            message = "⇒";
+        }
+        else
+        {
+            message = "　";
+        }
+
+        // 
+        message += " ";
+
+        // 
+        switch (i)
+        {
+        case PouseMenu::PouseMenu_Option:
+            message += "OPTION";
+            break;
+        case PouseMenu::PouseMenu_Retry:
+            message += "RETRY";
+            break;
+        case PouseMenu::PouseMenu_StageSelect:
+            message += "STAGE SELECT";
+            break;
+        case PouseMenu::PouseMenu_Title:
+            message += "TITLE";
+            break;
+        default:
+            message += "bgbgbgbgbgbgbgbgbgbgbg";
+            break;
+        }
+
+        // 
+        DxLib::DrawString(
+            400,
+            60 + 120 * i,
+            message.c_str(),
+            GetColor(255, 255, 255));
+    }
+
+    // 
+    return 0;
+}
+
+// 
+int BasePuzzleScene::ResultUpdate()
+{
+    // リザルトシーンって、どういう機能を持たせたい？
+    // RETRYとか、STAGE SELECTとかそういうの
+    // 
+
+    // 
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
+        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
+    {
+        // 
+        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+
+        // 
+        this->OnResetFlag();
+    }
+
+    // 
+    return 0;
+}
+
+// 
+int BasePuzzleScene::ResultDraw()
+{
+    // 
+    DxLib::DrawString(
+        500,
+        60 + 120 * 0,
+        "STAGE CLEAR!",
+        GetColor(255, 255, 255));
+
+    // 
+    DxLib::DrawString(
+        500,
+        60 + 120 * 1,
+        "Pless A Key",
+        GetColor(255, 255, 255));
+
+    // 
+    return 0;
+}
+
+// 
+int BasePuzzleScene::FailedUpdate()
+{
+    // とりあえず強制RETRY
+    Master::mpBaseSceneManager->ChangeScene(this->GetTag());
+    this->OnResetFlag();
+
+    // 
+    return 0;
+}
+
+// 
+int BasePuzzleScene::FailedDraw()
+{
     // 
     return 0;
 }

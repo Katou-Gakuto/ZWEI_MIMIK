@@ -23,7 +23,10 @@ struct RouteKeyFrame
     // 何フレーム目のものか
     uint32_t mnFrameCount;
 
-    // このフレームでの座標はどこか
+    // このフレームでの回転量
+    float mfRadian;
+
+    // このフレームでの座標
     VECTOR2D mvPos;
 };
 
@@ -49,8 +52,11 @@ public:
     // キーフレームを登録する関数
     int Add(const RouteKeyFrame keyFrame);
 
+    // フレームに合わせた回転量を取得する関数
+    float GetTargetFrameRad(uint32_t frameCount) const;
+
     // フレームに合わせた座標を取得する関数
-    VECTOR2D GetMovedPos(uint32_t frameCount) const;
+    VECTOR2D GetTargetFramePos(uint32_t frameCount) const;
 
     // ループを行うのか
     bool GetLoopFlag();

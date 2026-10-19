@@ -46,63 +46,11 @@ ButtonObjectController::~ButtonObjectController()
 int ButtonObjectController::Create()
 {
     // 
-    GameObject2D *obj = this->GetMyObject2D();
-    if (obj == nullptr)
-    {
-        // 
-        return -1;
-    }
-
-    obj->SetPosition(this->mvCenterPos);
-
-    // 
-    VECTOR2D tempPos;
-
-    // 
-    Quadrangle2D *collision = new Quadrangle2D(
-        tempPos,
-        tempPos,
-        tempPos,
-        tempPos,
-        obj,
-        CollisionTag::CollisionTag_Button,
-        CollisionNorm_Out,
-        true,
-        false,
-        0.0f);
-
-    // 
-    obj->AddCollision(collision, this->mdBody);
-
-    // 
-    return 0;
+    return this->CreateBody();
 }
 
 int ButtonObjectController::Initialize()
 {
-    // 
-    GameObject2D *obj = this->GetMyObject2D();
-    if (obj == nullptr)
-    {
-        // 
-        return -1;
-    }
-
-    obj->SetPosition(this->mvCenterPos);
-
-    // 
-    VECTOR2D tempPos[4];
-    tempPos[0] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[1] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[2] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[3] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
-
-    // 
-    Quadrangle2D *collision = this->GetBody();
-
-    // 
-    collision->SetShapeParameter(tempPos[0], tempPos[1], tempPos[2], tempPos[3]);
-
     // 
     return 0;
 }
@@ -116,16 +64,7 @@ int ButtonObjectController::Finalize()
 int ButtonObjectController::EarlyUpdate()
 {
     // 
-    this->mbPushLastFrame = this->mbOnPlayer;
-
-    // 
-    this->CheckLightSide();
-
-    // 
-    this->UpdateNowState();
-
-    // 
-    return 0;
+    return this->BaseEarlyUpdate();
 }
 
 int ButtonObjectController::Update()
@@ -143,7 +82,7 @@ int ButtonObjectController::HitOnCollision(BaseCollision *myCollision, BaseColli
 int ButtonObjectController::LateUpdate()
 {
     // 
-    return 0;
+    return this->BaseLateUpdate();
 }
 
 int ButtonObjectController::Draw()
@@ -156,13 +95,33 @@ int ButtonObjectController::Draw()
         return false;
     }
 
+    unsigned long color = 0x000000;
+    if (this->mbNowOn)
+    {
+        // 
+        color = 0xffffff;
+    }
+    else
+    {
+        if (this->mbLightSide)
+        {
+            // 
+            color = 0xff0000;
+        }
+        else
+        {
+            // 
+            color = 0x0000ff;
+        }
+    }
+
     // 
     DxLib::DrawBox(
         body->GetVertexPos(0).GetX(),
         body->GetVertexPos(0).GetY(),
         body->GetVertexPos(3).GetX(),
         body->GetVertexPos(3).GetY(),
-        0x0000ff,
+        color,
         false);
 
     // 
@@ -181,6 +140,87 @@ bool ButtonObjectController::GetLightSide() const
 {
     // 
     return this->mbLightSide;
+}
+
+// 
+ButtonObjectController::ButtonObjectController(
+    ComponentTagAndOrder ctao,
+    GameObject *myObject,
+    const VECTOR2D &center,
+    const VECTOR2D &blockSize) :
+    mbNowOn(false),
+    mbHitButton(true),
+    mbPushLastFrame(false),
+    mbLightSide(false),
+    mbOnPlayer(false),
+    mnOnFrameCount(0),
+    mnNowFrameCount(0),
+    mvCenterPos(center),
+    mvBlockSize(blockSize),
+    BaseComponent(myObject, ctao)
+{
+}
+
+// 
+int ButtonObjectController::CreateBody()
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return -1;
+    }
+
+    obj->SetPosition(this->mvCenterPos);
+
+    VECTOR2D tempPos[4];
+    tempPos[0] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[1] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[2] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
+    tempPos[3] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
+
+    // 
+    Quadrangle2D *collision = new Quadrangle2D(
+        tempPos[0],
+        tempPos[1],
+        tempPos[2],
+        tempPos[3],
+        obj,
+        CollisionTag::CollisionTag_Button,
+        CollisionNorm_Out,
+        true,
+        false,
+        0.0f);
+
+    // 
+    obj->AddCollision(collision, this->mdBody);
+
+    // 
+    return 0;
+}
+
+// 
+int ButtonObjectController::BaseEarlyUpdate()
+{
+    // 
+    this->mbPushLastFrame = this->mbOnPlayer;
+
+    // 
+    return 0;
+}
+
+// 
+int ButtonObjectController::BaseLateUpdate()
+{
+    // 
+    this->UpdateLightSide();
+
+    // 
+    this->UpdateNowState();
+
+    // 
+    return 0;
 }
 
 // 現在このボタンの上にプレイヤーがいるのか
@@ -413,7 +453,7 @@ void ButtonObjectController::UpdateNowState()
 }
 
 // 
-void ButtonObjectController::CheckLightSide()
+void ButtonObjectController::UpdateLightSide()
 {
     // 
     VECTOR2D myObjPos = this->GetMyObject2D()->GetPosition();

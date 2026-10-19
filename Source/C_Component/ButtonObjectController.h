@@ -25,20 +25,37 @@ public:
     // 
     ~ButtonObjectController() override;
 
-    int Create() override;
-    int Initialize() override;
-    int Finalize() override;
-    int EarlyUpdate() override;
-    int Update() override;
-    int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) override;
-    int LateUpdate() override;
-    int Draw() override;
+    virtual int Create() override;
+    virtual int Initialize() override;
+    virtual int Finalize() override;
+    virtual int EarlyUpdate() override;
+    virtual int Update() override;
+    virtual int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) override;
+    virtual int LateUpdate() override;
+    virtual int Draw() override;
 
     // 現在このボタンはONの状態なのか
     bool GetNowState() const;
 
-    // 現在このボタンの上にプレイヤーがいるのか
+    // 現在このボタンは光域プレイヤー用なのか
     bool GetLightSide() const;
+
+protected:
+    // 
+    ButtonObjectController(
+        ComponentTagAndOrder ctao,
+        GameObject *myObject,
+        const VECTOR2D &center,
+        const VECTOR2D &blockSize);
+
+    // 
+    int CreateBody();
+
+    // 
+    int BaseEarlyUpdate();
+
+    // 
+    int BaseLateUpdate();
 
 private:
     // 現在スイッチがONになっているか
@@ -78,7 +95,7 @@ private:
     void UpdateNowState();
 
     // 
-    void CheckLightSide();
+    void UpdateLightSide();
 
     // 
     Quadrangle2D *GetBody() const;

@@ -50,8 +50,8 @@ public:
     // 
     bool ChangeLightSide();
 
-    // é©êgÇÃÉSÅ[ÉãÇ…ÇΩÇ«ÇËíÖÇ¢ÇΩÇ©
-    bool CheckGoal() const;
+    // 
+    bool GetInLightArea() const;
 
 private:
 
@@ -83,6 +83,9 @@ private:
     bool mbLightSide;
 
     // 
+    bool mbInLightArea;
+
+    // 
     bool CheckHoldNow() const;
 
     // 
@@ -93,4 +96,8 @@ private:
 
     // 
     void SetHoldLightRadian();
+
+    // 
+    int UpdateInLightArea();
+
 };
