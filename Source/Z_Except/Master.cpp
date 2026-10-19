@@ -98,7 +98,7 @@ int Master::Initialize()
     mpLightManager->Initilize();
 
     // imguiマネージャー
-    mpImguiManager = new ImguiManager(false);// 使うかどうかのフラグ
+    mpImguiManager = new ImguiManager(true);// 使うかどうかのフラグ
     mpImguiManager->Initilize();
 
     // ラストに初期化して

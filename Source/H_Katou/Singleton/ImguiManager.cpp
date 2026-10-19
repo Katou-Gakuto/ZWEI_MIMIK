@@ -102,12 +102,12 @@ void ImguiManager::Update()
     }
     
     mstImguiGroupDatas.clear();
-ImGui::TextLinkOpenURL("TEST", "https://github.com/Katou-Gakuto/ZWEI_MIMIK");
-    DEBUG::SaveText("CLICK");
-    if (ImGui::Button("Test Button"))
-    {
-        DEBUG::SaveText("CLICK\n\n");
-    }
+// ImGui::TextLinkOpenURL("TEST", "https://github.com/Katou-Gakuto/ZWEI_MIMIK");
+//     DEBUG::SaveText("CLICK");
+//     if (ImGui::Button("Test Button"))
+//     {
+//         DEBUG::SaveText("CLICK\n\n");
+//     }
 #endif
 }
 
@@ -1296,15 +1296,24 @@ void ImguiManager::InitDrawGameDisplayToImguiVariable()
 }
 
 // ゲーム画面描画
-void ImguiManager::DrawGameDisplayToImgui()
+void ImguiManager::DrawGameDisplayToImgui(std::string plusName)
 {
-    // TODO:_ ドッキングしてもエラー出ないようにする
-    // TODO:_ ドッキングしたら描画されている画面サイズ変更するようにする
+    ImGui::Begin(("DxLibDraw" + plusName).c_str(), nullptr);
 
-    ImVec2 displaySize = ImVec2(Master::mpDxLibDataManager->GetDisplaySize().GetX(), Master::mpDxLibDataManager->GetDisplaySize().GetY());
-    // ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    // ImGui::SetNextWindowSize(displaySize, ImGuiCond_Once);// 画面サイズを設定
-    ImGui::Begin("DxLibDraw", nullptr);//, ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+    // タブ内で画像を描画できる領域のサイズ
+    ImVec2 displaySize = ImGui::GetContentRegionAvail();
+    // DxLibの元の画面サイズ
+    VECTOR2D dxLibDisplaySize = Master::mpDxLibDataManager->GetDisplaySize();
+    // 元の縦横比を維持して表示サイズを計算
+    if (dxLibDisplaySize.GetX() > 0.0f && dxLibDisplaySize.GetY() > 0.0f &&
+        displaySize.x > 0.0f && displaySize.y > 0.0f)
+    {
+        float scale = (std::min)(displaySize.x / dxLibDisplaySize.GetX(), displaySize.y / dxLibDisplaySize.GetY());
+
+        displaySize.x = dxLibDisplaySize.GetX() * scale;
+        displaySize.y = dxLibDisplaySize.GetY() * scale;
+    }
+
     ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
     ID3D11DeviceContext* context = static_cast<ID3D11DeviceContext*>(const_cast<void*>(GetUseDirect3D11DeviceContext()));
 

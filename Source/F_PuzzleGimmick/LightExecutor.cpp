@@ -1238,7 +1238,6 @@ int LightExecutor::Draw(bool triggerSignal)
                     currentNode->GetMyEndPos().GetX(),
                     currentNode->GetMyEndPos().GetY(),
                     0x00ffff);
-
                 // 
                 if (!currentNode->AccessNext(&nextNode))
                 {
@@ -1250,6 +1249,7 @@ int LightExecutor::Draw(bool triggerSignal)
                 currentNode = nextNode;
             }
         }
+                   // Master::mpImguiManager->DrawGameDisplayToImgui("Draw");
     }
     else if (drawMode == 1)
     {

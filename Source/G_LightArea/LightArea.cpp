@@ -33,6 +33,15 @@ LightArea::~LightArea()
 {
 }
 
+// 初期化(シーン開始時)
+void LightArea::Init()
+{
+    for (int lightNodeIterator = 0; lightNodeIterator < mlLightFirstNode.size(); ++lightNodeIterator)
+    {
+        mlLightFirstNode[lightNodeIterator]->Init(this->mpParentObject);
+    }
+}
+
 // 
 void LightArea::SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle, bool final2start)
 {

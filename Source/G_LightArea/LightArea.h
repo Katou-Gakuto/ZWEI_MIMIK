@@ -30,6 +30,9 @@ public:
     // 
     ~LightArea();
 
+    // 初期化(シーン開始時)
+    void Init();
+
     // 自身の光のレイの角度を設定する関数
     void SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle, bool final2start);
 

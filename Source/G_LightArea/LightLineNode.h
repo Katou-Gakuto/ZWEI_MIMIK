@@ -16,6 +16,9 @@ public:
     // デストラクタ
     ~LightLineNode();
 
+    // 初期化(シーン開始時)
+    void Init(void *parent);
+
     // 自身の光の終了地点を計算し、設定する関数
     // 次のノードにつながる場合はtrueを返す
     bool CalculateEndPos(

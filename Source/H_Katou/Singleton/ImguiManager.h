@@ -131,7 +131,7 @@ public:
     /*ƒQ[ƒ€‰æ–Ê•`‰æ—p•Ï”‰Šú‰»*/
     void InitDrawGameDisplayToImguiVariable();
     /*ƒQ[ƒ€‰æ–Ê•`‰æ*/
-    void DrawGameDisplayToImgui();
+    void DrawGameDisplayToImgui(std::string plusName = "");
 };
 /*
 \‘¢‘Ìì¬

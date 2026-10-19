@@ -75,6 +75,15 @@ void LightAreaManager::Initilize()
     ScreenSizeChange();
 }
 
+// ƒV[ƒ“–ˆ‰Šú‰»
+void LightAreaManager::SceneInit()
+{
+    for (int nodeIterator = 0; nodeIterator < mlNode.size(); ++nodeIterator)
+    {
+        mlNode[nodeIterator]->Init();
+    }
+}
+
 // •`‰æ
 void LightAreaManager::Draw()
 {    
@@ -533,7 +542,7 @@ void LightAreaManager::EndLightDraw()
 {
     // •`‰ææ–ß‚·
     SetDrawScreen(DX_SCREEN_BACK);
-    
+
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 125);
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {

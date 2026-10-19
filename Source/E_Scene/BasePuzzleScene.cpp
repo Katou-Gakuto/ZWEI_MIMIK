@@ -10,6 +10,7 @@
 #include "../A_GameObject/GoalObject.h"
 #include "../C_Component/Player.h"
 #include "../C_Component/GoalObjectController.h"
+#include "LightAreaManager.h"
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../E_Scene/BaseSceneManager.h"
 #include "../H_Katou/Singleton/KeyState.h"
@@ -93,6 +94,9 @@ int BasePuzzleScene::Initialize()
     this->mpPlayerShadow->InitPosition(initPosBox[1]);
     this->mpGoalLight->InitPosition(initPosBox[2]);
     this->mpGoalShadow->InitPosition(initPosBox[3]);
+
+    // ƒ‰ƒCƒg‰Šú‰»
+    Master::mpLightManager->SceneInit();
 
     // 
     this->AddMasterObjects();
