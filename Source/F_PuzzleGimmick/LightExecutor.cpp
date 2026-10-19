@@ -1115,13 +1115,15 @@ int LightExecutor::Update(bool triggerSignal)
 {
     if (!flag)
     {
-    ImGui::Begin("Test", nullptr);
-        TestAllLayoutImgui();
-        ImGui::End();
-    ImGui::Begin("DEbug", nullptr);
-        TestAllButtonImgui();
-        ImGui::End();
+#ifdef _DEBUG
+    //ImGui::Begin("Test", nullptr);
+    //    TestAllLayoutImgui();
+    //    ImGui::End();
+    //ImGui::Begin("DEbug", nullptr);
+        //TestAllButtonImgui();
+        //ImGui::End();
         flag = true;
+#endif
     }
     // 
     if (this->GetActiveParam().GetSignalNot())

@@ -43,7 +43,4 @@ public:
 	/// <summary>初期化済みフラグ</summary>
 	/// <returns>初期化しているなら「true」を返す</returns>
 	inline bool GetInitializedFlag() const { return mbIsInitialized; }
-
-	/*取得*/
-	inline VECTOR2D GetDisplaySize() const { return mstDisplaySize; }
 };
