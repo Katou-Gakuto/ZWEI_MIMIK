@@ -51,7 +51,7 @@ int GimmickObjectController::EarlyUpdate()
     for (uint32_t i = 0; i < this->mlGimmickList.size(); i++)
     {
         // 
-        this->mlGimmickList[i].mpExecutor->LateUpdate((this->mlGimmickList[i].mbTriggerSignal));
+        this->mlGimmickList[i].mpExecutor->EarlyUpdate(this->mlGimmickList[i].mbTriggerSignal);
     }
 
     // 
@@ -67,7 +67,7 @@ int GimmickObjectController::Update()
         this->mlGimmickList[i].mbTriggerSignal = this->mlGimmickList[i].mpTrigger->GetSignal();
 
         // 
-        this->mlGimmickList[i].mpExecutor->Update((this->mlGimmickList[i].mbTriggerSignal));
+        this->mlGimmickList[i].mpExecutor->Update(this->mlGimmickList[i].mbTriggerSignal);
     }
 
     // 
@@ -76,6 +76,19 @@ int GimmickObjectController::Update()
 
 int GimmickObjectController::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
 {
+    // 
+    for (uint32_t i = 0; i < this->mlGimmickList.size(); i++)
+    {
+        // 
+        this->mlGimmickList[i].mpTrigger->HitOnCollision(myCollision, hitCollision);
+    }
+
+    // 
+    for (uint32_t i = 0; i < this->mlGimmickList.size(); i++)
+    {
+        // 
+        this->mlGimmickList[i].mpExecutor->HitOnCollision(myCollision, hitCollision);
+    }
     // 
     return 0;
 }
@@ -86,7 +99,7 @@ int GimmickObjectController::LateUpdate()
     for (uint32_t i = 0; i < this->mlGimmickList.size(); i++)
     {
         // 
-        this->mlGimmickList[i].mpExecutor->LateUpdate((this->mlGimmickList[i].mbTriggerSignal));
+        this->mlGimmickList[i].mpExecutor->LateUpdate(this->mlGimmickList[i].mbTriggerSignal);
     }
 
     // 

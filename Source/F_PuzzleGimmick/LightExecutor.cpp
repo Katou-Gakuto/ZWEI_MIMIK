@@ -1064,7 +1064,7 @@ LightExecutor::LightExecutor(
 {
     InitializeTestAllLayoutImgui();
     // 
-    this->SetLightLineCount(lineCount);
+    this->SetLightLineCount(this->mnLineCount);
 
     // 
     this->SetLength(this->mfLength);
@@ -1073,10 +1073,10 @@ LightExecutor::LightExecutor(
     this->SetBaseAngle(this->mfBaseAngle);
 
     // 
-    this->SetLightAngle(lightAngle);
+    this->SetLightAngle(this->mfLightAngle);
 
     // 
-    this->SetFinal2Start(final2start);
+    this->SetFinal2Start(this->mbFinal2Start);
 
     // 
     this->UpdateLightParam();
@@ -1164,6 +1164,13 @@ int LightExecutor::LateUpdate(bool triggerSignal)
     return 0;
 }
 
+// 当たり判定によるギミックの変化に対応させる関数
+int LightExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
+{
+    // 
+    return 0;
+}
+
 // シミュレーション内容を描画する関数
 // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
 int LightExecutor::Draw(bool triggerSignal)
@@ -1221,14 +1228,14 @@ int LightExecutor::Draw(bool triggerSignal)
                     // 
                     // break;
                 }
-
+                
                 // デバッグ用レイの可視化
-                //drawResult = DxLib::DrawLine(
-                //    currentNode->GetMyStartPos().GetX(),
-                //    currentNode->GetMyStartPos().GetY(),
-                //    currentNode->GetMyEndPos().GetX(),
-                //    currentNode->GetMyEndPos().GetY(),
-                //    0x00ffff);
+                drawResult = DxLib::DrawLine(
+                    currentNode->GetMyStartPos().GetX(),
+                    currentNode->GetMyStartPos().GetY(),
+                    currentNode->GetMyEndPos().GetX(),
+                    currentNode->GetMyEndPos().GetY(),
+                    0x00ffff);
 
                 // 
                 if (!currentNode->AccessNext(&nextNode))
@@ -1417,7 +1424,7 @@ bool LightExecutor::CalculateLineEndPos()
     std::vector<BaseCollision2D *> objectCollisionBox;
 
     // 
-    BaseScene *nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    BaseScene *nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
     if (nowScene->GetBaseCollision2DManager()->SearchTag(CollisionTag::CollisionTag_Wall, objectCollisionBox) != 0)
     {
         // 

@@ -5,7 +5,8 @@
 #include "../Z_Except/CursorMoveSupporter.h"
 
 class Player;
-class LightAreaManager;
+class GoalObjectController;
+class VECTOR2D;
 
 class BasePuzzleScene : public BaseScene
 {
@@ -32,9 +33,38 @@ public:
     int Draw() override;
 
     // 
-    virtual int MapCreate() = 0;
+    virtual int MapCreate(GameObjectManager &objectManager) = 0;
+
+    // 
+    virtual void GetMasterObjectsInitPos(
+        VECTOR2D &playerLightPos,
+        VECTOR2D &playerShadowPos,
+        VECTOR2D &goalLightPos,
+        VECTOR2D &goalShadowPos) = 0;
+
+    // 
+    static SceneTag StageNum2SceneTag(unsigned long stageNum);
+
+    // 
+    Player *GetPlayer(int playerNumber)const;
+
+    // 
+    GoalObjectController *GetGoal(bool lightSide)const;
+
 
 private:
+    // 
+    Player *mpPlayerLight;
+
+    // 
+    Player *mpPlayerShadow;
+
+    // 
+    GoalObjectController *mpGoalLight;
+
+    // 
+    GoalObjectController *mpGoalShadow;
+
     // 
     bool mbPouse;
 
@@ -43,4 +73,10 @@ private:
 
     // 
     static CursorMoveData smdMoveData;
+
+    // 
+    void AddMasterObjects();
+
+    // 
+    int PouseUpdate();
 };

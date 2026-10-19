@@ -182,7 +182,7 @@ int BaseComponentList::Finalize()
     int temp = 0;
     for (BaseComponent *current = this->mpFirstComponent; current != nullptr; current = current->GetNext())
     {
-        temp = current->Finalize();
+        temp = current->BaseFinalize();
         if (temp != 0)
         {
             break;

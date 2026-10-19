@@ -19,5 +19,5 @@ public:
     int SetBaseParamMySelf() override;
     int GetAABB(AABB2D &out) override;
 
-    void SetShapeParameter(const VECTOR2D &pos, float radiusNoSqrt);
+    void SetShapeParameter(const VECTOR2D &pos, float radius);
 };

@@ -13,7 +13,7 @@ Sphere3D::Sphere3D(
     BaseCollision3D(myObject, CollisionType::CollisionType_Sphere3D, tag, normNum, penetrate, hitMove, moveLate)
 {
     this->SetBasePos(pos);
-    this->SetBaseRadiusSqrt(radiusSqrt);
+    this->SetBaseRadius(radiusSqrt);
 }
 
 Sphere3D::~Sphere3D()
@@ -64,8 +64,8 @@ int Sphere3D::GetAABB(AABB3D &out)
     return 0;
 }
 
-void Sphere3D::SetShapeParameter(const VECTOR3D &pos, float radiusNoSqrt)
+void Sphere3D::SetShapeParameter(const VECTOR3D &pos, float radius)
 {
     this->SetBasePos(pos);
-    this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+    this->SetBaseRadius(radius);
 }

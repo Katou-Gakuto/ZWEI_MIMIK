@@ -10,7 +10,7 @@ BaseCollision3D::BaseCollision3D(
     GameObject *object, CollisionType type, CollisionTag tag, CollisionNorm normNum,
     bool penetrate, bool hitMove, float moveLate) :
     mvBasePos(VECTOR3D::GetZero()),
-    mfBaseRadiusNoSqrt(0.0f),
+    mfBaseRadius(0.0f),
     mbBasePosUpdateFlag(true),
     mbBaseRadiusUpdateFlag(true),
     mvMoveVec(VECTOR3D::GetZero()),
@@ -58,14 +58,14 @@ int BaseCollision3D::SetNextPos(const void *posData)
 
 int BaseCollision3D::WorldConnectMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    auto nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
 
     return nowScene->GetBaseCollision3DManager()->Add(this);
 }
 
 int BaseCollision3D::WorldIsolateMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    auto nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
 
     return nowScene->GetBaseCollision3DManager()->IsolateTarget(this);
 }

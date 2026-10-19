@@ -80,6 +80,18 @@ int BaseComponent::BaseInitialize()
     return temp;
 }
 
+int BaseComponent::BaseFinalize()
+{
+    int temp = 0;
+
+    temp = this->Finalize();
+    if (temp == 0)
+    {
+        this->mbInitializedFlag = false;
+    }
+    return temp;
+}
+
 void BaseComponent::OnDeleteFlag()
 {
     this->mbDeleteFlag = true;

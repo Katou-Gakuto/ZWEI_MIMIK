@@ -66,8 +66,8 @@ int Ray3D::SetBaseParamMySelf()
     if (this->GetBaseRadiusUpdateFlag())
     {
         // Ray‚Ì’·‚³‚Ì”¼•ª‚ðŽæ“¾‚·‚é
-        float radiusNoSqrt = (this->mvEndPos - this->mvStartPos).MagnitudeNoSqrt() * 0.5f;
-        this->SetBaseRadiusNoSqrt(radiusNoSqrt);
+        float radius = ((this->mvEndPos - this->mvStartPos) * 0.5f).Magnitude();
+        this->SetBaseRadius(radius);
 
         // ƒtƒ‰ƒO‚ð®‚¦‚é
         this->SetBaseRadiusUpdateFlag(false);

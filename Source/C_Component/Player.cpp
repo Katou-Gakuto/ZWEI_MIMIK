@@ -2,11 +2,17 @@
 #include "GameObject2D.h"
 #include "Master.h"
 
+#include "../A_GameObject/LightObject.h"
+
 #include "../C_Component/BaseComponentList.h"
 #include "../C_Component/HoldObjectController.h"
+#include "../C_Component/GoalObjectController.h"
+#include "../C_Component/GimmickObjectController.h"
 
 #include "../E_Scene/BaseScene.h"
 #include "../E_Scene/BaseSceneManager.h"
+
+#include "../F_PuzzleGimmick/LightExecutor.h"
 
 #include "../G_LightArea/LightAreaManager.h"
 
@@ -14,14 +20,23 @@
 #include "../T_Model/DXModelAnim.h"
 
 #include "../S_Collision/BaseCollision.h"
+#include "../S_Collision/BaseCollision2DManager.h"
 #include "../S_Collision/BaseCollisionList.h"
+#include "../S_Collision/Point2D.h"
 #include "../S_Collision/Circle2D.h"
 
+#include "../Y_Tool/MyFunctions.h"
+
+const int debugNum = 5;
 
 Player::Player(GameObject* myObject, int playerNumber)
 : BaseComponent(myObject, ComponentTagAndOrder::CTAO_PlayerController)
 , mdBodyCollision()
-, PlayerNum(playerNumber)
+, mnPlayerNum(playerNumber)
+, mfSwingDegree(1.0f)
+, mfNowSwingRadian(0.0f)
+, mfMoveMagnitude(4)
+, mbLightSide(playerNumber == 1)
 , mpHold(nullptr)
 {
 }
@@ -55,10 +70,10 @@ int Player::Create()
     body->AddProcessingTag(CollisionTag::CollisionTag_Wall);
 
     // 
-    obj->AddCollision(body, this->mdBodyCollision);
+    body->AddProcessingTag(CollisionTag::CollisionTag_LightBody);
 
     // 
-    body->WorldConnectMySelf();
+    obj->AddCollision(body, this->mdBodyCollision);
 
     // 
     obj->AddModel(new DXAnimModel(obj), this->mdModelHandle);
@@ -69,15 +84,11 @@ int Player::Create()
 
 int Player::Initialize()
 {
-    Pos = this->GetMyObject2D()->GetPosition();
+    VECTOR2D pos = this->GetMyObject2D()->GetPosition();
     
-    // Pos = OldPos;
-    //if (Master::mpResourceManager != nullptr);
-
-
     DXAnimModel *playerModel = this->GetPlayerModel();
 
-    if (PlayerNum == 1)
+    if (mnPlayerNum == 1)
     {
         PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f);
     }
@@ -88,8 +99,11 @@ int Player::Initialize()
 
     // 
     Circle2D *bodyCollision = GetBodyCollision();
-    float circleRadius = 50.0f;
-    bodyCollision->SetShapeParameter(this->Pos, circleRadius * circleRadius);
+    float circleRadius = 20.0f;
+    bodyCollision->SetShapeParameter(pos, circleRadius);
+
+    // 
+    bodyCollision->WorldConnectMySelf();
 
     // 
     return 0;
@@ -98,82 +112,106 @@ int Player::Initialize()
 
 int Player::Finalize()
 {
+    // 
+    Circle2D *bodyCollision = GetBodyCollision();
+    bodyCollision->WorldIsolateMySelf();
+
     return 0;
 }
 
 
 int Player::EarlyUpdate()
 {
-    moveVec = VECTOR2D::GetZero();
-
-	//十字ボタン
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::UP, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::UP, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-        moveVec.SetY(-4);
-	}
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::DOWN, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-        moveVec.SetY(4);
-	}
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::LEFT, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-        moveVec.SetX(-4);
-	}
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::RIGHT, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::RIGHT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-        moveVec.SetX(4);
-	}
-
-    // 
-    moveVec = moveVec.SetMagnitude(4);
-
-	//ボタン
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::UP, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-		// この中にAを押したときの処理を追加する
-	}
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-		// この中にBを押したときの処理を追加する
-	}
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::X, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-		// この中にXを押したときの処理を追加する
-	}
-	if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::Y, PlayerNum - 1)/*(CONTROLLER_KEY_TYPE::RIGHT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
-	{
-		// この中にYを押したときの処理を追加する
-	}
-
-
     return 0;
 }
 
 
 int Player::Update()
 {
-    GameObject2D* player = GetMyObject2D();
-    player->SetMoveVec(moveVec);
-    player->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return -1;
+    }
+
+    VECTOR2D moveVec = this->GetMoveVecNowFrame();
+
+    // この中にAを押したときの処理がある
+    int result = TryHold();
+
+    // 
+    if (this->mbHoldFlag)
+    {
+        // 
+        result = this->HoldSwing();
+
+        // 
+        if (result != 0)
+        {
+            // 
+            return -1;
+        }
+
+        if (!this->mbSwingFlag)
+        {
+            // 
+            this->HoldMove(moveVec);
+        }
+    }
+    else
+    {
+        // 
+        if (this->mpHold != nullptr)
+        {
+            // 
+            this->HoldMove(VECTOR2D::GetZero());
+
+            // 
+            this->mpHold->SetHoldFlag(this->mbLightSide, false);
+
+            // 
+            this->mpHold = nullptr;
+        }
+    }
+
+    // 
+    if (!this->mbSwingFlag &&
+        moveVec != VECTOR2D::GetZero())
+    {
+        // 
+        obj->SetMoveVec(moveVec);
+
+        // 
+        obj->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+    }
+
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        // この中にBを押したときの処理を追加する
+    }
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::X, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        // この中にXを押したときの処理を追加する
+    }
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::Y, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::RIGHT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        // この中にYを押したときの処理を追加する
+    }
+
+    // 
     return 0;
 }
 
 
 int Player::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
 {
-    // 自身の体の当たり判定と当たっている場合は処理を行う
-    if (myCollision->GetMyObject() != hitCollision->GetMyObject() &&
-        myCollision->GetCollisionTag() == CollisionTag::CollisionTag_CharaBody)
-    {
-        // 当たったオブジェクトが普通のオブジェクト、ライト、鏡のいずれかの場合は処理を行う
-        Hold(hitCollision);
-    }
-
     // 
     if (this->CheckHoldNow())
     {
         //
-        HoldMove();
+        HoldMove(this->GetMyObject2D()->GetMoveVec2D());
     }
 
     // 
@@ -188,6 +226,21 @@ int Player::LateUpdate()
     // ↓のコードでこのフレームの描画にこのモデルを描画を行うようにできる
     playerModel->SetDrawFlag(true);
 
+    // 
+    if (this->mpHold != nullptr &&
+        this->mbSwingFlag)
+    {
+        // 
+        this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition(), debugNum);
+
+        // 
+        if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
+        {
+            this->SetHoldLightRadian();
+        }
+    }
+
+    // 
     return 0;
 }
 
@@ -205,7 +258,7 @@ int Player::Draw()
         unsigned int color = 0;
 
         // p1かどうかで処理を変える
-        if (PlayerNum == 1)
+        if (mnPlayerNum == 1)
         {
             // プレイヤー1の場合は赤色で描画
             color = 0xff0000;
@@ -224,15 +277,29 @@ int Player::Draw()
             color, false);
     }
 
+    // Aボタンを押していたら円を描画する
     if (bodyCircleDraw)
     {
-        // 緑色で円を描画する
+        // 体の当たり判定である円を緑色で描画する
         Circle2D *bodyCollision = GetBodyCollision();
         DrawCircle(
             bodyCollision->GetBasePos().GetX(),
             bodyCollision->GetBasePos().GetY(),
             bodyCollision->GetBaseRadius(),
             0x00ff00,
+            false);
+    }
+
+    // Aボタンを押していたら円を描画する
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, this->mnPlayerNum - 1))
+    {
+        // ホールドの大体の範囲である円を白色で描画する
+        Circle2D *bodyCollision = GetBodyCollision();
+        DrawCircle(
+            bodyCollision->GetBasePos().GetX(),
+            bodyCollision->GetBasePos().GetY(),
+            bodyCollision->GetBaseRadius() + (this->mfMoveMagnitude * 1.5f),
+            0xffffff,
             false);
     }
     
@@ -248,7 +315,7 @@ int Player::Draw()
     bool inLightArea = !inArea.empty();
     
     // 
-    float lightAreaParam = 30.0f;
+    float lightAreaParam = 5.0f;
 
     // 
     if (inLightArea)
@@ -261,91 +328,269 @@ int Player::Draw()
             true);
     }
 
-    return 0;
-}
-
-// 
-int Player::Hold(BaseCollision *hitCollision)
-{
-    // @Debug
-    // アクションボタン
-    // 現在はTEST_1だけど、後々は違うボタンに
-    if (!Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::TEST_1, PlayerNum - 1))
-    {
-        // 何もしない
-        return 0;
-    }
-
-    // 当たったオブジェクトが普通のオブジェクト、ライト、鏡のいずれでもないなら処理を行う
-    if ((hitCollision->GetCollisionTag() == CollisionTag::CollisionTag_Wall ||
-        hitCollision->GetCollisionTag() == CollisionTag::CollisionTag_LightBody ||
-        hitCollision->GetCollisionTag() == CollisionTag::CollisionTag_Mirror) == false)
-    {
-        // 何もしない
-        return 0;
-    }
-
-    // 既にオブジェクトをつかんでいる場合は処理を行う
-    if (this->mpHold != nullptr)
-    {
-        // 掴みっぱなしなので
-        return 0;
-    }
-
     // 
-    GameObject2D *hitObject = hitCollision->GetMyObject2D();
-    if (hitObject == nullptr)
+    if (this->CheckGoal())
     {
-        // 
-        return 0;
+        DrawCircle(
+            player->GetPosition().GetX(),
+            player->GetPosition().GetY(),
+            40.0f,
+            0xff0000,
+            false);
     }
-
-    // 
-    BaseComponentList *compList = hitObject->GetBaseComponentList();
-    if (compList == nullptr)
-    {
-        // 
-        return 0;
-    }
-
-    // 
-    auto conponentBox = compList->SearchComponent(ComponentTagAndOrder::CTAO_HoldController);
-    if (conponentBox.empty() ||
-        conponentBox[0] == nullptr)
-    {
-        // 
-        return 0;
-    }
-
-    // 
-    mbHoldFlag = true;
-
-    // 
-    this->mpHold = static_cast<HoldObjectController *>(conponentBox[0]);
 
     // 
     return 0;
 }
 
 // 
-int Player::HoldMove()
+int Player::TryHold()
+{
+    // 
+    this->mbHoldFlag = false;
+    this->mbSwingFlag = false;
+
+    // 
+    bool holdCommandFlag = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, mnPlayerNum - 1);
+
+    // 
+    if (this->mpHold != nullptr)
+    {
+        // 
+        if (holdCommandFlag)
+        {
+            // 
+            this->mbHoldFlag = true;
+        }
+
+        // 関数終了
+        return 0;
+    }
+
+    //ボタンを押していない場合は処理を行う
+    if (!holdCommandFlag)
+    {
+        // 
+        return 0;
+    }
+
+    // 
+    auto collisionManager = Master::mpBaseSceneManager->SearchSceneAuto()->GetBaseCollision2DManager();
+    if (collisionManager == nullptr)
+    {
+        // 
+        return 0;
+    }
+
+    // 
+    Circle2D *body = this->GetBodyCollision();
+    if (body == nullptr)
+    {
+        // 
+        return 0;
+    }
+
+    GameObject2D *hitObject = nullptr;
+    BaseComponentList *compList = nullptr;
+    std::vector<BaseComponent *> componentBox;
+
+    // 
+    std::vector<CollisionTag> targetTagBox;
+    targetTagBox.push_back(CollisionTag::CollisionTag_LightBody);
+    targetTagBox.push_back(CollisionTag::CollisionTag_Mirror);
+    targetTagBox.push_back(CollisionTag::CollisionTag_Wall);
+
+    // 
+    Circle2D tempCircle;
+
+    // Bodyの半径に + 移動量1.5倍の大きさがHoldに使用する当たり判定の大きさ
+    float radius = body->GetBaseRadius() + (this->mfMoveMagnitude * 1.5f);
+    tempCircle.SetShapeParameter(this->GetMyObject2D()->GetPosition(), radius);
+    tempCircle.SetPenetrate(true);
+
+    // 
+    CollisionCheckResult2D hitResult = GetCollisionCheckResult2DZero();
+    std::vector<BaseCollision2D *> collisionBox;
+    for (auto targetTag : targetTagBox)
+    {
+        // 
+        if (collisionManager->SearchTag(targetTag, collisionBox) != 0)
+        {
+            // 
+            return 0;
+        }
+
+        // 
+        for (BaseCollision2D *hitCollision : collisionBox)
+        {
+            // 
+            hitResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempCircle, hitCollision);
+            if (hitResult.mnResultParam < 0)
+            {
+                // 
+                continue;
+            }
+
+            // 
+            hitObject = hitCollision->GetMyObject2D();
+            if (hitObject == nullptr)
+            {
+                // 
+                continue;
+            }
+
+            compList = hitObject->GetBaseComponentList();
+            if (compList == nullptr)
+            {
+                // 
+                continue;
+            }
+
+            // 
+            componentBox = compList->SearchComponent(ComponentTagAndOrder::CTAO_HoldController);
+            if (componentBox.empty() ||
+                componentBox[0] == nullptr)
+            {
+                // 
+                continue;
+            }
+
+            // 
+            HoldObjectController *hold = static_cast<HoldObjectController *>(componentBox[0]);
+
+            // 
+            if (!hold->SetHoldFlag(this->mbLightSide, true))
+            {
+                // 
+                break;
+            }
+
+            // 
+            this->mbHoldFlag = true;
+
+            // 
+            this->mpHold = hold;
+
+            // 
+            break;
+        }
+
+        // 
+        if (this->mbHoldFlag)
+        {
+            // 
+            break;
+        }
+    }
+
+    // 
+    if (this->mbHoldFlag)
+    {
+        // 
+        if (this->mpHold->GetSwingFlag())
+        {
+            // これまで持っていなかったオブジェクトをホールドしたので角度を取得
+            this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition(), debugNum);
+
+            // 
+            if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
+            {
+                this->SetHoldLightRadian();
+            }
+        }
+    }
+
+    // 
+    return 0;
+}
+
+// オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
+int Player::HoldSwing()
+{
+    // 
+    if (!this->mpHold->GetSwingFlag())
+    {
+        // 
+        return 0;
+    }
+
+    // 
+    bool clockwise = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::Y, this->mnPlayerNum - 1);
+    bool counterClockwise = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::X, this->mnPlayerNum - 1);
+
+    // 
+    if (!clockwise && !counterClockwise)
+    {
+        // 
+        return 0;
+    }
+
+    // 
+    if (clockwise && counterClockwise)
+    {
+        // 
+        return 1;
+    }
+
+    // 
+    float addRad = MyFunctions::Deg2Rad(this->mfSwingDegree);
+    if (counterClockwise)
+    {
+        // 
+        addRad = -addRad;
+    }
+
+    VECTOR2D nowPos = this->GetMyObject2D()->GetPosition();
+
+    // 
+    VECTOR2D nowDinstance = this->mpHold->GetMyObject2D()->GetPosition() - nowPos;
+
+    // 
+    float distanceMag = nowDinstance.Magnitude();
+
+    // 
+    float newRadian = this->mfNowSwingRadian + addRad;
+
+    // 
+    bool result = this->mpHold->SetSwingParam(nowPos, newRadian, distanceMag);
+
+    // 
+    this->mbSwingFlag = true;
+
+    // 
+    return 0;
+}
+
+// 
+int Player::HoldMove(const VECTOR2D &moveVec)
 {
     // 
     if (this->mpHold != nullptr)
     {
+        // ほぼ0ベクトルの場合は処理を行う
+        if (moveVec == VECTOR2D::GetZero())
+        {
+            this->mpHold = this->mpHold;
+        }
+
         // 現状のMoveVecを更新する
-        this->mpHold->SyncHoldMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+        this->mpHold->SyncMoveVecToHold(moveVec);
+
+        // 
+        if (this->mpHold->GetDoubleHold())
+        {
+            // 
+            int targetPlayerNum = this->mnPlayerNum == 1 ? 2 : 1;
+
+            // 
+            Player *target = Master::GetPlayerController(targetPlayerNum);
+            target->SyncPlayerMoveVec(moveVec);
+        }
+
     }
 
     // 
     return 0;
-}
-
-// 
-bool Player::CheckHoldObject(const HoldObjectController *hold) const
-{
-    // 
-    return this->mpHold == hold;
 }
 
 // 
@@ -364,6 +609,88 @@ bool Player::SyncPlayerMoveVec(const VECTOR2D &holdMoveVec)
 
     // 
     list->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &holdMoveVec);
+
+    // 
+    return true;
+}
+
+// 
+VECTOR2D Player::GetMoveVecNowFrame()const
+{
+    VECTOR2D moveVec = VECTOR2D::GetZero();
+
+    //十字ボタン
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::UP, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::UP, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        moveVec.SetY(-1);
+    }
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::DOWN, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        moveVec.SetY(1);
+    }
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::LEFT, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        moveVec.SetX(-1);
+    }
+    if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::RIGHT, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::RIGHT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
+    {
+        moveVec.SetX(1);
+    }
+
+    // 
+    moveVec = moveVec.SetMagnitude(mfMoveMagnitude);
+
+    // 
+    return moveVec;
+}
+
+// 
+bool Player::InitPosition(const VECTOR2D &pos)
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    obj->SetPosition(pos);
+
+    // 
+    return false;
+}
+
+// 
+bool Player::ChangeLightSide()
+{
+    // 
+    this->mbLightSide = !this->mbLightSide;
+
+    // 
+    return true;
+}
+
+// 
+bool Player::CheckGoal() const
+{
+    // 
+    GameObject2D *goalObj = nullptr;
+    
+    goalObj = Master::GetGoalController(this->mbLightSide)->GetMyObject2D();
+
+    // 
+    Point2D goalPoint;
+    goalPoint.SetShapeParameter(goalObj->GetPosition());
+
+    // 
+    auto hitResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&goalPoint, this->GetBodyCollision());
+    if (hitResult.mnResultParam < 0)
+    {
+        // 
+        return false;
+    }
 
     // 
     return true;
@@ -391,4 +718,43 @@ Circle2D *Player::GetBodyCollision() const
 {
     // 
     return static_cast<Circle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBodyCollision));
+}
+
+// 
+void Player::SetHoldLightRadian()
+{
+    // 
+    float setRagian = this->mfNowSwingRadian;
+    if (this->mbLightSide)
+    {
+        // 
+        setRagian += MyFunctions::GetMaxRad() * 0.5f;
+
+        // 
+        setRagian = MyFunctions::GetArrangeRad(setRagian);
+    }
+
+    // 
+    GimmickObjectController *gimmickController = (static_cast<LightObject *>(this->mpHold->GetMyObject()))->GetGimmickController();
+    if (gimmickController == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    LightExecutor *currentExecutor = nullptr;
+
+    // 
+    auto box = gimmickController->GetGimmickBox();
+    auto count = gimmickController->GetGimmickCount();
+    for (uint32_t i = 0; i < count; i++)
+    {
+        currentExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
+        if (currentExecutor != nullptr)
+        {
+            // 
+            currentExecutor->SetBaseAngle(setRagian);
+        }
+    }
 }

@@ -329,6 +329,48 @@ VECTOR2D VECTOR2D::GetLerpPos(const VECTOR2D &startPos, const VECTOR2D &targetPo
     return temp;
 }
 
+// 線形補間
+VECTOR2D VECTOR2D::GetLerpPos(const VECTOR2D &startPos, const VECTOR2D &targetPos, const VECTOR2D &rate)
+{
+    VECTOR2D tempRate = rate;
+
+    // 補間率を調整する
+    if (tempRate.mfParamX < 0.0f)
+    {
+        tempRate.mfParamX = 0.0f;
+    }
+    if (1.0f < tempRate.mfParamX)
+    {
+        tempRate.mfParamX = 1.0f;
+    }
+    if (tempRate.mfParamY < 0.0f)
+    {
+        tempRate.mfParamY = 0.0f;
+    }
+    if (1.0f < tempRate.mfParamY)
+    {
+        tempRate.mfParamY = 1.0f;
+    }
+
+    // 返り値
+    VECTOR2D temp = GetZero();
+
+    // startからtargetまでの矢印ベクトルを取得する
+    VECTOR2D distanceVec = targetPos - startPos;
+
+    // 矢印ベクトルに倍率(補間率)をかける
+    VECTOR2D lerpVec;
+    lerpVec.mfParamX = distanceVec.mfParamX * rate.mfParamX;
+    lerpVec.mfParamY = distanceVec.mfParamY * rate.mfParamY;
+
+    // 倍率のかかった矢印ベクトルを世界座標に直す
+    temp = lerpVec + startPos;
+
+    // 値を返す
+    return temp;
+}
+
+
 // 円形補間
 VECTOR2D VECTOR2D::GetSlerpPos(const VECTOR2D &centerPos, const VECTOR2D &startPos, const VECTOR2D &targetPos, float rate)
 {

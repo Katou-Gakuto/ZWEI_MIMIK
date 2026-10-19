@@ -86,23 +86,30 @@ float MyFunctions::GetClamp01(float target)
 
 float MyFunctions::Rad2Deg(float radian)
 {
-    return (radian / M_PI) * 180;
+    // 
+    radian = MyFunctions::GetArrangeRad(radian);
+
+    // 
+    return radian * 180.0f / M_PI;
 }
 
 float MyFunctions::Deg2Rad(float degree)
 {
-    return (degree / 180) * M_PI;
+    // 
+    degree = MyFunctions::GetArrangeDeg(degree);
 
+    // 
+    return degree * M_PI / 180.0f;
 }
 
 float MyFunctions::GetMaxRad()
 {
-    return M_PI;
+    return M_PI * 2.0f;
 }
 
 float MyFunctions::GetMinRad()
 {
-    return -(M_PI);
+    return 0.0f;
 }
 
 float MyFunctions::GetAllRad()
@@ -129,12 +136,12 @@ float MyFunctions::GetArrangeRad(float radian)
 
 float MyFunctions::GetMaxDeg()
 {
-    return 180.0f;
+    return 360.0f;
 }
 
 float MyFunctions::GetMinDeg()
 {
-    return -180.0f;
+    return 0.0f;
 }
 
 float MyFunctions::GetAllDeg()

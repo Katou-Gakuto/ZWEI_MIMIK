@@ -10,7 +10,7 @@ BaseCollision2D::BaseCollision2D(
     GameObject *object, CollisionType type, CollisionTag tag, CollisionNorm normNum,
     bool penetrate, bool hitMove, float moveLate) :
     mvBasePos(VECTOR2D::GetZero()),
-    mfBaseRadiusNoSqrt(0.0f),
+    mfBaseRadius(0.0f),
     mbBasePosUpdateFlag(true),
     mbBaseRadiusUpdateFlag(true),
     mvMoveVec(VECTOR2D::GetZero()),
@@ -58,16 +58,40 @@ int BaseCollision2D::SetNextPos(const void *posData)
 
 int BaseCollision2D::WorldConnectMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    auto nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
 
     return nowScene->GetBaseCollision2DManager()->Add(this);
 }
 
 int BaseCollision2D::WorldIsolateMySelf()
 {
-    auto nowScene = Master::mpBaseSceneManager->SearchSceneNow();
+    int resultNum = -1;
+    BaseScene *nowScene;
+    BaseCollision2DManager *manager = nullptr;
+    for (int i = 0; i < SceneTag::ST_Max; i++)
+    {
+        // 
+        nowScene = Master::mpBaseSceneManager->SearchScene(i);
+        if (nowScene != nullptr)
+        {
+            // 
+            manager = nowScene->GetBaseCollision2DManager();
 
-    return nowScene->GetBaseCollision2DManager()->IsolateTarget(this);
+            // 
+            if (manager != nullptr)
+            {
+                resultNum = manager->IsolateTarget(this);
+                if (resultNum == 0)
+                {
+                    // 
+                    break;
+                }
+            }
+        }
+
+    }
+
+    return resultNum;
 }
 
 int BaseCollision2D::SetBaseParamMySelf()

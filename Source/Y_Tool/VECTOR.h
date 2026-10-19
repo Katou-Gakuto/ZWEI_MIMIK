@@ -101,6 +101,9 @@ public:
     // ê¸å`ï‚ä‘
     static VECTOR2D GetLerpPos(const VECTOR2D &startPos, const VECTOR2D &targetPos, float rate);
 
+    // ê¸å`ï‚ä‘
+    static VECTOR2D GetLerpPos(const VECTOR2D &startPos, const VECTOR2D &targetPos, const VECTOR2D &rate);
+
     // â~å`ï‚ä‘
     static VECTOR2D GetSlerpPos(const VECTOR2D &centerPos, const VECTOR2D &startPos, const VECTOR2D &targetPos, float rate);
 

@@ -9,9 +9,12 @@
 #include "ImguiManager.h"
 
 #include "../A_GameObject/PlayerObject.h"
+#include "../A_GameObject/GoalObject.h"
 #include "../C_Component/Player.h"
+#include "../C_Component/GoalObjectController.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../E_Scene/BaseSceneManager.h"
+#include "../E_Scene/BasePuzzleScene.h"
 #include "../T_Model/DXModelAnim.h"
 #include "../Z_Except/CursorMoveSupporter.h"
 #include "../Z_Except/ResourceManager.h"
@@ -29,11 +32,33 @@ DxLibDataManager* Master::mpDxLibDataManager = nullptr;
 
 ImguiManager* Master::mpImguiManager = nullptr;
 
-Player* Master::mpPlayerLight = nullptr;
-Player* Master::mpPlayerShadow = nullptr;
 LightAreaManager* Master::mpLightManager = nullptr;
 
 CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
+
+// 
+Player *Master::GetPlayerController(int playerNumber)
+{
+    auto autoScene = mpBaseSceneManager->SearchSceneAuto();
+    if (autoScene->GetTag() < SceneTag::ST_Puzzle1_1)
+    {
+        return nullptr;
+    }
+
+    return (static_cast<BasePuzzleScene *>(autoScene))->GetPlayer(playerNumber);
+}
+
+// 
+GoalObjectController *Master::GetGoalController(bool lightSide)
+{
+    auto autoScene = mpBaseSceneManager->SearchSceneAuto();
+    if (autoScene->GetTag() < SceneTag::ST_Puzzle1_1)
+    {
+        return nullptr;
+    }
+
+    return (static_cast<BasePuzzleScene *>(autoScene))->GetGoal(lightSide);
+}
 
 // DxLibの前の初期化
 int Master::DxInitPreInitialize()
@@ -75,16 +100,7 @@ int Master::Initialize()
     // imguiマネージャー
     mpImguiManager = new ImguiManager(true);// 使うかどうかのフラグ
     mpImguiManager->Initilize();
-
-    // 
-    GameObject *playerObjectLight = new PlayerObject(1);
-    playerObjectLight->Create();
-    mpPlayerLight = static_cast<PlayerObject *>(playerObjectLight)->GetPlayerComponent();
-
-    GameObject *playerObjectShadow = new PlayerObject(2);
-    playerObjectShadow->Create();
-    mpPlayerShadow = static_cast<PlayerObject *>(playerObjectShadow)->GetPlayerComponent();
-
+#endif
 
     // ラストに初期化して
     mpDxLibDataManager->Initialize();
@@ -96,18 +112,12 @@ int Master::Finalize()
 {
     mpBaseSceneManager->Finalize();
 
-    GameObject *playerObjectLight = mpPlayerLight->GetMyObject();
-
-    GameObject *playerObjectShadow = mpPlayerShadow->GetMyObject();
-
     // 
     mpImguiManager->Finalize();
 
     mpDxLibDataManager->Finalize();
 
     // 削除
-    delete playerObjectLight;
-    delete playerObjectShadow;
     delete mpImguiManager;
     delete mpBaseSceneManager;
     delete mpEndManager;

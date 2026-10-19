@@ -8,13 +8,14 @@ WallObject::WallObject(bool gimmick, const VECTOR2D &center, const VECTOR2D &blo
     mbGimmick(gimmick),
     mvCenterPos(center),
     mvBlockSize(blockSize),
+    mpTempGimmickPtr(nullptr),
     GameObject2D(GameObjectTag::GOT_Player)
 {
     // 
     if (this->mbGimmick)
     {
         // 
-        this->AddComponent(new GimmickObjectController(this));
+        this->mpTempGimmickPtr = new GimmickObjectController(this);
     }
 }
 
@@ -28,6 +29,12 @@ int WallObject::Create()
     this->AddComponent(new WallObjectController(this, this->mvCenterPos, this->mvBlockSize));
 
     // 
+    this->AddComponent(this->mpTempGimmickPtr);
+
+    // 
+    this->mpTempGimmickPtr = nullptr;
+
+    // 
     return 0;
 }
 
@@ -39,6 +46,13 @@ GimmickObjectController *WallObject::GetGimmickController() const
     {
         // 
         return nullptr;
+    }
+
+    // 
+    if (this->mpTempGimmickPtr != nullptr)
+    {
+        // 
+        return this->mpTempGimmickPtr;
     }
 
     // 

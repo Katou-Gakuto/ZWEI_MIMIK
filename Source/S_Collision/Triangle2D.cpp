@@ -87,7 +87,7 @@ int Triangle2D::SetBaseParamMySelf()
 
         // ŒvŽZŒ‹‰Ê‚ðBaseParam‚É”½‰f‚·‚é
         this->SetBasePos(basePos);
-        this->SetBaseRadiusNoSqrt(distance->MagnitudeNoSqrt());
+        this->SetBaseRadius(distance[maxDisntanceIndex].Magnitude());
 
         // ƒtƒ‰ƒO‚ð®‚¦‚é
         this->SetBasePosUpdateFlag(false);

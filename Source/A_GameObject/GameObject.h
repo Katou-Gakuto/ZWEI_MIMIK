@@ -8,7 +8,10 @@
 enum GameObjectTag : unsigned long
 {
     GOT_Player = 0,
+    GOT_Goal,
     GOT_Wall,
+    GOT_Light,
+    GOT_Button,
 
     GOT_Max,
 };

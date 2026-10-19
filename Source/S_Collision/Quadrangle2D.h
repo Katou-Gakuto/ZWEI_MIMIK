@@ -2,6 +2,8 @@
 
 #include "BaseCollision2D.h"
 
+#include <vector>
+
 class Quadrangle2D : public BaseCollision2D
 {
 private:
@@ -23,8 +25,13 @@ public:
 
     void SetShapeParameter(const VECTOR2D &pos0, const VECTOR2D &pos1, const VECTOR2D &pos2, const VECTOR2D &pos3);
 
-    VECTOR2D GetVertexPos(int index);
+    const VECTOR2D &GetVertexPos(int index) const;
 
     // Ç±ÇÃéläpå`ÇÃñ êœÇãÅÇﬂÇÈä÷êî
     float GetSignedArea() const;
+
+    static VECTOR2D GetQuadrangleContactPoint(
+        const std::vector<VECTOR2D> &aVertices,
+        const std::vector<VECTOR2D> &bVertices,
+        const VECTOR2D &normal);
 };

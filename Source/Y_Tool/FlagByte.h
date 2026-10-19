@@ -37,6 +37,7 @@ private:
 
 public:
     FlagByte();
+    FlagByte(bool bit0, bool bit1, bool bit2, bool bit3, bool bit4, bool bit5, bool bit6, bool bit7);
     FlagByte(unsigned char bitData);
     FlagByte(const FlagByte &byte);
 

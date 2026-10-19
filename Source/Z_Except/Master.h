@@ -24,6 +24,9 @@ class ImguiManager;
 class Player;
 
 // 
+class GoalObjectController;
+
+// 
 class VECTOR2D;
 
 // 
@@ -52,17 +55,17 @@ public:
     // DXƒ‰ƒCƒuƒ‰ƒŠ‚Ìî•ñŠÇ—
     static DxLibDataManager* mpDxLibDataManager;
 
-    // 
-    static Player *mpPlayerLight;
-
-    // 
-    static Player *mpPlayerShadow;
-
     // Manager
     static LightAreaManager *mpLightManager;
 
     // 
     static CursorMoveSupporter *mpCursorMoveSupporter;
+
+    // 
+    static Player *GetPlayerController(int playerNumber);
+
+    // 
+    static GoalObjectController *GetGoalController(bool lightSide);
 
     // DxLib‚Ì‘O‚Ì‰Šú‰»
     static int DxInitPreInitialize();

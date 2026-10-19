@@ -88,10 +88,8 @@ int Triangle3D::SetBaseParamMySelf()
     {
         VECTOR3D basePos = VECTOR3D::GetZero();
         VECTOR3D maxDistance = this->mvVertexPos[1] - this->mvVertexPos[0];
-        float maxMagNoSqrt = maxDistance.MagnitudeNoSqrt();
-
+        
         VECTOR3D currentDistance = VECTOR3D::GetZero();
-        float currentMagNoSqrt = 0.0f;
 
         for (int i = 0; i < 3; i++)
         {
@@ -99,14 +97,10 @@ int Triangle3D::SetBaseParamMySelf()
             {
                 // 現在のベクトルとそのベクトルの大きさを取得する
                 currentDistance = this->mvVertexPos[j] - this->mvVertexPos[i];
-                currentMagNoSqrt = currentDistance.MagnitudeNoSqrt();
 
                 // 今回のベクトルの大きさが前回のベクトルよりも大きかったら更新処理を行う
-                if (maxMagNoSqrt < currentMagNoSqrt)
+                if (maxDistance.MagnitudeNoSqrt() < currentDistance.MagnitudeNoSqrt())
                 {
-                    // この図形がすっぽり埋まる円の半径を取得する
-                    maxMagNoSqrt = currentMagNoSqrt;
-
                     // この図形がすっぽり埋まる円の中心点を取得する
                     basePos = VECTOR3D::GetLerpPos((this->mvVertexPos[i]), (this->mvVertexPos[j]), 0.5f);
                 }
@@ -115,7 +109,7 @@ int Triangle3D::SetBaseParamMySelf()
 
         // 計算結果をBaseParamに反映する
         this->SetBasePos(basePos);
-        this->SetBaseRadiusNoSqrt(maxMagNoSqrt);
+        this->SetBaseRadius(maxDistance.Magnitude());
 
         // フラグを整える
         this->SetBasePosUpdateFlag(false);

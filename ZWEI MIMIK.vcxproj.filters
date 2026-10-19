@@ -283,15 +283,6 @@
     <ClCompile Include="Source\F_PuzzleGimmick\RotateExecutor.cpp">
       <Filter>Source\F_PuzzleGimmick</Filter>
     </ClCompile>
-    <ClCompile Include="Source\F_PuzzleGimmick\HoldTrigger.cpp">
-      <Filter>Source\F_PuzzleGimmick</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\F_PuzzleGimmick\FreeMoveExecutor.cpp">
-      <Filter>Source\F_PuzzleGimmick</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Component\HoldObjectController.cpp">
-      <Filter>Source\C_Component</Filter>
-    </ClCompile>
     <ClCompile Include="Source\S_Collision\CollisionHandle.cpp">
       <Filter>Source\S_Collision</Filter>
     </ClCompile>
@@ -381,6 +372,24 @@
     </ClCompile>
     <ClCompile Include="Source\H_Katou\Struct\ImguiData.cpp">
       <Filter>Source\H_Katou\Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\A_GameObject\GoalObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Component\GoalObjectController.cpp">
+      <Filter>Source\C_Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\A_GameObject\ButtonObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\A_GameObject\LightObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Component\LightObjectController.cpp">
+      <Filter>Source\C_Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Component\HoldObjectController.cpp">
+      <Filter>Source\C_Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -618,9 +627,6 @@
     <ClInclude Include="resource.h">
       <Filter>リソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\C_Component\HoldObjectController.h">
-      <Filter>Source\C_Component</Filter>
-    </ClInclude>
     <ClInclude Include="Source\S_Collision\CollisionHandle.h">
       <Filter>Source\S_Collision</Filter>
     </ClInclude>
@@ -741,6 +747,24 @@
     <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImgui.h">
       <Filter>Source\H_Katou\DebugLogs</Filter>
     </ClInclude>
+    <ClInclude Include="Source\A_GameObject\GoalObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Component\GoalObjectController.h">
+      <Filter>Source\C_Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\ButtonObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\LightObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Component\LightObjectController.h">
+      <Filter>Source\C_Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Component\HoldObjectController.h">
+      <Filter>Source\C_Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -768,12 +792,6 @@
     </ClInclude>
     <ClInclude Include="Source\G_LightArea\LightAreaManager.h">
       <Filter>Source\G_LightArea</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\F_PuzzleGimmick\FreeMoveExecutor.h">
-      <Filter>Source\F_PuzzleGimmick</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\F_PuzzleGimmick\HoldTrigger.h">
-      <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
     <ClInclude Include="Source\F_PuzzleGimmick\RotateExecutor.h">
       <Filter>Source\F_PuzzleGimmick</Filter>

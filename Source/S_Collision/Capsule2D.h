@@ -7,7 +7,7 @@ class Capsule2D : public BaseCollision2D
 private:
     VECTOR2D mvCenterLineStartPos;
     VECTOR2D mvCenterLineEndPos;
-    float mfCenterLineRadiusSqrt;
+    float mfCenterLineRadius;
 
 public:
     Capsule2D();
@@ -23,7 +23,7 @@ public:
     int SetBaseParamMySelf() override;
     int GetAABB(AABB2D &out) override;
 
-    void SetShapeParameter(const VECTOR2D &startPos, const VECTOR2D &endPos, float radiusNoSqrt);
+    void SetShapeParameter(const VECTOR2D &startPos, const VECTOR2D &endPos, float radius);
 
     VECTOR2D GetStartPos() const { return this->mvCenterLineStartPos; }
     VECTOR2D GetEndPos() const { return this->mvCenterLineEndPos; }

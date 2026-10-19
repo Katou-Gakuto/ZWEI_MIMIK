@@ -7,7 +7,7 @@ class Capsule3D : public BaseCollision3D
 private:
     VECTOR3D mvCenterLineStartPos;
     VECTOR3D mvCenterLineEndPos;
-    float mfCenterLineRadiusSqrt;
+    float mfCenterLineRadius;
 
 public:
     Capsule3D();
@@ -23,10 +23,9 @@ public:
     int SetBaseParamMySelf() override;
     int GetAABB(AABB3D &out) override;
 
-    void SetShapeParameter(const VECTOR3D &startPos, const VECTOR3D &endPos, float radiusNoSqrt);
+    void SetShapeParameter(const VECTOR3D &startPos, const VECTOR3D &endPos, float radius);
 
-    float GetCenterRadiusSqrt() { return this->mfCenterLineRadiusSqrt; }
-    float GetCenterRadiusNoSqrt() { return this->mfCenterLineRadiusSqrt * this->mfCenterLineRadiusSqrt; }
+    float GetCenterRadius() { return this->mfCenterLineRadius; }
     VECTOR3D GetStartPos() { return this->mvCenterLineStartPos; }
     VECTOR3D GetEndPos() { return this->mvCenterLineEndPos; }
     VECTOR3D GetLineVec() { return this->mvCenterLineEndPos - this->GetBasePos(); }

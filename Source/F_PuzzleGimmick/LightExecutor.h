@@ -39,6 +39,9 @@ public:
     // ※GameObject::LateUpdate()のタイミングで呼ばれます
     int LateUpdate(bool triggerSignal) override;
 
+    // 当たり判定によるギミックの変化に対応させる関数
+    int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) override;
+
     // シミュレーション内容を描画する関数
     // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
     int Draw(bool triggerSignal) override;
@@ -67,7 +70,6 @@ public:
     // 最後の線から最初の線の計算を行う関数
     void SetFinal2Start(bool flag);
 
-protected:
     // この光域を取得する関数
     LightArea *GetMyLightArea() const;
 

@@ -354,10 +354,10 @@ int Cube3D::SetBaseParamMySelf()
         // 真上から見て手前側のやつを0123、奥側のやつを4567としてます。
         VECTOR3D maxStart;
         VECTOR3D maxEnd;
-        float maxMagNoSqrt;
+        VECTOR3D maxVec;
         VECTOR3D nowStart;
         VECTOR3D nowEnd;
-        float nowMagNoSqrt;
+        VECTOR3D nowVec;
 
         for (unsigned char i = 0; i < (unsigned char)(InputCubeVertexNumber::CubeVertex_Max); i++)
         {
@@ -365,31 +365,30 @@ int Cube3D::SetBaseParamMySelf()
             {
                 nowStart = this->mvVertexPos[i];
                 nowEnd = this->mvVertexPos[j];
-                nowMagNoSqrt = (nowEnd - nowStart).MagnitudeNoSqrt();
-
+                nowVec = nowEnd - nowStart;
+                
                 if (i == 0 && j == 1)
                 {
                     maxStart = nowStart;
                     maxEnd = nowEnd;
-                    maxMagNoSqrt = nowMagNoSqrt;
+                    maxVec = nowVec;
                 }
                 else
                 {
-                    if (maxMagNoSqrt < nowMagNoSqrt)
+                    if (maxVec.MagnitudeNoSqrt() < nowVec.MagnitudeNoSqrt())
                     {
                         maxStart = nowStart;
                         maxEnd = nowEnd;
-                        maxMagNoSqrt = nowMagNoSqrt;
+                        maxVec = nowVec;
                     }
                 }
             }
         }
 
         VECTOR3D basePos = VECTOR3D::GetLerpPos(maxStart, maxEnd, 0.5f);
-        float baseRadiusNoSqrt = maxMagNoSqrt * 0.5f;
         this->SetBasePos(basePos);
         this->SetBasePosUpdateFlag(false);
-        this->SetBaseRadiusNoSqrt(baseRadiusNoSqrt);
+        this->SetBaseRadius(maxVec.Magnitude());
         this->SetBaseRadiusUpdateFlag(false);
     }
 
@@ -492,7 +491,7 @@ bool Cube3D::CheckInPoint(const VECTOR3D &pointNowPos, const VECTOR3D &pointMove
     this->SetBaseParamMySelf();
     VECTOR3D pointNextPos = (pointNowPos + pointMoveVec);
     VECTOR3D cubeBase2point = pointNextPos - this->GetMovedPos(this->GetBasePos());
-    if (this->GetBaseRadiusNoSqrt() < cubeBase2point.MagnitudeNoSqrt())
+    if (this->GetBaseRadius() * this->GetBaseRadius() < cubeBase2point.MagnitudeNoSqrt())
     {
         return false;
     }

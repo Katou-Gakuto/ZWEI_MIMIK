@@ -39,8 +39,10 @@ int TestScene::Create()
 
 	GameObject2D *currentObject = nullptr;
 
+	/*
 	this->mpGameObjectManager->Add(Master::mpPlayerLight->GetMyObject());
 	this->mpGameObjectManager->Add(Master::mpPlayerShadow->GetMyObject());
+	*/
 
 	const VECTOR2D tempBlockSize = VECTOR2D(150.0f, 150.0f);
 	const VECTOR2D tempCenterStart = (tempBlockSize * 0.5f) + (tempBlockSize * 0.5f);
@@ -57,9 +59,11 @@ int TestScene::Create()
 		currentObject = new WallObject(false, tempCenter, tempBlockSize);
 		this->mpGameObjectManager->Add(currentObject);
 
+		/*
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 1.0f);
 		currentObject = new WallObject(false, tempCenter, tempBlockSize);
 		this->mpGameObjectManager->Add(currentObject);
+		*/
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 2.0f);
 		currentObject = new WallObject(false, tempCenter, tempBlockSize);
@@ -153,6 +157,7 @@ int TestScene::Create()
 	tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 3.0f, tempBlockSize.GetY() * 2.0f);
 
 	// 
+	/*/
 	Master::mpLightManager->ResizeArea(3);
 
 	// 
@@ -216,9 +221,25 @@ int TestScene::Create()
 				MyFunctions::Deg2Rad(45.0f),
 				10000.0f,
 				false));
+	/*/
+	Master::mpLightManager->ResizeArea(1);
+	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize);
+	GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
+	gimmickController->AddGimmick(
+		new ButtonTrigger,
+		new LightExecutor(
+			PuzzleGimmickActiveParam::Create(true, false),
+			gimmickObject,
+			0,
+			50,
+			MyFunctions::Deg2Rad(0.0f),
+			MyFunctions::Deg2Rad(360.0f),
+			10000.0f,
+			true));
 
 		this->mpGameObjectManager->Add(gimmickObject);
 
+	/*/
 		LightArea* lightArea = Master::mpLightManager->SearchArea(2);
 		if (lightArea != nullptr)
 		{
@@ -227,13 +248,14 @@ int TestScene::Create()
 	}
 
 	this->mpGameObjectManager->Create();
+	//*/
 	return 0;
 }
 
 int TestScene::Initialize()
 {
-	// 
-	Master::mpPlayerLight->GetMyObject2D()->SetPosition(VECTOR2D(200.0f, 200.0f));
+	//// 
+	//Master::mpPlayerLight->GetMyObject2D()->SetPosition(VECTOR2D(200.0f, 200.0f));
 
 	this->mpGameObjectManager->Initialize();
 	return 0;
@@ -243,8 +265,8 @@ int TestScene::Finalize()
 {
 	if (this->mpGameObjectManager != nullptr)
 	{
-		this->mpGameObjectManager->IsolateTarget(Master::mpPlayerLight->GetMyObject());
-		this->mpGameObjectManager->IsolateTarget(Master::mpPlayerShadow->GetMyObject());
+		//this->mpGameObjectManager->IsolateTarget(Master::mpPlayerLight->GetMyObject());
+		//this->mpGameObjectManager->IsolateTarget(Master::mpPlayerShadow->GetMyObject());
 		this->mpGameObjectManager->Finalize();
 	}
 	if (this->mpBaseCollision2DManager != nullptr)

@@ -4,6 +4,9 @@
 
 #include "../Y_Tool/FlagByte.h"
 
+// 
+class BaseCollision;
+
 // ギミックの内容を実行するかを判断するクラス
 // 継承先のメンバーを更新してから関数を呼んでください
 class BaseGimmickTrigger
@@ -18,6 +21,9 @@ public:
     // シミュレーションしてきたギミックを実行に移すかを判断する関数
     // ※GameObject::Update()のタイミングで呼ばれ、自身と紐づけられてるExecutor::Update()の直前で呼ばれます
     virtual bool GetSignal() = 0;
+
+    // 当たり判定によるギミックの変化に対応させる関数
+    virtual int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) = 0;
 };
 
 // ここで言うActiveというのはギミックが起動しているかということ
@@ -96,6 +102,9 @@ public:
     // ギミックの内容を実行する関数
     // ※GameObject::LateUpdate()のタイミングで呼ばれます
     virtual int LateUpdate(bool triggerSignal) = 0;
+
+    // 当たり判定によるギミックの変化に対応させる関数
+    virtual int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) = 0;
 
     // ギミック内容を描画する関数
     // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。

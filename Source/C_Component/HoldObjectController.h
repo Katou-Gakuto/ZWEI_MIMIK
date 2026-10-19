@@ -1,32 +1,80 @@
 #pragma once
 
+// 
 #include "BaseComponent.h"
 
-#include "../Y_Tool/VECTOR.h"
+#include "../Y_Tool/FlagByte.h"
 
-// オブジェクトを掴めるようにする拡張パーツ
+// 
+class GameObject2D;
+class VECTOR2D;
+
+// 
 class HoldObjectController : public BaseComponent
 {
+private:
+    // 
+    enum HoldFlagBitIndex
+    {
+        HoldFlagBitIndex_DoubleHold = 0,
+        HoldFlagBitIndex_OneSide,
+        HoldFlagBitIndex_OneSideLight,
+        HoldFlagBitIndex_MoveSync,
+        HoldFlagBitIndex_Swing,
+
+        HoldFlagBitIndex_Max,
+    };
+
 public:
-    // コンストラクタ
-    HoldObjectController(GameObject *myObject, bool doubleHold);
+    // 
+    HoldObjectController(GameObject2D *myObj, bool doubleHold, bool oneSide, bool oneSideLight, bool move, bool swing);
 
-    // デストラクタ
-    ~HoldObjectController() override;
+    // 
+    ~HoldObjectController();
 
-    // 自身の当たり判定が何かと当たった場合に行う処理
+    int Create() override;
+    int Initialize() override;
+    int Finalize() override;
+    int EarlyUpdate() override;
+    int Update() override;
     int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) override;
+    int LateUpdate() override;
+    int Draw() override;
 
-    // プレイヤーが呼び出す関数で、プレイヤーと移動ベクトルを同期する関数
-    bool SyncHoldMoveVec(const VECTOR2D &holdMoveVec);
+    // 
+    bool CheckHoldNow() const;
 
-    // こっちが呼び出す関数で、移動ベクトルをプレイヤーに同期させる関数
-    int SetPlayerMoveVec(bool lightSide);
+    // 
+    bool SetHoldFlag(bool lightPlayer, bool flag);
 
-    // 現在プレイヤーに掴まれているかを確認する関数
-    bool CheckHold() const;
+    // 
+    float GetRadianPlayerToHold(const VECTOR2D &playerPos, int debugNum) const;
+
+    // 
+    bool SetSwingParam(const VECTOR2D &centerPos, float radian, float distance);
+
+    // 
+    void SyncMoveVecToHold(const VECTOR2D &moveVec);
+
+    // 
+    bool GetDoubleHold() const;
+
+    // 
+    bool GetSwingFlag() const;
 
 private:
-    // 2人で掴まなければいけない場合はtrue
-    bool mbDoubleHold;
+    // 
+    int mnState;
+
+    // 中身はHoldFlagBitIndexの通りです
+    const FlagByte mbFlags;
+
+    // 
+    bool mbHoldLight;
+
+    // 
+    bool mbHoldShadow;
+
+    // 
+    bool mbSwingNow;
 };

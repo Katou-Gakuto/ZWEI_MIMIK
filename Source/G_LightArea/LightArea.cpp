@@ -46,6 +46,13 @@ void LightArea::SetParam(void *parentObject, uint32_t lineCount, float baseAngle
     this->SetLightLineCount(lineCount);
 
     // 
+    if (lineCount == 0)
+    {
+        // 
+        return;
+    }
+
+    // 
     float oneAngle = lightAngle / static_cast<float>(lineCount);
 
     // 
@@ -96,7 +103,7 @@ bool LightArea::CalculateNode(
         tempStartPos = this->mlLightFirstNode[i]->GetListStartPos();
 
         // 
-        toEndNorm = VECTOR2D::GetOnUnitCirclePos('x', 'y', baseAngle + this->mlLineAngleBox[i]);
+        toEndNorm = VECTOR2D::GetOnUnitCirclePos('x', 'y', this->mlLineAngleBox[i]);
 
         // 
         currentNode = this->mlLightFirstNode[i];

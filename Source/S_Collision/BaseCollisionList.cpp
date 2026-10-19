@@ -70,6 +70,20 @@ int BaseCollisionList::SetCollisionPosCollisionMoveVec()
     return 0;
 }
 
+int BaseCollisionList::SetHitMoveParam(bool prenetrate, bool hitMove, float late)
+{
+    BaseCollision *current = this->mpFirstBaseCollision;
+    while (current != nullptr)
+    {
+        current->SetPenetrate(prenetrate);
+        current->SetHitMove(hitMove);
+        current->SetMoveLate(late);
+        current = current->GetNextList();
+    }
+
+    return 0;
+}
+
 int BaseCollisionList::Initialize()
 {
     return 0;

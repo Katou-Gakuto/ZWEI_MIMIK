@@ -1,151 +1,382 @@
 #include "HoldObjectController.h"
 
-#include "Player.h"
-
 #include "../A_GameObject/GameObject2D.h"
+
+#include "../C_Component/BaseComponentList.h"
+#include "../C_Component/Player.h"
+#include "../C_Component/GimmickObjectController.h"
 
 #include "../S_Collision/BaseCollisionList.h"
 
 #include "../Z_Except/Master.h"
 
-// コンストラクタ
-HoldObjectController::HoldObjectController(GameObject *myObject, bool doubleHold) :
-    mbDoubleHold(doubleHold),
-    BaseComponent(myObject, ComponentTagAndOrder::CTAO_HoldController)
+// 
+HoldObjectController::HoldObjectController(GameObject2D *myObj, bool doubleHold, bool oneSide, bool oneSideLight, bool move, bool swing) :
+    mnState(0),
+    mbFlags(doubleHold, oneSide, oneSideLight, move, swing, false, false, false),
+    mbHoldLight(false),
+    mbHoldShadow(false),
+    BaseComponent(myObj, ComponentTagAndOrder::CTAO_HoldController)
 {
 }
 
-// デストラクタ
+// 
 HoldObjectController::~HoldObjectController()
 {
 }
 
-// 自身の当たり判定が何かと当たった場合に行う処理
-int HoldObjectController::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
+// 
+int HoldObjectController::Create()
 {
     // 
-    GameObject2D *hitObj = hitCollision->GetMyObject2D();
+    return 0;
+}
 
-    // breakで一番下まで飛びたいだけ
-    do
-    {
-        // 自身の当たり判定同士が当たっても何もしない
-        if (myCollision->GetMyObject2D() == hitObj)
-        {
-            break;
-        }
+// 
+int HoldObjectController::Initialize()
+{
+    // 
+    return 0;
+}
 
-        // プレイヤーと当たった場合もこちらは何もしない
-        if (hitObj == Master::mpPlayerLight->GetMyObject2D() &&
-            hitObj == Master::mpPlayerShadow->GetMyObject2D())
-        {
-            break;
-        }
+// 
+int HoldObjectController::Finalize()
+{
+    // 
+    return 0;
+}
 
-        // 
-        if (this->mbDoubleHold)
-        {
-            // 
-            if (Master::mpPlayerLight->CheckHoldObject(this) &&
-                Master::mpPlayerShadow->CheckHoldObject(this))
-            {
-                // 
-                this->SetPlayerMoveVec(true);
+// 
+int HoldObjectController::EarlyUpdate()
+{
+    // 
+    this->mnState = 0;
 
-                // 
-                this->SetPlayerMoveVec(false);
-            }
-        }
-        else
-        {
-            // 
-            if (Master::mpPlayerLight->CheckHoldObject(this))
-            {
-                // 
-                this->SetPlayerMoveVec(true);
-            }
-            else if (Master::mpPlayerShadow->CheckHoldObject(this))
-            {
-                // 
-                this->SetPlayerMoveVec(false);
-            }
-        }
-    } while (false);
+    // 
+    this->mbSwingNow = false;
 
     // 
     return 0;
 }
 
-// プレイヤーが呼び出す関数で、プレイヤーと移動ベクトルを同期する関数
-bool HoldObjectController::SyncHoldMoveVec(const VECTOR2D &holdMoveVec)
+// 
+int HoldObjectController::Update()
 {
     // 
-    GameObject2D *obj = this->GetMyObject2D();
-    if (obj == nullptr)
+    return 0;
+}
+
+// 
+int HoldObjectController::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
+{
+    // Holdによる移動が許可されている場合は処理を行う
+    if (this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_MoveSync])
+    {
+        // 
+        if (this->mnState == HoldFlagBitIndex::HoldFlagBitIndex_MoveSync)
+        {
+            // 
+            if (this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_DoubleHold])
+            {
+                if (this->mbHoldLight && this->mbHoldShadow)
+                {
+                    Master::GetPlayerController(1)->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+                    Master::GetPlayerController(2)->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+                }
+            }
+            else
+            {
+                if (this->mbHoldLight)
+                {
+                    Master::GetPlayerController(1)->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+                }
+                else if (this->mbHoldShadow)
+                {
+                    Master::GetPlayerController(2)->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+                }
+            }
+        }
+        else if (this->mnState == HoldFlagBitIndex::HoldFlagBitIndex_Swing)
+        {
+            // 
+            VECTOR2D zeroVec;
+
+            // 
+            this->GetMyObject2D()->SetMoveVec(zeroVec);
+
+            // 
+            this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &zeroVec);
+        }
+    }
+
+    // 
+    return 0;
+}
+
+int HoldObjectController::LateUpdate()
+{
+    // 
+    return 0;
+}
+
+int HoldObjectController::Draw()
+{
+    // 
+    return 0;
+}
+
+// 
+bool HoldObjectController::CheckHoldNow() const
+{
+    // 
+    if (this->GetMyObject2D() == nullptr)
     {
         // 
         return false;
     }
 
     // 
-    BaseCollisionList *list = obj->GetBaseCollisionList();
-    if (list == nullptr)
+    bool result = false;
+
+    // 
+    if (this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_DoubleHold])
+    {
+        // 
+        if (this->mbHoldLight && this->mbHoldShadow)
+        {
+            // 
+            result = true;
+        }
+    }
+    else
+    {
+        // 
+        if (this->mbHoldLight != this->mbHoldShadow)
+        {
+            // 
+            result = true;
+        }
+    }
+
+    // 
+    return result;
+}
+
+// 
+bool HoldObjectController::SetHoldFlag(bool lightPlayer, bool flag)
+{
+    if (this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_DoubleHold])
+    {
+        // 
+        if (lightPlayer)
+        {
+            this->mbHoldLight = flag;
+        }
+        else
+        {
+            this->mbHoldShadow = flag;
+        }
+
+        // 
+        return true;
+    }
+
+    // 
+    if (this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_OneSide])
+    {
+        // 
+        if (this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_OneSideLight] && lightPlayer)
+        {
+            // 
+            this->mbHoldLight = flag;
+
+            // 
+            return true;
+        }
+        else if (!this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_OneSideLight] && !lightPlayer)
+        {
+            // 
+            this->mbHoldShadow = flag;
+
+            // 
+            return true;
+        }
+    }
+    else
+    {
+        // 
+        if (lightPlayer)
+        {
+            if (!this->mbHoldShadow)
+            {
+                this->mbHoldLight = flag;
+                return true;
+            }
+        }
+        else
+        {
+            if (!this->mbHoldLight)
+            {
+                this->mbHoldShadow = flag;
+                return true;
+            }
+        }
+    }
+
+    // 
+    return false;
+}
+
+// 
+float HoldObjectController::GetRadianPlayerToHold(const VECTOR2D &playerPos, int debugNum) const
+{
+    // 
+    VECTOR2D nowPos = this->GetMyObject2D()->GetPosition();
+
+    // 
+    VECTOR2D distanceVec = nowPos - playerPos;
+
+    // 
+    float radian = 0.0f;
+    switch (debugNum)
+    {
+    case 0:
+        radian = atan2f(distanceVec.GetY(), distanceVec.GetX());
+        break;
+    case 1:
+        radian = atan2f(-distanceVec.GetY(), distanceVec.GetX());
+        break;
+    case 2:
+        radian = atan2f(distanceVec.GetY(), -distanceVec.GetX());
+        break;
+    case 3:
+        radian = atan2f(-distanceVec.GetY(), -distanceVec.GetX());
+        break;
+    case 4:
+        radian = atan2f(distanceVec.GetX(), distanceVec.GetY());
+        break;
+    case 5:
+        radian = atan2f(-distanceVec.GetX(), distanceVec.GetY());
+        break;
+    case 6:
+        radian = atan2f(distanceVec.GetX(), -distanceVec.GetY());
+        break;
+    case 7:
+        radian = atan2f(-distanceVec.GetX(), -distanceVec.GetY());
+        break;
+    default:
+        break;
+    }
+    
+    // 
+    return radian;
+}
+
+// 
+bool HoldObjectController::SetSwingParam(const VECTOR2D &centerPos, float radian, float distance)
+{
+    // 
+    if (!this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_Swing])
+    {
+        // 
+        return true;
+    }
+
+    // 
+    if (this->GetMyObject2D() == nullptr)
     {
         // 
         return false;
     }
 
     // 
-    obj->SetMoveVec(holdMoveVec);
+    if (this->mnState != 0)
+    {
+        // 
+        return false;
+    }
 
     // 
-    list->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &holdMoveVec);
+    VECTOR2D normVec = VECTOR2D::GetOnUnitCirclePos('x', 'y', radian);
+    if (normVec == VECTOR2D::GetZero())
+    {
+        // 
+        return false;
+    }
+
+    // 
+    VECTOR2D distanceVec = normVec * distance;
+    VECTOR2D newPos = centerPos + distanceVec;
+    VECTOR2D newMoveVec = newPos - this->GetMyObject2D()->GetPosition();
+
+    // 
+    this->GetMyObject2D()->SetMoveVec(newMoveVec);
+
+    // 
+    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &newMoveVec);
+
+    // 
+    this->mnState = HoldFlagBitIndex::HoldFlagBitIndex_Swing;
+
+    // 
+    this->mbSwingNow = true;
 
     // 
     return true;
 }
 
-// こっちが呼び出す関数で、移動ベクトルをプレイヤーに同期させる関数
-int HoldObjectController::SetPlayerMoveVec(bool lightSide)
+// 
+void HoldObjectController::SyncMoveVecToHold(const VECTOR2D &moveVec)
 {
     // 
-    if (lightSide)
+    if (!this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_MoveSync])
     {
-        Master::mpPlayerLight->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
-    }
-    else
-    {
-        Master::mpPlayerShadow->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+        // 
+        return;
     }
 
     // 
-    return 0;
+    if (this->GetMyObject2D() == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    if (!(this->mnState == 0 || this->mnState == HoldFlagBitIndex::HoldFlagBitIndex_MoveSync))
+    {
+        // 
+        return;
+    }
+
+    // 
+    this->GetMyObject2D()->SetMoveVec(moveVec);
+
+    // 
+    BaseCollisionList *list = this->GetMyObject2D()->GetBaseCollisionList();
+    if (list == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    list->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+
+    // 
+    this->mnState = HoldFlagBitIndex::HoldFlagBitIndex_MoveSync;
 }
 
-// 現在プレイヤーに掴まれているかを確認する関数
-bool HoldObjectController::CheckHold() const
+// 
+bool HoldObjectController::GetDoubleHold() const
 {
     // 
-    bool signal = false;
+    return this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_DoubleHold];
+}
 
-    // 光のプレイヤー
-    bool p1hold = Master::mpPlayerLight->CheckHoldObject(this);
-
-    // 影のプレイヤー
-    bool p2hold = Master::mpPlayerShadow->CheckHoldObject(this);
-
+// 
+bool HoldObjectController::GetSwingFlag() const
+{
     // 
-    if (this->mbDoubleHold)
-    {
-        // 2人のプレイヤーに捕まれている場合は処理を行う
-        signal = (p1hold && p2hold);
-    }
-    else
-    {
-        // 片方のみがtrueだったら1人に掴まれているので
-        signal = (p1hold != p2hold);
-    }
-
-    // 
-    return signal;
+    return this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_Swing];
 }

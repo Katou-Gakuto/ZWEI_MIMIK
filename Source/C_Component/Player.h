@@ -15,7 +15,7 @@ class Player : public BaseComponent
 {
 public:
 
-    Player(GameObject* myObject, int playerNumber);
+    Player(GameObject *myObject, int playerNumber);
     ~Player();
 
     int Create() override;
@@ -23,36 +23,48 @@ public:
     int Finalize() override;
     int EarlyUpdate() override;
     int Update() override;
-    int HitOnCollision(BaseCollision* myCollision, BaseCollision* hitCollision) override;
+    int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) override;
     int LateUpdate() override;
     int Draw() override;
 
-    // HitOnCollision()が呼ばれたら行う関数で、オブジェクトが掴める際に掴む関数
-    int Hold(BaseCollision *hitCollision);
+    // オブジェクトが掴める際に掴む関数
+    int TryHold();
 
     // オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
-    int HoldMove();
+    int HoldSwing();
 
-    // 
-    bool CheckHoldObject(const HoldObjectController *hold) const;
+    // オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
+    int HoldMove(const VECTOR2D &moveVec);
 
     // 
     bool SyncPlayerMoveVec(const VECTOR2D &vec);
 
-	VECTOR2D GetPos() const { return Pos; }
-	int GetPlayerNum() const { return PlayerNum; } // 1Pか2Pかを返す
+    // 
+    VECTOR2D GetMoveVecNowFrame()const;
 
+    int GetPlayerNum() const { return mnPlayerNum; } // 1Pか2Pかを返す
+
+    // 
+    bool InitPosition(const VECTOR2D &pos);
+
+    // 
+    bool ChangeLightSide();
+
+    // 自身のゴールにたどり着いたか
+    bool CheckGoal() const;
 
 private:
 
-    VECTOR2D Pos;
-    VECTOR2D OldPos;
-    VECTOR2D moveVec;
-    int PlayerNum; //P1かP2か
+    int mnPlayerNum;        //P1かP2か
 
-	int PlayerGraphHandle; // プレイヤーのグラフィックハンドル
+    int PlayerGraphHandle;  // プレイヤーのグラフィックハンドル
 
-    
+    float mfSwingDegree;    // 
+
+    float mfNowSwingRadian;       // 
+
+    float mfMoveMagnitude;
+
     HoldObjectController *mpHold; // 自身がつかんでいるオブジェクト
 
     // このプレイヤーの当たり判定
@@ -65,6 +77,12 @@ private:
     bool mbHoldFlag;
 
     // 
+    bool mbSwingFlag;
+
+    // 
+    bool mbLightSide;
+
+    // 
     bool CheckHoldNow() const;
 
     // 
@@ -72,4 +90,7 @@ private:
 
     // 
     Circle2D *GetBodyCollision() const;
+
+    // 
+    void SetHoldLightRadian();
 };
