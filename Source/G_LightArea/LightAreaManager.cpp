@@ -526,8 +526,7 @@ void LightAreaManager::EndLightDraw()
 {
     // •`‰ææ–ß‚·
     SetDrawScreen(DX_SCREEN_BACK);
-
-    // TODO:_ ‚±‚±ã“h‚èo—ˆ‚È‚¢‚æ‚¤‚É•‰‚¯‚éİ’è‚É‚·‚é
+    
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 125);
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {

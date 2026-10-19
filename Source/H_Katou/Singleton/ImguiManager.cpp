@@ -91,6 +91,7 @@ void ImguiManager::Update()
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
     ImGui::ShowDemoWindow();
 
     mnAddNumber = 0;
@@ -1301,9 +1302,9 @@ void ImguiManager::DrawGameDisplayToImgui()
     // TODO:_ ドッキングしたら描画されている画面サイズ変更するようにする
 
     ImVec2 displaySize = ImVec2(Master::mpDxLibDataManager->GetDisplaySize().GetX(), Master::mpDxLibDataManager->GetDisplaySize().GetY());
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    ImGui::SetNextWindowSize(displaySize, ImGuiCond_Once);// 画面サイズを設定
-    ImGui::Begin("DxLibDraw", nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+    // ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+    // ImGui::SetNextWindowSize(displaySize, ImGuiCond_Once);// 画面サイズを設定
+    ImGui::Begin("DxLibDraw", nullptr);//, ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
     ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
     ID3D11DeviceContext* context = static_cast<ID3D11DeviceContext*>(const_cast<void*>(GetUseDirect3D11DeviceContext()));
 
@@ -1311,7 +1312,7 @@ void ImguiManager::DrawGameDisplayToImgui()
     {
         context->CopyResource(mdCopyTexture, backBuffer);
 
-        // TODO:_ 個々のデフォルトで変更できるようにする
+        // TODO:_ 個々のデフォルトで変更できるようにする ?
         ImGui::Image((ImTextureID)mbCopySRV, displaySize);
     }
     ImGui::End();

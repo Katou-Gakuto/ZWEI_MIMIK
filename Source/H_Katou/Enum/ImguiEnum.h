@@ -95,64 +95,70 @@ enum class IMGUI_BUTTON_TYPE
 enum class IMGUI_LAYOUT_TYPE
 {
     NONE = 0,
-    IMGUI_LAYOUT_TEXT,                      // Text()
-    IMGUI_LAYOUT_TEXT_FORMAT,               // Text()（フォーマット付き）
+    IMGUI_LAYOUT_TEXT,                          // Text()
+    IMGUI_LAYOUT_TEXT_FORMAT,                   // Text()（フォーマット付き）
 
-    IMGUI_LAYOUT_SAME_LINE,                 // SameLine()
-    IMGUI_LAYOUT_SEPARATOR,                 // Separator()
-    IMGUI_LAYOUT_SPACING,                   // Spacing()
+    IMGUI_LAYOUT_SAME_LINE,                     // SameLine()
+    IMGUI_LAYOUT_SEPARATOR,                     // Separator()
+    IMGUI_LAYOUT_SPACING,                       // Spacing()
 
     //==================================================
     // レイアウト・配置関連
     //==================================================
-    IMGUI_LAYOUT_NEW_LINE,                  // NewLine()
-    IMGUI_LAYOUT_INDENT,                    // Indent()
-    IMGUI_LAYOUT_UNINDENT,                  // Unindent()
-    IMGUI_LAYOUT_DUMMY,                     // Dummy()
-    IMGUI_LAYOUT_SET_NEXT_ITEM_WIDTH,        // SetNextItemWidth()
-    IMGUI_LAYOUT_PUSH_ITEM_WIDTH,            // PushItemWidth()
-    IMGUI_LAYOUT_POP_ITEM_WIDTH,             // PopItemWidth()
-    IMGUI_LAYOUT_ALIGN_TEXT_TO_FRAME_PADDING,// AlignTextToFramePadding()
-    IMGUI_LAYOUT_SET_NEXT_ITEM_OPEN,         // SetNextItemOpen()
+    IMGUI_LAYOUT_NEW_LINE,                      // NewLine()
+    IMGUI_LAYOUT_INDENT,                        // Indent()
+    IMGUI_LAYOUT_UNINDENT,                      // Unindent()
+    IMGUI_LAYOUT_DUMMY,                         // Dummy()
+    IMGUI_LAYOUT_SET_NEXT_ITEM_WIDTH,           // SetNextItemWidth()
+    IMGUI_LAYOUT_PUSH_ITEM_WIDTH,               // PushItemWidth()
+    IMGUI_LAYOUT_POP_ITEM_WIDTH,                // PopItemWidth()
+    IMGUI_LAYOUT_ALIGN_TEXT_TO_FRAME_PADDING,   // AlignTextToFramePadding()
+    IMGUI_LAYOUT_SET_NEXT_ITEM_OPEN,            // SetNextItemOpen()
 
     //==================================================
     // グループ関連
     //==================================================
-    IMGUI_LAYOUT_BEGIN_GROUP,                // BeginGroup()
-    IMGUI_LAYOUT_END_GROUP,                  // EndGroup()
+    IMGUI_LAYOUT_BEGIN_GROUP,                   // BeginGroup()
+    IMGUI_LAYOUT_END_GROUP,                     // EndGroup()
 
     //==================================================
     // 子領域関連
     //==================================================
-    IMGUI_LAYOUT_BEGIN_CHILD,                // BeginChild()
-    IMGUI_LAYOUT_END_CHILD,                  // EndChild()
+    IMGUI_LAYOUT_BEGIN_CHILD,                   // BeginChild()
+    IMGUI_LAYOUT_END_CHILD,                     // EndChild()
 
     //==================================================
     // 折りたたみ・ツリー関連
     //==================================================
-    IMGUI_LAYOUT_COLLAPSING_HEADER,          // CollapsingHeader()
-    IMGUI_LAYOUT_END_COLLAPSING_HEADER,      // 閉じるだけ
-    IMGUI_LAYOUT_TREE_NODE,                  // TreeNode()
-    IMGUI_LAYOUT_TREE_POP,                   // TreePop()
+    IMGUI_LAYOUT_COLLAPSING_HEADER,             // CollapsingHeader()
+    IMGUI_LAYOUT_END_COLLAPSING_HEADER,         // 閉じるだけ
+    IMGUI_LAYOUT_TREE_NODE,                     // TreeNode()
+    IMGUI_LAYOUT_TREE_POP,                      // TreePop()
 
     //==================================================
     // 表関連
     //==================================================
-    IMGUI_LAYOUT_BEGIN_TABLE,                // BeginTable()
-    IMGUI_LAYOUT_TABLE_SETUP_COLUMN,         // TableSetupColumn()
-    IMGUI_LAYOUT_TABLE_HEADERS_ROW,          // TableHeadersRow()
-    IMGUI_LAYOUT_TABLE_NEXT_ROW,             // TableNextRow()
-    IMGUI_LAYOUT_TABLE_NEXT_COLUMN,          // TableNextColumn()
-    IMGUI_LAYOUT_TABLE_SET_COLUMN_INDEX,     // TableSetColumnIndex()
-    IMGUI_LAYOUT_END_TABLE,                  // EndTable()
+    IMGUI_LAYOUT_BEGIN_TABLE,                   // BeginTable()
+    IMGUI_LAYOUT_TABLE_SETUP_COLUMN,            // TableSetupColumn()
+    IMGUI_LAYOUT_TABLE_HEADERS_ROW,             // TableHeadersRow()
+    IMGUI_LAYOUT_TABLE_NEXT_ROW,                // TableNextRow()
+    IMGUI_LAYOUT_TABLE_NEXT_COLUMN,             // TableNextColumn()
+    IMGUI_LAYOUT_TABLE_SET_COLUMN_INDEX,        // TableSetColumnIndex()
+    IMGUI_LAYOUT_END_TABLE,                     // EndTable()
 
     //==================================================
     // スタイル関連
     //==================================================
-    IMGUI_LAYOUT_PUSH_STYLE_VAR,             // PushStyleVar()
-    IMGUI_LAYOUT_POP_STYLE_VAR,              // PopStyleVar()
-    IMGUI_LAYOUT_PUSH_STYLE_COLOR,           // PushStyleColor()
-    IMGUI_LAYOUT_POP_STYLE_COLOR,            // PopStyleColor()
+    IMGUI_LAYOUT_PUSH_STYLE_VAR,                // PushStyleVar()
+    IMGUI_LAYOUT_POP_STYLE_VAR,                 // PopStyleVar()
+    IMGUI_LAYOUT_PUSH_STYLE_COLOR,              // PushStyleColor()
+    IMGUI_LAYOUT_POP_STYLE_COLOR,               // PopStyleColor()
+
+    //==================================================
+    // タブ関連
+    //==================================================
+    IMGUI_LAYOUT_NET_TAB_BEGIN,                 // Begin()
+    IMGUI_LAYOUT_DELETE_TAB_END,                // End()
 };
 
 
