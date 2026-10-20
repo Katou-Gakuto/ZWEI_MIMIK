@@ -133,11 +133,11 @@ int WallObjectController::Draw()
 
     /**/
     // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
-    DxLib::DrawQuadrangle(
-        bodyCollision->GetVertexPos(0)),
-        bodyCollision->GetVertexPos(1)),
-        bodyCollision->GetVertexPos(2)),
-        bodyCollision->GetVertexPos(3)),
+    DRAW_SYSTEM::DrawQuadrangle(
+        bodyCollision->GetVertexPos(0),
+        bodyCollision->GetVertexPos(1),
+        bodyCollision->GetVertexPos(2),
+        bodyCollision->GetVertexPos(3),
         0xaaaa00,
         true);
 

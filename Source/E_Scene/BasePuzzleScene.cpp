@@ -385,9 +385,8 @@ int BasePuzzleScene::PouseUpdate()
 int BasePuzzleScene::PouseDraw()
 {
     // 
-    DxLib::DrawString(
-        500,
-        60 + 120 * 0,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(500, 60 + 120 * 0),
         "POUSE MENU",
         GetColor(255, 255, 255));
 
@@ -431,9 +430,8 @@ int BasePuzzleScene::PouseDraw()
         }
 
         // 
-        DxLib::DrawString(
-            400,
-            60 + 120 * i,
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(400, 60 + 120 * i),
             message.c_str(),
             GetColor(255, 255, 255));
     }
@@ -468,16 +466,14 @@ int BasePuzzleScene::ResultUpdate()
 int BasePuzzleScene::ResultDraw()
 {
     // 
-    DxLib::DrawString(
-        500,
-        60 + 120 * 0,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(500, 60 + 120 * 0),
         "STAGE CLEAR!",
         GetColor(255, 255, 255));
 
     // 
-    DxLib::DrawString(
-        500,
-        60 + 120 * 1,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(500, 60 + 120 * 1),
         "Pless A Key",
         GetColor(255, 255, 255));
 
