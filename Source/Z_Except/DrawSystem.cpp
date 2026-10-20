@@ -29,6 +29,21 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, int handle)
 // Œ»óŒõ—Ìˆæ•`‰æ—p
 void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag)
 {
+    for (int i = 0; i < polygonNumber; ++i)
+    {
+        VECTOR2D setPos1 = VECTOR2D(triangleVertex[(i * 3) + 0].pos.x, triangleVertex[(i * 3) + 0].pos.y);
+        VECTOR2D setPos2 = VECTOR2D(triangleVertex[(i * 3) + 1].pos.x, triangleVertex[(i * 3) + 1].pos.y);
+        VECTOR2D setPos3 = VECTOR2D(triangleVertex[(i * 3) + 2].pos.x, triangleVertex[(i * 3) + 2].pos.y);
+        setPos1 = WorldSizeToDisplaySize(setPos1);
+        setPos2 = WorldSizeToDisplaySize(setPos2);
+        setPos3 = WorldSizeToDisplaySize(setPos3);
+        triangleVertex[(i * 3) + 0].pos.x = setPos1.GetX();
+        triangleVertex[(i * 3) + 0].pos.y = setPos1.GetY();
+        triangleVertex[(i * 3) + 1].pos.x = setPos1.GetX();
+        triangleVertex[(i * 3) + 1].pos.y = setPos1.GetY();
+        triangleVertex[(i * 3) + 2].pos.x = setPos1.GetX();
+        triangleVertex[(i * 3) + 2].pos.y = setPos1.GetY();
+    }
     DxLib::DrawPolygon2D(triangleVertex, polygonNumber, graphHandle, flag);
 }
 
@@ -87,6 +102,8 @@ VECTOR2D DRAW_SYSTEM::WorldSizeToDisplaySize(const VECTOR2D& objectSize)
 
     // displaySize = VECTOR2D((objectSize.GetX() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_OBJECT_SIZE].GetX()) * StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetX(),
     //                         (objectSize.GetY() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_OBJECT_SIZE].GetY()) * StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetY());
+
+    displaySize += StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_LEFT_UP_INTERVAL];
 
     return displaySize;
 }

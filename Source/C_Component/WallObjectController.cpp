@@ -10,6 +10,9 @@
 
 #include "../Y_Tool/MyMatrix.h"
 
+#include "Master.h"
+#include "ImguiManager.h"
+
 WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &centerPos, const VECTOR2D &blockSize, float radian) :
     mvCenterPosInit(centerPos),
     mvBlockSizeInit(blockSize),
@@ -104,13 +107,13 @@ int WallObjectController::Finalize()
 
 int WallObjectController::EarlyUpdate()
 {
-    // 
+     
+     
     return 0;
 }
 
 int WallObjectController::Update()
 {
-    // 
     return 0;
 }
 
@@ -129,18 +132,17 @@ int WallObjectController::LateUpdate()
 int WallObjectController::Draw()
 {
     // 
-    Quadrangle2D *bodyCollision = this->GetBody();
+    Quadrangle2D* bodyCollision = this->GetBody();
 
     /**/
     // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
     DRAW_SYSTEM::DrawQuadrangle(
         bodyCollision->GetVertexPos(0),
         bodyCollision->GetVertexPos(1),
-        bodyCollision->GetVertexPos(2),
         bodyCollision->GetVertexPos(3),
+        bodyCollision->GetVertexPos(2),
         0xaaaa00,
         true);
-
     // 
     return 0;
 }
@@ -216,7 +218,7 @@ bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
     for (int i = 0; i < 2; i++)
     {
         // 
-        result = rotateMatrix * tempVecBox[i].ToMat();
+        result = tempVecBox[i].ToMat() * rotateMatrix;
 
         // 
         tempVecBox[i] = result.ToV2D();

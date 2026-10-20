@@ -1186,8 +1186,6 @@ int LightExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hit
 // ¦Šù‚ÉŽÀs’iŠK‚Å‚ ‚éê‡‚Íˆø”‚ªtrue‚É‚È‚è‚Ü‚·BŽÀs’iŠK‚Å‚Í•`‰æ‚µ‚È‚¢A‚ ‚é‚¢‚Í‚»‚Ì‹t‚Ìê‡‚Í‚±‚Ìˆø”‚ðŽg‚Á‚Ä‚­‚¾‚³‚¢B
 int LightExecutor::Draw(bool triggerSignal)
 {
-    int number = 0;
-    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
     // 
     if (!this->mbLightOn)
     {
@@ -1258,7 +1256,6 @@ int LightExecutor::Draw(bool triggerSignal)
                 currentNode = nextNode;
             }
         }
-    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
     }
     else if (drawMode == 1)
     {
@@ -1282,7 +1279,6 @@ int LightExecutor::Draw(bool triggerSignal)
             }
         }
 
-    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
         // 
         if (drawResult != 0)
         {
@@ -1367,7 +1363,6 @@ int LightExecutor::Draw(bool triggerSignal)
                     loopFlag = false;
                 }
             }
-    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
 
             // 
             if (drawResult != 0)
@@ -1403,7 +1398,6 @@ int LightExecutor::Draw(bool triggerSignal)
                 break;
             }
         }
-    Master::mpImguiManager->DrawGameDisplayToImgui("Draw" + std::to_string(number++));
 
         // 
         gnDebugTest++;
