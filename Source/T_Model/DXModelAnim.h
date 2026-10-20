@@ -15,6 +15,7 @@ public:
 	int Draw();
 	int Finalize();
 
+	// 画像とページ数、間隔を設定する
 	int SetAnimModel(string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright);
 
 	void SetNowPage(int nowpage) { NowPage = nowpage; }

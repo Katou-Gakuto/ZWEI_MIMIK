@@ -211,6 +211,13 @@ int TitleScene::UpdateModeSelect()
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1);
 
+        // B‚ª‰Ÿ‚³‚ê‚½‚çÅ‰‚Ì‰æ–Ê‚É–ß‚é
+        if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, 0))
+        {
+            // 
+            this->mbLogoPhase = true;
+        }
+
         // 
         switch (this->mnCurrentMode)
         {
