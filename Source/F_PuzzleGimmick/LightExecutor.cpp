@@ -1088,6 +1088,14 @@ LightExecutor::~LightExecutor()
 {
 }
 
+// 初期化
+int LightExecutor::Initilize()
+{
+    this->mbParamUpdate = true;
+
+    return 0;
+}
+
 // ギミックの内容を実行する関数
 // ※GameObject::EarlyUpdate()のタイミングで呼ばれます
 int LightExecutor::EarlyUpdate(bool triggerSignal)

@@ -32,9 +32,6 @@ public:
     // ‰Šú‰»
     void Initilize();
 
-    // ƒV[ƒ“–ˆ‰Šú‰»
-    void SceneInit();
-
     // •`‰æ
     void Draw();
 

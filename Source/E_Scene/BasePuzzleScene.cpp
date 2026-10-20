@@ -18,6 +18,9 @@
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 // 
+//#include "MallocData.h"
+//#include "LightObject.h"
+//#include "GimmickObjectController.h"
 CursorMoveData BasePuzzleScene::smdMoveData;
 
 BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
@@ -95,8 +98,6 @@ int BasePuzzleScene::Initialize()
     this->mpGoalLight->InitPosition(initPosBox[2]);
     this->mpGoalShadow->InitPosition(initPosBox[3]);
 
-    // ƒ‰ƒCƒg‰Šú‰»
-    Master::mpLightManager->SceneInit();
 
     // 
     this->AddMasterObjects();
@@ -250,6 +251,8 @@ int BasePuzzleScene::Draw()
                 GetColor(255, 255, 255));
         }
     }
+
+	Master::mpLightManager->Draw();
 
     // 
     return 0;

@@ -1058,6 +1058,18 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_COLOR:
         ImGui::PopStyleColor(); // スタイル色を元に戻す
             break;
+            
+    // //==================================================
+    // // タブ関連
+    // //==================================================
+
+    // case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN:
+    //     ImGui::Begin(imgui); // スタイル色を元に戻す
+    //         break;
+
+    // case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END:
+    //     ImGui::End(); // スタイル色を元に戻す
+    //         break;
     }
 #endif
 }
@@ -1225,6 +1237,12 @@ IMGUI_GROUP_DATA* ImguiManager::GetCurrentGroupData()
 // 変数型を整数か浮動小数の変換
 IMGUI_VARIABLE_INTEGER_TYPE ImguiManager::ChangeVariableTypeToVariableIntegerType(IMGUI_VARIABLE_TYPE variableType)
 {
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return IMGUI_VARIABLE_INTEGER_TYPE::NONE;
+    }
+
     switch (variableType)
     {
         case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1269,11 +1287,18 @@ IMGUI_VARIABLE_INTEGER_TYPE ImguiManager::ChangeVariableTypeToVariableIntegerTyp
         default:
             return IMGUI_VARIABLE_INTEGER_TYPE::NONE;
     }
+#endif
 }
 
 // ゲーム画面描画用変数初期化
 void ImguiManager::InitDrawGameDisplayToImguiVariable()
 {
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+
     D3D11_TEXTURE2D_DESC desc{};
     ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
     ID3D11Device* device = static_cast<ID3D11Device*>(const_cast<void*>(GetUseDirect3D11Device()));
@@ -1293,11 +1318,18 @@ void ImguiManager::InitDrawGameDisplayToImguiVariable()
             device->CreateShaderResourceView(mdCopyTexture, nullptr, &mbCopySRV);
         }
     }
+#endif
 }
 
 // ゲーム画面描画
 void ImguiManager::DrawGameDisplayToImgui(std::string plusName)
 {
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+
     ImGui::Begin(("DxLibDraw" + plusName).c_str(), nullptr);
 
     // タブ内で画像を描画できる領域のサイズ
@@ -1325,6 +1357,8 @@ void ImguiManager::DrawGameDisplayToImgui(std::string plusName)
         ImGui::Image((ImTextureID)mbCopySRV, displaySize);
     }
     ImGui::End();
+
+#endif
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp

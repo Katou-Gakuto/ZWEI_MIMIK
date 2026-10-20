@@ -38,7 +38,7 @@ LightLineNode::~LightLineNode()
 }
 
 // 初期化(シーン開始時)
-void LightLineNode::Init(void *parent)
+void LightLineNode::SetParent(void *parent)
 {
     this->mpParentObject = parent;
 }
