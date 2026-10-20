@@ -7,6 +7,7 @@
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Quadrangle2D.h"
 #include "../S_Collision/Ray2D.h"
+#include "DrawSystem.h"
 
 MirrorObjectController::MirrorObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, float radian, unsigned char mirrorFace) :
     mnMirrorFace(mirrorFace),
@@ -171,11 +172,9 @@ int MirrorObjectController::Draw()
     color = 0x0000ff;
 
     // 
-    DxLib::DrawBox(
-        body->GetVertexPos(0).GetX(),
-        body->GetVertexPos(0).GetY(),
-        body->GetVertexPos(3).GetX(),
-        body->GetVertexPos(3).GetY(),
+    DRAW_SYSTEM::DrawBox(
+        body->GetVertexPos(0),
+        body->GetVertexPos(3),
         color,
         false);
 
@@ -205,11 +204,9 @@ int MirrorObjectController::Draw()
 
     
     // 
-    DxLib::DrawLine(
-        offset.GetX() + mirrorRay->GetStartPos().GetX(),
-        offset.GetY() + mirrorRay->GetStartPos().GetY(),
-        offset.GetX() + mirrorRay->GetEndPos().GetX(),
-        offset.GetY() + mirrorRay->GetEndPos().GetY(),
+    DRAW_SYSTEM::DrawLine(
+        offset + mirrorRay->GetStartPos(),
+        offset + mirrorRay->GetEndPos(),
         color);
 
     // 

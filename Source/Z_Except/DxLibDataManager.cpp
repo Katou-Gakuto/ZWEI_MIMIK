@@ -9,6 +9,7 @@
 #include "LightAreaManager.h"
 #include "KeyState.h"
 #include "TimeManager.h"
+#include "DrawSystem.h"
 
 #ifdef _DEBUG
 #include "ImguiManager.h""
@@ -36,6 +37,11 @@ void DxLibDataManager::DxInitPreInitialize()
     int screenW, screenH;
     GetScreenState(&screenW, &screenH, NULL);
     mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
+
+    //VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { VECTOR2D(3000.0f, 3000.0f), mstDisplaySize };
+    VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { mstDisplaySize, mstDisplaySize };
+    //VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { VECTOR2D(3000.0f, 3000.0f), mstDisplaySize };
+    DRAW_SYSTEM::SetStazeSize(setStageSize);
 }
 
 // èâä˙âª

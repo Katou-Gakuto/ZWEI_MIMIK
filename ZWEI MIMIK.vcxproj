@@ -239,6 +239,7 @@
     <ClCompile Include="Source\Y_Tool\VECTOR_D.cpp" />
     <ClCompile Include="Source\Y_Tool\VoidList.cpp" />
     <ClCompile Include="Source\Z_Except\CursorMoveSupporter.cpp" />
+    <ClCompile Include="Source\Z_Except\DrawSystem.cpp" />
     <ClCompile Include="Source\Z_Except\DxLibDataManager.cpp" />
     <ClCompile Include="Source\Z_Except\Master.cpp" />
     <ClCompile Include="Source\Z_Except\ResourceManager.cpp" />
@@ -374,6 +375,7 @@
     <ClInclude Include="Source\Y_Tool\VECTOR_D.h" />
     <ClInclude Include="Source\Y_Tool\VoidList.h" />
     <ClInclude Include="Source\Z_Except\CursorMoveSupporter.h" />
+    <ClInclude Include="Source\Z_Except\DrawSystem.h" />
     <ClInclude Include="Source\Z_Except\DxLibDataManager.h" />
     <ClInclude Include="Source\Z_Except\Master.h" />
     <ClInclude Include="Source\Z_Except\ResourceManager.h" />

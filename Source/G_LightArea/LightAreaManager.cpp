@@ -533,7 +533,7 @@ void LightAreaManager::EndLightDraw()
 {
     // ï`âÊêÊñﬂÇ∑
     SetDrawScreen(DX_SCREEN_BACK);
-    
+
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 125);
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {

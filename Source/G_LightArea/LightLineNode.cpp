@@ -37,6 +37,12 @@ LightLineNode::~LightLineNode()
     this->mpPrev->mpNext = nullptr;
 }
 
+// 初期化(シーン開始時)
+void LightLineNode::SetParent(void *parent)
+{
+    this->mpParentObject = parent;
+}
+
 // 自身の光の終了地点を計算し、設定する関数
 // 次のノードにつながる場合はtrueを返す
 bool LightLineNode::CalculateEndPos(

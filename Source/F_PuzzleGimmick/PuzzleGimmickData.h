@@ -91,6 +91,12 @@ public:
     {
     }
 
+    // 初期化
+    virtual int Initilize()
+    {
+        return 0;
+    }
+
     // ギミックの内容を実行する関数
     // ※GameObject::EarlyUpdate()のタイミングで呼ばれます
     virtual int EarlyUpdate(bool triggerSignal) = 0;

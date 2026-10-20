@@ -27,6 +27,9 @@ public:
     // デストラクタ
     ~LightExecutor() override;
 
+    // 初期化
+    int Initilize() override;
+
     // ギミックの内容を実行する関数
     // ※GameObject::EarlyUpdate()のタイミングで呼ばれます
     int EarlyUpdate(bool triggerSignal) override;

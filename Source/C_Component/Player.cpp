@@ -31,6 +31,8 @@
 
 #include "../Y_Tool/MyFunctions.h"
 
+#include "DrawSystem.h"
+
 const int debugNum = 5;
 
 Player::Player(GameObject *myObject, int playerNumber) :
@@ -298,10 +300,9 @@ int Player::Draw()
     if (grahpBoxDraw)
     {
         // •`‰æ‚ðs‚¤
-        DrawBox(player->GetPosition().GetX() - (Master::PlayerSizeXY / 2),
-            player->GetPosition().GetY() - (Master::PlayerSizeXY / 2),
-            player->GetPosition().GetX() + (Master::PlayerSizeXY / 2),
-            player->GetPosition().GetY() + (Master::PlayerSizeXY / 2),
+        DRAW_SYSTEM::DrawBox(
+            player->GetPosition() - VECTOR2D(Master::PlayerSizeXY / 2, Master::PlayerSizeXY / 2),
+            player->GetPosition() + VECTOR2D(Master::PlayerSizeXY / 2, Master::PlayerSizeXY / 2),
             color, false);
     }
 
@@ -310,9 +311,8 @@ int Player::Draw()
     {
         // ‘Ì‚Ì“–‚½‚è”»’è‚Å‚ ‚é‰~‚ð—ÎF‚Å•`‰æ‚·‚é
         Circle2D *bodyCollision = GetBodyCollision();
-        DrawCircle(
-            bodyCollision->GetBasePos().GetX(),
-            bodyCollision->GetBasePos().GetY(),
+        DRAW_SYSTEM::DrawCircle(
+            bodyCollision->GetBasePos(),
             bodyCollision->GetBaseRadius(),
             color,
             false);
@@ -323,9 +323,8 @@ int Player::Draw()
     {
         // ƒz[ƒ‹ƒh‚Ì‘å‘Ì‚Ì”ÍˆÍ‚Å‚ ‚é‰~‚ð—ÎF‚Å•`‰æ‚·‚é
         Circle2D *bodyCollision = GetBodyCollision();
-        DrawCircle(
-            bodyCollision->GetBasePos().GetX(),
-            bodyCollision->GetBasePos().GetY(),
+        DRAW_SYSTEM::DrawCircle(
+            bodyCollision->GetBasePos(),
             bodyCollision->GetBaseRadius() + (this->mfMoveMagnitude * 1.5f),
             0x00ff00,
             false);
@@ -348,14 +347,16 @@ int Player::Draw()
     // 
     if (inLightArea)
     {
-        DrawCircle(
-            player->GetPosition().GetX(),
-            player->GetPosition().GetY(),
+        DRAW_SYSTEM::DrawCircle(
+            player->GetPosition(),
             lightAreaParam,
             0xff0000,
             true);
     }
 
+    // 
+    // 
+    // 
     // 
     return 0;
 }

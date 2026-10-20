@@ -7,6 +7,7 @@
 #include "../H_Katou/Singleton/KeyState.h"
 
 #include "../Z_Except/Master.h"
+#include "DrawSystem.h"
 
 // 
 TitleScene::TitleScene() :
@@ -81,9 +82,8 @@ int TitleScene::Draw()
     int returnValue = 0;
 
     // タイトルの一番最初のやつを描画する
-    DxLib::DrawString(
-        0.0f,
-        0.0f,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(0.0f, 0.0f),
         "TITLE SCENE\n",
         GetColor(255, 255, 255));
 
@@ -91,9 +91,8 @@ int TitleScene::Draw()
     if (this->mbLogoPhase)
     {
         // タイトルの一番最初のやつを描画する
-        DxLib::DrawString(
-            600,
-            400,
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(600, 400),
             "   ZWEI MIMIK   \n"
             "                \n"
             "PRESS ANY BUTTON",
@@ -120,9 +119,8 @@ int TitleScene::Draw()
         message += "STAGE SELECT";
 
         // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            200,
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(400, 200),
             message.c_str(),
             GetColor(255, 255, 255));
 
@@ -142,9 +140,8 @@ int TitleScene::Draw()
         message += "OPTION";
 
         // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            400,
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(400, 400),
             message.c_str(),
             GetColor(255, 255, 255));
 
@@ -164,9 +161,8 @@ int TitleScene::Draw()
         message += "EXIT";
 
         // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            600,
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(400, 600),
             message.c_str(),
             GetColor(255, 255, 255));
     }

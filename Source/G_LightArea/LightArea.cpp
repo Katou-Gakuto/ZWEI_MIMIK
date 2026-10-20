@@ -12,6 +12,7 @@
 #include "Master.h"
 #include "DxLibDataManager.h"
 #include "LightAreaManager.h"
+#include "DrawSystem.h"
 
 // 
 LightArea::LightArea() :
@@ -66,6 +67,10 @@ void LightArea::SetParam(void *parentObject, uint32_t lineCount, float baseAngle
         {
             // 
             this->mlLightFirstNode[i] = new LightLineNode(parentObject);
+        }
+        else
+        {
+            this->mlLightFirstNode[i]->SetParent(parentObject);
         }
 
         // 
@@ -627,7 +632,7 @@ void LightArea::DrawLightArea()
         }
     }
     // Ý’è‚µ‚½3Šp‚ð‘S•”•`‰æ
-    DxLib::DrawPolygon2D(mstLightAreaTriangleVertex, lightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE); 
+    DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, lightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle()); 
 
 
     //  for (size_t i = 0; i < mstLightLine.size(); ++i)

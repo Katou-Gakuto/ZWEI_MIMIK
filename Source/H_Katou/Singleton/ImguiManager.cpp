@@ -102,12 +102,12 @@ void ImguiManager::Update()
     }
     
     mstImguiGroupDatas.clear();
-ImGui::TextLinkOpenURL("TEST", "https://github.com/Katou-Gakuto/ZWEI_MIMIK");
-    DEBUG::SaveText("CLICK");
-    if (ImGui::Button("Test Button"))
-    {
-        DEBUG::SaveText("CLICK\n\n");
-    }
+// ImGui::TextLinkOpenURL("TEST", "https://github.com/Katou-Gakuto/ZWEI_MIMIK");
+//     DEBUG::SaveText("CLICK");
+//     if (ImGui::Button("Test Button"))
+//     {
+//         DEBUG::SaveText("CLICK\n\n");
+//     }
 #endif
 }
 
@@ -1058,6 +1058,18 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_COLOR:
         ImGui::PopStyleColor(); // スタイル色を元に戻す
             break;
+            
+    // //==================================================
+    // // タブ関連
+    // //==================================================
+
+    // case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN:
+    //     ImGui::Begin(imgui); // スタイル色を元に戻す
+    //         break;
+
+    // case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END:
+    //     ImGui::End(); // スタイル色を元に戻す
+    //         break;
     }
 #endif
 }
@@ -1225,6 +1237,12 @@ IMGUI_GROUP_DATA* ImguiManager::GetCurrentGroupData()
 // 変数型を整数か浮動小数の変換
 IMGUI_VARIABLE_INTEGER_TYPE ImguiManager::ChangeVariableTypeToVariableIntegerType(IMGUI_VARIABLE_TYPE variableType)
 {
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return IMGUI_VARIABLE_INTEGER_TYPE::NONE;
+    }
+
     switch (variableType)
     {
         case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1269,11 +1287,18 @@ IMGUI_VARIABLE_INTEGER_TYPE ImguiManager::ChangeVariableTypeToVariableIntegerTyp
         default:
             return IMGUI_VARIABLE_INTEGER_TYPE::NONE;
     }
+#endif
 }
 
 // ゲーム画面描画用変数初期化
 void ImguiManager::InitDrawGameDisplayToImguiVariable()
 {
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+
     D3D11_TEXTURE2D_DESC desc{};
     ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
     ID3D11Device* device = static_cast<ID3D11Device*>(const_cast<void*>(GetUseDirect3D11Device()));
@@ -1293,18 +1318,34 @@ void ImguiManager::InitDrawGameDisplayToImguiVariable()
             device->CreateShaderResourceView(mdCopyTexture, nullptr, &mbCopySRV);
         }
     }
+#endif
 }
 
 // ゲーム画面描画
-void ImguiManager::DrawGameDisplayToImgui()
+void ImguiManager::DrawGameDisplayToImgui(std::string plusName)
 {
-    // TODO:_ ドッキングしてもエラー出ないようにする
-    // TODO:_ ドッキングしたら描画されている画面サイズ変更するようにする
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
 
-    ImVec2 displaySize = ImVec2(Master::mpDxLibDataManager->GetDisplaySize().GetX(), Master::mpDxLibDataManager->GetDisplaySize().GetY());
-    // ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    // ImGui::SetNextWindowSize(displaySize, ImGuiCond_Once);// 画面サイズを設定
-    ImGui::Begin("DxLibDraw", nullptr);//, ImGuiWindowFlags_::ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin(("DxLibDraw" + plusName).c_str(), nullptr);
+
+    // タブ内で画像を描画できる領域のサイズ
+    ImVec2 displaySize = ImGui::GetContentRegionAvail();
+    // DxLibの元の画面サイズ
+    VECTOR2D dxLibDisplaySize = Master::mpDxLibDataManager->GetDisplaySize();
+    // 元の縦横比を維持して表示サイズを計算
+    if (dxLibDisplaySize.GetX() > 0.0f && dxLibDisplaySize.GetY() > 0.0f &&
+        displaySize.x > 0.0f && displaySize.y > 0.0f)
+    {
+        float scale = (std::min)(displaySize.x / dxLibDisplaySize.GetX(), displaySize.y / dxLibDisplaySize.GetY());
+
+        displaySize.x = dxLibDisplaySize.GetX() * scale;
+        displaySize.y = dxLibDisplaySize.GetY() * scale;
+    }
+
     ID3D11Texture2D* backBuffer = static_cast<ID3D11Texture2D*>(const_cast<void*>(GetUseDirect3D11BackBufferTexture2D()));
     ID3D11DeviceContext* context = static_cast<ID3D11DeviceContext*>(const_cast<void*>(GetUseDirect3D11DeviceContext()));
 
@@ -1316,6 +1357,8 @@ void ImguiManager::DrawGameDisplayToImgui()
         ImGui::Image((ImTextureID)mbCopySRV, displaySize);
     }
     ImGui::End();
+
+#endif
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp

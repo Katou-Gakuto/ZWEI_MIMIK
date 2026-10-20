@@ -16,8 +16,11 @@
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Y_Tool/VECTOR.h"
 #include "../Z_Except/Master.h"
-
+#include "DrawSystem.h"
 // 
+//#include "MallocData.h"
+//#include "LightObject.h"
+//#include "GimmickObjectController.h"
 CursorMoveData BasePuzzleScene::smdMoveData;
 
 BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
@@ -77,6 +80,7 @@ int BasePuzzleScene::Initialize()
     this->mpPlayerShadow->InitPosition(initPosBox[1]);
     this->mpGoalLight->InitPosition(initPosBox[2]);
     this->mpGoalShadow->InitPosition(initPosBox[3]);
+
 
     // 
     this->mpGameObjectManager->Initialize();
@@ -188,9 +192,8 @@ int BasePuzzleScene::Update()
 int BasePuzzleScene::Draw()
 {
     // 
-    DxLib::DrawString(
-        0,
-        0,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(0, 0),
         "BASE PUZZLE SCENE",
         GetColor(255, 255, 255));
 
@@ -217,6 +220,8 @@ int BasePuzzleScene::Draw()
         // 
         this->FailedDraw();
     }
+
+	Master::mpLightManager->Draw();
 
     // 
     return 0;

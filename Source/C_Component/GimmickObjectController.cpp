@@ -32,7 +32,11 @@ int GimmickObjectController::Initialize()
     // 
     for (uint32_t i = 0; i < this->mlGimmickList.size(); i++)
     {
-
+        if (mlGimmickList[i].mpExecutor->Initilize() != 0)
+        {
+            // TODO:_ ここ返り値適当に1にしたけど確認
+            return 1;
+        }
     }
 
     // 

@@ -19,6 +19,7 @@
 #include "../Z_Except/CursorMoveSupporter.h"
 #include "../Z_Except/ResourceManager.h"
 
+#include "DrawSystem.h"
 
 // 静的メンバーの初期化
 
@@ -134,10 +135,8 @@ int Master::DrawGraphAnim(
 	const VECTOR2D &uvLeftUp, const VECTOR2D &uvRightDown,
 	int graphHandle)
 {
-	// 
-    DrawRectExtendGraphF(
-        posLeftUp.GetX(), posLeftUp.GetY(), posRightDown.GetX(), posRightDown.GetY(),
-        uvLeftUp.GetX(), uvLeftUp.GetY(), uvRightDown.GetX(), uvRightDown.GetY(), graphHandle, true);
+	// プレイヤー画像描画
+    DRAW_SYSTEM::DrawRectExtendGraph(posLeftUp, posRightDown, uvLeftUp, uvRightDown, graphHandle);
 
 	return 0;
 }

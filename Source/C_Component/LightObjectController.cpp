@@ -6,7 +6,7 @@
 
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Circle2D.h"
-
+#include "DrawSystem.h"
 // 
 LightObjectController::LightObjectController(GameObject *myObject, const VECTOR2D &center, float radius) :
     mvCenterPosInit(center),
@@ -111,9 +111,8 @@ int LightObjectController::Draw()
     }
 
     // 
-    DxLib::DrawCircle(
-        body->GetBasePos().GetX(),
-        body->GetBasePos().GetY(),
+    DRAW_SYSTEM::DrawCircle(
+        body->GetBasePos(),
         body->GetBaseRadius(),
         0xffff00,
         false);
