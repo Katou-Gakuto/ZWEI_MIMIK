@@ -25,7 +25,8 @@ LightArea::LightArea() :
     mnLightColor(0xffffff),
     mstLightLine(),
     mstLightAreaTriangleVertex(nullptr),
-    mnPreLightAreaTriangleVertexIndexCount(0)
+    mnPreLightAreaTriangleVertexIndexCount(0),
+    mbIsLightFlag(true)
 {
 }
 
@@ -434,6 +435,11 @@ bool LightArea::OffLight()
 // ライトエリアの描画
 void LightArea::DrawLightArea()
 {
+    if (mbIsLightFlag)
+    {
+        return;
+    }
+
     mstLightLine.clear();
     LightLineNode* currentNode;
     LightLineNode* nextNode;
