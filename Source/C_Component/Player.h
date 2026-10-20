@@ -95,7 +95,7 @@ private:
     Circle2D *GetBodyCollision() const;
 
     // 
-    void SetHoldLightRadian();
+    bool SetHoldRadian();
 
     // 
     int UpdateInLightArea();

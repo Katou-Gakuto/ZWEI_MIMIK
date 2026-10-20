@@ -4,10 +4,22 @@
 #include "../C_Component/GimmickObjectController.h"
 #include "../C_Component/WallObjectController.h"
 
-WallObject::WallObject(bool gimmick, const VECTOR2D &center, const VECTOR2D &blockSize) :
+// 
+WallObject::WallObject(GameObjectTag tag, bool gimmick, const VECTOR2D &center, const VECTOR2D &blockSize, float radian) :
     mbGimmick(gimmick),
     mvCenterPos(center),
     mvBlockSize(blockSize),
+    mfRadian(radian),
+    mpTempGimmickPtr(nullptr),
+    GameObject2D(tag)
+{
+}
+
+WallObject::WallObject(bool gimmick, const VECTOR2D &center, const VECTOR2D &blockSize, float radian) :
+    mbGimmick(gimmick),
+    mvCenterPos(center),
+    mvBlockSize(blockSize),
+    mfRadian(radian),
     mpTempGimmickPtr(nullptr),
     GameObject2D(GameObjectTag::GOT_Player)
 {
@@ -26,7 +38,7 @@ WallObject::~WallObject()
 int WallObject::Create()
 {
     // 
-    this->AddComponent(new WallObjectController(this, this->mvCenterPos, this->mvBlockSize));
+    this->AddComponent(new WallObjectController(this, this->mvCenterPos, this->mvBlockSize, this->mfRadian));
 
     // 
     this->AddComponent(this->mpTempGimmickPtr);
@@ -36,6 +48,21 @@ int WallObject::Create()
 
     // 
     return 0;
+}
+
+// 
+WallObjectController *WallObject::GetWallController() const
+{
+    // 
+    auto controller = this->GetBaseComponentList()->SearchComponent(ComponentTagAndOrder::CTAO_WallController);
+    if (controller.empty())
+    {
+        // 
+        return nullptr;
+    }
+
+    // 
+    return static_cast<WallObjectController *>(controller[0]);
 }
 
 // 

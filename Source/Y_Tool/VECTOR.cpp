@@ -923,7 +923,7 @@ MyMatrix VECTOR2D::ToMat() const
 // 行列を用いてVECTOR2Dの拡大・縮小(Scaling)、回転(Rotation)、平行移動(Transportion)を行う関数
 VECTOR2D VECTOR2D::MatrixOperation(const VECTOR2D &s, float r, const VECTOR2D &t) const
 {
-    return ((((*this) * MyMatrix::GetScaling2D(s)) * MyMatrix::GetRotation2D(r)) * MyMatrix::GetTransportion2D(t)).To2VD();
+    return ((((*this) * MyMatrix::GetScaling2D(s)) * MyMatrix::GetRotation2D(r)) * MyMatrix::GetTransportion2D(t)).ToV2D();
 }
 #endif // USE_MY_MATRIX
 
@@ -2133,7 +2133,7 @@ VECTOR3D VECTOR3D::MatrixOperation(const VECTOR3D &s, const VECTOR3D &r, const V
         * MyMatrix::GetRotation3DZ(r.GetZ())
         * MyMatrix::GetRotation3DX(r.GetX())
         * MyMatrix::GetRotation3DY(r.GetY())
-        * MyMatrix::GetTransportion3D(t)).To3VD();
+        * MyMatrix::GetTransportion3D(t)).ToV3D();
 }
 
 // BaseLine(一つの軸の成分のみ1の単位ベクトル)をtargetと同じベクトルにする変換行列を取得する関数

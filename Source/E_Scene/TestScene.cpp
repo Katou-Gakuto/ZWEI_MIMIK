@@ -52,11 +52,11 @@ int TestScene::Create()
 	if (wallCreate)
 	{
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 0.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		/*
@@ -66,91 +66,91 @@ int TestScene::Create()
 		*/
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 2.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 3.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 4.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 0.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 1.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 2.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 3.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 4.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 5.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * 5.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * 4.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * 3.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * 2.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * 1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * 0.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 6.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 5.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 4.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 3.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 2.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 
 		tempCenter = tempCenterStart + VECTOR2D(tempBlockSize.GetX() * 1.0f, tempBlockSize.GetY() * -1.0f);
-		currentObject = new WallObject(false, tempCenter, tempBlockSize);
+		currentObject = new WallObject(false, tempCenter, tempBlockSize, 0.0f);
 		this->mpGameObjectManager->Add(currentObject);
 	}
 
@@ -223,7 +223,7 @@ int TestScene::Create()
 				false));
 	/*/
 	Master::mpLightManager->ResizeArea(1);
-	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize);
+	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize, 0.0f);
 	GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
 	gimmickController->AddGimmick(
 		new ButtonTrigger,

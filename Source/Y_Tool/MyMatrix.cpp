@@ -888,7 +888,7 @@ MyMatrix::MyMatrixRow MyMatrix::operator [](unsigned long row)
 
 #ifdef USE_MY_VECTOR2D
 // 行列を2次元ベクトルに変換する関数
-VECTOR2D MyMatrix::To2VD() const
+VECTOR2D MyMatrix::ToV2D() const
 {
     VECTOR2D temp(0.0f, 0.0f);
     if (this->CheckActive() &&
@@ -923,7 +923,7 @@ MyMatrix MyMatrix::GetTransportion2D(const VECTOR2D &transportion)
 
 #ifdef USE_MY_VECTOR3D
 // 行列を3次元ベクトルに変換する関数
-VECTOR3D MyMatrix::To3VD() const
+VECTOR3D MyMatrix::ToV3D() const
 {
     VECTOR3D temp(0.0f, 0.0f, 0.0f);
     if (this->CheckActive() &&
@@ -2223,7 +2223,7 @@ MyMatrix_D::MyMatrixRow_D MyMatrix_D::operator [](unsigned long row)
 
 #ifdef USE_MY_VECTOR2D
 // 行列を2次元ベクトルに変換する関数
-VECTOR2D_D MyMatrix_D::To2VD() const
+VECTOR2D_D MyMatrix_D::ToV2D() const
 {
     VECTOR2D_D temp(0.0, 0.0);
     if (this->CheckActive() &&
@@ -2258,7 +2258,7 @@ MyMatrix_D MyMatrix_D::GetTransportion2D(const VECTOR2D_D &transportion)
 
 #ifdef USE_MY_VECTOR3D
 // 行列を3次元ベクトルに変換する関数
-VECTOR3D_D MyMatrix_D::To3VD() const
+VECTOR3D_D MyMatrix_D::ToV3D() const
 {
     VECTOR3D_D temp(0.0, 0.0, 0.0);
     if (this->CheckActive() &&

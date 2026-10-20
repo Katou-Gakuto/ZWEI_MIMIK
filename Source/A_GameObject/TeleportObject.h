@@ -1,8 +1,6 @@
 #pragma once
 #include "GameObject2D.h"
 
-#include <cstdint>
-
 class TeleportObjectController;
 
 class TeleportObject : public GameObject2D

@@ -2,12 +2,16 @@
 #include "GameObject2D.h"
 #include "Master.h"
 
+#include "../A_GameObject/MirrorObject.h"
 #include "../A_GameObject/LightObject.h"
+#include "../A_GameObject/WallObject.h"
 
 #include "../C_Component/BaseComponentList.h"
 #include "../C_Component/HoldObjectController.h"
 #include "../C_Component/GoalObjectController.h"
 #include "../C_Component/GimmickObjectController.h"
+#include "../C_Component/MirrorObjectController.h"
+#include "../C_Component/WallObjectController.h"
 
 #include "../E_Scene/BaseScene.h"
 #include "../E_Scene/BaseSceneManager.h"
@@ -247,7 +251,7 @@ int Player::LateUpdate()
         // 
         if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
         {
-            this->SetHoldLightRadian();
+            this->SetHoldRadian();
         }
     }
 
@@ -508,7 +512,7 @@ int Player::TryHold()
             // 
             if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
             {
-                this->SetHoldLightRadian();
+                this->SetHoldRadian();
             }
         }
     }
@@ -721,42 +725,119 @@ Circle2D *Player::GetBodyCollision() const
 }
 
 // 
-void Player::SetHoldLightRadian()
+bool Player::SetHoldRadian()
 {
     // 
+    if (this->mpHold == nullptr ||
+        this->mpHold->GetMyObject() == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
     float setRagian = this->mfNowSwingRadian;
-    if (this->mbLightSide)
-    {
-        // 
-        setRagian += MyFunctions::GetMaxRad() * 0.5f;
-
-        // 
-        setRagian = MyFunctions::GetArrangeRad(setRagian);
-    }
 
     // 
-    GimmickObjectController *gimmickController = (static_cast<LightObject *>(this->mpHold->GetMyObject()))->GetGimmickController();
-    if (gimmickController == nullptr)
+    if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
     {
         // 
-        return;
-    }
-
-    // 
-    LightExecutor *currentExecutor = nullptr;
-
-    // 
-    auto box = gimmickController->GetGimmickBox();
-    auto count = gimmickController->GetGimmickCount();
-    for (uint32_t i = 0; i < count; i++)
-    {
-        currentExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
-        if (currentExecutor != nullptr)
+        if (this->mbLightSide)
         {
             // 
-            currentExecutor->SetBaseAngle(setRagian);
+            setRagian += MyFunctions::GetMaxRad() * 0.5f;
+
+            // 
+            setRagian = MyFunctions::GetArrangeRad(setRagian);
+        }
+
+        // 
+        GimmickObjectController *gimmickController = (static_cast<LightObject *>(this->mpHold->GetMyObject()))->GetGimmickController();
+        if (gimmickController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        LightExecutor *currentExecutor = nullptr;
+
+        // 
+        auto box = gimmickController->GetGimmickBox();
+        auto count = gimmickController->GetGimmickCount();
+        for (uint32_t i = 0; i < count; i++)
+        {
+            currentExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
+            if (currentExecutor != nullptr)
+            {
+                // 
+                currentExecutor->SetBaseAngle(setRagian);
+            }
         }
     }
+    else if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Mirror)
+    {
+        // 
+        if (this->mbLightSide)
+        {
+            // 
+            setRagian += MyFunctions::GetMaxRad() * 0.5f;
+
+            // 
+            setRagian = MyFunctions::GetArrangeRad(setRagian);
+        }
+
+        // 
+        auto *mirrorObject = static_cast<MirrorObject *>(this->mpHold->GetMyObject());
+        if (mirrorObject == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        auto mirrorController = mirrorObject->GetMirrorController();
+        if (mirrorController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        if (!mirrorController->SetBodyCollisionRotateAtNowPos(setRagian))
+        {
+            // 
+            return false;
+        }
+    }
+    else if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Wall)
+    {
+        // 
+        auto *wallObject = static_cast<WallObject *>(this->mpHold->GetMyObject());
+        if (wallObject == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        auto wallController = wallObject->GetWallController();
+        if (wallController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        if (!wallController->SetBodyCollisionRotateAtNowPos(setRagian))
+        {
+            // 
+            return false;
+        }
+    }
+
+    // 
+    return true;
 }
 
 // 

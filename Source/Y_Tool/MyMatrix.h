@@ -158,13 +158,13 @@ public:
     MyMatrixRow operator [](unsigned long row);                                                         // 自身の行を抜粋する
 
 #ifdef USE_MY_VECTOR2D
-    VECTOR2D To2VD() const;                                                                             // 行列を2次元ベクトルに変換する関数
+    VECTOR2D ToV2D() const;                                                                             // 行列を2次元ベクトルに変換する関数
     static MyMatrix GetScaling2D(const VECTOR2D &scaling);                                              // VECTOR2Dの拡大・縮小が出来る行列を取得する関数
     static MyMatrix GetTransportion2D(const VECTOR2D &transportion);                                    // VECTOR2Dの平行移動が出来る行列を取得する関数
 #endif // USE_MY_VECTOR2D
 
 #ifdef USE_MY_VECTOR3D
-    VECTOR3D To3VD() const;                                                                             // 行列を3次元ベクトルに変換する関数
+    VECTOR3D ToV3D() const;                                                                             // 行列を3次元ベクトルに変換する関数
     static MyMatrix GetScaling3D(const VECTOR3D &scaling);                                              // 3Dベクトルの拡大・縮小が出来る行列を取得する関数
 #ifdef USE_MY_ROTATION
     static MyMatrix GetRotation3D(const VECTOR3D &rotateRadian);                                        // 3Dベクトルのx軸, y軸, z軸の回転がまとめて出来る行列を取得する関数
@@ -276,13 +276,13 @@ public:
     MyMatrixRow_D operator [](unsigned long row);                                                       // 自身の行を抜粋する
 
 #ifdef USE_MY_VECTOR2D
-    VECTOR2D_D To2VD() const;                                                                           // 行列を2次元ベクトルに変換する関数
+    VECTOR2D_D ToV2D() const;                                                                           // 行列を2次元ベクトルに変換する関数
     static MyMatrix_D GetScaling2D(const VECTOR2D_D &scaling);                                          // VECTOR2Dの拡大・縮小が出来る行列を取得する関数
     static MyMatrix_D GetTransportion2D(const VECTOR2D_D &transportion);                                // VECTOR2Dの平行移動が出来る行列を取得する関数
 #endif // USE_MY_VECTOR2D
 
 #ifdef USE_MY_VECTOR3D
-    VECTOR3D_D To3VD() const;                                                                           // 行列を3次元ベクトルに変換する関数
+    VECTOR3D_D ToV3D() const;                                                                           // 行列を3次元ベクトルに変換する関数
     static MyMatrix_D GetScaling3D(const VECTOR3D_D &scaling);                                          // 3Dベクトルの拡大・縮小が出来る行列を取得する関数
 #ifdef USE_MY_ROTATION
     static MyMatrix_D GetRotation3D(const VECTOR3D_D &rotateRadian);                                    // 3Dベクトルのx軸, y軸, z軸の回転がまとめて出来る行列を取得する関数

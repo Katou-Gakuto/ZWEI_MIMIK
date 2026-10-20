@@ -8,9 +8,9 @@
 #include "../S_Collision/Quadrangle2D.h"
 #include "../S_Collision/Ray2D.h"
 
-MirrorObjectController::MirrorObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, unsigned char mirrorFace) :
+MirrorObjectController::MirrorObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, float radian, unsigned char mirrorFace) :
     mnMirrorFace(mirrorFace),
-    WallObjectController(myObject, ComponentTagAndOrder::CTAO_MirrorController, leftUp, rightDown)
+    WallObjectController(myObject, ComponentTagAndOrder::CTAO_MirrorController, leftUp, rightDown, radian)
 {
 }
 
@@ -64,31 +64,21 @@ int MirrorObjectController::Create()
 int MirrorObjectController::Initialize()
 {
     // 
-    this->mvCenterPos = this->mvCenterPosInit;
-    
-    // 
-    this->mvBlockSize = this->mvBlockSizeInit;
+    this->GetMyObject2D()->SetPosition(this->mvCenterPosInit);
 
     // 
-    this->GetMyObject2D()->SetPosition(this->mvCenterPos);
+    this->SetBodyCollisionRotateAtNowPos(this->mfRadianInit);
 
     // 
-    VECTOR2D tempPos[4];
-    tempPos[0] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[1] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[2] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[3] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
+    this->mfRadian = this->mfRadianInit;
 
     // 
-    GameObject2D *obj = this->GetMyObject2D();
-    if (obj == nullptr)
+    auto list = this->GetMyObject()->GetBaseCollisionList();
+    if (list == nullptr)
     {
         // 
         return -1;
     }
-
-    // 
-    BaseCollisionList *list = obj->GetBaseCollisionList();
 
     // 
     Quadrangle2D *body = static_cast<Quadrangle2D *>(list->SearchCollision(this->mdBody));
@@ -100,22 +90,19 @@ int MirrorObjectController::Initialize()
     }
 
     // 
-    body->SetShapeParameter(tempPos[0], tempPos[1], tempPos[2], tempPos[3]);
-
-    // 
     switch (this->mnMirrorFace)
     {
     case 0:
-        mirrorRay->SetShapeParameter(tempPos[0], tempPos[1]);
+        mirrorRay->SetShapeParameter(body->GetVertexPos(0), body->GetVertexPos(1));
         break;
     case 1:
-        mirrorRay->SetShapeParameter(tempPos[1], tempPos[3]);
+        mirrorRay->SetShapeParameter(body->GetVertexPos(1), body->GetVertexPos(3));
         break;
     case 2:
-        mirrorRay->SetShapeParameter(tempPos[3], tempPos[2]);
+        mirrorRay->SetShapeParameter(body->GetVertexPos(3), body->GetVertexPos(2));
         break;
     case 3:
-        mirrorRay->SetShapeParameter(tempPos[2], tempPos[0]);
+        mirrorRay->SetShapeParameter(body->GetVertexPos(2), body->GetVertexPos(0));
         break;
     default:
         break;

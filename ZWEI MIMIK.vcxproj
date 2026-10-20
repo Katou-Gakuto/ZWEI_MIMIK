@@ -169,7 +169,6 @@
     <ClCompile Include="Source\F_PuzzleGimmick\LightExecutor.cpp" />
     <ClCompile Include="Source\F_PuzzleGimmick\RotateExecutor.cpp" />
     <ClCompile Include="Source\F_PuzzleGimmick\RouteMoveExecutor.cpp" />
-    <ClCompile Include="Source\F_PuzzleGimmick\TeleportExecutor.cpp" />
     <ClCompile Include="Source\G_LightArea\LightArea.cpp" />
     <ClCompile Include="Source\G_LightArea\LightAreaManager.cpp" />
     <ClCompile Include="Source\G_LightArea\LightLineNode.cpp" />
@@ -285,7 +284,6 @@
     <ClInclude Include="Source\F_PuzzleGimmick\RotateExecutor.h" />
     <ClInclude Include="Source\F_PuzzleGimmick\RouteMoveExecutor.h" />
     <ClInclude Include="Source\F_PuzzleGimmick\PuzzleGimmickData.h" />
-    <ClInclude Include="Source\F_PuzzleGimmick\TeleportExecutor.h" />
     <ClInclude Include="Source\G_LightArea\LightArea.h" />
     <ClInclude Include="Source\G_LightArea\LightAreaManager.h" />
     <ClInclude Include="Source\G_LightArea\LightLineNode.h" />

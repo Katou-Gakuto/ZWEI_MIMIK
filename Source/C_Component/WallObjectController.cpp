@@ -7,12 +7,13 @@
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Quadrangle2D.h"
 
+#include "../Y_Tool/MyMatrix.h"
 
-WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &centerPos, const VECTOR2D &blockSize) :
+WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &centerPos, const VECTOR2D &blockSize, float radian) :
     mvCenterPosInit(centerPos),
     mvBlockSizeInit(blockSize),
-    mvCenterPos(centerPos),
-    mvBlockSize(blockSize),
+    mfRadianInit(radian),
+    mfRadian(0.0f),
     BaseComponent(myObject, ComponentTagAndOrder::CTAO_MirrorController)
 {
 }
@@ -70,10 +71,6 @@ int WallObjectController::Create()
 int WallObjectController::Initialize()
 {
     // 
-    this->mvCenterPos = this->mvCenterPosInit;
-    this->mvBlockSize = this->mvBlockSizeInit;
-
-    // 
     GameObject2D *obj = this->GetMyObject2D();
     if (obj == nullptr)
     {
@@ -81,20 +78,18 @@ int WallObjectController::Initialize()
         return -1;
     }
 
-    obj->SetPosition(this->mvCenterPos);
+    // 
+    obj->SetPosition(this->mvCenterPosInit);
 
     // 
-    VECTOR2D tempPos[4];
-    tempPos[0] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[1] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), -this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[2] = this->mvCenterPos + (VECTOR2D(-this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
-    tempPos[3] = this->mvCenterPos + (VECTOR2D(+this->mvBlockSize.GetX(), +this->mvBlockSize.GetY()) * 0.5f);
+    if (!this->SetBodyCollisionRotateAtNowPos(this->mfRadianInit))
+    {
+        // 
+        return -1;
+    }
 
     // 
-    Quadrangle2D *collision = this->GetBody();
-
-    // 
-    collision->SetShapeParameter(tempPos[0], tempPos[1], tempPos[2], tempPos[3]);
+    this->mfRadian = this->mfRadianInit;
 
     // 
     return 0;
@@ -137,23 +132,123 @@ int WallObjectController::Draw()
 
     /**/
     // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
-    DxLib::DrawBox(
+    DxLib::DrawQuadrangle(
         bodyCollision->GetVertexPos(0).GetX(),
         bodyCollision->GetVertexPos(0).GetY(),
+        bodyCollision->GetVertexPos(1).GetX(),
+        bodyCollision->GetVertexPos(1).GetY(),
+        bodyCollision->GetVertexPos(2).GetX(),
+        bodyCollision->GetVertexPos(2).GetY(),
         bodyCollision->GetVertexPos(3).GetX(),
         bodyCollision->GetVertexPos(3).GetY(),
         0xaaaa00,
         true);
-        //*/
+
     // 
     return 0;
 }
 
-WallObjectController::WallObjectController(GameObject *myObject, ComponentTagAndOrder ctao, const VECTOR2D &leftUp, const VECTOR2D &rightDown) :
-    mvCenterPosInit(leftUp),
-    mvBlockSizeInit(rightDown),
-    mvCenterPos(leftUp),
-    mvBlockSize(rightDown),
+// 
+bool WallObjectController::SetMoveVecObjAndBody(const VECTOR2D &moveVec)
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    auto body = this->GetBody();
+    if (body == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    obj->SetMoveVec(moveVec);
+
+    // 
+    body->SetMoveVec(moveVec);
+
+    // 
+    return true;
+}
+
+// 
+bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    auto body = this->GetBody();
+    if (body == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    VECTOR2D pos = obj->GetPosition();
+
+    // 
+    const MyMatrix rotateMatrix = MyMatrix::GetRotation2D(radian);
+    if (!rotateMatrix.CheckActive())
+    {
+        // 
+        return false;
+    }
+
+    // 
+    VECTOR2D tempVecBox[2]
+    {
+        VECTOR2D(-this->mvBlockSizeInit.GetX(), -this->mvBlockSizeInit.GetY()),
+        VECTOR2D(+this->mvBlockSizeInit.GetX(), +this->mvBlockSizeInit.GetY()),
+    };
+
+    // 
+    MyMatrix result(0, 0);
+    for (int i = 0; i < 2; i++)
+    {
+        // 
+        result = rotateMatrix * tempVecBox[i].ToMat();
+
+        // 
+        tempVecBox[i] = result.ToV2D();
+    }
+
+    // 
+    VECTOR2D tempPosBox[4];
+    tempPosBox[0] = pos + VECTOR2D(tempVecBox[0].GetX(), tempVecBox[0].GetY());
+    tempPosBox[1] = pos + VECTOR2D(tempVecBox[1].GetX(), tempVecBox[0].GetY());
+    tempPosBox[2] = pos + VECTOR2D(tempVecBox[0].GetX(), tempVecBox[1].GetY());
+    tempPosBox[3] = pos + VECTOR2D(tempVecBox[1].GetX(), tempVecBox[1].GetY());
+
+    // 
+    body->SetShapeParameter(
+        tempPosBox[0],
+        tempPosBox[1], 
+        tempPosBox[2], 
+        tempPosBox[3]);
+    
+    // 
+    return true;
+}
+
+
+WallObjectController::WallObjectController(GameObject *myObject, ComponentTagAndOrder ctao, const VECTOR2D &centerPos, const VECTOR2D &blockSize, float radian) :
+    mvCenterPosInit(centerPos),
+    mvBlockSizeInit(blockSize),
+    mfRadianInit(radian),
+    mfRadian(0.0f),
     BaseComponent(myObject, ctao)
 {
 }

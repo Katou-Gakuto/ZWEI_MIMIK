@@ -6,7 +6,7 @@
 class MirrorObjectController : public WallObjectController
 {
 public:
-    MirrorObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, unsigned char mirrorFace);
+    MirrorObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, float radian, unsigned char mirrorFace);
     ~MirrorObjectController() override;
 
     int Create() override;

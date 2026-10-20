@@ -79,5 +79,5 @@ void GameObject3D::SetForword(const VECTOR3D &forwordVec, float zRotate)
 
 VECTOR3D GameObject3D::GetForwordVec() const
 {
-    return (VECTOR3D::GetFront() * MyMatrix::GetRotation3D(this->mvRotation)).To3VD();
+    return (VECTOR3D::GetFront() * MyMatrix::GetRotation3D(this->mvRotation)).ToV3D();
 }

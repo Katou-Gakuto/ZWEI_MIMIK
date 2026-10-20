@@ -12,7 +12,7 @@ class Quadrangle2D;
 class WallObjectController : public BaseComponent
 {
 public:
-    WallObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown);
+    WallObjectController(GameObject *myObject, const VECTOR2D &leftUp, const VECTOR2D &rightDown, float radian);
     virtual ~WallObjectController() override;
 
     virtual int Create() override;
@@ -24,14 +24,25 @@ public:
     virtual int LateUpdate() override;
     virtual int Draw() override;
 
+    // 
+    bool SetMoveVecObjAndBody(const VECTOR2D &moveVec);
+
+    // 
+    bool SetBodyCollisionRotateAtNowPos(float radian);
+
 protected:
     const VECTOR2D mvCenterPosInit;
     const VECTOR2D mvBlockSizeInit;
-    VECTOR2D mvCenterPos;
-    VECTOR2D mvBlockSize;
+    const float mfRadianInit;
+    float mfRadian;
     CollisionHandle mdBody;
 
-    WallObjectController(GameObject *myObject, ComponentTagAndOrder ctao, const VECTOR2D &leftUp, const VECTOR2D &rightDown);
+    WallObjectController(
+        GameObject *myObject,
+        ComponentTagAndOrder ctao,
+        const VECTOR2D &centerPos,
+        const VECTOR2D &blockSize,
+        float radian);
 
     Quadrangle2D *GetBody() const;
 };
