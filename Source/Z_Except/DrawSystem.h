@@ -24,6 +24,7 @@ namespace DRAW_SYSTEM
 
     // ‰æ‘œ•`‰æ
     void DrawImage(VECTOR2D pos, VECTOR2D size, int handle);
+    void DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handle, int TransFlag);
 
     // Œ»óŒõ—Ìˆæ•`‰æ—p
     void DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag = TRUE);

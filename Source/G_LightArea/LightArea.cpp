@@ -435,7 +435,7 @@ bool LightArea::OffLight()
 // ライトエリアの描画
 void LightArea::DrawLightArea()
 {
-    if (mbIsLightFlag)
+    if (!mbIsLightFlag)
     {
         return;
     }
@@ -462,7 +462,6 @@ void LightArea::DrawLightArea()
             LIGHT_DATA linePosData;
             linePosData.lineOne = currentNode->GetMyStartPos();
             linePosData.lineTwo = currentNode->GetMyEndPos();
-            linePosData = GetScreenInsideLine(linePosData);
 
             // このループ数最初の判定なら追加だけして次へ
             if (mstLightLine.size() <= loopCount)
@@ -519,7 +518,6 @@ void LightArea::DrawLightArea()
                 LIGHT_DATA linePosData;
                 linePosData.lineOne = currentNode->GetMyStartPos();
                 linePosData.lineTwo = currentNode->GetMyEndPos();
-                linePosData = GetScreenInsideLine(linePosData);
 
                 // このループ数最初の判定なら追加だけして次へ
                 if (mstLightLine.size() <= loopCount)
@@ -662,123 +660,4 @@ bool LightArea::IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2
 
     // 外積が0なら、3点は同一直線上にある
     return std::fabs(VECTOR2D::Cross(lineVec, checkVec)) < 0.001f;
-}
-
-// 片方の点が画面外の場合、画面内に収まる位置まで線分を縮める
-LightArea::LIGHT_DATA LightArea::GetScreenInsideLine(const LIGHT_DATA& linePos)
-{
-    LIGHT_DATA result = linePos;
-
-    const float screenWidth = Master::mpDxLibDataManager->GetDisplaySize().GetX();
-    const float screenHeight = Master::mpDxLibDataManager->GetDisplaySize().GetY();
-
-    const VECTOR2D& pos1 = linePos.lineOne;
-    const VECTOR2D& pos2 = linePos.lineTwo;
-
-    // 両方とも画面内ならそのまま返す
-    const bool pos1Inside = pos1.GetX() >= 0.0f && pos1.GetX() <= screenWidth &&
-                            pos1.GetY() >= 0.0f && pos1.GetY() <= screenHeight;
-
-    const bool pos2Inside = pos2.GetX() >= 0.0f && pos2.GetX() <= screenWidth &&
-                            pos2.GetY() >= 0.0f && pos2.GetY() <= screenHeight;
-
-    if (pos1Inside == pos2Inside)
-    {
-        return result;
-    }
-
-    // 画面内の点
-    const VECTOR2D insidePos = pos1Inside ? pos1 : pos2;
-
-    // 画面外の点
-    const VECTOR2D outsidePos = pos1Inside ? pos2 : pos1;
-
-    const VECTOR2D direction = outsidePos - insidePos;
-
-    float nearestT = 1.0f;
-    bool hasIntersection = false;
-
-    // 左端
-    if (direction.GetX() != 0.0f)
-    {
-        const float t = (0.0f - insidePos.GetX()) / direction.GetX();
-
-        if (t >= 0.0f && t <= 1.0f)
-        {
-            const float y = insidePos.GetY() + direction.GetY() * t;
-
-            if (y >= 0.0f && y <= screenHeight && t < nearestT)
-            {
-                nearestT = t;
-                hasIntersection = true;
-            }
-        }
-    }
-
-    // 右端
-    if (direction.GetX() != 0.0f)
-    {
-        const float t = (screenWidth - insidePos.GetX()) / direction.GetX();
-
-        if (t >= 0.0f && t <= 1.0f)
-        {
-            const float y = insidePos.GetY() + direction.GetY() * t;
-
-            if (y >= 0.0f && y <= screenHeight && t < nearestT)
-            {
-                nearestT = t;
-                hasIntersection = true;
-            }
-        }
-    }
-
-    // 上端
-    if (direction.GetY() != 0.0f)
-    {
-        const float t = (0.0f - insidePos.GetY()) / direction.GetY();
-
-        if (t >= 0.0f && t <= 1.0f)
-        {
-            const float x = insidePos.GetX() + direction.GetX() * t;
-
-            if (x >= 0.0f && x <= screenWidth && t < nearestT)
-            {
-                nearestT = t;
-                hasIntersection = true;
-            }
-        }
-    }
-
-    // 下端
-    if (direction.GetY() != 0.0f)
-    {
-        const float t = (screenHeight - insidePos.GetY()) / direction.GetY();
-
-        if (t >= 0.0f && t <= 1.0f)
-        {
-            const float x = insidePos.GetX() + direction.GetX() * t;
-
-            if (x >= 0.0f && x <= screenWidth && t < nearestT)
-            {
-                nearestT = t;
-                hasIntersection = true;
-            }
-        }
-    }
-
-    if (hasIntersection)
-    {
-        const VECTOR2D newPos = insidePos + direction * nearestT;
-
-        if (pos1Inside)
-        {
-            result.lineTwo = newPos;
-        }
-        else
-        {
-            result.lineOne = newPos;
-        }
-    }
-
-    return result;
 }

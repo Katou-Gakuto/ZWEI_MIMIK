@@ -1,5 +1,6 @@
 #include "DXModelAnim.h"
 #include "../A_GameObject/GameObject2D.h"
+#include "../E_Scene/BasePuzzleScene.h"
 #include "../Z_Except/Master.h"
 #include "../Z_Except/ResourceManager.h"
 
@@ -16,12 +17,16 @@ int DXAnimModel::Initialize()
 {
 	NowPageFrame = 0;
 	NowPage = 0;
+	uvLeftUp.SetX(0.0f);
+	uvRightDown.SetX(UVWidth);
 	return 0;
 }
 
 int DXAnimModel::Update()
 {
 	NowPageFrame++;
+
+
 	if (NowPageFrame > MaxPageFrame)
 	{
 		NowPageFrame = 0;
@@ -65,7 +70,7 @@ int DXAnimModel::Finalize()
 int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright)
 {
 	// ƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý
-	int modelHandle = Master::mpResourceManager->LoadMadel(pathName);
+	int modelHandle = Master::mpResourceManager->LoadGraphics(pathName);
 	if (modelHandle == -1)
 	{
 		return -1;

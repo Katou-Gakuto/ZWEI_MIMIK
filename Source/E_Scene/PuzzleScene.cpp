@@ -98,7 +98,8 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 	objManager.Add(currentObject);
 
 	// Light_01
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5f, 0.82f));
+	//objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5f, 0.82f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.45f, 0.82f));
 	objRadius = 40.0f;
 	lightObject = new LightObject(objCenter, objRadius);
 	gimmickController = lightObject->GetGimmickController();
@@ -241,7 +242,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 	objManager.Add(buttonObject[buttonObject.size() - 1]);
 
 	// Light_01
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5f, 0.82f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.6f, 0.82f));
 	objRadius = 40.0f;
 	lightObject = new LightObject(objCenter, objRadius);
 	gimmickController = lightObject->GetGimmickController();

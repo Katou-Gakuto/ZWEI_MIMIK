@@ -6,6 +6,10 @@
 
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Circle2D.h"
+
+#include "../T_Model/BaseModelList.h"
+#include "../T_Model/DXModelRotaObj.h"
+
 #include "DrawSystem.h"
 // 
 LightObjectController::LightObjectController(GameObject *myObject, const VECTOR2D &center, float radius) :
@@ -42,6 +46,10 @@ int LightObjectController::Create()
     // 
     this->GetMyObject()->AddCollision(body, this->mdBody);
 
+
+    // ƒ‚ƒfƒ‹‚ð’Ç‰Á
+    this->GetMyObject()->AddModel(new DXModelRotaObj(this->GetMyObject()), this->mdModelHandle);
+
     // 
     body->WorldConnectMySelf();
 
@@ -57,6 +65,8 @@ int LightObjectController::Initialize()
     // 
     this->GetMyObject2D()->SetPosition(this->mvCenterPos);
 
+    //this->GetMyObject2D()->SetRotation(this->/*‚±‚±‚Éƒ‰ƒWƒAƒ“Šp‚ð“ü‚ê‚é*/);
+
     // 
     Circle2D *body = this->GetBody();
     if (body == nullptr)
@@ -66,6 +76,9 @@ int LightObjectController::Initialize()
 
     // 
     body->SetShapeParameter(this->mvCenterPos, this->mfRadiusInit);
+
+    DXModelRotaObj *lightModel = this->GetModel();
+    lightModel->SetObjModel("Resource/invader.png", VECTOR2D(100.0f, 100.0f));
 
     // 
     return 0;
@@ -128,3 +141,13 @@ Circle2D *LightObjectController::GetBody() const
     return static_cast<Circle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBody));
 }
 
+// 
+DXModelRotaObj *LightObjectController::GetModel()const
+{
+    // 
+    GameObject *myObject = this->GetMyObject();
+    BaseModelList *modelList = myObject->GetModelList();
+    DXModelRotaObj *objModel = static_cast<DXModelRotaObj *>(modelList->SearchModelNumber(this->mdModelHandle));
+    // 
+    return objModel;
+}

@@ -12,6 +12,7 @@
 
 #include "../Z_Except/Master.h"
 
+#include "DrawSystem.h"
 
 // 
 GoalObjectController::GoalObjectController(GameObject *myObject, bool playerLight, float goalRadius) :
@@ -111,9 +112,8 @@ int GoalObjectController::Draw()
     }
 
     // 
-    int result = DxLib::DrawCircle(
-        obj->GetPosition().GetX(),
-        obj->GetPosition().GetY(),
+    int result = DRAW_SYSTEM::DrawCircle(
+        obj->GetPosition(),
         this->mfGoalRadius,
         color,
         false);

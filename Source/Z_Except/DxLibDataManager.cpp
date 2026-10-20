@@ -39,8 +39,8 @@ void DxLibDataManager::DxInitPreInitialize()
     mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
 
     //VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { VECTOR2D(3000.0f, 3000.0f), mstDisplaySize, mstDisplaySize * 0.1f  };
-    VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { mstDisplaySize, mstDisplaySize, mstDisplaySize * 0.0f };
-    //VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { VECTOR2D(mstDisplaySize.GetX() * 1.05f, mstDisplaySize.GetY() * 1.4f), mstDisplaySize, VECTOR2D(mstDisplaySize.GetX() * -0.11f, mstDisplaySize.GetY() * 0.0f) };
+    //VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { mstDisplaySize, mstDisplaySize, mstDisplaySize * 0.0f };
+    VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { VECTOR2D(mstDisplaySize.GetX() * 1.05f, mstDisplaySize.GetY() * 1.4f), mstDisplaySize, VECTOR2D(mstDisplaySize.GetX() * -0.11f, mstDisplaySize.GetY() * 0.0f) };
     //VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = { VECTOR2D(100.0f, 100.0f), mstDisplaySize, mstDisplaySize * 0.1f  };
     DRAW_SYSTEM::SetStazeSize(setStageSize);
 }

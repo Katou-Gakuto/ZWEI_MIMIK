@@ -48,6 +48,7 @@ public:
     // 
     Player *GetPlayer(int playerNumber)const;
 
+
     // 
     GoalObjectController *GetGoal(bool lightSide)const;
 
@@ -100,4 +101,9 @@ private:
 
     // 
     int FailedDraw();
+
+public:
+
+    // ƒ|[ƒYó‘Ô‚ğæ“¾‚·‚é
+    bool GetmbPouse() { return mbPouse; }
 };

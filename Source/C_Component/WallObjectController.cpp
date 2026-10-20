@@ -6,6 +6,9 @@
 
 #include "../S_Collision/BaseCollisionList.h"
 #include "../S_Collision/Quadrangle2D.h"
+#include "../T_Model/BaseModelList.h"
+#include "../T_Model/DXModelRotaObj.h"
+
 #include "DrawSystem.h"
 
 #include "../Y_Tool/MyMatrix.h"
@@ -18,6 +21,7 @@ WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D 
     mvBlockSizeInit(blockSize),
     mfRadianInit(radian),
     mfRadian(0.0f),
+    mdModel(),
     BaseComponent(myObject, ComponentTagAndOrder::CTAO_MirrorController)
 {
 }
@@ -31,6 +35,16 @@ int WallObjectController::Create()
     // 
     GameObject2D *obj = this->GetMyObject2D();
     if (obj == nullptr)
+    {
+        // 
+        return -1;
+    }
+
+    // ƒ‚ƒfƒ‹Ý’è
+    //obj->SetRotation(180.0f);
+    DXModelRotaObj* myModel = new DXModelRotaObj(obj);
+    myModel->SetObjModel("Resource/wall.png", mvBlockSizeInit);
+    if (obj->AddModel(myModel, this->mdModel) != 0)
     {
         // 
         return -1;
@@ -63,7 +77,6 @@ int WallObjectController::Create()
         // 
         return -1;
     }
-
 
     // 
     collision->WorldConnectMySelf();
@@ -135,14 +148,14 @@ int WallObjectController::Draw()
     Quadrangle2D* bodyCollision = this->GetBody();
 
     /**/
-    // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
-    DRAW_SYSTEM::DrawQuadrangle(
-        bodyCollision->GetVertexPos(0),
-        bodyCollision->GetVertexPos(1),
-        bodyCollision->GetVertexPos(3),
-        bodyCollision->GetVertexPos(2),
-        0xaaaa00,
-        true);
+    //// ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
+    //DRAW_SYSTEM::DrawQuadrangle(
+    //    bodyCollision->GetVertexPos(0),
+    //    bodyCollision->GetVertexPos(1),
+    //    bodyCollision->GetVertexPos(3),
+    //    bodyCollision->GetVertexPos(2),
+    //    0xaaaa00,
+    //    true);
     // 
     return 0;
 }
@@ -256,4 +269,10 @@ Quadrangle2D *WallObjectController::GetBody() const
 {
     // 
     return static_cast<Quadrangle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBody));
+}
+
+DXModelRotaObj* WallObjectController::GetModel() const
+{
+    // 
+    return static_cast<DXModelRotaObj*>(this->GetMyObject()->GetModelList()->SearchModelNumber(this->mdModel));
 }

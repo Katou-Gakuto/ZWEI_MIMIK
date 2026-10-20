@@ -118,8 +118,8 @@ int GimmickObjectController::Draw()
         // 
         this->mlGimmickList[i].mbTriggerSignal = this->mlGimmickList[i].mpTrigger->GetSignal();
 
-        // 
-        this->mlGimmickList[i].mpExecutor->Draw((this->mlGimmickList[i].mbTriggerSignal));
+        //// 
+        //this->mlGimmickList[i].mpExecutor->Draw((this->mlGimmickList[i].mbTriggerSignal));
     }
 
     // 

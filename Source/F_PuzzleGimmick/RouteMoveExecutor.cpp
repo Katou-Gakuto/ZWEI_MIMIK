@@ -363,14 +363,6 @@ int RouteMoveExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision 
     return 0;
 }
 
-// ギミック内容を描画する関数
-// ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
-int RouteMoveExecutor::Draw(bool triggerSignal)
-{
-    // 
-    return 0;
-}
-
 // 
 void RouteMoveExecutor::SetFrameCount(uint32_t frameCount)
 {

@@ -73,7 +73,7 @@ int StageSelectScene::Update()
         }
         else
         {
-            // 
+			// 選択したステージのシーンに遷移する
             Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage));
         }
 

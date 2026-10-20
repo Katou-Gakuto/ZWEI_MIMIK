@@ -112,10 +112,6 @@ public:
     // 当たり判定によるギミックの変化に対応させる関数
     virtual int HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision) = 0;
 
-    // ギミック内容を描画する関数
-    // ※既に実行段階である場合は引数がtrueになります。実行段階では描画しない、あるいはその逆の場合はこの引数を使ってください。
-    virtual int Draw(bool triggerSignal) = 0;
-
     // ギミックの内容を実行するかの判断材料を取得する関数
     const PuzzleGimmickActiveParam &GetActiveParam() const { return this->mdActiveParam; }
 

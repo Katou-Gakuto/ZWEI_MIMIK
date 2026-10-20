@@ -101,11 +101,11 @@ int Player::Initialize()
 
     if (mnPlayerNum == 1)
     {
-        PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f);
+       playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f);
     }
     else
     {
-        PlayerGraphHandle = playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f);
+       playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f);
     }
 
     // 

@@ -87,9 +87,6 @@ private:
     // 指定した2点を通る直線上に点があるかを判定
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
 
-    // 片方の点が画面外の場合、画面内に収まる位置まで線分を縮める
-    LIGHT_DATA GetScreenInsideLine(const LIGHT_DATA& linePos);
-
 private:
     // とりあえず用意しておこうか
     std::vector<LightLineNode *> mlLightFirstNode;
