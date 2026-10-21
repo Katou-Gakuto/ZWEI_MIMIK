@@ -8,6 +8,15 @@
 
 #include "DxLib.h"
 
+#include "BaseCollision.h"
+
+struct HIT_COLLISION_LINE
+{
+    BaseCollision* HitCollision;
+    VECTOR2D LineStartPos;
+    VECTOR2D LineEndPos;
+};
+
 class LightLineNode;
 
 class BaseCollision2D;
@@ -18,11 +27,13 @@ struct CollisionCheckResult2D;
 // 
 class LightArea
 {
+private:
     struct LIGHT_DATA
     {
         VECTOR2D lineOne;
         VECTOR2D lineTwo;
     };
+
 public:
     // 
     LightArea();
@@ -80,6 +91,12 @@ public:
     // ライトエリアの描画
     void DrawLightArea();
 
+    // ライトエリア再描画
+    void ReDrawLightArea();
+
+    // ライトエリア描画時当たっている
+    std::vector<std::vector<HIT_COLLISION_LINE>> DrawLingAreaHitCollisionsGetProcess();
+
     // ライト有効フラグ設定
     void SetLightFlag(bool flag) { mbIsLightFlag = flag; }
 
@@ -114,6 +131,9 @@ private:
 
     // ライトエリア三角
     VERTEX2D* mstLightAreaTriangleVertex;
+
+    // ライトエリア三角の数
+    unsigned int munLightAreaTriangleSize;
 
     // 前の三角の配列数
     int mnPreLightAreaTriangleVertexIndexCount;

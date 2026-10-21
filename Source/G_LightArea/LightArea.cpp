@@ -25,6 +25,7 @@ LightArea::LightArea() :
     mnLightColor(0xffffff),
     mstLightLine(),
     mstLightAreaTriangleVertex(nullptr),
+    munLightAreaTriangleSize(0),
     mnPreLightAreaTriangleVertexIndexCount(0),
     mbIsLightFlag(true)
 {
@@ -571,7 +572,7 @@ void LightArea::DrawLightArea()
     {
         VERTEX2D startBoxPosData;
         startBoxPosData.rhw = 1.0f;
-        startBoxPosData.dif = GetColorU8(((mnLightColor & 0xff0000) >> 16), ((mnLightColor & 0x00ff00) >> 8), (mnLightColor & 0x0000ff), 255);
+        startBoxPosData.dif = GetColorU8(((/*mnLightColor*/0xffffff & 0xff0000) >> 16), ((/*mnLightColor*/0xffffff & 0x00ff00) >> 8), (/*mnLightColor*/0xffffff & 0x0000ff), 255);
         startBoxPosData.u = 0.0f;
         startBoxPosData.v = 0.0f;
         for (int i = 0; i < boxIndexMax; ++i)
@@ -581,7 +582,7 @@ void LightArea::DrawLightArea()
     }
     
     // 三角形を入力する情報の数を測定
-    unsigned int lightAreaTriangleSize = 0;
+    munLightAreaTriangleSize = 0;
     for (int i = 0; i < mstLightLine.size(); ++i)
     {
         // 四角ができるか判定
@@ -589,20 +590,20 @@ void LightArea::DrawLightArea()
         {
             continue;
         }
-        lightAreaTriangleSize += mstLightLine[i].size() - 1/*一番後ろは計測しない*/;
+        munLightAreaTriangleSize += mstLightLine[i].size() - 1/*一番後ろは計測しない*/;
     }
 
-    lightAreaTriangleSize *= 6;/*一つの4角で6個頂点を登録する*/
+    munLightAreaTriangleSize *= 6;/*一つの4角で6個頂点を登録する*/
 
-    if (mnPreLightAreaTriangleVertexIndexCount != lightAreaTriangleSize)
+    if (mnPreLightAreaTriangleVertexIndexCount != munLightAreaTriangleSize)
     {
         // 中に何か入っているなら消して新しくメモリを用意する
         if (mstLightAreaTriangleVertex != nullptr)
         {
             free(mstLightAreaTriangleVertex);
         }
-        mstLightAreaTriangleVertex = static_cast<VERTEX2D*>(malloc(sizeof(VERTEX2D) * lightAreaTriangleSize));
-        mnPreLightAreaTriangleVertexIndexCount = lightAreaTriangleSize;
+        mstLightAreaTriangleVertex = static_cast<VERTEX2D*>(malloc(sizeof(VERTEX2D) * munLightAreaTriangleSize));
+        mnPreLightAreaTriangleVertexIndexCount = munLightAreaTriangleSize;
     }
 
     // 四角を三角で設定
@@ -636,7 +637,7 @@ void LightArea::DrawLightArea()
         }
     }
     // 設定した3角を全部描画
-    DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, lightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle()); 
+    DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, munLightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE, false); 
 
 
     //  for (size_t i = 0; i < mstLightLine.size(); ++i)
@@ -648,6 +649,158 @@ void LightArea::DrawLightArea()
     //                   0xffffff);
     //      }
     //  }
+}
+
+// ライトエリア再描画
+void LightArea::ReDrawLightArea()
+{
+    for (int i = 0; i < munLightAreaTriangleSize; ++i)
+    {
+        mstLightAreaTriangleVertex[i].dif = GetColorU8(((mnLightColor & 0xff0000) >> 16), ((mnLightColor & 0x00ff00) >> 8), (mnLightColor & 0x0000ff), 255);
+    }
+    // 設定した3角を全部描画
+    DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, munLightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE, true); 
+}
+
+// ライトエリア描画時当たっている
+std::vector<std::vector<HIT_COLLISION_LINE>> LightArea::DrawLingAreaHitCollisionsGetProcess()
+{
+    std::vector<std::vector<HIT_COLLISION_LINE>> hitCollisionLineData;
+    std::vector<std::vector<LIGHT_DATA>> lightLine;
+
+    if (!mbIsLightFlag)
+    {
+        return hitCollisionLineData;
+    }
+
+    LightLineNode* currentNode;
+    LightLineNode* nextNode;
+
+    for (uint32_t i = 0; i < mnLightLineCount; ++i)
+    {
+        currentNode = this->GetFirstNodeBox()[i];
+
+        if (currentNode == nullptr)
+        {
+            continue;
+        }
+
+        // ループ数
+        int loopCount = 0;
+        while (true)
+        {
+
+            // 情報保存
+            LIGHT_DATA linePosData;
+            linePosData.lineOne = currentNode->GetMyStartPos();
+            linePosData.lineTwo = currentNode->GetMyEndPos();
+
+            // このループ数最初の判定なら追加だけして次へ
+            if (lightLine.size() <= loopCount)
+            {
+                // 情報を追加
+                lightLine.push_back({linePosData});
+                hitCollisionLineData.push_back({{currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo}});
+            }
+            // 前に設定したことがあるから調べる
+            else
+            {
+                /*このif判定順番厳守、配列の参照でエラー出る*/
+                if (/*二つのラインで四角分がこれまでに作成されているか判定*/
+                    (lightLine[loopCount].size() >= 2) &&
+                    /*前の二つのラインを見て今のラインの頂点が両点座標が直線上にあるか判定*/
+                    (IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineOne, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineOne, linePosData.lineOne) &&
+                        IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineTwo, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineTwo, linePosData.lineTwo)))
+                {
+                    // 前回登録した情報を書き換える
+                    lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/] = linePosData;
+                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].HitCollision = currentNode->GetHitCollision();
+                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].LineEndPos = linePosData.lineTwo;
+                }
+                else
+                {
+                    // 情報を追加
+                    lightLine[loopCount].push_back(linePosData);
+                    hitCollisionLineData[loopCount].push_back({currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo});
+                }
+            }
+
+            // 次のノードがあるか確認
+            if (!currentNode->AccessNext(&nextNode))
+            {
+                break;
+            }
+
+            // 次のノード設定
+            currentNode = nextNode;
+
+            // ループ数インクリメント
+            ++loopCount;
+        }
+    }
+
+    // 一周しているか
+    if (mbFinal2Start && (0 < mnLightLineCount))
+    {
+        currentNode = this->GetFirstNodeBox()[0];
+        if (currentNode != nullptr)
+        {
+            // ループ数
+            int loopCount = 0;
+            while (true)
+            {
+
+                // 情報保存
+                LIGHT_DATA linePosData;
+                linePosData.lineOne = currentNode->GetMyStartPos();
+                linePosData.lineTwo = currentNode->GetMyEndPos();
+
+                // このループ数最初の判定なら追加だけして次へ
+                if (lightLine.size() <= loopCount)
+                {
+                    // 情報を追加
+                    lightLine.push_back({ linePosData });
+                    hitCollisionLineData.push_back({{currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo}});
+                }
+                // 前に設定したことがあるから調べる
+                else
+                {
+                    /*このif判定順番厳守、配列の参照でエラー出る*/
+                    if (/*二つのラインで四角分がこれまでに作成されているか判定*/
+                        (lightLine[loopCount].size() >= 2) &&
+                        /*前の二つのラインを見て今のラインの頂点が両点座標が直線上にあるか判定*/
+                        (IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineOne, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineOne, linePosData.lineOne) &&
+                            IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineTwo, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineTwo, linePosData.lineTwo)))
+                    {
+                        // 前回登録した情報を書き換える
+                        lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/] = linePosData;
+                        hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].HitCollision = currentNode->GetHitCollision();
+                        hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].LineEndPos = linePosData.lineTwo;
+                    }
+                    else
+                    {
+                        // 情報を追加
+                        lightLine[loopCount].push_back(linePosData);
+                        hitCollisionLineData[loopCount].push_back({currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo});
+                    }
+                }
+
+                // 次のノードがあるか確認
+                if (!currentNode->AccessNext(&nextNode))
+                {
+                    break;
+                }
+
+                // 次のノード設定
+                currentNode = nextNode;
+
+                // ループ数インクリメント
+                ++loopCount;
+            }
+        }
+    }
+
+    return hitCollisionLineData;
 }
 
 // 指定した2点を通る直線上に点があるかを判定

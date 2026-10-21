@@ -37,7 +37,7 @@ PuzzleScene1_1::~PuzzleScene1_1()
 int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 {
 	// 
-	Master::mpLightManager->ResizeArea(1);
+	Master::mpLightManager->ResizeArea(3);
 
 	VECTOR2D objCenter;
 	VECTOR2D blockSize;
@@ -114,6 +114,56 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 
 	// ライトにHoldを追加する
 	lightObject->AddComponent(new HoldObjectController(lightObject, false, true, false, true, false));
+
+	objManager.Add(lightObject);
+	{
+	// Light_01
+	//objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5f, 0.82f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.85f, 0.72f));
+	objRadius = 40.0f;
+	lightObject = new LightObject(objCenter, objRadius);
+	gimmickController = lightObject->GetGimmickController();
+	// 光のON/OFFのギミック
+	buttonTrigger = new ButtonTrigger;
+	baseTrigger = buttonTrigger;
+	baseExecutor = new LightExecutor(
+		tempGimmickParam, lightObject, 1, 50, MyFunctions::Deg2Rad(120.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+	gimmickController->AddGimmick(baseTrigger, baseExecutor);
+
+		LightArea* lightArea = Master::mpLightManager->SearchArea(1);
+		if (lightArea != nullptr)
+		{
+			lightArea->SetLightColor(0x00ff00);
+		}
+
+	// ライトにHoldを追加する
+	lightObject->AddComponent(new HoldObjectController(lightObject, false, true, false, true, false));
+	}
+	objManager.Add(lightObject);
+
+	{
+	// Light_01
+	//objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5f, 0.82f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.25f, 0.52f));
+	objRadius = 40.0f;
+	lightObject = new LightObject(objCenter, objRadius);
+	gimmickController = lightObject->GetGimmickController();
+	// 光のON/OFFのギミック
+	buttonTrigger = new ButtonTrigger;
+	baseTrigger = buttonTrigger;
+	baseExecutor = new LightExecutor(
+		tempGimmickParam, lightObject, 2, 50, MyFunctions::Deg2Rad(280.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+	gimmickController->AddGimmick(baseTrigger, baseExecutor);
+
+		LightArea* lightArea = Master::mpLightManager->SearchArea(2);
+		if (lightArea != nullptr)
+		{
+			lightArea->SetLightColor(0x0000ff);
+		}
+
+	// ライトにHoldを追加する
+	lightObject->AddComponent(new HoldObjectController(lightObject, false, true, false, true, false));
+	}
 
 	objManager.Add(lightObject);
 

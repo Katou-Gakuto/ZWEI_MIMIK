@@ -21,6 +21,13 @@ private:
         unsigned char* maskData = nullptr;
     };
 
+    struct LIGHT_SCREEN_HANDLE
+    {
+        int SceneObjectScreenHandle;
+        int FilpScreenHandle;
+        int ScreenHandle;
+    };
+
 
 public:
     // 
@@ -62,6 +69,9 @@ private:
     // ライト描画終了時処理
     void EndLightDraw();
 
+    // 光領域内の描画済み画面を反転
+    void FlipLightAreaScreen();
+
 private:
     // 
     std::vector<LightArea *> mlNode;
@@ -70,7 +80,10 @@ private:
     uint16_t mnDeactivateStartIndex;
 
     // ライトスクリーンハンドル
-    std::vector<int> mnLightScreenHandle;
+    std::vector<LIGHT_SCREEN_HANDLE> mnLightScreenHandle;
+
+    // 全ライトまとめ用スクリーンハンドル
+    int mnAllLightScreenHandle;
 
     // マスクデータ
     MASK_DATA mstMaskData;

@@ -151,3 +151,112 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	// ソフトの終了
 	return 0;
 }
+/*
+#include "DxLib.h"
+#include <chrono>
+#include <cstdio>
+
+using Clock = std::chrono::steady_clock;
+
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+	ChangeWindowMode(TRUE);
+
+	if (DxLib_Init() == -1)
+		return -1;
+
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	// 計測用のメモリ画面
+	int screen = MakeScreen(640, 480, TRUE);
+
+	if (screen == -1)
+	{
+		DxLib_End();
+		return -1;
+	}
+
+	constexpr int COUNT = 100000;
+
+	double switchMs = 0.0;
+	double loopMs = 0.0;
+
+	// ウォームアップ
+	for (int i = 0; i < 1000; ++i)
+	{
+		SetDrawScreen(screen);
+		SetDrawScreen(DX_SCREEN_BACK);
+	}
+
+	// 1. SetDrawScreenの切り替え時間
+	{
+		auto start = Clock::now();
+
+		for (int i = 0; i < COUNT; ++i)
+		{
+			SetDrawScreen(screen);
+			SetDrawScreen(DX_SCREEN_BACK);
+		}
+
+		auto end = Clock::now();
+
+		switchMs =
+			std::chrono::duration<double, std::milli>(
+				end - start).count();
+	}
+
+	// 2. ループと色判定に相当する処理の比較用
+	volatile int color = 0;
+	{
+		auto start = Clock::now();
+
+		for (int i = 0; i < COUNT; ++i)
+		{
+			if (color == 0)
+				color = 1;
+			else
+				color = 0;
+		}
+
+		auto end = Clock::now();
+
+		loopMs =
+			std::chrono::duration<double, std::milli>(
+				end - start).count();
+	}
+
+	// 計測結果をゲーム画面に表示
+	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	{
+		SetDrawScreen(DX_SCREEN_BACK);
+		ClearDrawScreen();
+
+		DrawFormatString(20, 20, GetColor(255, 255, 255),
+			"SetDrawScreen benchmark");
+
+		DrawFormatString(20, 60, GetColor(255, 255, 0),
+			"Switch count: %d", COUNT * 2);
+
+		DrawFormatString(20, 90, GetColor(255, 255, 255),
+			"Switch time: %.3f ms", switchMs);
+
+		DrawFormatString(20, 120, GetColor(255, 255, 255),
+			"Average per call: %.3f us",
+			switchMs * 1000.0 / (COUNT * 2));
+
+		DrawFormatString(20, 160, GetColor(255, 255, 255),
+			"Loop test: %.3f ms", loopMs);
+
+		DrawFormatString(20, 210, GetColor(180, 180, 180),
+			"Press ESC to exit");
+
+		ScreenFlip();
+	}
+
+	DeleteGraph(screen);
+	DxLib_End();
+
+	return 0;
+}
+*/
+

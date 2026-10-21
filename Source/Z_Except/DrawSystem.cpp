@@ -105,22 +105,25 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handl
 }
 
 // Œ»óŒõ—Ìˆæ•`‰æ—p
-void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag)
+void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag, bool redrawFlag)
 {
-    for (int i = 0; i < polygonNumber; ++i)
+    if (!redrawFlag)
     {
-        VECTOR2D setPos1 = VECTOR2D(triangleVertex[(i * 3) + 0].pos.x, triangleVertex[(i * 3) + 0].pos.y);
-        VECTOR2D setPos2 = VECTOR2D(triangleVertex[(i * 3) + 1].pos.x, triangleVertex[(i * 3) + 1].pos.y);
-        VECTOR2D setPos3 = VECTOR2D(triangleVertex[(i * 3) + 2].pos.x, triangleVertex[(i * 3) + 2].pos.y);
-        setPos1 = WorldSizeToDisplaySize(setPos1);
-        setPos2 = WorldSizeToDisplaySize(setPos2);
-        setPos3 = WorldSizeToDisplaySize(setPos3);
-        triangleVertex[(i * 3) + 0].pos.x = setPos1.GetX();
-        triangleVertex[(i * 3) + 0].pos.y = setPos1.GetY();
-        triangleVertex[(i * 3) + 1].pos.x = setPos2.GetX();
-        triangleVertex[(i * 3) + 1].pos.y = setPos2.GetY();
-        triangleVertex[(i * 3) + 2].pos.x = setPos3.GetX();
-        triangleVertex[(i * 3) + 2].pos.y = setPos3.GetY();
+        for (int i = 0; i < polygonNumber; ++i)
+        {
+            VECTOR2D setPos1 = VECTOR2D(triangleVertex[(i * 3) + 0].pos.x, triangleVertex[(i * 3) + 0].pos.y);
+            VECTOR2D setPos2 = VECTOR2D(triangleVertex[(i * 3) + 1].pos.x, triangleVertex[(i * 3) + 1].pos.y);
+            VECTOR2D setPos3 = VECTOR2D(triangleVertex[(i * 3) + 2].pos.x, triangleVertex[(i * 3) + 2].pos.y);
+            setPos1 = WorldSizeToDisplaySize(setPos1);
+            setPos2 = WorldSizeToDisplaySize(setPos2);
+            setPos3 = WorldSizeToDisplaySize(setPos3);
+            triangleVertex[(i * 3) + 0].pos.x = setPos1.GetX();
+            triangleVertex[(i * 3) + 0].pos.y = setPos1.GetY();
+            triangleVertex[(i * 3) + 1].pos.x = setPos2.GetX();
+            triangleVertex[(i * 3) + 1].pos.y = setPos2.GetY();
+            triangleVertex[(i * 3) + 2].pos.x = setPos3.GetX();
+            triangleVertex[(i * 3) + 2].pos.y = setPos3.GetY();
+        }
     }
     DxLib::DrawPolygon2D(triangleVertex, polygonNumber, graphHandle, flag);
 }
