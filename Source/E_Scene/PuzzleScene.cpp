@@ -112,6 +112,12 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 		tempGimmickParam, lightObject, 0, 50, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
 	gimmickController->AddGimmick(baseTrigger, baseExecutor);
 
+	LightArea* lightArea = Master::mpLightManager->SearchArea(0);
+	if (lightArea != nullptr)
+	{
+		lightArea->SetLightColor(0x000000);
+	}
+
 	// ライトにHoldを追加する
 	lightObject->AddComponent(new HoldObjectController(lightObject, false, true, false, true, false));
 
@@ -133,7 +139,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 		LightArea* lightArea = Master::mpLightManager->SearchArea(1);
 		if (lightArea != nullptr)
 		{
-			lightArea->SetLightColor(0x00ff00);
+			lightArea->SetLightColor(0xff0000);
 		}
 
 	// ライトにHoldを追加する
@@ -158,7 +164,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 		LightArea* lightArea = Master::mpLightManager->SearchArea(2);
 		if (lightArea != nullptr)
 		{
-			lightArea->SetLightColor(0x0000ff);
+			lightArea->SetLightColor(0x000000);
 		}
 
 	// ライトにHoldを追加する
