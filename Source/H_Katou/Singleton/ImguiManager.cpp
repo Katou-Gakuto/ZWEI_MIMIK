@@ -28,6 +28,7 @@ ImguiManager::ImguiManager(bool isImguiExecute)
 : mnAddNumber(0)
 , mbIsImguiExecute(isImguiExecute)
 , mstCurrentGroupTypeData()
+, mnFrameCount(0)
 {
     mstImguiGroupDatas.clear();
 }
@@ -98,12 +99,11 @@ void ImguiManager::Update()
     // グループ
     for (int i = 0; i < mstImguiGroupDatas.size(); i++)
     {
+        ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
+        ImGui::Begin(mstImguiGroupDatas[i].GetGroupName().c_str());
         DrawGroupImgui(mstImguiGroupDatas[i]);
+        ImGui::End();
     }
-
-    // INPROGRESS:_ ここやってからの方が光領域やりやすそう
-    
-    // TODO:_ クリアじゃなくて削除予定をけすのと描画前に消すどちらも作りたい
     mstImguiGroupDatas.clear();
 // ImGui::TextLinkOpenURL("TEST", "https://github.com/Katou-Gakuto/ZWEI_MIMIK");
 //     DEBUG::SaveText("CLICK");
@@ -167,7 +167,7 @@ void ImguiManager::AddDrawImguiGroup(IMGUI_GROUP_DATA imguiGroupData)
 }
 
 // Imguiグループ追加描画(引数参照)
-void ImguiManager::AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName)
+void ImguiManager::AddDrawImguiGroup(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -181,21 +181,21 @@ void ImguiManager::AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariable
     // 既存グループがある場合
     if (imguiGroupData != nullptr)
     {
-        imguiGroupData->AddImguiControlVariableData(imguiControlVariableData);
+        imguiGroupData->AddImguiControlDrawData(imguiControlVariableData);
         return;
     }
 
     // グループが存在しない場合は新規作成
     IMGUI_GROUP_DATA newGroupData = IMGUI_GROUP_DATA::GetImguiGroupData(groupName, groupType);
 
-    newGroupData.AddImguiControlVariableData(imguiControlVariableData);
+    newGroupData.AddImguiControlDrawData(imguiControlVariableData);
 
     mstImguiGroupDatas.push_back(newGroupData);
 #endif
 }
 
 // Imguiグループ追加描画(参照) ※StartGroupを読んでから使用してください
-void ImguiManager::AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData)
+void ImguiManager::AddDrawImguiGroup(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -212,7 +212,7 @@ void ImguiManager::AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariable
         return;
     }
 
-    imguiGroupData->AddImguiControlVariableData(imguiControlVariableData);
+    imguiGroupData->AddImguiControlDrawData(imguiControlVariableData);
 #endif    
 }
 
@@ -455,6 +455,11 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_VARIABLE_CONTROL imguiControlV
     {
         return;
     }
+    // 描画できない範囲にいる場合
+    if (!IsLayoutDrawEnabled())
+    {
+        return;
+    }
 
     for (int i = 0; i < imguiControlVariableData.VariableDatas.size(); i++)
     {
@@ -684,6 +689,11 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVaria
     {
         return;
     }
+    // 描画できない範囲にいる場合
+    if (!IsLayoutDrawEnabled())
+    {
+        return;
+    }
     bool buttonFlag = false;
     switch (imguiButtonControlVariableData.ButtonType)
     {    
@@ -704,15 +714,15 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVaria
         break;
 
     case IMGUI_BUTTON_TYPE::CHECK_BOX:
-        buttonFlag = ImGui::Checkbox(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	チェックボックス。クリックで bool の ON/OFF を切り替える
+        buttonFlag = ImGui::Checkbox(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonFlag);//	チェックボックス。クリックで bool の ON/OFF を切り替える
         break;
 
     case IMGUI_BUTTON_TYPE::CHECK_BOX_FLAGS:
-        buttonFlag = ImGui::CheckboxFlags(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonBitFlag.flags, imguiButtonControlVariableData.ButtonBitFlagValue);//	ビットフラグ用チェックボックス。チェック状態に応じて指定したビットを設定・解除する
+        buttonFlag = ImGui::CheckboxFlags(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonBitFlag, imguiButtonControlVariableData.ButtonBitFlagValue);//	ビットフラグ用チェックボックス。チェック状態に応じて指定したビットを設定・解除する
         break;
 
     case IMGUI_BUTTON_TYPE::RADIO_BUTTON:
-        buttonFlag = ImGui::RadioButton(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonFlag);//	ラジオボタン。複数候補から一つを選択する用途
+        buttonFlag = ImGui::RadioButton(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonFlag);//	ラジオボタン。複数候補から一つを選択する用途
         break;
 
     case IMGUI_BUTTON_TYPE::COLOR_BUTTON:
@@ -720,11 +730,11 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVaria
         break;
 
     case IMGUI_BUTTON_TYPE::SELECTABLE:
-        buttonFlag = ImGui::Selectable(imguiButtonControlVariableData.ButtonLabel.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ButtonSelectableFlags, imguiButtonControlVariableData.ButtonSize);//	選択可能な項目。選択状態に応じて背景が変わり、リスト項目などに使える
+        buttonFlag = ImGui::Selectable(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ButtonSelectableFlags, imguiButtonControlVariableData.ButtonSize);//	選択可能な項目。選択状態に応じて背景が変わり、リスト項目などに使える
         break;
 
     case IMGUI_BUTTON_TYPE::MENU_ITEM:
-        buttonFlag = ImGui::MenuItem(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.PressKeyString.c_str(), &imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ButtonDrawFlag);//	メニュー内の項目。選択やチェック付き項目に使う
+        buttonFlag = ImGui::MenuItem(imguiButtonControlVariableData.ButtonLabel.c_str(), imguiButtonControlVariableData.PressKeyString.c_str(), imguiButtonControlVariableData.ButtonFlag, imguiButtonControlVariableData.ButtonDrawFlag);//	メニュー内の項目。選択やチェック付き項目に使う
         break;
 
     case IMGUI_BUTTON_TYPE::TABITEM_BUTTON:
@@ -743,7 +753,10 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVaria
         return;
     }
 
-    imguiButtonControlVariableData.ArgumentButtonFlag = buttonFlag;
+    if (imguiButtonControlVariableData.ArgumentButtonFlag != nullptr)
+    {
+        *imguiButtonControlVariableData.ArgumentButtonFlag = buttonFlag;
+    }
 #endif
 }
 
@@ -761,10 +774,30 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
     {
         switch (imguiLayoutControlData.LayoutType)
         {
+        // ウィンドウ開始：描画しない状態を積む
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN:
+            mucWindowDrawFlags.push_back(0);
+        return;
+
+        // ウィンドウ終了：Begin()を呼んだ場合だけEnd()を呼ぶ
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END:
+            if (!mucWindowDrawFlags.empty())
+            {
+                if (mucWindowDrawFlags.back() & WINDOW_BEGIN_CALLED)
+                {
+                    ImGui::End();
+                }
+
+                mucWindowDrawFlags.pop_back();
+            }
+            return;
+                    
         // 内側のレイアウトも閉じた状態として記録
         case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_NODE:
         case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_COLLAPSING_HEADER:
         case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_TABLE:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_MENU:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_TAB_BAR:
             mbLayoutDrawFlags.push_back(false);
             return;
 
@@ -772,6 +805,8 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
         case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TREE_POP:
         case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_COLLAPSING_HEADER:
         case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TABLE:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_MENU:
+        case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TAB_BAR:
             if (!mbLayoutDrawFlags.empty())
             {
                 mbLayoutDrawFlags.pop_back();
@@ -1034,12 +1069,12 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
         break;
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TABLE:
-    if (!mbLayoutDrawFlags.empty())
-    {
-        // 開始できたテーブルだけ終了
-        ImGui::EndTable();// 表を終了
-        mbLayoutDrawFlags.pop_back();
-    }
+        if (!mbLayoutDrawFlags.empty())
+        {
+            // 開始できたテーブルだけ終了
+            ImGui::EndTable();// 表を終了
+            mbLayoutDrawFlags.pop_back();
+        }
         break;
 
     //==================================================
@@ -1060,19 +1095,62 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
 
     case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_POP_STYLE_COLOR:
         ImGui::PopStyleColor(); // スタイル色を元に戻す
-            break;
+        break;
             
-    // //==================================================
-    // // タブ関連
-    // //==================================================
+    //==================================================
+    // タブ関連
+    //==================================================
 
-    // case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN:
-    //     ImGui::Begin(imgui); // スタイル色を元に戻す
-    //         break;
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN:
+    {
+        unsigned char drawFlag = WINDOW_BEGIN_CALLED;
 
-    // case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END:
-    //     ImGui::End(); // スタイル色を元に戻す
-    //         break;
+        ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
+        // ウィンドウを開始
+        if (ImGui::Begin(imguiLayoutControlData.LayoutText.c_str()))
+        {
+            drawFlag |= WINDOW_DRAW_ENABLED;
+        }
+
+        mucWindowDrawFlags.push_back(drawFlag);
+    }
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END:
+        if (!mucWindowDrawFlags.empty())
+        {
+            if (mucWindowDrawFlags.back() & WINDOW_BEGIN_CALLED)
+            {
+                ImGui::End();// ウィンドウを終了
+            }
+
+            mucWindowDrawFlags.pop_back();
+        }
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_MENU:
+        mbLayoutDrawFlags.push_back(ImGui::BeginMenu(imguiLayoutControlData.LayoutText.c_str())); // メニューを開始
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_MENU:
+        if (!mbLayoutDrawFlags.empty())
+        {
+            ImGui::EndMenu();// メニューを終了
+            mbLayoutDrawFlags.pop_back();
+        }
+        break;
+    
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_BEGIN_TAB_BAR:
+        mbLayoutDrawFlags.push_back(ImGui::BeginTabBar(imguiLayoutControlData.LayoutText.c_str(), imguiLayoutControlData.LayoutStyleTabBarFlags)); // タブバーを開始
+        break;
+
+    case IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_END_TAB_BAR:
+        if (!mbLayoutDrawFlags.empty())
+        {
+            ImGui::EndTabBar(); // タブバーを終了
+            mbLayoutDrawFlags.pop_back();
+        }        
+        break;
     }
 #endif
 }
@@ -1081,7 +1159,7 @@ void ImguiManager::DrawLayoutImgui(IMGUI_LAYOUT_CONTROL imguiLayoutControlData)
 bool ImguiManager::IsLayoutDrawEnabled() const
 {
 #ifdef _DEBUG
-    return mbLayoutDrawFlags.empty() || mbLayoutDrawFlags.back();
+    return (mucWindowDrawFlags.empty() || (mucWindowDrawFlags.back() & WINDOW_DRAW_ENABLED)) && (mbLayoutDrawFlags.empty() || mbLayoutDrawFlags.back());
 #else
     return true;
 #endif
@@ -1099,11 +1177,23 @@ void ImguiManager::DrawGroupImgui(IMGUI_GROUP_DATA imguiGroupData)
     // グループ描画
     if (ImGui::TreeNode(imguiGroupData.GetGroupName().c_str()))
     {
-        // imguiControlVariable描画
+        // imgui描画
         for (int i = 0; i < imguiGroupData.GetImguiControlVariableDatas()->size(); i++)
         {
-            // TODO:_ 分岐
-            this->DrawControlVariableImgui((*imguiGroupData.GetImguiControlVariableDatas())[i].ImguiVariableControl);
+            switch ((*imguiGroupData.GetImguiControlVariableDatas())[i].MyImguiDrawMode)
+            {
+            case IMGUI_DRAW_MODE::VARIABLE:
+                this->DrawControlVariableImgui((*imguiGroupData.GetImguiControlVariableDatas())[i].ImguiVariableControl);
+                break;
+                
+            case IMGUI_DRAW_MODE::BUTTON:
+                this->DrawButtonImgui((*imguiGroupData.GetImguiControlVariableDatas())[i].ImguiButtonControl);
+                break;
+                
+            case IMGUI_DRAW_MODE::LAYOUT:
+                this->DrawLayoutImgui((*imguiGroupData.GetImguiControlVariableDatas())[i].ImguiLayoutControl);
+                break;
+            }
         }
 
         // 子グループ描画

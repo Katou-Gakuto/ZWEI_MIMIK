@@ -241,8 +241,15 @@ public:
         , VariableFlag(other.VariableFlag)
         , VariableImguiType(other.VariableImguiType)
         , AddNumberDrawFlag(other.AddNumberDrawFlag)
+        , VariableBeforeImguiLayoutControl(other.VariableBeforeImguiLayoutControl)
+        , VariableAfterImguiLayoutControl(other.VariableAfterImguiLayoutControl)
 #endif
     {
+        for (int i = 0; i < IMGUI_VARIABLE_MAX; ++i)
+        {
+            PreVariable[i] = other.PreVariable[i];
+            ChangeVariable[i] = other.ChangeVariable[i];
+        }
     }
 
     // 引数付きコンストラクタ
@@ -259,7 +266,9 @@ public:
         const std::string& format = "%.6f",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberFlag = true
+        bool addNumberFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
 #ifdef _DEBUG
         : VariableDatas(variableDatas)
@@ -273,6 +282,8 @@ public:
         , VariableFlag(flag)
         , VariableImguiType(imguiType)
         , AddNumberDrawFlag(addNumberFlag)
+        , VariableBeforeImguiLayoutControl(variableBeforeImguiLayoutControl)
+        , VariableAfterImguiLayoutControl(variableAfterImguiLayoutControl)
 #endif
     {
 #ifdef _DEBUG
@@ -612,6 +623,22 @@ public:
 #endif
     }
 
+    // 描画前レイアウト設定
+    void SetVariableBeforeImguiLayoutControl(std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl)
+    {
+#ifdef _DEBUG
+        this->VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+#endif
+    }
+
+    // 描画後レイアウト設定
+    void SetVariableAfterImguiLayoutControl(std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl)
+    {
+#ifdef _DEBUG
+        this->VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
+#endif
+    }
+
     // float用データ生成
     static IMGUI_VARIABLE_CONTROL GetImguiData(
         const std::vector<float*>& variableDatas,
@@ -624,7 +651,9 @@ public:
         const std::string& format = "%.6f",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberDrawFlag = true
+        bool addNumberDrawFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
     {
         IMGUI_VARIABLE_CONTROL imguiData;
@@ -638,6 +667,8 @@ public:
         imguiData.VariableFlag = flag;
         imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+        imguiData.VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+        imguiData.VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
 
         for (float* variable : variableDatas)
         {
@@ -662,7 +693,9 @@ public:
         const std::string& format = "%d",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberDrawFlag = true
+        bool addNumberDrawFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
     {
         IMGUI_VARIABLE_CONTROL imguiData;
@@ -676,6 +709,8 @@ public:
         imguiData.VariableFlag = flag;
         imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+        imguiData.VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+        imguiData.VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
 
         for (int* variable : variableDatas)
         {
@@ -699,7 +734,9 @@ public:
         const std::string& format = "%d",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberDrawFlag = true
+        bool addNumberDrawFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
     {
         IMGUI_VARIABLE_CONTROL imguiData;
@@ -713,6 +750,8 @@ public:
         imguiData.VariableFlag = flag;
         imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+        imguiData.VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+        imguiData.VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
 
         imguiData.VariableDatas = variableDatas;
 #endif
@@ -756,11 +795,11 @@ struct IMGUI_BUTTON_CONTROL
     bool ButtonDrawFlag;
 
     // ボタンフラグ
-    bool ButtonFlag;
+    bool *ButtonFlag = nullptr;
     // 引数ボタンフラグ
-    bool ArgumentButtonFlag;
+    bool *ArgumentButtonFlag = nullptr;
     // ボタンビットフラグ
-    BIT_FLAG<unsigned int> ButtonBitFlag;
+    unsigned int* ButtonBitFlag = nullptr;
     // ボタンビットフラグの値
     unsigned int ButtonBitFlagValue = 0;
 
@@ -796,6 +835,7 @@ struct IMGUI_LAYOUT_CONTROL
         ImGuiTableColumnFlags LayoutTableColumnFlags; // = ImGuiTableColumnFlags_None; 表の列設定
         ImGuiStyleVar LayoutStyleVar; // = ImGuiStyleVar_ItemSpacing; 変更するスタイル項目
         ImGuiCol LayoutStyleColor; // = ImGuiCol_Text; 変更する色の項目
+        ImGuiTabBarFlags LayoutStyleTabBarFlags;    // = ImGuiTabBarFlags_; タブバーの設定
     };
 
     //==================================================
@@ -835,6 +875,9 @@ struct IMGUI_ALL_DRAW_ONE_DATA
     IMGUI_VARIABLE_CONTROL ImguiVariableControl;
     IMGUI_BUTTON_CONTROL   ImguiButtonControl;
     IMGUI_LAYOUT_CONTROL   ImguiLayoutControl;
+
+    // グループに登録した最終フレーム
+    int LastRegisteredFrame = -1;
 
     IMGUI_ALL_DRAW_ONE_DATA();
     IMGUI_ALL_DRAW_ONE_DATA(IMGUI_VARIABLE_CONTROL value);
@@ -917,8 +960,8 @@ public:
     /*  【追加】  */
     /*------------*/
 
-    /// <summary>Imgui管理変数情報追加</summary>
-    void AddImguiControlVariableData(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData)
+    /// <summary>Imgui管理描画情報追加</summary>
+    void AddImguiControlDrawData(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData)
     {
 #ifdef _DEBUG
         ImguiControlVariableDatas.push_back(imguiControlVariableData);

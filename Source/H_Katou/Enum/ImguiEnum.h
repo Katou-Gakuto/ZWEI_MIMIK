@@ -159,6 +159,10 @@ enum class IMGUI_LAYOUT_TYPE
     //==================================================
     IMGUI_LAYOUT_NET_TAB_BEGIN,                 // Begin()
     IMGUI_LAYOUT_DELETE_TAB_END,                // End()
+    IMGUI_LAYOUT_BEGIN_MENU,                    // BeginMenu()
+    IMGUI_LAYOUT_END_MENU,                      // EndMenu()
+    IMGUI_LAYOUT_BEGIN_TAB_BAR,                 // BeginTabBar()
+    IMGUI_LAYOUT_END_TAB_BAR,                   // EndTabBar()
 };
 
 

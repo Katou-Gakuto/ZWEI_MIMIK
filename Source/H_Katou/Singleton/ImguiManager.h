@@ -48,14 +48,26 @@ private:
     int mnAddNumber;
 
     // imgui実行フラグ
-    bool mbIsImguiExecute;
+    const bool mbIsImguiExecute;
 
     // ツリーの開閉状態管理
     std::vector<bool> mbLayoutDrawFlags;
+    
+    // Begin() / End() の描画状態管理
+    std::vector<unsigned char> mucWindowDrawFlags;
+
+    // Begin()を呼び出した
+    static constexpr unsigned char WINDOW_BEGIN_CALLED = 0x01;
+
+    // ウィンドウ内を描画できる
+    static constexpr unsigned char WINDOW_DRAW_ENABLED = 0x02;
 
     // 初期化時に一度だけ作成
     ID3D11Texture2D* mdCopyTexture = nullptr;
     ID3D11ShaderResourceView* mbCopySRV = nullptr;
+
+    // フレーム数
+    int mnFrameCount = 0;
 
 #endif
 public:
@@ -79,9 +91,9 @@ public:
     /// <summary>Imguiグループ追加描画(全部)</summary>
     void AddDrawImguiGroup(IMGUI_GROUP_DATA imguiGroupData);
     /// <summary>Imguiグループ追加描画(引数参照)</summary>
-    void AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName = "NEW_GROUP");
+    void AddDrawImguiGroup(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData, IMGUI_GROUP_TYPE groupType, std::string groupName = "NEW_GROUP");
     /// <summary>Imguiグループ追加描画(参照) ※StartGroupを読んでから使用してください</summary>
-    void AddDrawImguiGroup(IMGUI_VARIABLE_CONTROL imguiControlVariableData);
+    void AddDrawImguiGroup(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData);
 
     /// <summary>Imguiグループ参照先設定開始 ※設定が終わったらEndGroupを読んでください</summary>
     void StartGroup(IMGUI_GROUP_TYPE groupType, std::string groupName = "NEW_GROUP");
@@ -105,8 +117,7 @@ public:
 private:
     /*Imguui描画*/
     void DrawControlVariableImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData);
-// DELETE:_ 削除
-public:
+
     /*ボタンimgui描画*/
     void DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVariableData);
 
