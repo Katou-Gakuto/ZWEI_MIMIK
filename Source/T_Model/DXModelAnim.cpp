@@ -1,12 +1,18 @@
 #include "DXModelAnim.h"
+
 #include "../A_GameObject/GameObject2D.h"
-#include "../E_Scene/BasePuzzleScene.h"
 #include "../Z_Except/Master.h"
 #include "../Z_Except/ResourceManager.h"
 
+class BaseSceneManager; // 前方宣言
+
 DXAnimModel::DXAnimModel(GameObject *myObject) : BaseModel(myObject, ModelType_Model2D, static_cast<ScreenNumber>(0))
 {
-	GraphHandle= -1;
+	MaxPage = 0;
+	MaxPageFrame = 0;
+	NowPage = 0;
+	NowPageFrame = 0;
+	UVWidth = 0.0f;
 }
 
 DXAnimModel::~DXAnimModel()
@@ -26,28 +32,26 @@ int DXAnimModel::Update()
 {
 	NowPageFrame++;
 
+    if (NowPageFrame > MaxPageFrame)
+    {
+        NowPageFrame = 0;
+        NowPage++;
 
-	if (NowPageFrame > MaxPageFrame)
-	{
-		NowPageFrame = 0;
-		NowPage++;
+        // ずらす
+        uvLeftUp.SetX(uvLeftUp.GetX() + UVWidth);
 
-		// ずらす
-		uvLeftUp.SetX(uvLeftUp.GetX() + UVWidth);
-
-		if (NowPage >= MaxPage)
-		{
-			NowPage = 0;
-			uvLeftUp.SetX(0.0f);
-			uvRightDown.SetX(UVWidth);
-		}
-	}
-	return 0;
+        if (NowPage >= MaxPage)
+        {
+            NowPage = 0;
+            uvLeftUp.SetX(0.0f);
+            uvRightDown.SetX(UVWidth);
+        }
+    }
+    return 0;
 }
 
 int DXAnimModel::Draw()
 {
-	Update();
     auto model = static_cast<GameObject2D *>(this->GetUp());
     VECTOR2D pos = model->GetPosition();
 
@@ -57,7 +61,7 @@ int DXAnimModel::Draw()
 		VECTOR2D(pos.GetX() + (Master::PlayerSizeXY / 2), pos.GetY() + (Master::PlayerSizeXY / 2)),
 		uvLeftUp,
 		uvRightDown,
-		GraphHandle);//this->GetModelNumber());
+		GraphHandle[AnimNum]);//this->GetModelNumber());
 	return 0;
 }
 
@@ -66,8 +70,8 @@ int DXAnimModel::Finalize()
 	return 0;
 }
 
-// 色々設定(画像パス アニメーションの枚数 ページをめくるまでのフレーム数 1枚目の右下のUV値)
-int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright)
+// 色々設定(画像パス アニメーションの枚数 ページをめくるまでのフレーム数 1枚目の右下のUV値 アニメーションの番号)
+int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright, int animnum)
 {
 	// モデルの読み込み
 	int modelHandle = Master::mpResourceManager->LoadGraphics(pathName);
@@ -76,11 +80,9 @@ int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFram
 		return -1;
 	}
 
-		GraphHandle = modelHandle;
-
-	
-	// ↓このBaseModel::ModelNuberはList内での識別番号であり、モデルのハンドルではない
-	// this->SetModelNumber(modelHandle);
+	// アニメーション番号とグラフハンドルをセット
+	this->ChangeAnimNum(animnum);
+	GraphHandle[animnum] = modelHandle;
 	
 	// UV座標の初期化
 	uvLeftUp.SetX(0.0f);
@@ -91,7 +93,7 @@ int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFram
 	// フレーム数の設定
 	this->SetNowPage(0);
 	this->SetMaxPage(maxPage);
-	this->SteMaxPageFrame(maxPageFrame);
+	this->SetMaxPageFrame(maxPageFrame);
 
 	// UV幅を保存
 	UVWidth = uvRightDown.GetX() - uvLeftUp.GetX();

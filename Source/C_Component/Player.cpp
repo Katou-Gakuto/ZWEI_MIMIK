@@ -90,11 +90,20 @@ int Player::Initialize()
 
     if (mnPlayerNum == 1)
     {
-       playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f);
+        /* アニメーションの保存番号はヘッダーのAnimationListを参照 */
+        // 画像読み込み (パス, アニメーションの枚数, アニメーションの一枚ごとのフレーム数, アニメーション一枚目の右下のUV値(x), UV値(y), アニメーションの保番号)
+        playerModel->SetAnimModel("Resource/Idle.png", 8, 30, 150.0f, 150.0f, 0);
+        playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f, 1);
+
+        // アニメーションの切り替え
+        playerModel->ChangeAnimModel(1);
     }
     else
     {
-       playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f);
+        playerModel->SetAnimModel("Resource/Idle.png", 8, 30, 150.0f, 150.0f, 0);
+        playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f, 1);
+
+        playerModel->ChangeAnimModel(1);
     }
 
     // 

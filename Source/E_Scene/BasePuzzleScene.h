@@ -52,6 +52,9 @@ public:
     // 
     GoalObjectController *GetGoal(bool lightSide)const;
 
+    // ポーズ状態を取得する
+    bool GetmbPouse() { return mbPouse; }
+
 
 private:
     // 
@@ -66,7 +69,7 @@ private:
     // 
     GoalObjectController *mpGoalShadow;
 
-    // 
+	// ポーズ状態かどうか
     bool mbPouse;
 
     // 
@@ -80,9 +83,4 @@ private:
 
     // 
     int PouseUpdate();
-
-public:
-
-    // ポーズ状態を取得する
-    bool GetmbPouse() { return mbPouse; }
 };

@@ -23,6 +23,7 @@ public:
 
     int Initialize();
     int Finalize();
+    int Update();
     int Draw();
 
     int Add(BaseModel *model, BaseModelHandle &modelHandle);

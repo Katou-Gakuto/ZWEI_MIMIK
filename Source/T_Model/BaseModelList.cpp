@@ -94,6 +94,28 @@ int BaseModelList::Finalize()
     return temp;
 }
 
+int BaseModelList::Update()
+{
+    int temp = 0;
+    BaseModel *current = this->mpFirstModel;
+    while (current != nullptr)
+    {
+        if (current->GetDrawFlag())
+        {
+            temp = current->Update();
+        }
+        if (temp == 0)
+        {
+            current = current->GetNext();
+        }
+        else
+        {
+            break;
+        }
+    }
+    return temp;
+}
+
 int BaseModelList::Draw()
 {
     int temp = 0;

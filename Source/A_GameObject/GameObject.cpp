@@ -394,10 +394,17 @@ int GameObject::DeleteToFlagMember()
 int GameObject::UpdateModel()
 {
     int temp = 0;
+    /*
     if (this->mpModelList != nullptr && this->mpBehaviorTree != nullptr)
     {
         temp = this->mpBehaviorTree->UpdateModel(this->mpModelList);
     }
+    */
+    if (this->mpModelList != nullptr)
+    {
+        temp = this->mpModelList->Update();
+    }
+
     return temp;
 }
 
