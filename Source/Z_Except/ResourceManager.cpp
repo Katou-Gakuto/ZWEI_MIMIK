@@ -12,6 +12,7 @@ ResourceManager::~ResourceManager()
 {
 }
 
+// モデルの読み込み
 int ResourceManager::LoadMadel(string pathName)
 {
 
@@ -36,6 +37,7 @@ int ResourceManager::LoadMadel(string pathName)
     return handle;
 }
 
+// 画像の読み込み
 int ResourceManager::LoadGraphics(string pathName)
 {
     //すでに読み込まれたデータか確認

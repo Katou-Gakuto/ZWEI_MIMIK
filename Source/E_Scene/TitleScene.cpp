@@ -6,6 +6,7 @@
 
 #include "../H_Katou/Singleton/KeyState.h"
 
+#include "../Z_Except/ResourceManager.h"
 #include "../Z_Except/Master.h"
 
 // 
@@ -44,13 +45,14 @@ int TitleScene::Create()
 // 
 int TitleScene::Initialize()
 {
-    // 
+	// タイトルの一番最初のやつを描画するフェーズに設定する
     this->mbLogoPhase = true;
 
-    // 
+	// カーソルを一番上に設定する
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
-    // 
+    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
+
     return 0;
 }
 
@@ -98,6 +100,9 @@ int TitleScene::Draw()
             "                \n"
             "PRESS ANY BUTTON",
             GetColor(255, 255, 255));
+
+        // タイトルロゴを描画
+        DrawExtendGraph(300, 100,950,200, TitleLogo, true);
     }
     else
     {
