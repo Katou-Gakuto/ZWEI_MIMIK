@@ -167,7 +167,6 @@
     <ClCompile Include="Source\E_Scene\TitleScene.cpp" />
     <ClCompile Include="Source\F_PuzzleGimmick\ButtonTrigger.cpp" />
     <ClCompile Include="Source\F_PuzzleGimmick\LightExecutor.cpp" />
-    <ClCompile Include="Source\F_PuzzleGimmick\RotateExecutor.cpp" />
     <ClCompile Include="Source\F_PuzzleGimmick\RouteMoveExecutor.cpp" />
     <ClCompile Include="Source\G_LightArea\LightArea.cpp" />
     <ClCompile Include="Source\G_LightArea\LightAreaManager.cpp" />
@@ -230,6 +229,7 @@
     <ClCompile Include="Source\Y_Tool\CountDownSystem.cpp" />
     <ClCompile Include="Source\Y_Tool\CSVOperater.cpp" />
     <ClCompile Include="Source\Y_Tool\EulerOrder.cpp" />
+    <ClCompile Include="Source\Y_Tool\MyEasing.cpp" />
     <ClCompile Include="Source\Y_Tool\MyEulerAngle.cpp" />
     <ClCompile Include="Source\Y_Tool\MyFunctions.cpp" />
     <ClCompile Include="Source\Y_Tool\MyMatrix.cpp" />
@@ -283,7 +283,6 @@
     <ClInclude Include="Source\E_Scene\TitleScene.h" />
     <ClInclude Include="Source\F_PuzzleGimmick\ButtonTrigger.h" />
     <ClInclude Include="Source\F_PuzzleGimmick\LightExecutor.h" />
-    <ClInclude Include="Source\F_PuzzleGimmick\RotateExecutor.h" />
     <ClInclude Include="Source\F_PuzzleGimmick\RouteMoveExecutor.h" />
     <ClInclude Include="Source\F_PuzzleGimmick\PuzzleGimmickData.h" />
     <ClInclude Include="Source\G_LightArea\LightArea.h" />
@@ -361,6 +360,7 @@
     <ClInclude Include="Source\Y_Tool\EulerOrder.h" />
     <ClInclude Include="Source\Y_Tool\HADList.h" />
     <ClInclude Include="Source\Y_Tool\MallocData.h" />
+    <ClInclude Include="Source\Y_Tool\MyEasing.h" />
     <ClInclude Include="Source\Y_Tool\MyEulerAngle.h" />
     <ClInclude Include="Source\Y_Tool\MyFunctions.h" />
     <ClInclude Include="Source\Y_Tool\MyMacro.h" />

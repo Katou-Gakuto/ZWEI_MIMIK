@@ -11,11 +11,11 @@ void BaseModel::SetDrawBit(bool flag)
 {
     if (flag)
     {
-
+        this->mcBitFlag |= BaseModelBitFlag::BMBF_DrawFlag;
     }
     else
     {
-
+        this->mcBitFlag &= ~(BaseModelBitFlag::BMBF_DrawFlag);
     }
 }
 
@@ -87,7 +87,7 @@ ModelType BaseModel::GetModeltype() const
 
 bool BaseModel::GetDrawFlag() const
 {
-    return ((this->mcBitFlag | BMBF::BMBF_DrawFlag) != 0);
+    return ((this->mcBitFlag & BMBF::BMBF_DrawFlag) != 0);
 }
 
 unsigned long BaseModel::GetModelNumber()const

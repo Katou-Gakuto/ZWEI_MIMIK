@@ -223,19 +223,23 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
     bool result = false;
 
     // 
+    auto nodeBox = this->GetFirstNodeBox();
+    uint32_t count = this->GetLightLineCount();
+
+    // 
     VECTOR2D lightStartPos = this->GetFirstNodeBox()[0]->GetListStartPos();
 
     // 
     CollisionCheckResult2D checkResult = GetCollisionCheckResult2DZero();
 
     // 
-    for (size_t i = 0; i < this->mlLightFirstNode.size() - 1; i++)
+    for (size_t i = 0; i < count - 1; i++)
     {
         // 
         tempTriangle.SetShapeParameter(
             lightStartPos,
-            this->mlLightFirstNode[i]->GetMyEndPos(),
-            this->mlLightFirstNode[i + 1]->GetMyEndPos());
+            nodeBox[i]->GetMyEndPos(),
+            nodeBox[i + 1]->GetMyEndPos());
 
         // 
         checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempTriangle);
@@ -249,13 +253,20 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
         }
     }
 
+    // 
+    if (result)
+    {
+        // 
+        return true;
+    }
+
     if (this->mbFinal2Start)
     {
         // 
         tempTriangle.SetShapeParameter(
             lightStartPos,
-            this->mlLightFirstNode[this->mlLightFirstNode.size() - 1]->GetMyEndPos(),
-            this->mlLightFirstNode[0]->GetMyEndPos());
+            nodeBox[count - 1]->GetMyEndPos(),
+            nodeBox[0]->GetMyEndPos());
 
         // 
         checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempTriangle);
@@ -289,25 +300,25 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
     bool loopFlag = true;
 
     // 
-    for (size_t i = 0; i < this->mlLightFirstNode.size(); i++)
+    for (size_t i = 0; i < count; i++)
     {
         // 
         if (this->mbFinal2Start)
         {
-            firstNode = this->mlLightFirstNode[i];
-            secondNode = this->mlLightFirstNode[(i + 1) % this->mlLightFirstNode.size()];
+            firstNode = nodeBox[i];
+            secondNode = nodeBox[(i + 1) % count];
         }
         else
         {
-            if (this->mlLightFirstNode.size() - 1 < (i + 1))
+            if (count - 1 < (i + 1))
             {
                 // 
                 break;
             }
 
             // 
-            firstNode = this->mlLightFirstNode[i];
-            secondNode = this->mlLightFirstNode[i + 1];
+            firstNode = nodeBox[i];
+            secondNode = nodeBox[i + 1];
         }
 
         // 

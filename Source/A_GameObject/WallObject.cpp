@@ -13,6 +13,12 @@ WallObject::WallObject(GameObjectTag tag, bool gimmick, const VECTOR2D &center, 
     mpTempGimmickPtr(nullptr),
     GameObject2D(tag)
 {
+    // 
+    if (this->mbGimmick)
+    {
+        // 
+        this->mpTempGimmickPtr = new GimmickObjectController(this);
+    }
 }
 
 WallObject::WallObject(bool gimmick, const VECTOR2D &center, const VECTOR2D &blockSize, float radian) :
@@ -21,7 +27,7 @@ WallObject::WallObject(bool gimmick, const VECTOR2D &center, const VECTOR2D &blo
     mvBlockSize(blockSize),
     mfRadian(radian),
     mpTempGimmickPtr(nullptr),
-    GameObject2D(GameObjectTag::GOT_Player)
+    GameObject2D(GameObjectTag::GOT_Wall)
 {
     // 
     if (this->mbGimmick)

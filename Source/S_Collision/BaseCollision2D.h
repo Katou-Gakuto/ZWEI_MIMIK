@@ -20,6 +20,9 @@ private:
     BaseCollision2D *mpNextWorld;               // 次の当たり判定へのポインタ(ワールド線形リスト)
 
 public:
+    // 
+    int mnHitCount;
+
     BaseCollision2D(
         GameObject *object, CollisionType type, CollisionTag tag, CollisionNorm normNum,
         bool penetrate, bool hitMove, float moveLate);

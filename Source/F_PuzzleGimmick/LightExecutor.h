@@ -54,9 +54,6 @@ public:
     // このライトの長さを取得する関数
     float GetLength() const;
 
-    // このライトのレイの本数を設定する関数
-    void SetLightLineCount(uint32_t count);
-
     // このライトの長さを設定する関数
     void SetLength(float length);
 
@@ -92,12 +89,14 @@ private:
     float mfLength;
 
     // ライトの基準となる角度
+    const float mfBaseAngleInit;
     float mfBaseAngle;
 
     // 基準から左右に広がるライトの合計角度
     float mfLightAngle;
 
     // 
+    const uint32_t mnLineCountInit;
     uint32_t mnLineCount;
 
     // 

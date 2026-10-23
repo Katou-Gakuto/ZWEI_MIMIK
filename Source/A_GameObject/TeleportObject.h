@@ -14,5 +14,5 @@ public:
 	int Create() override;
 
 	// 
-	TeleportObjectController *GetButtonController()const;
+	TeleportObjectController *GetTeleportController()const;
 };

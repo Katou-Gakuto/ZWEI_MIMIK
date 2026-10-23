@@ -235,8 +235,7 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()
-                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
@@ -256,8 +255,7 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()
-                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }
@@ -290,8 +288,7 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()
-                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
@@ -314,8 +311,7 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()
-                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }
@@ -343,8 +339,7 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()
-                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
             else
@@ -364,8 +359,7 @@ int Circle2D::SlideMove(const CollisionCheckResult2D &result, float moveLate)
                     this->GetMyObject2D()->SetMoveVec(newMoveVec);
 
                     // オブジェクトの当たり判定全ての移動ベクトルを更新する
-                    this->GetMyObject2D()->GetBaseCollisionList()
-                        ->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
+                    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &newMoveVec);
                 }
             }
         }

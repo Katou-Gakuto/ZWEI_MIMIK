@@ -146,6 +146,9 @@ bool LightAreaManager::ResizeArea(uint32_t useAreaCount)
 int LightAreaManager::CheckInLightArea(const VECTOR2D &pos, std::vector<int> &out)
 {
     // 
+    out.clear();
+
+    // 
     Point2D tempPoint;
 
     // 

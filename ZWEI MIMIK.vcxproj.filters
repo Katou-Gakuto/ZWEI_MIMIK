@@ -280,9 +280,6 @@
     <ClCompile Include="Source\F_PuzzleGimmick\RouteMoveExecutor.cpp">
       <Filter>Source\F_PuzzleGimmick</Filter>
     </ClCompile>
-    <ClCompile Include="Source\F_PuzzleGimmick\RotateExecutor.cpp">
-      <Filter>Source\F_PuzzleGimmick</Filter>
-    </ClCompile>
     <ClCompile Include="Source\S_Collision\CollisionHandle.cpp">
       <Filter>Source\S_Collision</Filter>
     </ClCompile>
@@ -402,6 +399,9 @@
     </ClCompile>
     <ClCompile Include="Source\T_Model\DXModelRotaObj.cpp">
       <Filter>Source\T_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Y_Tool\MyEasing.cpp">
+      <Filter>Source\Y_Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -789,6 +789,9 @@
     <ClInclude Include="Source\T_Model\DXModelRotaObj.h">
       <Filter>Source\T_Model</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Y_Tool\MyEasing.h">
+      <Filter>Source\Y_Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -816,9 +819,6 @@
     </ClInclude>
     <ClInclude Include="Source\G_LightArea\LightAreaManager.h">
       <Filter>Source\G_LightArea</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\F_PuzzleGimmick\RotateExecutor.h">
-      <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
     <Image Include="Resource\Idle.png">
       <Filter>リソース ファイル</Filter>

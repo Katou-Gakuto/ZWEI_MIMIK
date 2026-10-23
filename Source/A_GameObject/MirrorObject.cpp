@@ -6,7 +6,7 @@
 
 MirrorObject::MirrorObject(bool gimmick, const VECTOR2D &leftUp, const VECTOR2D &rightDown, float radian, unsigned char mirrorFace) :
     mnMirrorFace(mirrorFace),
-    WallObject(gimmick, leftUp, rightDown, radian)
+    WallObject(GameObjectTag::GOT_Mirror, gimmick, leftUp, rightDown, radian)
 {
 }
 
@@ -23,7 +23,10 @@ int MirrorObject::Create()
     if (this->mbGimmick)
     {
         // 
-        this->AddComponent(new GimmickObjectController(this));
+        this->AddComponent(this->mpTempGimmickPtr);
+
+        // 
+        this->mpTempGimmickPtr = nullptr;
     }
 
     // 

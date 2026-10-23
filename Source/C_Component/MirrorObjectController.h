@@ -18,6 +18,12 @@ public:
     int LateUpdate() override;
     int Draw() override;
 
+    // 
+    void SetMoveVecMirrorFace(const VECTOR2D &moveVec);
+
+    // 
+    void UpdateMirrorFaceRadian();
+
 private:
     unsigned char mnMirrorFace;
     CollisionHandle mdMirrorFaceRay;

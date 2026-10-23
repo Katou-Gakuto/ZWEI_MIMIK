@@ -57,6 +57,9 @@ protected:
     // 
     int BaseLateUpdate();
 
+    // 
+    Quadrangle2D *GetBody() const;
+
 private:
     // 現在スイッチがONになっているか
     bool mbNowOn;
@@ -96,7 +99,4 @@ private:
 
     // 
     void UpdateLightSide();
-
-    // 
-    Quadrangle2D *GetBody() const;
 };

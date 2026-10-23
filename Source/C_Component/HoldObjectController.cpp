@@ -16,6 +16,7 @@ HoldObjectController::HoldObjectController(GameObject2D *myObj, bool doubleHold,
     mbFlags(doubleHold, oneSide, oneSideLight, move, swing, false, false, false),
     mbHoldLight(false),
     mbHoldShadow(false),
+    mbSwingNow(false),
     BaseComponent(myObj, ComponentTagAndOrder::CTAO_HoldController)
 {
 }

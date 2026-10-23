@@ -91,11 +91,9 @@ public:
     {
     }
 
-    // 初期化
-    virtual int Initilize()
-    {
-        return 0;
-    }
+    // ギミックの内容を初期化する関数
+    // ※GameObject::Initialize()のタイミングで呼ばれます
+    virtual int Initilize() = 0;
 
     // ギミックの内容を実行する関数
     // ※GameObject::EarlyUpdate()のタイミングで呼ばれます

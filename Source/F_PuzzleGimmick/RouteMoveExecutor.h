@@ -52,11 +52,8 @@ public:
     // キーフレームを登録する関数
     int Add(const RouteKeyFrame keyFrame);
 
-    // フレームに合わせた回転量を取得する関数
-    float GetTargetFrameRad(uint32_t frameCount) const;
-
-    // フレームに合わせた座標を取得する関数
-    VECTOR2D GetTargetFramePos(uint32_t frameCount) const;
+    // フレームに合わせた値を取得する関数
+    bool GetTargetFrameData(uint32_t frameCount, float &outRad, VECTOR2D &outPos) const;
 
     // ループを行うのか
     bool GetLoopFlag();
@@ -74,13 +71,19 @@ private:
     // 登録されたキーフレームを記憶する動的配列
     // キーフレームからキーフレームまではLeapで補間
     // 最初に動いた際に処理に使用するフレーム数は1です
-    std::vector<RouteKeyFrame> mlKeyFramesBox;
+    std::vector<RouteKeyFrame> mlKeyFrameBox;
 
     // OFFの状態でどのような移動を行うのかの設定
     RouteOffMode mnOffMode;
 
     // ON時に最後のキーフレームまで到達した場合、そのまま0フレームから再生を行うかどうか
     bool mbLoop;
+
+    // 
+    bool GetCurrentKeyNumber(uint32_t frameCount, uint32_t &outCurrent, uint32_t &outEnd) const;
+
+    // 
+    bool GetTargetTimming(uint32_t frameCount, uint32_t currentIndex, uint32_t currentEndIndex, float &out) const;
 };
 
 // 
@@ -95,6 +98,10 @@ public:
 
     // デストラクタ
     ~RouteMoveExecutor() override;
+
+    // ギミックの内容を初期化する関数
+    // ※GameObject::Initialize()のタイミングで呼ばれます
+    int Initilize() override;
 
     // ギミックの内容を実行する関数
     // ※GameObject::EarlyUpdate()のタイミングで呼ばれます
@@ -123,4 +130,7 @@ private:
 
     // 
     GameObject2D *mpMyObject;
+
+    // 
+    bool MoveRouteOnTargetFrame(bool triggerSignal);
 };

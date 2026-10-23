@@ -1,6 +1,8 @@
-#include "BaseCollision2D.h"
 #include "BaseCollision2DManager.h"
 
+#include "../A_GameObject/GameObject2D.h"
+
+#include "BaseCollisionList.h"
 #include "Point2D.h"
 #include "Circle2D.h"
 #include "Capsule2D.h"
@@ -707,27 +709,47 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitPoint2DToTriangle2D(Point
     constexpr float EPS = 1e-5f;
 
     const bool allPositive =
-        cross1 >= -EPS &&
-        cross2 >= -EPS &&
-        cross0 >= -EPS;
+        -EPS <= cross1 &&
+        -EPS <= cross2 &&
+        -EPS <= cross0;
 
     const bool allNegative =
         cross1 <= EPS &&
         cross2 <= EPS &&
         cross0 <= EPS;
 
-    // 外積で求めた架空のz成分の向きが揃っているかを調べる
-    if (allPositive || allNegative)
+    // 
+    if (triangle2D->CheckCollisionNormIn())
     {
-        // 点が三角形の中に入っているということなのでtrueを返す
-        temp = GetCollisionCheckResult2D(
-            point2D,
-            triangle2D,
-            0,
-            triangle2D->GetBasePos() - point2D->GetBasePos(),
-            point2D->GetBasePos() - triangle2D->GetBasePos(),
-            point2D->GetBasePos(),
-            VECTOR2D::GetZero());
+        // 外積で求めた架空のz成分の向きが揃っているかを調べる
+        if (!allPositive && !allNegative)
+        {
+            // 点が三角形の外にあるということなのでtrueを返す
+            temp = GetCollisionCheckResult2D(
+                point2D,
+                triangle2D,
+                0,
+                point2D->GetBasePos() - triangle2D->GetBasePos(),
+                triangle2D->GetBasePos() - point2D->GetBasePos(),
+                point2D->GetBasePos(),
+                VECTOR2D::GetZero());
+        }
+    }
+    else
+    {
+        // 外積で求めた架空のz成分の向きが揃っているかを調べる
+        if (allPositive || allNegative)
+        {
+            // 点が三角形の中に入っているということなのでtrueを返す
+            temp = GetCollisionCheckResult2D(
+                point2D,
+                triangle2D,
+                0,
+                triangle2D->GetBasePos() - point2D->GetBasePos(),
+                point2D->GetBasePos() - triangle2D->GetBasePos(),
+                point2D->GetBasePos(),
+                VECTOR2D::GetZero());
+        }
     }
 
     // 計算結果を返す
@@ -740,21 +762,49 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitPoint2DToQuadrangle2D(Poi
     // 返り値
     CollisionCheckResult2D temp = GetCollisionCheckResult2DZero();
 
-    Triangle2D tempTriangle2D;
-    tempTriangle2D.SetShapeParameter(
+    // 
+    Triangle2D tempTriangle2D(
         quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(0)),
         quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(1)),
-        quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(2)));
+        quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(2)),
+        nullptr,
+        CollisionTag::CollisionTag_Checker,
+        quadrangle2D->GetCollisionNorm(),
+        true, 
+        false,
+        0.0f);
 
-
+    // 
     temp = BaseCollision2DManager::CheckHitPoint2DToTriangle2D(point2D, &tempTriangle2D);
 
-    if (0 <= temp.mnResultParam)
+    // 
+    if (quadrangle2D->CheckCollisionNormIn())
     {
+        // 
+        if (temp.mnResultParam < 0)
+        {
+            // 
+            return GetCollisionCheckResult2DZero();
+        }
+
+        // 
+        tempTriangle2D.SetShapeParameter(
+            quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(3)),
+            quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(2)),
+            quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(1)));
+
+        // 
+        if (temp.mnResultParam < 0)
+        {
+            // 
+            return GetCollisionCheckResult2DZero();
+        }
+
+        // 
         temp = GetCollisionCheckResult2D(
-            point2D, 
-            quadrangle2D, 
-            1, 
+            point2D,
+            quadrangle2D,
+            1,
             point2D->GetBasePos() - quadrangle2D->GetBasePos(),
             quadrangle2D->GetBasePos() - point2D->GetBasePos(),
             point2D->GetBasePos(),
@@ -762,18 +812,33 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitPoint2DToQuadrangle2D(Poi
     }
     else
     {
-        tempTriangle2D.SetShapeParameter(
-            quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(3)),
-            quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(2)),
-            quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(1)));
+        // 
+        bool firstHit = 0 <= temp.mnResultParam;
 
-        temp = BaseCollision2DManager::CheckHitPoint2DToTriangle2D(point2D, &tempTriangle2D);
+        // 当たっていない場合はさらに処理を行う
+        if (!firstHit)
+        {
+            // 
+            tempTriangle2D.SetShapeParameter(
+                quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(3)),
+                quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(2)),
+                quadrangle2D->GetMovedPos(quadrangle2D->GetVertexPos(1)));
+
+            // 
+            temp = BaseCollision2DManager::CheckHitPoint2DToTriangle2D(point2D, &tempTriangle2D);
+        }
+
+        // 
         if (0 <= temp.mnResultParam)
         {
+            // 
+            int resultParam = firstHit ? 1 : 2;
+
+            // 
             temp = GetCollisionCheckResult2D(
                 point2D,
                 quadrangle2D,
-                2,
+                resultParam,
                 point2D->GetBasePos() - quadrangle2D->GetBasePos(),
                 quadrangle2D->GetBasePos() - point2D->GetBasePos(),
                 point2D->GetBasePos(),
@@ -781,6 +846,7 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitPoint2DToQuadrangle2D(Poi
         }
     }
 
+    // 
     return temp;
 }
 
@@ -1033,18 +1099,172 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitCircle2DToQuadrangle2D(
     Circle2D *circle2D,
     Quadrangle2D *quadrangle2D)
 {
-    CollisionCheckResult2D returnValue = GetCollisionCheckResult2DZero();
-
+    // 
     if (circle2D == nullptr || quadrangle2D == nullptr)
     {
-        return returnValue;
+        return GetCollisionCheckResult2DZero();
     }
 
     const float radius = circle2D->GetBaseRadius();
-
-    if (radius < 0.0f)
+    if (radius <= 0.0f)
     {
+        return GetCollisionCheckResult2DZero();
+    }
+
+    // 
+    CollisionCheckResult2D returnValue = GetCollisionCheckResult2DZero();
+
+    // 
+    Point2D tempPoint;
+    tempPoint.SetShapeParameter(circle2D->GetMovedPos(circle2D->GetBasePos()));
+
+    // 
+    returnValue = BaseCollision2DManager::CheckHitPoint2DToQuadrangle2D(&tempPoint, quadrangle2D);
+    if (0 <= returnValue.mnResultParam)
+    {
+        // 
+        if (quadrangle2D->CheckCollisionNormIn())
+        {
+            // 
+            returnValue = GetCollisionCheckResult2D(
+                circle2D,
+                quadrangle2D,
+                1,
+                circle2D->GetMovedPos(circle2D->GetBasePos()) - quadrangle2D->GetMovedPos(quadrangle2D->GetBasePos()),
+                quadrangle2D->GetMovedPos(quadrangle2D->GetBasePos()) - circle2D->GetMovedPos(circle2D->GetBasePos()),
+                tempPoint.GetMovedPos(tempPoint.GetBasePos()),
+                VECTOR2D::GetZero());
+        }
+        else
+        {
+            // 
+            returnValue = GetCollisionCheckResult2D(
+                circle2D,
+                quadrangle2D,
+                1,
+                quadrangle2D->GetMovedPos(quadrangle2D->GetBasePos()) - circle2D->GetMovedPos(circle2D->GetBasePos()),
+                circle2D->GetMovedPos(circle2D->GetBasePos()) - quadrangle2D->GetMovedPos(quadrangle2D->GetBasePos()),
+                tempPoint.GetMovedPos(tempPoint.GetBasePos()),
+                VECTOR2D::GetZero());
+        }
+
+        // 
         return returnValue;
+    }
+
+    // 
+    CollisionCheckResult2D tempValue;
+
+    // 
+    tempPoint.SetMoveVec(quadrangle2D->GetMoveVec());
+
+    // 四角の角に当たったかを判定するループ文
+    bool minHit = false;
+    VECTOR2D minVec;
+    for (int i = 0; i < 4; i++)
+    {
+        // 
+        tempPoint.SetShapeParameter(quadrangle2D->GetVertexPos(i));
+
+        // 
+        tempValue = BaseCollision2DManager::CheckHitPoint2DToCircle2D(&tempPoint, circle2D);
+        if (0 <= tempValue.mnResultParam)
+        {
+            // 
+            minHit = false;
+
+            // 
+            if (returnValue.mnResultParam < 0)
+            {
+                // 
+                minHit = true;
+            }
+            else
+            {
+                if ((tempValue.mvHitPos - circle2D->GetBasePos()).MagnitudeNoSqrt() < minVec.MagnitudeNoSqrt())
+                {
+                    // 
+                    minHit = true;
+                }
+            }
+
+            // 
+            if (minHit)
+            {
+                // 
+                returnValue = GetCollisionCheckResult2D(
+                    circle2D,
+                    quadrangle2D,
+                    10 + i,
+                    tempValue.mvRepulsionVecA,
+                    tempValue.mvRepulsionVecB,
+                    tempValue.mvHitPos,
+                    tempValue.mvFloatBox);
+
+                // 
+                minVec = tempValue.mvHitPos - circle2D->GetBasePos();
+            }
+        }
+    }
+
+    // 
+    VECTOR2D newMoveVecCircle = circle2D->GetMoveVec();
+    VECTOR2D newMoveVecQuad = quadrangle2D->GetMoveVec();
+
+    // 四角の角のいずれかに当たっていた場合は新しい移動ベクトルを取得する
+    if (0 <= returnValue.mnResultParam)
+    {
+        // 
+        float moveLateCircle = 0.0f;
+        float moveLateQuad = 0.0f;
+        if (BaseCollision2DManager::GetCollisionMoveLate(circle2D, quadrangle2D, moveLateCircle, moveLateQuad))
+        {
+            // 
+            if (1.0f < moveLateCircle)
+            {
+                // 自分じゃない方の当たり判定の移動ベクトルを取得する
+                VECTOR2D targetMoveVec = quadrangle2D->GetMoveVec();
+
+                // スライドの進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(circle2D->GetMoveVec(), returnValue.mvRepulsionVecA.Normalize());
+
+                // 新しい移動の進行ベクトルを取得する
+                newMoveVecCircle = circle2D->GetMoveVec() + slideVec + (targetMoveVec * (moveLateCircle - 1.0f));
+            }
+            else
+            {
+                // 壁ずり移動の進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(circle2D->GetMoveVec(), returnValue.mvRepulsionVecA.Normalize());
+
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
+                newMoveVecCircle = circle2D->GetMoveVec() + (slideVec * moveLateCircle);
+            }
+
+            // 
+            if (1.0f < moveLateQuad)
+            {
+                // 自分じゃない方の当たり判定の移動ベクトルを取得する
+                VECTOR2D targetMoveVec = circle2D->GetMoveVec();
+
+                // スライドの進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(quadrangle2D->GetMoveVec(), returnValue.mvRepulsionVecB.Normalize());
+
+                // 新しい移動の進行ベクトルを取得する
+                newMoveVecQuad = quadrangle2D->GetMoveVec() + slideVec + (targetMoveVec * (moveLateQuad - 1.0f));
+            }
+            else
+            {
+                // 壁ずり移動の進行ベクトルを取得する
+                VECTOR2D slideVec = VECTOR2D::GetSlide(quadrangle2D->GetMoveVec(), returnValue.mvRepulsionVecB.Normalize());
+
+                // 壁の法線成分を抜いた新しい進行ベクトルを取得する
+                newMoveVecQuad = quadrangle2D->GetMoveVec() + (slideVec * moveLateQuad);
+            }
+        }
+
+        // めんどくさいので、手っ取り早い方法にします。
+        circle2D->SetMoveVec(newMoveVecCircle);
+        quadrangle2D->SetMoveVec(newMoveVecQuad);
     }
 
     // 四角形の各辺を構成する頂点のインデックス
@@ -1056,229 +1276,109 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitCircle2DToQuadrangle2D(
         { 2, 0 }
     };
 
-    // 円の中心と四角形の頂点を移動後の座標に変換
-    const VECTOR2D center =
-        circle2D->GetMovedPos(circle2D->GetBasePos());
+    // 
+    Circle2D tempCircle(
+        circle2D->GetBasePos(),
+        circle2D->GetBaseRadius(),
+        nullptr,
+        CollisionTag::CollisionTag_Checker,
+        circle2D->GetCollisionNorm(),
+        true,
+        false,
+        0.0f);
 
-    VECTOR2D movedVertices[4];
+    // 
+    tempCircle.SetMoveVec(newMoveVecCircle);
 
-    for (int i = 0; i < 4; ++i)
+    // 
+    Ray2D tempRay;
+    tempRay.SetMoveVec(newMoveVecQuad);
+
+    // 
+    for (int i = 0; i < 4; i++)
     {
-        movedVertices[i] = quadrangle2D->GetMovedPos(
-            quadrangle2D->GetVertexPos(i));
-    }
-
-    // 四角形の頂点の回転方向を判定
-    double area2 = 0.0;
-
-    for (int i = 0; i < 4; ++i)
-    {
-        const VECTOR2D &a =
-            movedVertices[edgeVertex[i][0]];
-
-        const VECTOR2D &b =
-            movedVertices[edgeVertex[i][1]];
-
-        area2 +=
-            static_cast<double>(a.GetX()) * b.GetY()
-            - static_cast<double>(a.GetY()) * b.GetX();
-    }
-
-    // 面積がほぼゼロの場合は判定しない
-    if (std::fabs(area2) <= FLT_EPSILON)
-    {
-        return returnValue;
-    }
-
-    // 円の中心が四角形の内部にあるか判定
-    bool hasPositive = false;
-    bool hasNegative = false;
-
-    for (int i = 0; i < 4; ++i)
-    {
-        const VECTOR2D &a =
-            movedVertices[edgeVertex[i][0]];
-
-        const VECTOR2D &b =
-            movedVertices[edgeVertex[i][1]];
-
-        const VECTOR2D edge = b - a;
-        const VECTOR2D toCenter = center - a;
-
-        const double cross =
-            static_cast<double>(edge.GetX()) * toCenter.GetY()
-            - static_cast<double>(edge.GetY()) * toCenter.GetX();
-
-        if (cross > FLT_EPSILON)
+        // 
+        if (quadrangle2D->CheckCollisionNormIn())
         {
-            hasPositive = true;
+            tempRay.SetShapeParameter(
+                quadrangle2D->GetVertexPos(edgeVertex[i][1]),
+                quadrangle2D->GetVertexPos(edgeVertex[i][0]));
         }
-        else if (cross < -FLT_EPSILON)
+        else
         {
-            hasNegative = true;
+            tempRay.SetShapeParameter(
+                quadrangle2D->GetVertexPos(edgeVertex[i][0]),
+                quadrangle2D->GetVertexPos(edgeVertex[i][1]));
         }
 
-        if (hasPositive && hasNegative)
+        // 
+        tempValue = BaseCollision2DManager::CheckHitCircle2DToRay2D(&tempCircle, &tempRay);
+        if (0 <= tempValue.mnResultParam)
         {
-            break;
-        }
-    }
+            // 
+            minHit = false;
 
-    const bool inside = !(hasPositive && hasNegative);
+            // 
+            if (returnValue.mnResultParam < 0)
+            {
+                // 
+                minHit = true;
+            }
+            else
+            {
+                // 
+                if ((tempValue.mvHitPos - circle2D->GetBasePos()).MagnitudeNoSqrt() < minVec.MagnitudeNoSqrt())
+                {
+                    // 
+                    minHit = true;
+                }
+            }
 
-    // 円の中心から各辺への最近接点を求める
-    VECTOR2D closest = VECTOR2D::GetZero();
-    double minDistSq = INFINITY;
-    int nearestEdge = 0;
+            // 
+            if (minHit)
+            {
+                // 
+                returnValue = GetCollisionCheckResult2D(
+                    circle2D,
+                    quadrangle2D,
+                    20 + i,
+                    tempValue.mvRepulsionVecA,
+                    tempValue.mvRepulsionVecB,
+                    tempValue.mvHitPos,
+                    tempValue.mvFloatBox);
 
-    for (int i = 0; i < 4; ++i)
-    {
-        const VECTOR2D &a =
-            movedVertices[edgeVertex[i][0]];
-
-        const VECTOR2D &b =
-            movedVertices[edgeVertex[i][1]];
-
-        const VECTOR2D candidate =
-            VECTOR2D::GetNearestPosOnLineSegment(center, a, b);
-
-        const VECTOR2D diff = center - candidate;
-
-        // 距離の二乗を取得
-        const double distSq = diff.MagnitudeNoSqrt();
-
-        if (distSq < minDistSq)
-        {
-            minDistSq = distSq;
-            closest = candidate;
-            nearestEdge = i;
+                // 
+                minVec = tempValue.mvHitPos - circle2D->GetBasePos();
+            }
         }
     }
 
-    const double radiusSq =
-        static_cast<double>(radius) * radius;
-
-    // 円が四角形の外側にあり、接触していなければ非衝突
-    if (!inside && minDistSq > radiusSq)
-    {
-        return returnValue;
-    }
-
-    // 最近接辺を取得
-    const VECTOR2D &edgeStart =
-        movedVertices[edgeVertex[nearestEdge][0]];
-
-    const VECTOR2D &edgeEnd =
-        movedVertices[edgeVertex[nearestEdge][1]];
-
-    const VECTOR2D edge = edgeEnd - edgeStart;
-
-    // 頂点の回転方向に応じて外向き法線を求める
-    VECTOR2D normalVec;
-
-    if (area2 > 0.0)
-    {
-        // 反時計回り
-        normalVec = VECTOR2D(edge.GetY(), -edge.GetX());
-    }
-    else
-    {
-        // 時計回り
-        normalVec = VECTOR2D(-edge.GetY(), edge.GetX());
-    }
-
-    normalVec = normalVec.Normalize();
-
-    // 外部では最近接点から円の中心へ向かう方向を法線にする
-    const double distance = std::sqrt(
-        (minDistSq > 0.0) ? minDistSq : 0.0);
-
-    if (!inside && distance > FLT_EPSILON)
-    {
-        const VECTOR2D diff = center - closest;
-
-        normalVec = diff / static_cast<float>(distance);
-    }
-
-    // 円と四角形の相対移動量
-    const VECTOR2D relativeMove =
-        circle2D->GetMoveVec()
-        - quadrangle2D->GetMoveVec();
-
-    // 円側の反発移動ベクトル
-    const VECTOR2D relativeSlide =
-        VECTOR2D::GetSlide(relativeMove, normalVec);
-
-    const VECTOR2D repulsionVecA =
-        quadrangle2D->GetMoveVec() + relativeSlide;
-
-    // 四角形側の反発移動ベクトル
-    const VECTOR2D reverseRelative =
-        quadrangle2D->GetMoveVec()
-        - circle2D->GetMoveVec();
-
-    const VECTOR2D reverseSlide =
-        VECTOR2D::GetSlide(
-            reverseRelative,
-            normalVec * -1.0f);
-
-    const VECTOR2D repulsionVecB =
-        circle2D->GetMoveVec() + reverseSlide;
-
-    // 接触位置を四角形の移動前の座標系に戻す
-    const VECTOR2D hitPos =
-        closest - quadrangle2D->GetMoveVec();
-
-    VECTOR2D correctionVec = VECTOR2D::GetZero();
-
-    if (inside)
-    {
-        // 円の中心が四角形の内部にある場合、
-        // 最近接辺の外側へ円全体を押し出す。
-        correctionVec =
-            normalVec * static_cast<float>(radius + distance);
-    }
-    else if (distance < radius)
-    {
-        // 円の中心が四角形の外側にある場合、
-        // 重なっている深さだけ押し戻す。
-        correctionVec =
-            normalVec * static_cast<float>(radius - distance);
-    }
-
-    return GetCollisionCheckResult2D(
-        circle2D,
-        quadrangle2D,
-        0,
-        repulsionVecA,
-        repulsionVecB,
-        hitPos,
-        correctionVec
-    ); 
+    // 
+    return returnValue;
 }
 
 // 円とレイの内外判定と衝突判定を行う関数
 CollisionCheckResult2D BaseCollision2DManager::CheckHitCircle2DToRay2D(Circle2D *circle2D, Ray2D *ray2D)
 {
-    CollisionCheckResult2D returnValue = GetCollisionCheckResult2DZero();
-
+    // 円の半径を取得し、0.0未満だったら当たるわけないので
     const float radius = circle2D->GetBaseRadius();
     if (radius < 0.0f)
     {
-        return returnValue;
+        return GetCollisionCheckResult2DZero();;
     }
+
+    // 返り値
+    CollisionCheckResult2D returnValue = GetCollisionCheckResult2DZero();
 
     // 移動後の円の中心
     const VECTOR2D movedCirclePos = circle2D->GetMovedPos(circle2D->GetBasePos());
 
     // 移動後の線分の両端
     const VECTOR2D movedStartPos = ray2D->GetMovedPos(ray2D->GetStartPos());
-
     const VECTOR2D movedEndPos = ray2D->GetMovedPos(ray2D->GetEndPos());
 
-    // 移動後の線分上で、円の中心に最も近い点
-    const VECTOR2D movedNearestPos =
-        VECTOR2D::GetNearestPosOnLineSegment(
+    // 移動後の線分上で、移動後の円の中心に最も近い点
+    const VECTOR2D movedNearestPos = VECTOR2D::GetNearestPosOnLineSegment(
             movedCirclePos,
             movedStartPos,
             movedEndPos);
@@ -2235,132 +2335,32 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitQuadrangle2DToRay2D(Quadr
     // 作業用変数
     Ray2D quadrangleRay;
 
-    // 四角形の辺をRayに変換する
-    quadrangleRay.SetShapeParameter(quadrangle2D->GetVertexPos(0), quadrangle2D->GetVertexPos(1));
-
-    // 四角形の辺をRayに変換する
+    // 四角形の移動量をRayに記憶させる
     quadrangleRay.SetMoveVec(quadrangle2D->GetMoveVec());
 
-    // 四角形の辺と自分のRayが当たっている場合は特別な処理を行う
-    temp = BaseCollision2DManager::CheckHitRay2DToRay2D(&quadrangleRay, ray2D);
-    if (0 <= temp.mnResultParam)
+    // 
+    const int edgeStart[] = { 0, 1, 3, 2 };
+    const int edgeEnd[] = { 1, 3, 2, 0 };
+    for (int i = 0; i < 4; ++i)
     {
-        returnValue = GetCollisionCheckResult2D(
-            quadrangle2D,
-            ray2D,
-            1,
-            temp.mvRepulsionVecA,
-            temp.mvRepulsionVecB,
-            temp.mvHitPos,
-            temp.mvFloatBox);
-    }
+        // 四角形の辺をRayに変換する
+        quadrangleRay.SetShapeParameter(quadrangle2D->GetVertexPos(edgeStart[i]), quadrangle2D->GetVertexPos(edgeEnd[i]));
 
-    // 四角形の辺をRayに変換する
-    quadrangleRay.SetShapeParameter(quadrangle2D->GetVertexPos(1), quadrangle2D->GetVertexPos(3));
-
-    // 四角形の辺と自分のRayが当たっている場合は特別な処理を行う
-    temp = BaseCollision2DManager::CheckHitRay2DToRay2D(&quadrangleRay, ray2D);
-    if (0 <= temp.mnResultParam)
-    {
-        if (returnValue.mnResultParam == -1)
-        {
-            returnValue = GetCollisionCheckResult2D(
-                quadrangle2D,
-                ray2D,
-                2,
-                temp.mvRepulsionVecA,
-                temp.mvRepulsionVecB,
-                temp.mvHitPos,
-                temp.mvFloatBox);
-        }
-        else
+        // 四角形の辺と自分のRayが当たっている場合は特別な処理を行う
+        temp = BaseCollision2DManager::CheckHitRay2DToRay2D(&quadrangleRay, ray2D);
+        if (0 <= temp.mnResultParam)
         {
             // これまでで一番近かった衝突地点と今回の衝突地点と、どちらがより近かったかを比較する
             VECTOR2D minVec = returnValue.mvHitPos - ray2D->GetStartPos();
             VECTOR2D tempVec = temp.mvHitPos - ray2D->GetStartPos();
-            if (tempVec.MagnitudeNoSqrt() < minVec.MagnitudeNoSqrt())
+            if ((returnValue.mnResultParam == -1) ||
+                (tempVec.MagnitudeNoSqrt() < minVec.MagnitudeNoSqrt()))
             {
                 // 今回の衝突地点を一番近かった衝突地点として保存しておく
                 returnValue = GetCollisionCheckResult2D(
                     quadrangle2D,
                     ray2D,
-                    2,
-                    temp.mvRepulsionVecA,
-                    temp.mvRepulsionVecB,
-                    temp.mvHitPos,
-                    temp.mvFloatBox);
-            }
-        }
-    }
-
-    // 四角形の辺をRayに変換する
-    quadrangleRay.SetShapeParameter(quadrangle2D->GetVertexPos(3), quadrangle2D->GetVertexPos(2));
-
-    // 四角形の辺と自分のRayが当たっている場合は特別な処理を行う
-    temp = BaseCollision2DManager::CheckHitRay2DToRay2D(&quadrangleRay, ray2D);
-    if (0 <= temp.mnResultParam)
-    {
-        if (returnValue.mnResultParam == -1)
-        {
-            returnValue = GetCollisionCheckResult2D(
-                quadrangle2D,
-                ray2D,
-                3,
-                temp.mvRepulsionVecA,
-                temp.mvRepulsionVecB,
-                temp.mvHitPos,
-                temp.mvFloatBox);
-        }
-        else
-        {
-            // これまでで一番近かった衝突地点と今回の衝突地点と、どちらがより近かったかを比較する
-            VECTOR2D minVec = returnValue.mvHitPos - ray2D->GetStartPos();
-            VECTOR2D tempVec = temp.mvHitPos - ray2D->GetStartPos();
-            if (tempVec.MagnitudeNoSqrt() < minVec.MagnitudeNoSqrt())
-            {
-                // 今回の衝突地点を一番近かった衝突地点として保存しておく
-                returnValue = GetCollisionCheckResult2D(
-                    quadrangle2D,
-                    ray2D,
-                    3,
-                    temp.mvRepulsionVecA,
-                    temp.mvRepulsionVecB,
-                    temp.mvHitPos,
-                    temp.mvFloatBox);
-            }
-        }
-    }
-
-    // 四角形の辺をRayに変換する
-    quadrangleRay.SetShapeParameter(quadrangle2D->GetVertexPos(2), quadrangle2D->GetVertexPos(0));
-
-    // 四角形の辺と自分のRayが当たっている場合は特別な処理を行う
-    temp = BaseCollision2DManager::CheckHitRay2DToRay2D(&quadrangleRay, ray2D);
-    if (0 <= temp.mnResultParam)
-    {
-        if (returnValue.mnResultParam == -1)
-        {
-            returnValue = GetCollisionCheckResult2D(
-                quadrangle2D,
-                ray2D,
-                4,
-                temp.mvRepulsionVecA,
-                temp.mvRepulsionVecB,
-                temp.mvHitPos,
-                temp.mvFloatBox);
-        }
-        else
-        {
-            // これまでで一番近かった衝突地点と今回の衝突地点と、どちらがより近かったかを比較する
-            VECTOR2D minVec = returnValue.mvHitPos - ray2D->GetStartPos();
-            VECTOR2D tempVec = temp.mvHitPos - ray2D->GetStartPos();
-            if (tempVec.MagnitudeNoSqrt() < minVec.MagnitudeNoSqrt())
-            {
-                // 今回の衝突地点を一番近かった衝突地点として保存しておく
-                returnValue = GetCollisionCheckResult2D(
-                    quadrangle2D,
-                    ray2D,
-                    4,
+                    i,
                     temp.mvRepulsionVecA,
                     temp.mvRepulsionVecB,
                     temp.mvHitPos,
@@ -2373,68 +2373,176 @@ CollisionCheckResult2D BaseCollision2DManager::CheckHitQuadrangle2DToRay2D(Quadr
     return returnValue;
 }
 
-CollisionCheckResult2D BaseCollision2DManager::CheckHitRay2DToRay2D(Ray2D *ray2Da, Ray2D *ray2Db)
+CollisionCheckResult2D BaseCollision2DManager::CheckHitRay2DToRay2D(
+    Ray2D *ray2Da,
+    Ray2D *ray2Db)
 {
-    // 返り値
-    CollisionCheckResult2D temp = GetCollisionCheckResult2DZero();
+    CollisionCheckResult2D result =
+        GetCollisionCheckResult2DZero();
 
-    // 下のdo文はbreakで一番下に行きたいだけのdo文なのでループはしません
-    do
+    const float eps = 0.00001f;
+
+    const VECTOR2D p = ray2Da->GetStartPos();
+    const VECTOR2D q = ray2Db->GetStartPos();
+    const VECTOR2D r = ray2Da->GetLineVec();
+    const VECTOR2D s = ray2Db->GetLineVec();
+
+    const float rr = VECTOR2D::Dot(r, r);
+    const float ss = VECTOR2D::Dot(s, s);
+
+    const VECTOR2D qmp = q - p;
+
+    const float rxs = VECTOR2D::Cross(r, s);
+    const float qmpxr = VECTOR2D::Cross(qmp, r);
+
+    // 内分比を計算するための補助関数
+    auto clamp01 = [](float t) -> float
+        {
+            if (t < 0.0f) return 0.0f;
+            if (t > 1.0f) return 1.0f;
+            return t;
+        };
+
+    // 線分の法線を生成する
+    auto getNormal = [](const VECTOR2D &line)->
+        VECTOR2D
+        {
+            VECTOR2D normal(-line.GetY(), line.GetX());
+
+            float len = normal.Magnitude();
+
+            if (len > 0.0f)
+                normal = normal / len;
+
+            return normal;
+        };
+
+    // 衝突結果を生成する
+    auto makeResult = [&](float t, float u, const VECTOR2D &hitPos)->
+        CollisionCheckResult2D
+        {
+            VECTOR2D normalA = getNormal(r);
+            VECTOR2D normalB = getNormal(s);
+
+            // 既存コードと同様、法線の向きは
+            // GetTargetDirectionNewrVec() で調整する。
+            VECTOR2D a2b =
+                ray2Db->GetBasePos() - ray2Da->GetBasePos();
+
+            VECTOR2D b2a =
+                ray2Da->GetBasePos() - ray2Db->GetBasePos();
+
+            normalA = VECTOR2D::GetTargetDirectionNewrVec(
+                a2b, normalA, -normalA);
+
+            normalB = VECTOR2D::GetTargetDirectionNewrVec(
+                b2a, normalB, -normalB);
+
+            return GetCollisionCheckResult2D(
+                ray2Da,
+                ray2Db,
+                0,
+                normalB,
+                normalA,
+                hitPos,
+                VECTOR2D(t, u));
+        };
+
+    // 両方が点の場合
+    if (rr <= eps * eps && ss <= eps * eps)
     {
-        float Crs_v1_v2 = VECTOR2D::Cross(ray2Da->GetLineVec(), ray2Db->GetLineVec());
-        if (Crs_v1_v2 == 0.0f)
+        if ((p - q).MagnitudeNoSqrt() <= eps * eps)
         {
-            // 平行状態
-            break;
+            return makeResult(0.0f, 0.0f, p);
         }
 
-        VECTOR2D aStart2bStart = ray2Db->GetStartPos() - ray2Da->GetStartPos();
-        float Crs_v_v1 = VECTOR2D::Cross(aStart2bStart, ray2Da->GetLineVec());
-        float Crs_v_v2 = VECTOR2D::Cross(aStart2bStart, ray2Db->GetLineVec());
+        return result;
+    }
 
-        float t1 = Crs_v_v2 / Crs_v1_v2;
-        float t2 = Crs_v_v1 / Crs_v1_v2;
-
-        // 余裕を少しだけ持たせて、交差しているかを確認する
-        const float eps = 0.00001f;
-        if (t1 + eps < 0 || t1 - eps > 1 || t2 + eps < 0 || t2 - eps > 1)
+    // Aが点の場合
+    if (rr <= eps * eps)
+    {
+        if (ss > eps * eps)
         {
-            // 交差していない
-            break;
+            float u = VECTOR2D::Dot(p - q, s) / ss;
+            u = clamp01(u);
+
+            VECTOR2D closest = q + s * u;
+
+            if ((closest - p).MagnitudeNoSqrt() <= eps * eps)
+            {
+                return makeResult(0.0f, u, p);
+            }
         }
 
-        // 線分の内分比なるもの(よくわかってない)
-        VECTOR2D floatBox = VECTOR2D(t1, t2);
+        return result;
+    }
 
-        // Rayの法線ベクトルを取得する
-        VECTOR3D aCrossVec3D = VECTOR3D::Cross((ray2Da->GetStartPos() - ray2Da->GetEndPos()).To3D(0.0f), VECTOR3D(0.0f, 0.0f, 1.0f));
-        VECTOR2D aCrossVec2D = aCrossVec3D.To2D('x', 'y');
-        VECTOR2D a2b = ray2Db->GetBasePos() - ray2Da->GetBasePos();
-        aCrossVec2D = VECTOR2D::GetTargetDirectionNewrVec(a2b, aCrossVec2D, -aCrossVec2D);
+    // Bが点の場合
+    if (ss <= eps * eps)
+    {
+        float t = VECTOR2D::Dot(q - p, r) / rr;
+        t = clamp01(t);
 
-        // Rayの法線ベクトルを取得する
-        VECTOR3D bCrossVec3D = VECTOR3D::Cross((ray2Db->GetStartPos() - ray2Db->GetEndPos()).To3D(0.0f), VECTOR3D(0.0f, 0.0f, 1.0f));
-        VECTOR2D bCrossVec2D = bCrossVec3D.To2D('x', 'y');
-        VECTOR2D b2a = ray2Db->GetBasePos() - ray2Da->GetBasePos();
-        bCrossVec2D = VECTOR2D::GetTargetDirectionNewrVec(b2a, bCrossVec2D, -bCrossVec2D);
+        VECTOR2D closest = p + r * t;
 
-        // ↓ここをSetMagnitude()にしていると、当たった地点がthisのRayの始点に極端に近くなる。これが角のめり込みの原因でした。
-        // temp.mvHitPos = VAdd2D(this->mvStartPos, VSetMagnitude2D(this->GetLineVec(), t1));
-        VECTOR2D hitPos = ray2Da->GetStartPos() + (ray2Da->GetLineVec() * t1);
+        if ((closest - q).MagnitudeNoSqrt() <= eps * eps)
+        {
+            return makeResult(t, 0.0f, q);
+        }
 
-        // 当たったことを記憶しておく
-        temp = GetCollisionCheckResult2D(
-            ray2Da,
-            ray2Db,
-            0,
-            bCrossVec2D,
-            aCrossVec2D,
-            hitPos,
-            floatBox);
-    } while (false);
+        return result;
+    }
 
-    // 結果を返す
-    return temp;
+    // 非平行の場合
+    if (fabsf(rxs) > eps)
+    {
+        float t = VECTOR2D::Cross(qmp, s) / rxs;
+        float u = VECTOR2D::Cross(qmp, r) / rxs;
+
+        if (t < -eps || t > 1.0f + eps ||
+            u < -eps || u > 1.0f + eps)
+        {
+            return result;
+        }
+
+        t = clamp01(t);
+        u = clamp01(u);
+
+        VECTOR2D hitPos = p + r * t;
+
+        return makeResult(t, u, hitPos);
+    }
+
+    // 平行だが、同一直線上ではない
+    if (fabsf(qmpxr) > eps)
+    {
+        return result;
+    }
+
+    // ここから同一直線上の処理
+    // Bの両端をAのパラメータに変換する
+    float t0 = VECTOR2D::Dot(q - p, r) / rr;
+    float t1 = VECTOR2D::Dot(q + s - p, r) / rr;
+
+    float overlapMin = fmaxf(0.0f, fminf(t0, t1));
+    float overlapMax = fminf(1.0f, fmaxf(t0, t1));
+
+    // 共通区間が存在しない
+    if (overlapMin > overlapMax + eps)
+    {
+        return result;
+    }
+
+    // Aの始点に最も近い共通点を選択
+    float t = clamp01(overlapMin);
+    VECTOR2D hitPos = p + r * t;
+
+    // 共通点をBのパラメータに変換
+    float u = VECTOR2D::Dot(hitPos - q, s) / ss;
+    u = clamp01(u);
+
+    return makeResult(t, u, hitPos);
 }
 
 // 当たり判定の寿命に関する更新処理を行う関数
@@ -2575,6 +2683,12 @@ int BaseCollision2DManager::CheckHitAllMove()
     {
         return 0;
     }
+    // 前者の当たり判定を取得する
+    for (BaseCollision2D *current = this->mpFirstBaseCollision2D; current != nullptr; current = current->GetNextWorld())
+    {
+        // 
+        current->mnHitCount = 0;
+    }
 
     // 関数の返り値を保持するための変数
     CollisionCheckResult2D temp;
@@ -2602,6 +2716,34 @@ int BaseCollision2DManager::CheckHitAllMove()
             {
                 // 二つの当たり判定のスライド移動を行う
                 BaseCollision2DManager::CollisionSlide(temp, current, target);
+
+                // 
+                current->mnHitCount++;
+
+                // 
+                target->mnHitCount++;
+
+                // 
+                VECTOR2D zeroVec;
+
+                // 
+                if (current->mnHitCount == 2)
+                {
+                    // 
+                    current->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                    // 
+                    current->GetMyObject()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                }
+                // 
+                if (target->mnHitCount == 2)
+                {
+                    // 
+                    target->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                    // 
+                    target->GetMyObject()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                }
 
                 // 二つの当たり判定に、衝突したことを知らせる
                 current->HitOnCollision(target);

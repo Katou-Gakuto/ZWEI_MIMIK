@@ -3,10 +3,13 @@
 #include "../A_GameObject/GameObject2D.h"
 #include "../A_GameObject/GameObjectManager.h"
 #include "../A_GameObject/WallObject.h"
+#include "../A_GameObject/MirrorObject.h"
 #include "../A_GameObject/ButtonObject.h"
 #include "../A_GameObject/LightObject.h"
+#include "../A_GameObject/TeleportObject.h"
 
 #include "../C_Component/HoldObjectController.h"
+#include "../C_Component/TeleportObjectController.h"
 #include "../C_Component/GimmickObjectController.h"
 
 #include "../F_PuzzleGimmick/ButtonTrigger.h"
@@ -109,7 +112,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseTrigger = buttonTrigger;
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 50, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
 	gimmickController->AddGimmick(baseTrigger, baseExecutor);
 
 	// ライトにHoldを追加する
@@ -254,7 +257,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, true);
 	baseTrigger = buttonTrigger;
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 50, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
 	gimmickController->AddGimmick(baseTrigger, baseExecutor);
 
 	// ライトにHoldを追加する
@@ -328,26 +331,16 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 	BaseGimmickTrigger *baseTrigger = nullptr;
 	BaseGimmickExecutor *baseExecutor = nullptr;
 	PuzzleGimmickActiveParam tempGimmickParam;
+	TeleportObject *teleportObjectA = nullptr;
+	TeleportObject *teleportObjectB = nullptr;
 
 	// 
 	objCenter = VECTOR2D(1300.0f * 0.5f, -0.5f);
 	blockSize = VECTOR2D(1300.0f, 10.0f);
 
-	// Wall_Bottom
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.6255666f, 1.388914));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(1.0f, 0.05f));
-	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
-	objManager.Add(wallObject);
-
-	// Wall_Left
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.1407181f, 0.8889141f));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.03030303f, 1.0f));
-	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
-	objManager.Add(wallObject);
-
-	// Wall_Right
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(1.1407181f, 0.8889141f));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.03030303f, 1.0f));
+	// Obstacle_Upper
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.45f, 0.99f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.3f, 0.03030303f));
 	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
 	objManager.Add(wallObject);
 
@@ -357,14 +350,8 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
 	objManager.Add(wallObject);
 
-	// Obstacle_Upper
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.2678788f, 0.294f));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.4848485f, 0.05f));
-	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
-	objManager.Add(wallObject);
-
 	// Light_01
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5f, 0.82f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.4f, 0.82f));
 	objRadius = 40.0f;
 	lightObject = new LightObject(objCenter, objRadius);
 	gimmickController = lightObject->GetGimmickController();
@@ -378,26 +365,75 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 	gimmickController->AddGimmick(baseTrigger, baseExecutor);
 
 	// ライトにHoldを追加する
-	lightObject->AddComponent(new HoldObjectController(lightObject, false, true, false, true, false));
+	lightObject->AddComponent(new HoldObjectController(lightObject, false, true, true, true, true));
 
 	// ライトをオブジェクトに追加する
 	objManager.Add(lightObject);
 
 	// 回転する四角
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.1f, 0.5f));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.2f, 0.2f));
-	wallObject = new WallObject(true, objCenter, blockSize, 0.0f);
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.5, 0.1f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.05f, 0.05f));
+	wallObject = new MirrorObject(true, objCenter, blockSize, 0.0f, 2);
 	gimmickController = wallObject->GetGimmickController();
 
 	// 時間経過で回転するギミック
+	/*
 	RouteData routeData(RouteOffMode::RouteOffMode_Stop, true);
+	RouteKeyFrame keyFrame;
+	uint32_t frameCount = 50;
+	keyFrame.mfRadian = 0.0f;
+	keyFrame.mnFrameCount = frameCount * 0;
+	keyFrame.mvPos = objCenter;
+	routeData.Add(keyFrame);
+
+	keyFrame.mfRadian = 0.0f;
+	keyFrame.mnFrameCount = frameCount * 1;
+	keyFrame.mvPos = objCenter + VECTOR2D(50.0f, 0.0f);
+	routeData.Add(keyFrame);
+
+	keyFrame.mfRadian = 0.0f;
+	keyFrame.mnFrameCount = frameCount * 2;
+	keyFrame.mvPos = objCenter + VECTOR2D(50.0f, 50.0f);
+	routeData.Add(keyFrame);
+
+	keyFrame.mfRadian = 0.0f;
+	keyFrame.mnFrameCount = frameCount * 3;
+	keyFrame.mvPos = objCenter + VECTOR2D(0.0f, 50.0f);
+	routeData.Add(keyFrame);
+
+	keyFrame.mfRadian = 0.0f;
+	keyFrame.mnFrameCount = frameCount * 4;
+	keyFrame.mvPos = objCenter;
+	routeData.Add(keyFrame);
+
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseTrigger = new ButtonTrigger();
 	baseExecutor = new RouteMoveExecutor(tempGimmickParam, wallObject, routeData);
 	gimmickController->AddGimmick(baseTrigger, baseExecutor);
+	*/
+
+	// 壁にHoldを追加する
+	wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, true, true));
 
 	// 回転する四角を追加する
 	objManager.Add(wallObject);
+
+	// テレポートA
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.1f, 0.7f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.05f, 0.05f));
+	teleportObjectA = new TeleportObject(objCenter, blockSize);
+
+	// テレポートB
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.9f, 0.7f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), displaySize, VECTOR2D(0.05f, 0.05f));
+	teleportObjectB = new TeleportObject(objCenter, blockSize);
+
+	// テレポートを繋げる
+	teleportObjectB->GetTeleportController()->ConnectPair(teleportObjectA->GetTeleportController());
+
+	// 二つのテレポートを追加する
+	objManager.Add(teleportObjectA);
+	objManager.Add(teleportObjectB);
 
 	// 
 	return 0;
@@ -415,12 +451,12 @@ void PuzzleScene1_3::GetMasterObjectsInitPos(
 	playerLightPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
 		displaySize,
-		VECTOR2D(0.7424242f, 0.8f));
+		VECTOR2D(0.3f, 0.82f));
 
 	playerShadowPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
 		displaySize,
-		VECTOR2D(0.4f, 0.82f));
+		VECTOR2D(0.7424242f, 0.8f));
 
 	goalLightPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),

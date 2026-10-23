@@ -130,6 +130,9 @@ int BasePuzzleScene::Update()
     this->mbFailed = 
         this->mpPlayerLight->GetInLightArea() == false ||
         this->mpPlayerShadow->GetInLightArea() == true;
+
+    // @Debug
+    this->mbFailed = false;
     if (this->mbFailed)
     {
         // 

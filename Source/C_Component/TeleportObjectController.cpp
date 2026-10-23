@@ -4,6 +4,10 @@
 
 #include "Player.h"
 
+#include "../S_Collision/Quadrangle2D.h"
+
+#include "../Z_Except/DrawSystem.h"
+#include "../Z_Except/DxLibDataManager.h"
 #include "../Z_Except/Master.h"
 
 // 
@@ -30,13 +34,15 @@ int TeleportObjectController::Create()
 
 int TeleportObjectController::Initialize()
 {
-
     // 
     if (this->mpPair == nullptr)
     {
         // 
         return 0;
     }
+
+    // 
+    this->mbTeleportedFromPair = false;
 
     // 
     return 0;
@@ -148,6 +154,18 @@ int TeleportObjectController::LateUpdate()
 
 int TeleportObjectController::Draw()
 {
+    // 
+    Quadrangle2D *bodyCollision = this->GetBody();
+
+    // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
+    DRAW_SYSTEM::DrawQuadrangle(
+        bodyCollision->GetVertexPos(0),
+        bodyCollision->GetVertexPos(1),
+        bodyCollision->GetVertexPos(3),
+        bodyCollision->GetVertexPos(2),
+        0xff00ff,
+        true);
+
     // 
     return 0;
 }

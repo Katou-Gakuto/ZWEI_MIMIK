@@ -22,7 +22,7 @@ WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D 
     mfRadianInit(radian),
     mfRadian(0.0f),
     mdModel(),
-    BaseComponent(myObject, ComponentTagAndOrder::CTAO_MirrorController)
+    BaseComponent(myObject, ComponentTagAndOrder::CTAO_WallController)
 {
 }
 
@@ -120,8 +120,6 @@ int WallObjectController::Finalize()
 
 int WallObjectController::EarlyUpdate()
 {
-     
-     
     return 0;
 }
 
@@ -139,6 +137,9 @@ int WallObjectController::HitOnCollision(BaseCollision *myCollision, BaseCollisi
 int WallObjectController::LateUpdate()
 {
     // 
+    this->GetModel()->SetDrawFlag(true);
+
+    // 
     return 0;
 }
 
@@ -147,15 +148,17 @@ int WallObjectController::Draw()
     // 
     Quadrangle2D* bodyCollision = this->GetBody();
 
-    /**/
-    //// ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
-    //DRAW_SYSTEM::DrawQuadrangle(
-    //    bodyCollision->GetVertexPos(0),
-    //    bodyCollision->GetVertexPos(1),
-    //    bodyCollision->GetVertexPos(3),
-    //    bodyCollision->GetVertexPos(2),
-    //    0xaaaa00,
-    //    true);
+    
+    // ‰©F‚Ì“h‚è‚Â‚Ô‚µƒAƒŠ‚Å“–‚½‚è”»’è‚ÌŽlŠp‚ð•`‰æ‚·‚é
+    /*
+    DRAW_SYSTEM::DrawQuadrangle(
+        bodyCollision->GetVertexPos(0),
+        bodyCollision->GetVertexPos(1),
+        bodyCollision->GetVertexPos(3),
+        bodyCollision->GetVertexPos(2),
+        0xaaaa00,
+        true);
+     */
     // 
     return 0;
 }
@@ -220,15 +223,17 @@ bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
     }
 
     // 
-    VECTOR2D tempVecBox[2]
+    VECTOR2D tempVecBox[4]
     {
         VECTOR2D(-this->mvBlockSizeInit.GetX(), -this->mvBlockSizeInit.GetY()),
+        VECTOR2D(+this->mvBlockSizeInit.GetX(), -this->mvBlockSizeInit.GetY()),
+        VECTOR2D(-this->mvBlockSizeInit.GetX(), +this->mvBlockSizeInit.GetY()),
         VECTOR2D(+this->mvBlockSizeInit.GetX(), +this->mvBlockSizeInit.GetY()),
     };
 
     // 
     MyMatrix result(0, 0);
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 4; i++)
     {
         // 
         result = tempVecBox[i].ToMat() * rotateMatrix;
@@ -239,10 +244,10 @@ bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
 
     // 
     VECTOR2D tempPosBox[4];
-    tempPosBox[0] = pos + VECTOR2D(tempVecBox[0].GetX(), tempVecBox[0].GetY());
-    tempPosBox[1] = pos + VECTOR2D(tempVecBox[1].GetX(), tempVecBox[0].GetY());
-    tempPosBox[2] = pos + VECTOR2D(tempVecBox[0].GetX(), tempVecBox[1].GetY());
-    tempPosBox[3] = pos + VECTOR2D(tempVecBox[1].GetX(), tempVecBox[1].GetY());
+    tempPosBox[0] = pos + tempVecBox[0];
+    tempPosBox[1] = pos + tempVecBox[1];
+    tempPosBox[2] = pos + tempVecBox[2];
+    tempPosBox[3] = pos + tempVecBox[3];
 
     // 
     body->SetShapeParameter(
@@ -250,6 +255,9 @@ bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
         tempPosBox[1], 
         tempPosBox[2], 
         tempPosBox[3]);
+
+    // 
+    obj->SetRotation(radian);
     
     // 
     return true;

@@ -1057,21 +1057,25 @@ LightExecutor::LightExecutor(
     mbParamUpdate(false),
     mbFinal2Start(false),
     mnAreaIndex(lightAreaIndex),
+    mnLineCountInit(lineCount),
     mnLineCount(lineCount),
+    mfBaseAngleInit(baseAngle), 
     mfBaseAngle(baseAngle),
     mfLightAngle(lightAngle),
     mfLength(lightLength),
     BaseGimmickExecutor(param)
 {
-    InitializeTestAllLayoutImgui();
     // 
-    this->SetLightLineCount(this->mnLineCount);
+    InitializeTestAllLayoutImgui();
+
+    // 
+    this->mnLineCount = this->mnLineCountInit;
 
     // 
     this->SetLength(this->mfLength);
 
     // 
-    this->SetBaseAngle(this->mfBaseAngle);
+    this->SetBaseAngle(this->mfBaseAngleInit);
 
     // 
     this->SetLightAngle(this->mfLightAngle);
@@ -1091,8 +1095,16 @@ LightExecutor::~LightExecutor()
 // 初期化
 int LightExecutor::Initilize()
 {
-    this->mbParamUpdate = true;
+    // 
+    this->mnLineCount = this->mnLineCountInit;
 
+    // 
+    this->SetBaseAngle(this->mfBaseAngleInit);
+
+    // 
+    this->UpdateLightParam();
+
+    // 
     return 0;
 }
 
@@ -1238,16 +1250,6 @@ float LightExecutor::GetLength() const
 {
     // 
     return this->mfLength;
-}
-
-// このライトのレイの本数を設定する関数
-void LightExecutor::SetLightLineCount(uint32_t count)
-{
-    // 
-    this->mnLineCount = count;
-
-    // 
-    this->mbParamUpdate = true;
 }
 
 // このライトの長さを設定する関数

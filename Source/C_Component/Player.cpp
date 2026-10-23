@@ -186,6 +186,9 @@ int Player::Update()
             this->HoldMove(VECTOR2D::GetZero());
 
             // 
+            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(false, false, 0.0f);
+
+            // 
             this->mpHold->SetHoldFlag(this->mbLightSide, false);
 
             // 
@@ -251,10 +254,7 @@ int Player::LateUpdate()
         this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition(), debugNum);
 
         // 
-        if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
-        {
-            this->SetHoldRadian();
-        }
+        this->SetHoldRadian();
     }
 
     // 
@@ -511,10 +511,10 @@ int Player::TryHold()
             this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition(), debugNum);
 
             // 
-            if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
-            {
-                this->SetHoldRadian();
-            }
+            this->SetHoldRadian();
+
+            // 
+            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(false, true, 1.0f);
         }
     }
 

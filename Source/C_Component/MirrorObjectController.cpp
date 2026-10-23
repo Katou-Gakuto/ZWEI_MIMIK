@@ -65,6 +65,9 @@ int MirrorObjectController::Create()
 int MirrorObjectController::Initialize()
 {
     // 
+    ;
+
+    // 
     this->GetMyObject2D()->SetPosition(this->mvCenterPosInit);
 
     // 
@@ -140,6 +143,9 @@ int MirrorObjectController::HitOnCollision(BaseCollision *myCollision, BaseColli
 int MirrorObjectController::LateUpdate()
 {
     // 
+    this->UpdateMirrorFaceRadian();
+
+    // 
     return 0;
 }
 
@@ -172,9 +178,11 @@ int MirrorObjectController::Draw()
     color = 0x0000ff;
 
     // 
-    DRAW_SYSTEM::DrawBox(
+    DRAW_SYSTEM::DrawQuadrangle(
         body->GetVertexPos(0),
+        body->GetVertexPos(1),
         body->GetVertexPos(3),
+        body->GetVertexPos(2),
         color,
         false);
 
@@ -182,33 +190,95 @@ int MirrorObjectController::Draw()
     color = 0xff00ff;
 
     // 
-    const float offsetParam = 3.0f;
-    VECTOR2D offset;
-    switch (this->mnMirrorFace)
-    {
-    case 0:
-        offset.SetXY(0.0f, -offsetParam);
-        break;
-    case 1:
-        offset.SetXY(-offsetParam, 0.0f);
-        break;
-    case 2:
-        offset.SetXY(0.0f, offsetParam);
-        break;
-    case 3:
-        offset.SetXY(offsetParam, 0.0f);
-        break;
-    default:
-        break;
-    }
-
-    
-    // 
     DRAW_SYSTEM::DrawLine(
-        offset + mirrorRay->GetStartPos(),
-        offset + mirrorRay->GetEndPos(),
+        mirrorRay->GetStartPos(),
+        mirrorRay->GetEndPos(),
         color);
 
     // 
     return 0;
+}
+
+// 
+void MirrorObjectController::SetMoveVecMirrorFace(const VECTOR2D &moveVec)
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    BaseCollisionList *list = obj->GetBaseCollisionList();
+
+    // 
+    unsigned int color = 0x000000;
+
+    // 
+    Ray2D *mirrorRay = static_cast<Ray2D *>(list->SearchCollision(this->mdMirrorFaceRay));
+    if (mirrorRay == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    mirrorRay->SetMoveVec(moveVec);
+}
+
+// 
+void MirrorObjectController::UpdateMirrorFaceRadian()
+{
+    // 
+    GameObject2D *obj = this->GetMyObject2D();
+    if (obj == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    BaseCollisionList *list = obj->GetBaseCollisionList();
+    if (list == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    Ray2D *mirrorRay = static_cast<Ray2D *>(list->SearchCollision(this->mdMirrorFaceRay));
+    if (mirrorRay == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    auto body = this->GetBody();
+    if (body == nullptr)
+    {
+        // 
+        return;
+    }
+
+    // 
+    switch (this->mnMirrorFace)
+    {
+    case 0:
+        mirrorRay->SetShapeParameter(body->GetVertexPos(0), body->GetVertexPos(1));
+        break;
+    case 1:
+        mirrorRay->SetShapeParameter(body->GetVertexPos(1), body->GetVertexPos(3));
+        break;
+    case 2:
+        mirrorRay->SetShapeParameter(body->GetVertexPos(3), body->GetVertexPos(2));
+        break;
+    case 3:
+        mirrorRay->SetShapeParameter(body->GetVertexPos(2), body->GetVertexPos(0));
+        break;
+    default:
+        break;
+    }
 }

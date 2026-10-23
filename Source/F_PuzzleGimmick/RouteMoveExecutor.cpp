@@ -2,8 +2,12 @@
 
 #include "../A_GameObject/GameObject2D.h"
 #include "../A_GameObject/LightObject.h"
+#include "../A_GameObject/MirrorObject.h"
+#include "../A_GameObject/WallObject.h"
 
 #include "../C_Component/GimmickObjectController.h"
+#include "../C_Component/MirrorObjectController.h"
+#include "../C_Component/WallObjectController.h"
 
 #include "../F_PuzzleGimmick/LightExecutor.h"
 
@@ -13,7 +17,7 @@
 
 // コンストラクタ
 RouteData::RouteData(RouteOffMode offMode, bool loop) :
-    mlKeyFramesBox(),
+    mlKeyFrameBox(),
     mbLoop(loop),
     mnOffMode(offMode)
 {
@@ -21,7 +25,7 @@ RouteData::RouteData(RouteOffMode offMode, bool loop) :
 
 // コピーコンストラクタ
 RouteData::RouteData(const RouteData &src) :
-    mlKeyFramesBox(src.mlKeyFramesBox),
+    mlKeyFrameBox(src.mlKeyFrameBox),
     mbLoop(src.mbLoop),
     mnOffMode(src.mnOffMode)
 {
@@ -36,102 +40,46 @@ RouteData::~RouteData()
 int RouteData::Add(const RouteKeyFrame keyFrame)
 {
     // 
-    this->mlKeyFramesBox.push_back(keyFrame);
+    this->mlKeyFrameBox.push_back(keyFrame);
 
     // 
     return 0;
 }
 
-// フレームに合わせた回転量を取得する関数
-float RouteData::GetTargetFrameRad(uint32_t frameCount) const
-{
-    float rad;
-
-    // 
-    uint32_t current = 0;
-
-    // 
-    for (uint32_t i = 0; i < this->mlKeyFramesBox.size() - 1; i++)
-    {
-        // 
-        if (this->mlKeyFramesBox[i].mnFrameCount <= frameCount &&
-            frameCount < this->mlKeyFramesBox[i + 1].mnFrameCount)
-        {
-            // 
-            current = i;
-
-            // 
-            break;
-        }
-    }
-
-    // 
-    uint32_t currentAnimLength =
-        this->mlKeyFramesBox[current + 1].mnFrameCount - this->mlKeyFramesBox[current].mnFrameCount;
-
-    // 
-    uint32_t frameInCurrentAnim = currentAnimLength - frameCount;
-
-    // 今回の目的の場所みたいな
-    float targetTimming = 0.0f;
-
-    // 0除算の回避
-    if (frameInCurrentAnim != 0)
-    {
-        // 
-        targetTimming = static_cast<float>(frameInCurrentAnim) / static_cast<float>(currentAnimLength);
-    }
-
-    // 
-    return MyFunctions::GetFloatLerp(
-        this->mlKeyFramesBox[current].mfRadian,
-        this->mlKeyFramesBox[current + 1].mfRadian,
-        targetTimming);
-}
-
-// フレームに合わせた座標を取得する関数
-VECTOR2D RouteData::GetTargetFramePos(uint32_t frameCount) const
+// フレームに合わせた値を取得する関数
+bool RouteData::GetTargetFrameData(uint32_t frameCount, float &outRad, VECTOR2D &outPos) const
 {
     // 
-    uint32_t current = 0;
-
-    // 
-    for (uint32_t i = 0; i < this->mlKeyFramesBox.size() - 1; i++)
+    uint32_t current;
+    uint32_t currentNext;
+    if (!this->GetCurrentKeyNumber(frameCount, current, currentNext))
     {
         // 
-        if (this->mlKeyFramesBox[i].mnFrameCount <= frameCount &&
-            frameCount < this->mlKeyFramesBox[i + 1].mnFrameCount)
-        {
-            // 
-            current = i;
-
-            // 
-            break;
-        }
+        return false;
     }
 
     // 
-    uint32_t currentAnimLength =
-        this->mlKeyFramesBox[current + 1].mnFrameCount - this->mlKeyFramesBox[current].mnFrameCount;
-
-    // 
-    uint32_t frameInCurrentAnim = currentAnimLength - frameCount;
-
-    // 今回の目的の場所みたいな
     float targetTimming = 0.0f;
-
-    // 0除算の回避
-    if (frameInCurrentAnim != 0)
+    if (!this->GetTargetTimming(frameCount, current, currentNext, targetTimming))
     {
         // 
-        targetTimming = static_cast<float>(frameInCurrentAnim) / static_cast<float>(currentAnimLength);
+        return false;
     }
 
     // 
-    return VECTOR2D::GetLerpPos(
-        this->mlKeyFramesBox[current].mvPos,
-        this->mlKeyFramesBox[current + 1].mvPos,
+    outRad = MyFunctions::GetFloatLerp(
+        this->mlKeyFrameBox[current].mfRadian,
+        this->mlKeyFrameBox[currentNext].mfRadian,
         targetTimming);
+
+    // 
+    outPos = VECTOR2D::GetLerpPos(
+        this->mlKeyFrameBox[current].mvPos,
+        this->mlKeyFrameBox[currentNext].mvPos,
+        targetTimming);
+
+    // 
+    return true;
 }
 
 // 
@@ -159,7 +107,90 @@ bool RouteData::GetReturnFlag()
 uint32_t RouteData::GetFinalFrame() const
 {
     // 
-    return this->mlKeyFramesBox[this->mlKeyFramesBox.size() - 1].mnFrameCount;
+    return this->mlKeyFrameBox[this->mlKeyFrameBox.size() - 1].mnFrameCount;
+}
+
+// 
+bool RouteData::GetCurrentKeyNumber(uint32_t frameCount, uint32_t &outCurrent, uint32_t &outEnd) const
+{
+    // 
+    if (this->mlKeyFrameBox.empty())
+    {
+        // 
+        return false;
+    }
+
+    // 
+    bool result = false;
+
+    // 
+    uint32_t current = 0;
+
+    // 
+    for (uint32_t i = 0; i < this->mlKeyFrameBox.size() - 1; i++)
+    {
+        // 
+        if (this->mlKeyFrameBox[i].mnFrameCount <= frameCount &&
+            frameCount < this->mlKeyFrameBox[i + 1].mnFrameCount)
+        {
+            // 
+            current = i;
+
+            // 
+            result = true;
+
+            // 
+            break;
+        }
+    }
+
+    // 
+    if (result)
+    {
+        // 
+        outCurrent = current;
+
+        // 
+        outEnd = current + 1;
+    }
+
+    // 
+    return result;
+}
+
+// 
+bool RouteData::GetTargetTimming(uint32_t frameCount, uint32_t currentIndex, uint32_t currentEndIndex, float &out) const
+{
+    // 
+    if (this->mlKeyFrameBox.empty() ||
+        this->mlKeyFrameBox.size() <= currentIndex ||
+        this->mlKeyFrameBox.size() <= currentEndIndex ||
+        currentEndIndex <= currentIndex )
+    {
+        // 
+        return false;
+    }
+
+    // 
+    uint32_t inCurrnetFrame = frameCount - this->mlKeyFrameBox[currentIndex].mnFrameCount;
+
+    // 
+    uint32_t currentMax = this->mlKeyFrameBox[currentEndIndex].mnFrameCount - this->mlKeyFrameBox[currentIndex].mnFrameCount;
+
+    // 
+    if (inCurrnetFrame == 0)
+    {
+        // 
+        out = 0.0f;
+    }
+    else
+    {
+        // 
+        out = static_cast<float>(inCurrnetFrame) / static_cast<float>(currentMax);
+    }
+
+    // 
+    return true;
 }
 
 // コンストラクタ
@@ -174,6 +205,17 @@ RouteMoveExecutor::RouteMoveExecutor(PuzzleGimmickActiveParam param, GameObject2
 // デストラクタ
 RouteMoveExecutor::~RouteMoveExecutor()
 {
+}
+
+// ギミックの内容を初期化する関数
+// ※GameObject::Initialize()のタイミングで呼ばれます
+int RouteMoveExecutor::Initilize()
+{
+    // 
+    this->mnFrameCount = 0;
+
+    // 
+    return 0;
 }
 
 // ギミックの内容を実行する関数
@@ -201,6 +243,42 @@ int RouteMoveExecutor::Update(bool triggerSignal)
         triggerSignal = !triggerSignal;
     }
 
+    // 
+    if (!this->MoveRouteOnTargetFrame(triggerSignal))
+    {
+        // 
+        return -1;
+    }
+
+    // 
+    return 0;
+}
+
+// ギミックの内容を実行する関数
+// ※GameObject::LateUpdate()のタイミングで呼ばれます
+int RouteMoveExecutor::LateUpdate(bool triggerSignal)
+{
+    // 
+    return 0;
+}
+
+// 当たり判定によるギミックの変化に対応させる関数
+int RouteMoveExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
+{
+    // 
+    return 0;
+}
+
+// 
+void RouteMoveExecutor::SetFrameCount(uint32_t frameCount)
+{
+    // 
+    this->mnFrameCount = frameCount;
+}
+
+// 
+bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
+{
     // 
     bool move = true;
 
@@ -255,117 +333,126 @@ int RouteMoveExecutor::Update(bool triggerSignal)
     }
 
     // 
-    if (move)
+    if (!move)
     {
         // 
-        if (framePlus)
+        return true;
+    }
+
+    // 
+    if (framePlus)
+    {
+        // 
+        if (this->mdMoveData.GetLoopFlag())
         {
             // 
-            if (this->mdMoveData.GetLoopFlag())
-            {
-                // 
-                this->mnFrameCount++;
+            this->mnFrameCount++;
 
-                // 
-                this->mnFrameCount %= this->mdMoveData.GetFinalFrame();
-            }
-            else
-            {
-                // 
-                if (this->mnFrameCount < this->mdMoveData.GetFinalFrame())
-                {
-                    // 
-                    this->mnFrameCount++;
-                }
-            }
+            // 
+            this->mnFrameCount %= this->mdMoveData.GetFinalFrame();
         }
         else
         {
-            // Returnの場合しか-方向には進まないので
-            this->mnFrameCount--;
-        }
-
-        // 
-        float nextRadian = this->mdMoveData.GetTargetFrameRad(this->mnFrameCount);
-
-        // 
-        VECTOR2D nextPos = this->mdMoveData.GetTargetFramePos(this->mnFrameCount);
-
-        // 
-        if (this->mpMyObject->GetPosition() != nextPos)
-        {
             // 
-            move = true;
+            if (this->mnFrameCount < this->mdMoveData.GetFinalFrame())
+            {
+                // 
+                this->mnFrameCount++;
+            }
         }
+    }
+    else
+    {
+        // Returnの場合しか-方向には進まないので
+        this->mnFrameCount--;
+    }
 
+    // 
+    float nextRadian = 0.0f;
+    VECTOR2D nextPos;
+    if (!this->mdMoveData.GetTargetFrameData(this->mnFrameCount, nextRadian, nextPos))
+    {
         // 
-        this->mpMyObject->SetNextPos(nextPos);
+        return false;
+    }
+
+    // 
+    VECTOR2D moveVec = nextPos - this->mpMyObject->GetPosition();
+
+    // 
+    if (this->mpMyObject->GetObjectTag() == GameObjectTag::GOT_Light)
+    {
+        // 
+        LightObject *lightObject = static_cast<LightObject *>(this->mpMyObject);
+        this->mpMyObject->SetMoveVec(moveVec);
 
         // 
         BaseCollisionList *list = this->mpMyObject->GetBaseCollisionList();
         if (list == nullptr)
         {
             // 
-            return 0;
+            return true;
+        }
+
+        list->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+
+        // 
+        auto gimmick = lightObject->GetGimmickController();
+        if (gimmick == nullptr)
+        {
+            return false;
         }
 
         // 
-        list->SetCollisionNextPos(CollisionDimension::CollisionDimension_2D, &nextPos);
-
-        // 
-        if (this->mpMyObject->GetObjectTag() == GameObjectTag::GOT_Light)
+        auto box = gimmick->GetGimmickBox();
+        auto count = gimmick->GetGimmickCount();
+        for (size_t i = 0; i < count; i++)
         {
             // 
-            LightObject *lightObject = static_cast<LightObject *>(this->mpMyObject);
-
-            // 
-            auto gimmick = lightObject->GetGimmickController();
-            if (gimmick == nullptr)
+            LightExecutor *lightExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
+            if (lightExecutor == nullptr)
             {
-                return -1;
+                // 
+                continue;
             }
 
             // 
-            auto box = gimmick->GetGimmickBox();
-            auto count = gimmick->GetGimmickCount();
-            for (size_t i = 0; i < count; i++)
-            {
-                // 
-                LightExecutor *lightExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
-                if (lightExecutor == nullptr)
-                {
-                    // 
-                    continue;
-                }
-
-                // 
-                lightExecutor->SetBaseAngle(nextRadian);
-            }
+            lightExecutor->SetBaseAngle(nextRadian);
         }
+    }
+    else if (this->mpMyObject->GetObjectTag() == GameObjectTag::GOT_Mirror)
+    {
+        // 
+        MirrorObject *mirrorObject = static_cast<MirrorObject *>(this->mpMyObject);
+        auto mirrorController = mirrorObject->GetMirrorController();
+        if (mirrorController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        mirrorController->SetMoveVecObjAndBody(moveVec);
+        mirrorController->SetMoveVecMirrorFace(moveVec);
+        mirrorController->SetBodyCollisionRotateAtNowPos(nextRadian);
+
+    }
+    else if (this->mpMyObject->GetObjectTag() == GameObjectTag::GOT_Wall)
+    {
+        // 
+        WallObject *wallObject = static_cast<WallObject *>(this->mpMyObject);
+        auto wallController = wallObject->GetWallController();
+        if (wallController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        wallController->SetMoveVecObjAndBody(moveVec);
+        wallController->SetBodyCollisionRotateAtNowPos(nextRadian);
     }
 
     // 
-    return 0;
-}
-
-// ギミックの内容を実行する関数
-// ※GameObject::LateUpdate()のタイミングで呼ばれます
-int RouteMoveExecutor::LateUpdate(bool triggerSignal)
-{
-    // 
-    return 0;
-}
-
-// 当たり判定によるギミックの変化に対応させる関数
-int RouteMoveExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
-{
-    // 
-    return 0;
-}
-
-// 
-void RouteMoveExecutor::SetFrameCount(uint32_t frameCount)
-{
-    // 
-    this->mnFrameCount = frameCount;
+    return true;
 }

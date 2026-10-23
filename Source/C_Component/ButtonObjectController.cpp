@@ -223,6 +223,12 @@ int ButtonObjectController::BaseLateUpdate()
     return 0;
 }
 
+Quadrangle2D *ButtonObjectController::GetBody() const
+{
+    // 
+    return static_cast<Quadrangle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBody));
+}
+
 // 現在このボタンの上にプレイヤーがいるのか
 bool ButtonObjectController::CheckOnPlayer() const
 {
@@ -467,10 +473,4 @@ void ButtonObjectController::UpdateLightSide()
 
     // 
     this->mbLightSide = !outBox.empty();
-}
-
-Quadrangle2D *ButtonObjectController::GetBody() const
-{
-    // 
-    return static_cast<Quadrangle2D *>(this->GetMyObject()->GetBaseCollisionList()->SearchCollision(this->mdBody));
 }

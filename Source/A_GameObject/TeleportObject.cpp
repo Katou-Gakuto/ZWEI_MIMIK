@@ -33,7 +33,7 @@ int TeleportObject::Create()
 }
 
 // 
-TeleportObjectController *TeleportObject::GetButtonController()const
+TeleportObjectController *TeleportObject::GetTeleportController()const
 {
     // 
     if (this->mpTempController != nullptr)
