@@ -8,8 +8,6 @@ class BaseSceneManager; // ‘O•ûéŒ¾
 
 DXAnimModel::DXAnimModel(GameObject *myObject) : BaseModel(myObject, ModelType_Model2D, static_cast<ScreenNumber>(0))
 {
-	MaxPage = 0;
-	MaxPageFrame = 0;
 	NowPage = 0;
 	NowPageFrame = 0;
 	UVWidth = 0.0f;
@@ -32,7 +30,7 @@ int DXAnimModel::Update()
 {
 	NowPageFrame++;
 
-    if (NowPageFrame > MaxPageFrame)
+    if (NowPageFrame > MaxPageFrame[AnimNum])
     {
         NowPageFrame = 0;
         NowPage++;
@@ -40,7 +38,7 @@ int DXAnimModel::Update()
         // ‚¸‚ç‚·
         uvLeftUp.SetX(uvLeftUp.GetX() + UVWidth);
 
-        if (NowPage >= MaxPage)
+        if (NowPage >= MaxPage[AnimNum])
         {
             NowPage = 0;
             uvLeftUp.SetX(0.0f);
@@ -92,10 +90,19 @@ int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFram
 
 	// ƒtƒŒ[ƒ€”‚Ìİ’è
 	this->SetNowPage(0);
-	this->SetMaxPage(maxPage);
-	this->SetMaxPageFrame(maxPageFrame);
+	this->SetMaxPage(maxPage, animnum);
+	this->SetMaxPageFrame(maxPageFrame, animnum);
 
 	// UV•‚ğ•Û‘¶
 	UVWidth = uvRightDown.GetX() - uvLeftUp.GetX();
 	return 0; 
+}
+
+void DXAnimModel::ChangeAnimNum(int animnum)
+{
+	AnimNum = animnum;
+	NowPage = 0;
+	NowPageFrame = 0;
+	uvLeftUp.SetX(0.0f);
+	uvRightDown.SetX(UVWidth);
 }

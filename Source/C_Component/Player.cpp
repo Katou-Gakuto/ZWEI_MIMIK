@@ -85,25 +85,24 @@ int Player::Create()
 int Player::Initialize()
 {
     VECTOR2D pos = this->GetMyObject2D()->GetPosition();
-    
     DXAnimModel *playerModel = this->GetPlayerModel();
 
     if (mnPlayerNum == 1)
     {
         /* アニメーションの保存番号はヘッダーのAnimationListを参照 */
         // 画像読み込み (パス, アニメーションの枚数, アニメーションの一枚ごとのフレーム数, アニメーション一枚目の右下のUV値(x), UV値(y), アニメーションの保番号)
-        playerModel->SetAnimModel("Resource/Idle.png", 8, 30, 150.0f, 150.0f, 0);
+        playerModel->SetAnimModel("Resource/Idle.png", 8, 3, 150.0f, 150.0f, 0);
         playerModel->SetAnimModel("Resource/Run1.png", 8, 30, 150.0f, 150.0f, 1);
 
-        // アニメーションの切り替え
-        playerModel->ChangeAnimModel(1);
+        // アニメーションの切り替え(AnimationListの番号を指定)
+        playerModel->ChangeAnimNum(1);
     }
     else
     {
         playerModel->SetAnimModel("Resource/Idle.png", 8, 30, 150.0f, 150.0f, 0);
         playerModel->SetAnimModel("Resource/Run.png", 8, 30, 150.0f, 150.0f, 1);
 
-        playerModel->ChangeAnimModel(1);
+        playerModel->ChangeAnimNum(1);
     }
 
     // 
@@ -199,6 +198,10 @@ int Player::Update()
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
         // この中にBを押したときの処理を追加する
+
+        DXAnimModel *playerModel = this->GetPlayerModel();
+        // アニメーションの切り替え
+        playerModel->ChangeAnimNum(0);
     }
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::X, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
