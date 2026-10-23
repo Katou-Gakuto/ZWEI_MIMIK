@@ -198,10 +198,6 @@ int Player::Update()
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
         // この中にBを押したときの処理を追加する
-
-        DXAnimModel *playerModel = this->GetPlayerModel();
-        // アニメーションの切り替え
-        playerModel->ChangeAnimNum(0);
     }
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::X, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {

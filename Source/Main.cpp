@@ -87,6 +87,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetOutApplicationLogValidFlag(FALSE);
 #endif
 
+	// フォント等の設定
+	SetFontSize(22);                  //フォントの大きさ
+	SetFontThickness(3);              //フォントの太さ
+	ChangeFont("HGS創英ﾌﾟﾚｾﾞﾝｽEB");   //フォントの種類
+	ChangeFontType(DX_FONTTYPE_EDGE); //フォントの種類(縁取り)
+
+
 	// DXライブラリ後
 	Master::Initialize();
 
