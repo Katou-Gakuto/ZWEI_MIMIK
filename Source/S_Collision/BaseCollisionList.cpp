@@ -70,11 +70,17 @@ int BaseCollisionList::SetCollisionPosCollisionMoveVec()
     return 0;
 }
 
-int BaseCollisionList::SetHitMoveParam(bool prenetrate, bool hitMove, float late)
+int BaseCollisionList::SetHitMoveParam(bool loseHit0, bool prenetrate, bool hitMove, float late)
 {
     BaseCollision *current = this->mpFirstBaseCollision;
     while (current != nullptr)
     {
+        // 
+        if (current->GetCollisionDimension() == CollisionDimension_2D)
+        {
+            // 
+            static_cast<BaseCollision2D *>(current)->mbLoseHitCollision0 = loseHit0;
+        }
         current->SetPenetrate(prenetrate);
         current->SetHitMove(hitMove);
         current->SetMoveLate(late);

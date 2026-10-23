@@ -23,6 +23,9 @@ public:
     // 
     int mnHitCount;
 
+    // ©g‚ª“®‚«A‘Šè‚ª“®‚¢‚Ä‚¢‚È‚¢ê‡‚É•K‚¸•‰‚¯‚é‚Æ‚¢‚¤‚â‚Â
+    bool mbLoseHitCollision0;
+
     BaseCollision2D(
         GameObject *object, CollisionType type, CollisionTag tag, CollisionNorm normNum,
         bool penetrate, bool hitMove, float moveLate);

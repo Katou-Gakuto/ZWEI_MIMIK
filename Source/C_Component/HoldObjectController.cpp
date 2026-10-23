@@ -89,10 +89,55 @@ int HoldObjectController::HitOnCollision(BaseCollision *myCollision, BaseCollisi
             {
                 if (this->mbHoldLight)
                 {
+                    // 
+                    if (hitCollision->GetMyObject() == Master::GetPlayerController(2)->GetMyObject())
+                    {
+                        /*
+                        // 
+                        VECTOR2D zeroVec;
+
+                        // 
+                        hitCollision->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                        // 
+                        hitCollision->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+
+                        // 
+                        this->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                        // 
+                        this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                        */
+                    }
+
+                    // 
                     Master::GetPlayerController(1)->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
+
                 }
                 else if (this->mbHoldShadow)
                 {
+                    // 
+                    if (hitCollision->GetMyObject() == Master::GetPlayerController(1)->GetMyObject())
+                    {
+                        /*
+                        // 
+                        VECTOR2D zeroVec;
+
+                        // 
+                        hitCollision->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                        // 
+                        hitCollision->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+
+                        // 
+                        this->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                        // 
+                        this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                        */
+                    }
+
+                    // 
                     Master::GetPlayerController(2)->SyncPlayerMoveVec(this->GetMyObject2D()->GetMoveVec2D());
                 }
             }

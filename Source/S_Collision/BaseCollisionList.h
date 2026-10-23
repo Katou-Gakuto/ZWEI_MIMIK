@@ -23,7 +23,7 @@ public:
     int SetCollisionMoveVec(CollisionDimension dimension, const void *moveData);
     int SetCollisionNextPos(CollisionDimension dimension, const void *posData);
     int SetCollisionPosCollisionMoveVec();
-    int SetHitMoveParam(bool prenetrate, bool hitMove, float late);
+    int SetHitMoveParam(bool loseHit0, bool prenetrate, bool hitMove, float late);
 
     int Initialize();
     int Finalize();

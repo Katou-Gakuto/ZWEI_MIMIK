@@ -40,6 +40,9 @@ public:
     bool SyncPlayerMoveVec(const VECTOR2D &vec);
 
     // 
+    bool ResetHold();
+
+    // 
     VECTOR2D GetMoveVecNowFrame()const;
 
     int GetPlayerNum() const { return mnPlayerNum; } // 1P‚©2P‚©‚ð•Ô‚·

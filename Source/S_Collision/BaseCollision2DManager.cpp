@@ -294,7 +294,31 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
 {
     aMoveLate = 0.0f;
     bMoveLate = 0.0f;
-    
+
+    // 
+    if (collision2DA->mbLoseHitCollision0 &&
+        collision2DB->GetMoveVec() == VECTOR2D::GetZero())
+    {
+        // 
+        aMoveLate = 2.0f;
+        bMoveLate = 0.0f;
+
+        // 
+        return true;
+    }
+
+    // 
+    if (collision2DB->mbLoseHitCollision0 &&
+        collision2DA->GetMoveVec() == VECTOR2D::GetZero())
+    {
+        // 
+        aMoveLate = 0.0f;
+        bMoveLate = 2.0f;
+
+        // 
+        return true;
+    }
+
     // 
     if (!collision2DA->GetHitMove() &&
         !collision2DB->GetHitMove())
@@ -2694,60 +2718,63 @@ int BaseCollision2DManager::CheckHitAllMove()
     CollisionCheckResult2D temp;
 
     // 前者の当たり判定を取得する
-    for (BaseCollision2D *current = this->mpFirstBaseCollision2D; current != nullptr; current = current->GetNextWorld())
+    for (int i = 0; i < 2; i++)
     {
-        // 後者の当たり判定を取得する
-        for (BaseCollision2D *target = current->GetNextWorld(); target != nullptr; target = target->GetNextWorld())
+        for (BaseCollision2D *current = this->mpFirstBaseCollision2D; current != nullptr; current = current->GetNextWorld())
         {
-            // 二つの当たり判定の削除フラグと有効フラグを確認し、問題があった場合は処理を飛ばす
-            if (current->GetDeleteFlag() ||
-                target->GetDeleteFlag() ||
-                current->GetActiveFlag() == false ||
-                target->GetActiveFlag() == false)
+            // 後者の当たり判定を取得する
+            for (BaseCollision2D *target = current->GetNextWorld(); target != nullptr; target = target->GetNextWorld())
             {
-                continue;
-            }
-
-            // 円のカリングを含めた当たり細かい判定の計算を行う
-            temp = BaseCollision2DManager::CheckHitCollision2DToCollision2D(current, target);
-
-            // 当たっている場合は処理を行う
-            if (0 <= temp.mnResultParam)
-            {
-                // 二つの当たり判定のスライド移動を行う
-                BaseCollision2DManager::CollisionSlide(temp, current, target);
-
-                // 
-                current->mnHitCount++;
-
-                // 
-                target->mnHitCount++;
-
-                // 
-                VECTOR2D zeroVec;
-
-                // 
-                if (current->mnHitCount == 2)
+                // 二つの当たり判定の削除フラグと有効フラグを確認し、問題があった場合は処理を飛ばす
+                if (current->GetDeleteFlag() ||
+                    target->GetDeleteFlag() ||
+                    current->GetActiveFlag() == false ||
+                    target->GetActiveFlag() == false)
                 {
-                    // 
-                    current->GetMyObject2D()->SetMoveVec(zeroVec);
-
-                    // 
-                    current->GetMyObject()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
-                }
-                // 
-                if (target->mnHitCount == 2)
-                {
-                    // 
-                    target->GetMyObject2D()->SetMoveVec(zeroVec);
-
-                    // 
-                    target->GetMyObject()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                    continue;
                 }
 
-                // 二つの当たり判定に、衝突したことを知らせる
-                current->HitOnCollision(target);
-                target->HitOnCollision(current);
+                // 円のカリングを含めた当たり細かい判定の計算を行う
+                temp = BaseCollision2DManager::CheckHitCollision2DToCollision2D(current, target);
+
+                // 当たっている場合は処理を行う
+                if (0 <= temp.mnResultParam)
+                {
+                    // 二つの当たり判定のスライド移動を行う
+                    BaseCollision2DManager::CollisionSlide(temp, current, target);
+
+                    // 
+                    current->mnHitCount++;
+
+                    // 
+                    target->mnHitCount++;
+
+                    // 
+                    VECTOR2D zeroVec;
+
+                    // 
+                    if (current->mnHitCount == 2)
+                    {
+                        // 
+                        current->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                        // 
+                        current->GetMyObject()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                    }
+                    // 
+                    if (target->mnHitCount == 2)
+                    {
+                        // 
+                        target->GetMyObject2D()->SetMoveVec(zeroVec);
+
+                        // 
+                        target->GetMyObject()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension_2D, &zeroVec);
+                    }
+
+                    // 二つの当たり判定に、衝突したことを知らせる
+                    current->HitOnCollision(target);
+                    target->HitOnCollision(current);
+                }
             }
         }
     }

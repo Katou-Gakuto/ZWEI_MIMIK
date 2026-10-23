@@ -188,20 +188,7 @@ int Player::Update()
     else
     {
         // 
-        if (this->mpHold != nullptr)
-        {
-            // 
-            this->HoldMove(VECTOR2D::GetZero());
-
-            // 
-            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(false, false, 0.0f);
-
-            // 
-            this->mpHold->SetHoldFlag(this->mbLightSide, false);
-
-            // 
-            this->mpHold = nullptr;
-        }
+        this->ResetHold();
     }
 
     // 
@@ -522,7 +509,10 @@ int Player::TryHold()
             this->SetHoldRadian();
 
             // 
-            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(false, true, 1.0f);
+            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(true, false, true, 1.0f);
+
+            // 
+
         }
     }
 
@@ -635,6 +625,29 @@ bool Player::SyncPlayerMoveVec(const VECTOR2D &holdMoveVec)
 
     // 
     list->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &holdMoveVec);
+
+    // 
+    return true;
+}
+
+// 
+bool Player::ResetHold()
+{
+    // 
+    if (this->mpHold != nullptr)
+    {
+        // 
+        this->HoldMove(VECTOR2D::GetZero());
+
+        // 
+        this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(false, false, false, 0.0f);
+
+        // 
+        this->mpHold->SetHoldFlag(this->mbLightSide, false);
+
+        // 
+        this->mpHold = nullptr;
+    }
 
     // 
     return true;
