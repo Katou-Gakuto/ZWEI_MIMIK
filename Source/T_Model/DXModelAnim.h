@@ -4,6 +4,16 @@
 #include <string>
 using namespace std;
 
+// アニメーションの保存番号
+enum AnimationList
+{
+	Anim_Idle,
+	Anim_Walk,
+	Anim_Push,
+	Anim_Max
+};
+
+
 class DXAnimModel : public BaseModel
 {
 public:
@@ -15,12 +25,14 @@ public:
 	int Draw();
 	int Finalize();
 
-	// 画像とページ数、間隔を設定する
-	int SetAnimModel(string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright);
+	// 画像とページ数、間隔、アニメーションの保存番号を設定する
+	int SetAnimModel(string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright, int animnum);
 
-	void SetNowPage(int nowpage) { NowPage = nowpage; }
-	void SetMaxPage(int maxpage) { MaxPage = maxpage; }
-	void SteMaxPageFrame(int maxpageframe) { MaxPageFrame = maxpageframe; }
+	
+	void SetNowPage(int nowpage) { NowPage = nowpage; }// 現在のページを設定する
+	void SetMaxPage(int maxpage, int animnum) { MaxPage[animnum] = maxpage; } // 最大ページ数を設定する
+	void SetMaxPageFrame(int maxpageframe, int animnum) { MaxPageFrame[animnum] = maxpageframe; } // ページをめくるまでのフレーム数を設定する
+	void ChangeAnimNum(int animnum);//アニメーション番号を指定してアニメーションを変更出来る様にする
 
 private:
 
@@ -28,10 +40,13 @@ private:
 	VECTOR2D uvRightDown;
 
 	int NowPage; // 現在のフレーム
-	int MaxPage; // 最大フレーム数
-	int NowPageFrame;
-	int MaxPageFrame; // ページをめくるまでのフレーム数
+	int NowPageFrame;// ページをめくるまでのフレーム数
+	int MaxPage[Anim_Max]; // 最大フレーム数
+	int MaxPageFrame[Anim_Max]; // ページをめくるまでのフレーム数の最大値
+
 	float UVWidth;
 
-	int GraphHandle;
+	int AnimNum; // アニメーションの番号
+
+	int GraphHandle[Anim_Max];
 };

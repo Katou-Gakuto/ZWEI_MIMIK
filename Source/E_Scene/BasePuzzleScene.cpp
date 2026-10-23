@@ -203,7 +203,7 @@ int BasePuzzleScene::Draw()
     // 
     this->mpGameObjectManager->Draw();
 
-    // 
+	// ポーズならポーズメニューを描画する
     if (this->mbPouse)
     {
         // 

@@ -51,4 +51,7 @@ private:
 
     // 
     CursorMoveData mdMoveData;
+
+	// タイトルロゴの画像ハンドル
+    int TitleLogo;
 };
