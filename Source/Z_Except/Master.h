@@ -8,6 +8,7 @@ class EndManager;
 class TimeManager;
 // リソースマネージャー
 class ResourceManager;
+class SoundManager;
 class DXAnimModel;
 // キー情報
 class KeyState;
@@ -45,6 +46,7 @@ public:
     static TimeManager* mpTimeManager;
     // リソースの管理
 	static ResourceManager *mpResourceManager;
+    static SoundManager *mpSoundManager;
 
     // キーの情報管理
     static KeyState* mpKeyState;

@@ -241,6 +241,7 @@
     <ClCompile Include="Source\Z_Except\DxLibDataManager.cpp" />
     <ClCompile Include="Source\Z_Except\Master.cpp" />
     <ClCompile Include="Source\Z_Except\ResourceManager.cpp" />
+    <ClCompile Include="Source\Z_Except\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -375,6 +376,7 @@
     <ClInclude Include="Source\Z_Except\DxLibDataManager.h" />
     <ClInclude Include="Source\Z_Except\Master.h" />
     <ClInclude Include="Source\Z_Except\ResourceManager.h" />
+    <ClInclude Include="Source\Z_Except\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
@@ -384,6 +386,10 @@
     <Image Include="Resource\invader.png" />
     <Image Include="Resource\Run.png" />
     <Image Include="ZWEI_MIMIK.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resource\Sound\入店音.mp3" />
+    <Media Include="Resource\Sound\学園アイドルマスター_初星学園_EndressDance.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

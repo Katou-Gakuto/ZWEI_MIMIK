@@ -7,6 +7,7 @@
 #include "../H_Katou/Singleton/KeyState.h"
 
 #include "../Z_Except/ResourceManager.h"
+#include "../Z_Except/SoundManager.h"
 #include "../Z_Except/Master.h"
 
 // 
@@ -52,7 +53,7 @@ int TitleScene::Initialize()
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
     TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
-
+	Master::mpSoundManager->PlayBGM("Resource/Sound/学園アイドルマスター_初星学園_EndressDance.wav");
     return 0;
 }
 

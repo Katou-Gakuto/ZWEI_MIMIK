@@ -18,6 +18,7 @@
 #include "../T_Model/DXModelAnim.h"
 #include "../Z_Except/CursorMoveSupporter.h"
 #include "../Z_Except/ResourceManager.h"
+#include "../Z_Except/SoundManager.h"
 
 
 // Ã“Iƒƒ“ƒo[‚Ì‰Šú‰»
@@ -27,6 +28,8 @@ BaseSceneManager *Master::mpBaseSceneManager = nullptr;
 EndManager* Master::mpEndManager = nullptr;
 TimeManager* Master::mpTimeManager = nullptr;
 ResourceManager *Master::mpResourceManager = nullptr;
+SoundManager *Master::mpSoundManager = nullptr;
+
 KeyState* Master::mpKeyState = nullptr;
 DxLibDataManager* Master::mpDxLibDataManager = nullptr;
 
@@ -83,7 +86,7 @@ int Master::Initialize()
     mpTimeManager = new TimeManager(/*/1/*/17/**/);
     mpTimeManager->Initilize();
 	mpResourceManager = new ResourceManager();
-
+	mpSoundManager = new SoundManager();
     // mpDXAnimModel = new DXAnimModel();
 
     mpKeyState = new KeyState();
@@ -122,6 +125,7 @@ int Master::Finalize()
     delete mpEndManager;
     delete mpTimeManager;
 	delete mpResourceManager;
+	delete mpSoundManager;
     delete mpKeyState;
     delete mpDxLibDataManager;
 
