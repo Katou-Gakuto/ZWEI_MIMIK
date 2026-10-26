@@ -6,7 +6,7 @@
 // 
 CursorMoveSupporter::CursorMoveSupporter() :
     mnBaseCount(30),
-    mnPushHoldFrameMax(5),
+    mnPushHoldFrameMax(2),
     mnLastModeFrameCount(-100),
     mnPlayerNumber(0)
 {
