@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cstddef>
 
+#include "../S_Collision/BaseCollision2DManager.h"
 #include "../S_Collision/Point2D.h"
 #include "../S_Collision/Quadrangle2D.h"
 #include "../S_Collision/Triangle2D.h"
@@ -22,6 +23,9 @@
 #include "DrawSystem.h"
 
 #include "ResourceManager.h"
+
+#include "ImguiManager.h"
+static int DrawSelectNumber = 0;
 
 namespace
 {
@@ -391,6 +395,10 @@ namespace
             }
             for (size_t l = 0; l < (hitCollisionLineData[i].size() - 1)/*四角にするために最後を除いて処理*/; ++l)
             {
+                if (DrawSelectNumber != l)
+                {
+                    continue;
+                }
                 // 4頂点入力
                 {
                     VECTOR2D lightLeftDataStart = hitCollisionLineData[i][l].LineStartPos;
@@ -496,7 +504,24 @@ void LightAreaManager::Initilize()
 
 // 描画
 void LightAreaManager::Draw()
-{    
+{
+    Master::mpImguiManager->AddDrawImgui(
+    IMGUI_VARIABLE_CONTROL::GetImguiData(
+        {
+            &DrawSelectNumber
+        },
+        1.0f,
+        1.0f,
+        1.0f,
+        0,
+        30,
+        "NONE_",
+        "%d",
+        0,
+        IMGUI_TYPE::SLIDER1
+    )
+);
+
     // ライト描画処理
     { 
         // 開始
@@ -714,8 +739,9 @@ void LightAreaManager::LightDraw()
     // 光の種類数を調べる
     int colorCount = 0;
     std::vector<uint32_t> colorNumbers;
-    for (LightArea* lightArea : mlNode)
+    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
     {
+        LightArea* lightArea = mlNode[lightAreaIndex];
         bool newColorFlag = true;
         for (int i = 0; i < colorNumbers.size(); ++i)
         {
@@ -768,8 +794,9 @@ void LightAreaManager::LightDraw()
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {
         SetDrawScreen(mnLightScreenHandle[i].FilpScreenHandle);
-        for (LightArea* lightArea : mlNode)
+        for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
         {
+            LightArea* lightArea = mlNode[lightAreaIndex];
             if (lightArea->GetLightColor() == colorNumbers[i])
             {
                 lightArea->DrawLightArea();
@@ -779,8 +806,9 @@ void LightAreaManager::LightDraw()
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {
         SetDrawScreen(mnLightScreenHandle[i].ScreenHandle);
-        for (LightArea* lightArea : mlNode)
+        for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
         {
+            LightArea* lightArea = mlNode[lightAreaIndex];
             if (lightArea->GetLightColor() == colorNumbers[i])
             {
                 //lightArea->ReDrawLightArea();
@@ -811,9 +839,9 @@ void LightAreaManager::LightDraw()
                 for (int hitCollisionLinesIterator = 0; hitCollisionLinesIterator < hitCollisionLine.size(); ++hitCollisionLinesIterator)
                 {
                     int drawHitCollisionLineIteratorPlusNumber = 0;
-                    for (int hitLineIndex = 0; hitLineIndex < hitCollisionLine[hitCollisionLinesIterator].size(); ++hitLineIndex)
+                    for (int hitLineIndex = 0; (hitLineIndex + 1) < hitCollisionLine[hitCollisionLinesIterator].size(); ++hitLineIndex)
                     {
-                        drawHitCollisionLineIteratorPlusNumber += ExtendHitCollisionLineToLightCorner(lightArea, hitCollisionLine[hitCollisionLinesIterator], drawHitCollisionLine[hitCollisionLinesIterator], hitLineIndex, drawHitCollisionLineIteratorPlusNumber);
+                        drawHitCollisionLineIteratorPlusNumber += SetupLightAreaForDrawing(hitCollisionLine[hitCollisionLinesIterator], drawHitCollisionLine[hitCollisionLinesIterator], hitLineIndex, drawHitCollisionLineIteratorPlusNumber);
                     }
                 }
 
@@ -1093,4 +1121,131 @@ void LightAreaManager::FlipLightAreaScreen()
     //     SetMaskScreenGraph(-1);
     //     DeleteMaskScreen();
     // }
+}
+
+
+// 光領域を描画用に調整する
+int LightAreaManager::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber)
+{
+    // 必要条件を満たしているか確認
+    {
+        if ((lineIndex + 1) >= hitCollisionLine.size())
+        {
+            return 0;
+        }
+    }
+    
+    // 参照しているライン
+    HIT_COLLISION_LINE nowCheckHitLine = hitCollisionLine[lineIndex];
+    // 次のライン
+    HIT_COLLISION_LINE nextCheckHitLine = hitCollisionLine[lineIndex + 1];
+
+    // 参照しているラインが何も当たってないなら
+    if (nowCheckHitLine.HitCollision == nullptr)
+    {
+        return 0;
+    }
+
+    // 追加するライン
+    std::vector<HIT_COLLISION_LINE> addDrawHitCollisionLine = {};
+
+    // 当たり判定 三角
+    Triangle2D tempTriangle;
+    tempTriangle.SetShapeParameter(nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, nextCheckHitLine.LineEndPos);
+
+    // 当たり判定 点
+    Point2D tempPoint;
+
+    // 参照してるラインと次のラインを調べて必要なら描画用に追加する
+    do {
+        // 参照してるラインと次のラインが同じ物体に当たっているなら角を追加する
+        if (nowCheckHitLine.HitCollision != nextCheckHitLine.HitCollision)
+        {
+            // 次のラインが何も当たっていないなら参照ラインが当たっている辺の次に近い方を追加する
+            if (nextCheckHitLine.HitCollision == nullptr)
+            {
+                std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision);
+                // 現在のラインの方向ベクトル
+                const VECTOR2D lineVec = nowCheckHitLine.LineEndPos - nowCheckHitLine.LineStartPos;
+                // ラインの長さの2乗
+                const float lineLengthSq = lineVec.MagnitudeNoSqrt();
+
+                // ラインの長さがほぼ0なら終了
+                if (lineLengthSq <= 0.0001f)
+                {
+                    break;
+                }
+
+                for (VECTOR2D& vertexPosition : vertexPositions)
+                {
+                    tempPoint.SetShapeParameter(vertexPosition);
+                    if (0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, &tempTriangle).mnResultParam)
+                    {
+                        // INPROGRESS:_ つぎここからかな
+                        addDrawHitCollisionLine.push_back({nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos, vertexPosition});
+                    }
+                }
+                break;
+            }
+
+            // 当たっている辺同士が交差してるなら交差点を追加
+
+            // 離れているなら当たっている辺の近い角同氏を追加
+        }
+        else
+        {
+            // 同じ辺に当たっていないなら共通の角までのラインを追加
+        }
+    } while (false);
+
+    // 追加されたラインを反映
+    drawHitCollisionLine.insert(drawHitCollisionLine.begin() + lineIndex + drawHitCollisionLineIteratorPlusNumber, addDrawHitCollisionLine.begin(), addDrawHitCollisionLine.end());
+
+    return addDrawHitCollisionLine.size();
+}
+
+// 2本のラインの間にある角を取得する
+std::vector<VECTOR2D> LightAreaManager::GetVertexPositions(BaseCollision* collision)
+{
+    std::vector<VECTOR2D> vertexPositions = {};
+    switch (collision->GetCollisionType())
+    {
+    // case CollisionType::CollisionType_Circle2D:
+    // {
+    //     auto* circle = dynamic_cast<Circle2D*>(collision);
+    //     if (circle != nullptr)
+    //     {
+    //         tryExtend(circle->GetBasePos());
+    //     }
+    //     break;
+    // }
+
+    case CollisionType::CollisionType_Quadrangle2D:
+    {
+        Quadrangle2D* quadrangle = dynamic_cast<Quadrangle2D*>(collision);
+        if (quadrangle != nullptr)
+        {
+            // 例
+            //左上: 0
+            //右上: 1
+            //左下: 2
+            // //右下: 3
+            // tryExtend(quadrangle->GetVertexPos(0));
+            // tryExtend(quadrangle->GetVertexPos(1));
+            // tryExtend(quadrangle->GetVertexPos(2));
+            // tryExtend(quadrangle->GetVertexPos(3));
+
+            // 四角形の各辺を取得
+            constexpr int VERTEX_COUNT = 4;
+
+            for (int i = 0; i < VERTEX_COUNT; ++i)
+            {
+                vertexPositions.push_back(quadrangle->GetVertexPos(i));
+            }
+        }
+        break;
+    }
+    }
+
+    return vertexPositions;
 }

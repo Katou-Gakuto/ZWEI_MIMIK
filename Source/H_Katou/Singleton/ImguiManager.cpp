@@ -25,12 +25,16 @@
 
 
 ImguiManager::ImguiManager(bool isImguiExecute)
+#ifdef _DEBUG
 : mnAddNumber(0)
 , mbIsImguiExecute(isImguiExecute)
 , mstCurrentGroupTypeData()
 , mnFrameCount(0)
+#endif
 {
+#ifdef _DEBUG
     mstImguiGroupDatas.clear();
+#endif
 }
 
 ImguiManager::~ImguiManager()
@@ -135,21 +139,57 @@ void ImguiManager::Draw()
 }
 
 
-// Imgui追加描画
-void ImguiManager::AddDrawImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData)
+// Imgui追加描画(変数)
+void ImguiManager::AddDrawImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData, std::string addTabName)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
     {
         return;
     }
-    
+
+    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
     if (imguiControlVariableData.AddNumberDrawFlag == true)
     {
         imguiControlVariableData.VariableLabel = imguiControlVariableData.VariableLabel + "_" + std::to_string(mnAddNumber);
     }
     ++mnAddNumber;
     DrawControlVariableImgui(imguiControlVariableData);
+    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+#endif
+}
+
+// Imgui追加描画（ボタン）
+void ImguiManager::AddDrawImgui(IMGUI_BUTTON_CONTROL imguiControlButtonData, std::string addTabName)
+{
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+
+    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+
+    DrawButtonImgui(imguiControlButtonData);
+
+    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+#endif
+}
+
+// Imgui追加描画（レイアウト）
+void ImguiManager::AddDrawImgui(IMGUI_LAYOUT_CONTROL imguiControlLayoutData, std::string addTabName)
+{
+#ifdef _DEBUG
+    if (!mbIsImguiExecute)
+    {
+        return;
+    }
+
+    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+
+    DrawLayoutImgui(imguiControlLayoutData);
+
+    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
 #endif
 }
 
@@ -461,6 +501,12 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_VARIABLE_CONTROL imguiControlV
         return;
     }
 
+    // 描画前レイアウト描画
+    for (int i = 0; i < imguiControlVariableData.VariableBeforeImguiLayoutControl.size(); ++i)
+    {
+        DrawLayoutImgui(imguiControlVariableData.VariableBeforeImguiLayoutControl[i]);
+    }
+
     for (int i = 0; i < imguiControlVariableData.VariableDatas.size(); i++)
     {
         if (i >= IMGUI_VARIABLE_CONTROL::IMGUI_VARIABLE_MAX)
@@ -677,6 +723,13 @@ void ImguiManager::DrawControlVariableImgui(IMGUI_VARIABLE_CONTROL imguiControlV
 
         imguiControlVariableData.PreVariable[i] = IMGUI_VARIABLE_CONTROL::GetVariableValue(imguiControlVariableData.VariableDatas[i]);
     }
+
+    
+    // 描画後レイアウト描画
+    for (int i = 0; i < imguiControlVariableData.VariableAfterImguiLayoutControl.size(); ++i)
+    {
+        DrawLayoutImgui(imguiControlVariableData.VariableAfterImguiLayoutControl[i]);
+    }
 #endif
 }
 
@@ -694,6 +747,13 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVaria
     {
         return;
     }
+    
+    // 描画前レイアウト描画
+    for (int i = 0; i < imguiButtonControlVariableData.ButtonBeforeImguiLayoutControl.size(); ++i)
+    {
+        DrawLayoutImgui(imguiButtonControlVariableData.ButtonBeforeImguiLayoutControl[i]);
+    }
+
     bool buttonFlag = false;
     switch (imguiButtonControlVariableData.ButtonType)
     {    
@@ -756,6 +816,12 @@ void ImguiManager::DrawButtonImgui(IMGUI_BUTTON_CONTROL& imguiButtonControlVaria
     if (imguiButtonControlVariableData.ArgumentButtonFlag != nullptr)
     {
         *imguiButtonControlVariableData.ArgumentButtonFlag = buttonFlag;
+    }
+
+    // 描画後レイアウト描画
+    for (int i = 0; i < imguiButtonControlVariableData.ButtonAfterImguiLayoutControl.size(); ++i)
+    {
+        DrawLayoutImgui(imguiButtonControlVariableData.ButtonAfterImguiLayoutControl[i]);
     }
 #endif
 }
@@ -1415,7 +1481,7 @@ void ImguiManager::InitDrawGameDisplayToImguiVariable()
 }
 
 // ゲーム画面描画
-void ImguiManager::DrawGameDisplayToImgui(std::string plusName)
+void ImguiManager::DrawGameDisplayToImgui(std::string plusName, float magnification, ImVec2 centerUV)
 {
 #ifdef _DEBUG
     if (!mbIsImguiExecute)
@@ -1444,10 +1510,63 @@ void ImguiManager::DrawGameDisplayToImgui(std::string plusName)
 
     if (context && backBuffer && mdCopyTexture && mbCopySRV)
     {
+
         context->CopyResource(mdCopyTexture, backBuffer);
 
-        // TODO:_ 個々のデフォルトで変更できるようにする ?
-        ImGui::Image((ImTextureID)mbCopySRV, displaySize);
+        // 拡大率が0以下の場合は1倍にする
+        magnification = (magnification > 0.0f) ? magnification : 1.0f;
+
+        // 拡大率に応じて表示する範囲を変更
+        float uvSize = 1.0f / magnification;
+
+        // 拡大する中心位置を0～1の範囲に制限
+        if (centerUV.x < 0.0f)
+        {
+            centerUV.x = 0.0f;
+        }
+        else if (centerUV.x > 1.0f)
+        {
+            centerUV.x = 1.0f;
+        }
+
+        if (centerUV.y < 0.0f)
+        {
+            centerUV.y = 0.0f;
+        }
+        else if (centerUV.y > 1.0f)
+        {
+            centerUV.y = 1.0f;
+        }
+
+        // 切り取り範囲を計算
+        ImVec2 uv0(centerUV.x - uvSize * 0.5f, centerUV.y - uvSize * 0.5f);
+
+        ImVec2 uv1(centerUV.x + uvSize * 0.5f, centerUV.y + uvSize * 0.5f);
+
+        // 画面端からはみ出さないように調整
+        if (uv0.x < 0.0f)
+        {
+            uv1.x -= uv0.x;
+            uv0.x = 0.0f;
+        }
+        if (uv0.y < 0.0f)
+        {
+            uv1.y -= uv0.y;
+            uv0.y = 0.0f;
+        }
+        if (uv1.x > 1.0f)
+        {
+            uv0.x -= uv1.x - 1.0f;
+            uv1.x = 1.0f;
+        }
+        if (uv1.y > 1.0f)
+        {
+            uv0.y -= uv1.y - 1.0f;
+            uv1.y = 1.0f;
+        }
+
+        // ゲーム画面を描画
+        ImGui::Image((ImTextureID)mbCopySRV, displaySize, uv0, uv1);
     }
     ImGui::End();
 

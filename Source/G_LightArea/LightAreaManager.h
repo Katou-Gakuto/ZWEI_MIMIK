@@ -7,6 +7,10 @@
 
 #include "../Y_Tool/VECTOR.h"
 
+struct HIT_COLLISION_LINE;
+
+class BaseCollision;
+
 // 
 class LightArea;
 
@@ -71,6 +75,12 @@ private:
 
     // Œõ—Ìˆæ“à‚Ì•`‰æÏ‚İ‰æ–Ê‚ğ”½“]
     void FlipLightAreaScreen();
+
+    // Œõ—Ìˆæ‚ğ•`‰æ—p‚É’²®‚·‚é
+    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber);
+
+    // Šp‚ğæ“¾‚·‚é
+    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision);
 
 private:
     // 
