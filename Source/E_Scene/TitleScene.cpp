@@ -56,7 +56,7 @@ int TitleScene::Initialize()
 	Master::mpSoundManager->SetBGMVolume(180);
 	Master::mpSoundManager->SetSEVolume(180);
 	Master::mpSoundManager->ChangeVolume();
-	Master::mpSoundManager->PlayBGM("Resource/Sound/学園アイドルマスター_初星学園_EndressDance.wav");
+	Master::mpSoundManager->PlayBGM("Resource/Sound/空.wav");
     return 0;
 }
 

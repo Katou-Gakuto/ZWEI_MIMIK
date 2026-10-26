@@ -3,7 +3,7 @@
 SoundManager::SoundManager()
 {
     // BGM
-    LoadBGM("Resource/Sound/学園アイドルマスター_初星学園_EndressDance.wav");// タイトル
+    LoadBGM("Resource/Sound/空.wav");// タイトル
 
 
     // SE

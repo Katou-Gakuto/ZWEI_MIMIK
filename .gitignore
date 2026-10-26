@@ -430,3 +430,4 @@ FodyWeavers.xsd
 *.msp
 **/Log.txt
 **/LogDebug
+*.png
