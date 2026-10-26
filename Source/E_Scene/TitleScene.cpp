@@ -53,6 +53,9 @@ int TitleScene::Initialize()
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
     TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
+	Master::mpSoundManager->SetBGMVolume(180);
+	Master::mpSoundManager->SetSEVolume(180);
+	Master::mpSoundManager->ChangeVolume();
 	Master::mpSoundManager->PlayBGM("Resource/Sound/学園アイドルマスター_初星学園_EndressDance.wav");
     return 0;
 }

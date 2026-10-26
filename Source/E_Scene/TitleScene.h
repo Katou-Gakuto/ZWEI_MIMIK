@@ -49,7 +49,7 @@ private:
     // カーソルで選択しているモード
     TitleSelectMode mnCurrentMode;
 
-    // 
+	// 上下入力のためのデータ
     CursorMoveData mdMoveData;
 
 	// タイトルロゴの画像ハンドル
