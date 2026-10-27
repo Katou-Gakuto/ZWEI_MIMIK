@@ -47,7 +47,7 @@ int TitleScene::Create()
 int TitleScene::Initialize()
 {
 	// タイトルの一番最初のやつを描画するフェーズに設定する
-    this->mbLogoPhase = true;
+    //this->mbLogoPhase = true;
 
 	// カーソルを一番上に設定する
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
@@ -157,6 +157,28 @@ int TitleScene::Draw()
             message.c_str(),
             GetColor(255, 255, 255));
 
+        // 現在CREDITを指している場合と層でない場合で処理を変える
+        if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_Credit)
+        {
+            // 右矢印を設定する
+            message = "⇒";
+        }
+        else
+        {
+            // 矢印分の空白を設定する
+            message = "　";
+        }
+
+        // 
+        message += "CREDIT";
+
+        // 文字列を描画する
+        DxLib::DrawString(
+            400,
+            600,
+            message.c_str(),
+            GetColor(255, 255, 255));
+
         // 現在EXITを指している場合と層でない場合で処理を変える
         if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_Exit)
         {
@@ -175,7 +197,7 @@ int TitleScene::Draw()
         // 文字列を描画する
         DxLib::DrawString(
             400,
-            600,
+            800,
             message.c_str(),
             GetColor(255, 255, 255));
     }
@@ -220,8 +242,14 @@ int TitleScene::UpdateModeSelect()
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1);
 
-        // Bが押されたら最初の画面に戻る
-        if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, 0))
+		// キャンセルボタンが押されているか
+		bool Back = 
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0) ||
+			Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1);
+
+
+        // Bが押されたらロゴの画面に戻る
+        if (Back)
         {
             // 
             this->mbLogoPhase = true;
@@ -253,14 +281,12 @@ int TitleScene::UpdateModeSelect()
                 }
             }
             break;
+
         case TitleSelectMode::TitleSelectMode_Option:
             if (sceneMove)
             {
                 // 
                 Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
-
-                // 
-                Master::mpBaseSceneManager->SetResreveScene(SceneTag::ST_Title);
             }
             else
             {
@@ -272,10 +298,32 @@ int TitleScene::UpdateModeSelect()
                 if (currentDown)
                 {
                     // 
-                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Exit;
+                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Credit;
                 }
             }
             break;
+
+		case TitleSelectMode::TitleSelectMode_Credit:
+			if (sceneMove)
+			{
+				// 
+				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit);
+			}
+			else
+			{
+				if (currentUp)
+				{
+					// 
+					this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Option;
+				}
+				if (currentDown)
+				{
+					// 
+					this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Exit;
+				}
+			}
+			break;
+
         case TitleSelectMode::TitleSelectMode_Exit:
             if (sceneMove)
             {
@@ -290,7 +338,7 @@ int TitleScene::UpdateModeSelect()
                 if (currentUp)
                 {
                     // 
-                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Option;
+                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Credit;
                 }
                 if (currentDown)
                 {

@@ -400,6 +400,9 @@
     <ClCompile Include="Source\Z_Except\SoundManager.cpp">
       <Filter>Source\Z_Except</Filter>
     </ClCompile>
+    <ClCompile Include="Source\E_Scene\CreditScene.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -780,6 +783,9 @@
     <ClInclude Include="Source\Z_Except\SoundManager.h">
       <Filter>Source\Z_Except</Filter>
     </ClInclude>
+    <ClInclude Include="Source\E_Scene\CreditScene.h">
+      <Filter>Source\E_Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -825,7 +831,7 @@
     <Media Include="Resource\Sound\入店音.mp3">
       <Filter>リソース ファイル\Sound</Filter>
     </Media>
-    <Media Include="Resource\Sound\学園アイドルマスター_初星学園_EndressDance.wav">
+    <Media Include="Resource\Sound\空.wav">
       <Filter>リソース ファイル\Sound</Filter>
     </Media>
   </ItemGroup>

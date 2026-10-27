@@ -9,6 +9,7 @@ enum SceneTag : unsigned char
     ST_Title = 0,
     ST_StageSelect,
     ST_Option,
+	ST_Credit,
 
     ST_Puzzle1_1,
     ST_Puzzle1_2,

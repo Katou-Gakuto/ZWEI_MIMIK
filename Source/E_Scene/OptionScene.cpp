@@ -122,7 +122,7 @@ int OptionScene::UpdateModeSelect()
         else // タイトルに戻る
         {
             // 
-            Master::mpBaseSceneManager->ChangeSceneMySelf();
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
 
             // 
             this->OnResetFlag();
@@ -359,18 +359,18 @@ int OptionScene::Draw()
             message.c_str(),
             GetColor(255, 255, 255));
 		DxLib::DrawLine(
-			500,
-            200,
 			600,
-            200,
+            210,
+			700,
+            210,
 			GetColor(255, 255, 255));
 		DxLib::DrawCircle(
-			500 + mnVolumeBGM,
-            200,
+			600 + mnVolumeBGM,
+            210,
             5,
 			GetColor(255, 255, 255));
         DxLib::DrawFormatString(
-            620,
+            720,
             200,
             GetColor(255, 255, 255),
             "%d%",
@@ -406,19 +406,19 @@ int OptionScene::Draw()
             message.c_str(),
             GetColor(255, 255, 255));
         DxLib::DrawLine(
-            500,
-            300,
             600,
-            300,
+            310,
+            700,
+            310,
             GetColor(255, 255, 255));
         DxLib::DrawCircle(
-            500 + mnVolumeSE,
-            300,
+            600 + mnVolumeSE,
+            310,
             5,
             GetColor(255, 255, 255));
         DxLib::DrawFormatString(
-            620,
-            340,
+            720,
+            300,
             GetColor(255, 255, 255),
             "%d %",
             mnVolumeSE);
@@ -455,16 +455,24 @@ int OptionScene::Draw()
 
         if(FullScreen)
             DxLib::DrawString(
-                620,
+                700,
                 400,
                 "ON",
                 GetColor(255, 255, 255));
         else
 			DxLib::DrawString(
-				620,
+				700,
 				400,
 				"OFF",
 				GetColor(255, 255, 255));
+        if (mbFullScreen)
+        {
+            DxLib::DrawString(
+                660,
+                400,
+                "←　　　→",
+                GetColor(255, 255, 255));
+        }
         
 
         // 色覚サポート
@@ -498,16 +506,25 @@ int OptionScene::Draw()
 
         if (ColorVisionSupport)
             DxLib::DrawString(
-                620,
+                700,
                 500,
                 "ON",
                 GetColor(255, 255, 255));
         else
             DxLib::DrawString(
-                620,
+                700,
                 500,
                 "OFF",
                 GetColor(255, 255, 255));
+
+        if (mbColorVisionSupport)
+        {
+            DxLib::DrawString(
+                660,
+                500,
+                "←　　　→",
+                GetColor(255, 255, 255));
+        }
 
 
         // タイトルへ
