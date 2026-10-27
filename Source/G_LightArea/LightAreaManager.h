@@ -9,6 +9,8 @@
 
 struct HIT_COLLISION_LINE;
 
+class Triangle2D;
+
 class BaseCollision;
 
 // 
@@ -82,6 +84,12 @@ private:
     // 角を取得する
     std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision);
 
+    // 	2本のラインの間にある頂点まで描画用ラインを追加する
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision);
+
+
+    // 当たっている辺を求める
+    std::vector<VECTOR2D> GetHitCollisionEdge(HIT_COLLISION_LINE hitCollisionLine);
 private:
     // 
     std::vector<LightArea *> mlNode;
