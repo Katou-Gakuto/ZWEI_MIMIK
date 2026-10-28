@@ -28,6 +28,7 @@
 static int DrawSelectNumber = 30;
 static int DrawSelectNumber2 = 0;
 static int DrawSelectNumber3 = 2;
+static float DrawSelectNumber4_Float = 0.0f;
 
 namespace
 {
@@ -504,6 +505,57 @@ void LightAreaManager::Initilize()
     ScreenSizeChange();
 }
 
+// 奥行きを表現する2D描画テスト
+void TestDrawImageOutward(float angle)
+{
+    // 画面上の回転中心
+    const float centerX = 640.0f;
+    const float centerY = 480.0f;
+
+    // 回転半径
+    const float radius = 200.0f;
+
+    // 基本サイズ
+    const float halfWidth = 30.0f;
+    const float halfHeight = 30.0f;
+
+    // 円運動の位置
+    const float posX = cosf(angle);
+    const float posY = sinf(angle);
+
+    // 左右の移動
+    const float drawX = centerX + posX * radius;
+
+    // 上下の移動（奥行きを表現）
+    const float drawY = centerY + posY * radius * 0.3f;
+
+    // 手前・奥による拡大縮小
+    const float scale = 1.0f + (1.0f - cosf(angle)) * 0.4f;
+
+    // 四角形のサイズ
+    const float drawHalfWidth  = halfWidth * scale;
+    const float drawHalfHeight = halfHeight * scale;
+
+    // 四角形を描画
+    DrawBox(
+        static_cast<int>(drawX - drawHalfWidth),
+        static_cast<int>(drawY - drawHalfHeight),
+        static_cast<int>(drawX + drawHalfWidth),
+        static_cast<int>(drawY + drawHalfHeight),
+        GetColor(255, 255, 255),
+        TRUE
+    );
+
+    // 回転中心
+    DrawCircle(
+        static_cast<int>(centerX),
+        static_cast<int>(centerY),
+        4,
+        GetColor(255, 0, 0),
+        TRUE
+    );
+}
+
 // 描画
 void LightAreaManager::Draw()
 {
@@ -555,6 +607,24 @@ void LightAreaManager::Draw()
             IMGUI_TYPE::SLIDER1
         )
     );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber4_Float
+            },
+            0.1f,
+            0.1f,
+            0.1f,
+            0,
+            360,
+            "NONE_",
+            "%f",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+
+    //TestDrawImageOutward(DrawSelectNumber4_Float);
 
     // ライト描画処理
     { 
@@ -862,8 +932,9 @@ void LightAreaManager::LightDraw()
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {
         SetDrawScreen(mnLightScreenHandle[i].ScreenHandle);
-        for (LightArea* lightArea : mlNode)
+        for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
         {
+            LightArea* lightArea = mlNode[lightAreaIndex];
             if (lightArea->GetLightColor() == colorNumbers[i])
             {
                 std::vector<std::vector<HIT_COLLISION_LINE>> hitCollisionLine = lightArea->DrawLingAreaHitCollisionsGetProcess();
@@ -892,8 +963,9 @@ void LightAreaManager::LightDraw()
     {
         return;
     }
-    for (LightArea* lightArea : mlNode)
+    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
     {
+        LightArea* lightArea = mlNode[lightAreaIndex];
         for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
         {
             LightLineNode *currentNode = lightArea->GetFirstNodeBox()[i];
@@ -1018,6 +1090,7 @@ void LightAreaManager::FlipLightAreaScreen()
     // // // // // SetMaskScreenGraph(-1);
 
     // // // // // SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
 
     // // // // // 光領域の統合マスクを作成
     // // // // SetDrawScreen(mnAllLightScreenHandle);
