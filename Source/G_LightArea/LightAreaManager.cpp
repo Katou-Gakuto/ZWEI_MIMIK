@@ -25,9 +25,9 @@
 #include "ResourceManager.h"
 
 #include "ImguiManager.h"
-static int DrawSelectNumber = 0;
+static int DrawSelectNumber = 30;
 static int DrawSelectNumber2 = 0;
-static int DrawSelectNumber3 = 0;
+static int DrawSelectNumber3 = 2;
 
 namespace
 {
@@ -861,10 +861,6 @@ void LightAreaManager::LightDraw()
     // 当たっているオブジェクトに沿った描画を行う
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {
-        if (i != 1)
-        {
-            continue;
-        }
         SetDrawScreen(mnLightScreenHandle[i].ScreenHandle);
         for (LightArea* lightArea : mlNode)
         {
@@ -1228,30 +1224,31 @@ int LightAreaManager::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_L
     Point2D tempPoint;
 
     // 参照してるラインと次のラインを調べて必要なら描画用に追加する
-    do {
-        // 参照してるラインと次のラインが同じ物体に当たっているなら角を追加する
+    do {// break用
+        // 参照してるラインと次のラインが違う物体に当たっている
         if (nowCheckHitLine.HitCollision != nextCheckHitLine.HitCollision)
         {
             // ×次のラインが何も当たっていないなら参照ラインが当たっている辺の次に近い方を追加する
             // 参照ラインが当たっている当たり判定の角が参照ラインと次のラインの間か調べる
             if (nextCheckHitLine.HitCollision == nullptr)
             {
-                std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision);
-                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nowCheckHitLine.HitCollision);
+                std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos);
+                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nowCheckHitLine.HitCollision, true);
                 break;
             }
             // 次のラインが当たっている当たり判定の角が参照ラインと次のラインの間か調べる
             else if (nowCheckHitLine.HitCollision == nullptr)
             {
-                std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nextCheckHitLine.HitCollision);
-                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nextCheckHitLine.HitCollision);
+                std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nextCheckHitLine.HitCollision, nextCheckHitLine.LineStartPos);
+                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nextCheckHitLine.HitCollision, false);
                 break;
             }
 
             // 当たっている辺同士が交差してるなら交差点を追加
-            {
-                std::vector<VECTOR2D> nowCollisionPositions = GetHitCollisionEdge(nowCheckHitLine);
-                std::vector<VECTOR2D> nextCollisionPositions = GetHitCollisionEdge(nextCheckHitLine);
+            bool IsAdd_AddDrawHitCollisionLine = false;
+            do {// break用
+                std::vector<VECTOR2D> nowCollisionPositions = GettingHitCollisionEdge(nowCheckHitLine);
+                std::vector<VECTOR2D> nextCollisionPositions = GettingHitCollisionEdge(nextCheckHitLine);
                 std::vector<VECTOR2D> intersectionPos;
 
                 if ((nowCollisionPositions.size() == 2) && (nextCollisionPositions.size() == 2))
@@ -1270,7 +1267,7 @@ int LightAreaManager::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_L
                     // 平行または同一直線上ならスキップ
                     if (fabsf(denominator) <= 0.0001f)
                     {
-                        continue;
+                        break;
                     }
 
                     const VECTOR2D diff = nextStart - nowStart;
@@ -1281,7 +1278,7 @@ int LightAreaManager::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_L
                     // 両方の線分の範囲内で交差しているか確認
                     if (nowEdgeIntersectionRatio < 0.0f || nowEdgeIntersectionRatio > 1.0f || startPositionDifference < 0.0f || startPositionDifference > 1.0f)
                     {
-                        continue;
+                        break;
                     }
 
                     intersectionPos.push_back(nowStart + nowEdgeDirection * nowEdgeIntersectionRatio);
@@ -1289,25 +1286,64 @@ int LightAreaManager::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_L
                     {
                         addDrawHitCollisionLine.push_back({nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos, intersectionPos[intersectionPosIndex]});
                     }
+                    IsAdd_AddDrawHitCollisionLine = true;
                 }
-            }
-
-            // 当たっている辺同士が交差してるなら交差点を追加
-            if (false)
+            } while (false);
+            if (IsAdd_AddDrawHitCollisionLine)
             {
-                std::vector<VECTOR2D> nowCollisionPositions = GetVertexPositions(nowCheckHitLine.HitCollision);
-                std::vector<VECTOR2D> nextCollisionPositions = GetVertexPositions(nextCheckHitLine.HitCollision);
-                VECTOR2D intersectionPos;
-                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, {intersectionPos}, nowCheckHitLine.HitCollision);
                 break;
             }
 
-            std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision);
-            AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nowCheckHitLine.HitCollision);
-            vertexPositions = GetVertexPositions(nextCheckHitLine.HitCollision);
-            AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nextCheckHitLine.HitCollision);
+            // 範囲内の角を追加
+            {
+                std::vector<HIT_COLLISION_LINE> setAddDrawHitCollisionLine;
+                std::vector<VECTOR2D> vertexPositions;
+
+                vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos);
+                setAddDrawHitCollisionLine.clear();
+                AddDrawLineToVertexBetweenLines(&setAddDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nowCheckHitLine.HitCollision, true);
+                if (0 < setAddDrawHitCollisionLine.size())
+                {
+                    HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[0];
+                    if (GettingExtendedLight(setAddDrawHitCollisionLine[setAddDrawHitCollisionLine.size() - 1], nextCheckHitLine, &setExtendedLight))
+                    {
+                        // 当たり判定 点
+                        Point2D tempPoint;
+                        tempPoint.SetShapeParameter(setExtendedLight.LineEndPos);
+                        // オブジェクトへの埋まり確認
+                        BaseCollision2D* nowHitCollision = dynamic_cast<BaseCollision2D*>(nowCheckHitLine.HitCollision);
+                        if ((nowHitCollision != nullptr) && !(0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, nowHitCollision).mnResultParam))
+                        {
+                            setAddDrawHitCollisionLine.push_back(setExtendedLight);
+                        }
+                    }
+                    addDrawHitCollisionLine.insert(addDrawHitCollisionLine.end(), setAddDrawHitCollisionLine.begin(), setAddDrawHitCollisionLine.end());
+                }
+
+                vertexPositions = GetVertexPositions(nextCheckHitLine.HitCollision, nextCheckHitLine.LineStartPos);
+                setAddDrawHitCollisionLine.clear();
+                AddDrawLineToVertexBetweenLines(&setAddDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nextCheckHitLine.HitCollision, false);
+                if (0 < setAddDrawHitCollisionLine.size())
+                {
+                    HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[0];
+                    if (GettingExtendedLight(setAddDrawHitCollisionLine[0], nowCheckHitLine, &setExtendedLight))
+                    {
+                        // 当たり判定 点
+                        Point2D tempPoint;
+                        tempPoint.SetShapeParameter(setExtendedLight.LineEndPos);
+                        // オブジェクトへの埋まり確認
+                        BaseCollision2D* nextHitCollision = dynamic_cast<BaseCollision2D*>(nextCheckHitLine.HitCollision);
+                        if ((nextHitCollision != nullptr) && !(0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, nextHitCollision).mnResultParam))
+                        {
+                            setAddDrawHitCollisionLine.insert(setAddDrawHitCollisionLine.begin(), setExtendedLight);
+                        }
+                    }
+                    addDrawHitCollisionLine.insert(addDrawHitCollisionLine.end(), setAddDrawHitCollisionLine.begin(), setAddDrawHitCollisionLine.end());
+                }
+            }
         }
         // nowCheckHitLine.HitCollision == nextCheckHitLine.HitCollision
+        // 参照してるラインと次のラインが同じ物体に当たっている
         else
         {
             if (nowCheckHitLine.HitCollision == nullptr)
@@ -1315,22 +1351,21 @@ int LightAreaManager::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_L
                 break;
             }
 
-            std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision);
-            AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nowCheckHitLine.HitCollision);
+            std::vector<VECTOR2D> vertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos);
+            AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempTriangle, vertexPositions, nowCheckHitLine.HitCollision, true);
         }
     } while (false);
 
     constexpr int INSERT_AFTER_REFERENCED_LINE_OFFSET = 1;
 
-    // INPROGRESS:_ 追加設定したラインを伸ばして描画
     // 追加されたラインを反映
     drawHitCollisionLine.insert(drawHitCollisionLine.begin() + lineIndex + drawHitCollisionLineIteratorPlusNumber + INSERT_AFTER_REFERENCED_LINE_OFFSET, addDrawHitCollisionLine.begin(), addDrawHitCollisionLine.end());
 
     return addDrawHitCollisionLine.size();
 }
 
-// 2本のラインの間にある角を取得する
-std::vector<VECTOR2D> LightAreaManager::GetVertexPositions(BaseCollision* collision)
+// 角を取得する
+std::vector<VECTOR2D> LightAreaManager::GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos)
 {
     std::vector<VECTOR2D> vertexPositions = {};
     switch (collision->GetCollisionType())
@@ -1364,11 +1399,65 @@ std::vector<VECTOR2D> LightAreaManager::GetVertexPositions(BaseCollision* collis
     }
     }
 
-    return vertexPositions;
+
+    // 頂点が2つ以下なら判定しない
+    if (vertexPositions.size() <= 2)
+    {
+        return vertexPositions;
+    }
+
+
+    std::vector<VECTOR2D> visibleVertexPositions = {};
+
+    // 全頂点を確認
+    for (int i = 0; i < vertexPositions.size(); ++i)
+    {
+        const VECTOR2D& vertexPos = vertexPositions[i];
+
+        bool isVisible = false;
+
+        // 全辺を確認
+        for (int j = 0; j < vertexPositions.size(); ++j)
+        {
+            // 辺の始点と終点
+            const VECTOR2D& edgeStart = vertexPositions[j];
+            const VECTOR2D& edgeEnd = vertexPositions[(j + 1) % vertexPositions.size()];
+
+            // 辺の方向ベクトル
+            const float edgeX = edgeEnd.GetX() - edgeStart.GetX();
+            const float edgeY = edgeEnd.GetY() - edgeStart.GetY();
+
+            // 辺の始点から視点へのベクトル
+            const float viewX = viewPos.GetX() - edgeStart.GetX();
+            const float viewY = viewPos.GetY() - edgeStart.GetY();
+
+            // 外積による可視判定
+            const float cross = edgeX * viewY - edgeY * viewX;
+
+            // 視点側を向いていない辺があれば除外
+            if (cross < 0.0f)
+            {
+                // 調べている頂点がこの辺の始点または終点なら除外
+                if (&vertexPos == &edgeStart || &vertexPos == &edgeEnd)
+                {
+                    isVisible = true;
+                    break;
+                }
+            }
+        }
+
+        // 見えている頂点だけ追加
+        if (isVisible)
+        {
+            visibleVertexPositions.push_back(vertexPos);
+        }
+    }
+
+    return visibleVertexPositions;
 }
 
 // 	2本のラインの間にある頂点まで描画用ラインを追加する
-bool LightAreaManager::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision)
+bool LightAreaManager::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet)
 {
     // 現在のラインの方向ベクトル
     const VECTOR2D lineVec = endPos - startPos;
@@ -1389,7 +1478,7 @@ bool LightAreaManager::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION
     std::sort(
         vertexPositions.begin(),
         vertexPositions.end(),
-        [&startPos, viewAngle](const VECTOR2D& a, const VECTOR2D& b)
+        [&startPos, viewAngle, isEqualAngleFrontSet](const VECTOR2D& a, const VECTOR2D& b)
         {
             // 開始地点から各頂点への角度
             const VECTOR2D vecA = a - startPos;
@@ -1397,6 +1486,24 @@ bool LightAreaManager::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION
 
             const float angleA = atan2f(vecA.GetY(), vecA.GetX()) - viewAngle;
             const float angleB = atan2f(vecB.GetY(), vecB.GetX()) - viewAngle;
+
+            constexpr float FLOAT_EPSILON = 0.00001f;
+            if (std::abs(angleA - angleB) < FLOAT_EPSILON)
+            {
+                // 各頂点までの距離の二乗
+                const float distanceA = vecA.GetX() * vecA.GetX() + vecA.GetY() * vecA.GetY();
+                const float distanceB = vecB.GetX() * vecB.GetX() + vecB.GetY() * vecB.GetY();
+
+                // trueなら近い順、falseなら遠い順
+                if (isEqualAngleFrontSet)
+                {
+                    return distanceA < distanceB;
+                }
+                else
+                {
+                    return distanceA > distanceB;
+                }
+            }
 
             return angleA < angleB;
         });
@@ -1418,13 +1525,13 @@ bool LightAreaManager::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION
 
 
 // 当たっている辺を求める
-std::vector<VECTOR2D> LightAreaManager::GetHitCollisionEdge(HIT_COLLISION_LINE hitCollisionLine)
+std::vector<VECTOR2D> LightAreaManager::GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine)
 {
     if (hitCollisionLine.HitCollision == nullptr)
     {
         return {};
     }
-    std::vector<VECTOR2D> hitCollisionPositions = GetVertexPositions(hitCollisionLine.HitCollision);
+    std::vector<VECTOR2D> hitCollisionPositions = GetVertexPositions(hitCollisionLine.HitCollision, hitCollisionLine.LineStartPos);
     std::vector<VECTOR2D> hitCollisionEdge;
 
     const VECTOR2D& hitPos = hitCollisionLine.LineEndPos;
@@ -1460,4 +1567,57 @@ std::vector<VECTOR2D> LightAreaManager::GetHitCollisionEdge(HIT_COLLISION_LINE h
     }
 
     return hitCollisionEdge;
+}
+
+// 延長した光を取得する
+bool LightAreaManager::GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight)
+{
+    std::vector<VECTOR2D> collisionEdge = GettingHitCollisionEdge(hitCollisionLine);
+
+    if (collisionEdge.size() != 2)
+    {
+        return false;
+    }
+    const VECTOR2D& lightStart = extendedLightLine.LineStartPos;
+    const VECTOR2D& lightEnd   = extendedLightLine.LineEndPos;
+
+    const VECTOR2D& edgeStart = collisionEdge[0];
+    const VECTOR2D& edgeEnd   = collisionEdge[1];
+
+    // 光の方向ベクトル
+    const float lightX = lightEnd.GetX() - lightStart.GetX();
+    const float lightY = lightEnd.GetY() - lightStart.GetY();
+
+    // 衝突辺の方向ベクトル
+    const float edgeX = edgeEnd.GetX() - edgeStart.GetX();
+    const float edgeY = edgeEnd.GetY() - edgeStart.GetY();
+
+    // 光と辺が平行な場合
+    const float denominator = lightX * edgeY - lightY * edgeX;
+
+    if (denominator == 0.0f)
+    {
+        return false;
+    }
+
+    // 光の始点から辺の始点までのベクトル
+    const float diffX = edgeStart.GetX() - lightStart.GetX();
+    const float diffY = edgeStart.GetY() - lightStart.GetY();
+
+    // 光の直線と辺の交点を求める
+    const float t = (diffX * edgeY - diffY * edgeX) / denominator;
+    const float u = (diffX * lightY - diffY * lightX) / denominator;
+
+
+
+    // // 光の前方かつ、衝突辺の範囲内に交点があるか確認
+    // if (t < 0.0f || u < 0.0f || u > 1.0f)
+    // {
+    //     return extendedLightLine;
+    // }
+
+    // 光の終点を交点に変更
+    setExtendedLight->LineEndPos.SetX(lightStart.GetX() + lightX * t);
+    setExtendedLight->LineEndPos.SetY(lightStart.GetY() + lightY * t);
+    return true;
 }
