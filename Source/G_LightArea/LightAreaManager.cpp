@@ -505,108 +505,6 @@ void LightAreaManager::Initilize()
     ScreenSizeChange();
 }
 
-// 奥行きを表現する2D描画テスト
-bool TestDrawImageOutward(float angle, VECTOR2D centerPos, VECTOR2D halfSize, VECTOR2D radius, float frontWidth, float backWidth, float leftDepth, float rightDepth, int frontHandle, int backHandle)
-{
-    angle = (angle / 180.0f /*ラジアン半周角度*/) * DX_PI_F;
-
-    // 画面上の回転中心
-    const float centerX = centerPos.GetX();
-    const float centerY = centerPos.GetY();
-
-    // 基本サイズ
-    const float halfWidth = halfSize.GetX();
-    const float halfHeight = halfSize.GetY();
-
-    // 円運動の位置
-    const float posX = sinf(angle);
-    const float posY = cosf(angle);
-
-    // 手前・奥の位置に応じた横方向の幅
-    const float frontWeight = (1.0f + posY) * 0.5f;
-    const float backWeight  = (1.0f - posY) * 0.5f;
-
-    const float radiusX = radius.GetX() + frontWidth * frontWeight + backWidth * backWeight;
-
-    // 左右の位置に応じた縦方向の幅
-    const float leftWeight  = (1.0f - posX) * 0.5f;
-    const float rightWeight = (1.0f + posX) * 0.5f;
-
-    const float radiusY = radius.GetY() + leftDepth * leftWeight + rightDepth * rightWeight;
-
-    // 描画位置
-    const float drawX = centerX + posX * radiusX;
-    const float drawY = centerY + posY * radiusY * 0.3f;
-
-    // 奥行きによる拡大縮小
-    const float scale = 1.0f + posY * 0.4f;
-
-    // Y軸回転の角度
-    const float rotateY = angle;
-
-    // 横幅の変化
-    const float rotateScaleX = fabsf(cosf(rotateY));
-
-    // 左右の辺の縦方向の伸縮率
-    const float sideScale = 0.1f * sinf(rotateY);
-
-    // 裏側なら左右の伸縮を反転
-    const float reverseSide =
-        (cosf(rotateY) < 0.0f) ? -1.0f : 1.0f;
-
-    const float leftScaleY =
-        1.0f + sideScale * reverseSide;
-
-    const float rightScaleY =
-        1.0f - sideScale * reverseSide;
-
-    // 四角形の左右の辺の高さ
-    const float leftHalfHeight =
-        halfHeight * scale * leftScaleY;
-
-    const float rightHalfHeight =
-        halfHeight * scale * rightScaleY;
-
-    // 四角形の左右の座標
-    const float leftX =
-        drawX - halfWidth * scale * rotateScaleX;
-
-    const float rightX =
-        drawX + halfWidth * scale * rotateScaleX;
-
-    // 四角形の頂点
-    const VECTOR2D vertex[] =
-    {
-        VECTOR2D(leftX,  drawY - leftHalfHeight),
-        VECTOR2D(rightX, drawY - rightHalfHeight),
-        VECTOR2D(rightX, drawY + rightHalfHeight),
-        VECTOR2D(leftX,  drawY + leftHalfHeight)
-    };
-
-    // 表裏に応じた画像を描画
-    DRAW_SYSTEM::DrawImage(
-        vertex[0],
-        vertex[1],
-        vertex[2],
-        vertex[3],
-        (cosf(angle) < 0.0f) ? backHandle : frontHandle,
-        TRUE
-    );
-
-#ifdef _DEBUG
-    // 回転中心
-    DRAW_SYSTEM::DrawCircle(
-        VECTOR2D(centerX, centerY),
-        4,
-        GetColor(255, 0, 0),
-        TRUE
-    );
-#endif
-
-    // 裏表判定
-    return cosf(angle) < 0.0f;
-}
-
 // 描画
 void LightAreaManager::Draw()
 {
@@ -674,8 +572,6 @@ void LightAreaManager::Draw()
             IMGUI_TYPE::SLIDER1
         )
     );
-
-    TestDrawImageOutward(DrawSelectNumber4_Float, VECTOR2D(1280 * 0.5f, 960 * 0.5f), VECTOR2D(100, 100), VECTOR2D(200, 500), 1000, 0, 0, 0, mnLightAreaGraphHandle, -1);
 
     // ライト描画処理
     { 
