@@ -18,13 +18,7 @@ public:
     int Draw();
     void DeleteAll();
 
-    // 画面サイズ変更時画像再読み込み
-    void ReLoad();
-
     //int GetotaResource() { return resourceMapList.size() + graphicResourceMapList.size(); }
-
-    // ハンドルを取得
-    int GetGraphicsHandle(int handle);
 
 public:
     // リソースファイルの名前
@@ -33,7 +27,4 @@ public:
 private:
     vector<pair<string, int>>resourceMapList;
     vector<pair<string, int>>graphicResourceMapList;
-
-    // 互換性用intハンドル
-    map<int, int> mmCompatibilityHandle;
 };

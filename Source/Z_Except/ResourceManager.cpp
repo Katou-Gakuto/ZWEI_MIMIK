@@ -6,7 +6,6 @@
 string ResourceManager::msResourceFile = "Resource/";
 
 ResourceManager::ResourceManager()
-: mmCompatibilityHandle()
 {
 }
 ResourceManager::~ResourceManager()
@@ -76,21 +75,4 @@ int ResourceManager::Draw()
 void ResourceManager::DeleteAll()
 {
    // graphicResourceMapList.clear();
-}
-
-
-// 画面サイズ変更時画像再読み込み
-void ResourceManager::ReLoad()
-{
-    for (auto& handleMapList : resourceMapList)
-    {
-        int newHandle = LoadGraph(handleMapList.first.c_str());
-        handleMapList.second = newHandle;
-    }
-    
-    for (auto& handleMapList : graphicResourceMapList)
-    {
-        int newHandle = LoadGraph(handleMapList.first.c_str());
-        handleMapList.second = newHandle;
-    }
 }

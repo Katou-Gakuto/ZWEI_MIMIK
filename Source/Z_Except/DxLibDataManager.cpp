@@ -10,7 +10,6 @@
 #include "KeyState.h"
 #include "TimeManager.h"
 #include "DrawSystem.h"
-#include "ResourceManager.h"
 
 #ifdef _DEBUG
 #include "ImguiManager.h""
@@ -20,6 +19,7 @@ LRESULT WINAPI DxLibDataManagerWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 
 DxLibDataManager::DxLibDataManager()
 : mstDisplaySize()
+, msWorldSize()
 , mbIsInitialized(false)
 {
 }
@@ -38,20 +38,9 @@ void DxLibDataManager::DxInitPreInitialize()
     int screenW, screenH;
     GetScreenState(&screenW, &screenH, NULL); // 現在の画面の大きさとカラービット数を得る
     mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
-
-    // 
-    VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = {
-        mstDisplaySize,         // ワールド座標
-        mstDisplaySize,         // ディスプレイ座標
-        mstDisplaySize * 0.0f   // 左上からのずれ
-    };
-
-    DRAW_SYSTEM::SetStazeSize(setStageSize);
-
-    if (Master::mpLightManager != nullptr)
-    {
-        Master::mpLightManager->ScreenSizeChange();
-    }
+    msWorldSize = mstDisplaySize;
+    // 描画情報設定
+    SettingDrawSizeData();
 }
 
 // 初期化
@@ -69,14 +58,29 @@ void DxLibDataManager::Finalize()
 // 新しく描画するディスプレイのサイズを設定
 void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windowmode)
 {
-
     //ChangeWindowMode(windowmode); // ウィンドウモードで描画するか
     Master::Window_SizeX = newDisplaySize.GetX();
     Master::Window_SizeY = newDisplaySize.GetY();
     float Win_Size_Rat = Master::Window_SizeY / static_cast<float>(1080);
-    SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
-    Master::mpResourceManager->ReLoad();
+    //SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
+    SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
     mstDisplaySize = newDisplaySize;
+
+    // 描画情報設定
+    SettingDrawSizeData();
+}
+
+// 描画サイズ情報設定
+void DxLibDataManager::SettingDrawSizeData()
+{
+    // 
+    VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = {
+        mstDisplaySize,         // ワールド座標
+        mstDisplaySize,         // ディスプレイ座標
+        mstDisplaySize * 0.0f   // 左上からのずれ
+    };
+
+    DRAW_SYSTEM::SetStazeSize(setStageSize);
 
     if (Master::mpLightManager != nullptr)
     {

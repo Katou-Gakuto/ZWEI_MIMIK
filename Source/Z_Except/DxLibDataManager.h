@@ -11,6 +11,9 @@ private:
 	// 描画画面サイズ
 	VECTOR2D mstDisplaySize;
 
+	// 世界サイズ
+	VECTOR2D msWorldSize;
+
 	// 初期化フラグ
 	bool mbIsInitialized;
 public:
@@ -43,4 +46,8 @@ public:
 	/// <summary>初期化済みフラグ</summary>
 	/// <returns>初期化しているなら「true」を返す</returns>
 	inline bool GetInitializedFlag() const { return mbIsInitialized; }
+
+private:
+	// 描画サイズ情報設定
+	void SettingDrawSizeData();
 };
