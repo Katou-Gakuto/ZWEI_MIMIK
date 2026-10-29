@@ -38,7 +38,7 @@ void DxLibDataManager::DxInitPreInitialize()
     int screenW, screenH;
     GetScreenState(&screenW, &screenH, NULL); // 現在の画面の大きさとカラービット数を得る
     mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
-    msWorldSize = mstDisplaySize;
+    msWorldSize = VECTOR2D(1280, 960);
     // 描画情報設定
     SettingDrawSizeData();
 }
@@ -66,8 +66,11 @@ void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windo
     SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
     mstDisplaySize = newDisplaySize;
 
-    // 描画情報設定
-    SettingDrawSizeData();
+
+    if (Master::mpLightManager != nullptr)
+    {
+        Master::mpLightManager->ScreenSizeChange();
+    }
 }
 
 // 描画サイズ情報設定

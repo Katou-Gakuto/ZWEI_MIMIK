@@ -301,7 +301,7 @@ int OptionScene::UpdateModeSelect()
         case OptionSelectMode::OptionSelectMode_Exit:
             if (sceneMove)
             {
-                // 
+                // ‚±‚±‚ðBaseSceneManager‚ÌSearchSceneOld‚Å‘O‚ÌƒV[ƒ“‚É–ß‚é‚æ‚¤‚É‚·‚é
                 Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
 
                 // 
