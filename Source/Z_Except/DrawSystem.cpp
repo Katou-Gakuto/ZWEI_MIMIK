@@ -13,8 +13,8 @@ void DRAW_SYSTEM::SetStazeSize(VECTOR2D* stageSize)
     {
         StageSize[stageSizeIndex] = stageSize[stageSizeIndex];
     }
-    ScaleFactor = VECTOR2D(StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetX() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_WORLD_SIZE].GetX(),
-                           StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetY() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_WORLD_SIZE].GetY());
+    ScaleFactor = VECTOR2D(StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_WORLD_SIZE].GetX() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetX(),
+                           StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_WORLD_SIZE].GetY() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetY());
 
 }
 

@@ -19,7 +19,7 @@ LRESULT WINAPI DxLibDataManagerWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 
 DxLibDataManager::DxLibDataManager()
 : mstDisplaySize()
-, msWorldSize()
+, msWorldSize(VECTOR2D(1920, 1080))
 , mbIsInitialized(false)
 {
 }
@@ -38,7 +38,6 @@ void DxLibDataManager::DxInitPreInitialize()
     int screenW, screenH;
     GetScreenState(&screenW, &screenH, NULL); // 現在の画面の大きさとカラービット数を得る
     mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
-    msWorldSize = VECTOR2D(1280, 960);
     // 描画情報設定
     SettingDrawSizeData();
 }
@@ -66,11 +65,8 @@ void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windo
     SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
     mstDisplaySize = newDisplaySize;
 
-
-    if (Master::mpLightManager != nullptr)
-    {
-        Master::mpLightManager->ScreenSizeChange();
-    }
+    // 描画情報設定
+    SettingDrawSizeData();
 }
 
 // 描画サイズ情報設定
@@ -79,7 +75,7 @@ void DxLibDataManager::SettingDrawSizeData()
     // 
     VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = {
         mstDisplaySize,         // ワールド座標
-        mstDisplaySize,         // ディスプレイ座標
+        msWorldSize,         // ディスプレイ座標
         mstDisplaySize * 0.0f   // 左上からのずれ
     };
 
