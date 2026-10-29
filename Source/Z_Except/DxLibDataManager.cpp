@@ -10,6 +10,7 @@
 #include "KeyState.h"
 #include "TimeManager.h"
 #include "DrawSystem.h"
+#include "ResourceManager.h"
 
 #ifdef _DEBUG
 #include "ImguiManager.h""
@@ -46,6 +47,11 @@ void DxLibDataManager::DxInitPreInitialize()
     };
 
     DRAW_SYSTEM::SetStazeSize(setStageSize);
+
+    if (Master::mpLightManager != nullptr)
+    {
+        Master::mpLightManager->ScreenSizeChange();
+    }
 }
 
 // 初期化
@@ -68,10 +74,14 @@ void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windo
     Master::Window_SizeX = newDisplaySize.GetX();
     Master::Window_SizeY = newDisplaySize.GetY();
     float Win_Size_Rat = Master::Window_SizeY / static_cast<float>(1080);
-    //SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
-    SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
-    SetDrawArea(0, 0, newDisplaySize.GetX(), newDisplaySize.GetY()); // 描画可能領域のセット
+    SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
+    Master::mpResourceManager->ReLoad();
     mstDisplaySize = newDisplaySize;
+
+    if (Master::mpLightManager != nullptr)
+    {
+        Master::mpLightManager->ScreenSizeChange();
+    }
 }
 
 // 別アプリ移動

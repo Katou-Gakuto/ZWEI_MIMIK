@@ -5,6 +5,7 @@
 
 #include "DxLib.h"
 
+
 namespace DRAW_SYSTEM
 {
     enum STAGE_SIZE_TYPE

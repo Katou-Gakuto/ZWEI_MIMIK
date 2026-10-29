@@ -62,6 +62,8 @@ int TitleScene::Initialize()
 	// ƒJ[ƒ\ƒ‹‚ðˆê”Ôã‚ÉÝ’è‚·‚é
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
+    Master::mpSoundManager->PlayBGM("Resource/Sound/‹ó.wav");
+
     // 
     return 0;
 }

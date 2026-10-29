@@ -6,6 +6,7 @@
 string ResourceManager::msResourceFile = "Resource/";
 
 ResourceManager::ResourceManager()
+: mmCompatibilityHandle()
 {
 }
 ResourceManager::~ResourceManager()
@@ -21,6 +22,7 @@ int ResourceManager::LoadMadel(string pathName)
         //すでに読み込まれたデータか確認
         if (resourceMapList.at(i).first == pathName)
         {
+            // QUESTION:_ これ3Dモデル用じゃね
             //読み込まれたデータを複製する
             return MV1DuplicateModel(resourceMapList.at(i).second);
         }
@@ -77,3 +79,18 @@ void ResourceManager::DeleteAll()
 }
 
 
+// 画面サイズ変更時画像再読み込み
+void ResourceManager::ReLoad()
+{
+    for (auto& handleMapList : resourceMapList)
+    {
+        int newHandle = LoadGraph(handleMapList.first.c_str());
+        handleMapList.second = newHandle;
+    }
+    
+    for (auto& handleMapList : graphicResourceMapList)
+    {
+        int newHandle = LoadGraph(handleMapList.first.c_str());
+        handleMapList.second = newHandle;
+    }
+}
