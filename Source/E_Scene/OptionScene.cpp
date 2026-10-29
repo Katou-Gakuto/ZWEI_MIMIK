@@ -562,7 +562,7 @@ int OptionScene::Draw()
         message += "TITLE";
 
         // •¶Žš—ñ‚ð•`‰æ‚·‚é
-        RAW_SYSTEM::DrawString(
+        DRAW_SYSTEM::DrawString(
             VECTOR2D(400, 600),
             message.c_str(),
             GetColor(255, 255, 255));
