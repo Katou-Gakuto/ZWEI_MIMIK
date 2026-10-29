@@ -826,6 +826,24 @@
     <Image Include="Resource\invader.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="Resource\kari1.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari2.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari3.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari4.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari5.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari6.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resource\Sound\入店音.mp3">

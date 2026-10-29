@@ -39,6 +39,15 @@ int TitleScene::Create()
     newElement.mnMoveVec = +1;
     this->mdMoveData.Add(newElement);
 
+
+    // タイトルの一番最初のやつを描画するフェーズに設定する
+    this->mbLogoPhase = true;
+
+    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
+    Master::mpSoundManager->SetBGMVolume(180);
+    Master::mpSoundManager->SetSEVolume(180);
+    Master::mpSoundManager->ChangeVolume();
+
     // 
     return 0;
 }
@@ -46,16 +55,10 @@ int TitleScene::Create()
 // 
 int TitleScene::Initialize()
 {
-	// タイトルの一番最初のやつを描画するフェーズに設定する
-    //this->mbLogoPhase = true;
 
 	// カーソルを一番上に設定する
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
-    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
-	Master::mpSoundManager->SetBGMVolume(180);
-	Master::mpSoundManager->SetSEVolume(180);
-	Master::mpSoundManager->ChangeVolume();
 	Master::mpSoundManager->PlayBGM("Resource/Sound/空.wav");
     return 0;
 }
@@ -98,7 +101,7 @@ int TitleScene::Draw()
     {
         // タイトルの一番最初のやつを描画する
         DxLib::DrawString(
-            600,
+            900,
             400,
             "   ZWEI MIMIK   \n"
             "                \n"
@@ -106,7 +109,7 @@ int TitleScene::Draw()
             GetColor(255, 255, 255));
 
         // タイトルロゴを描画
-        DrawExtendGraph(300, 100,950,200, TitleLogo, true);
+        DrawExtendGraph(700, 200,1250,300, TitleLogo, true);
     }
     else
     {

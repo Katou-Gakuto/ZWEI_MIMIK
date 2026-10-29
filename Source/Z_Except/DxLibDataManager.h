@@ -27,7 +27,7 @@ public:
 	void Finalize();
 
 	// 新しく描画するディスプレイのサイズを設定
-	void SettingNewDisplaySize(VECTOR2D newDisplaySize);
+	void SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windowmode);
 
 	// ディスプレイのサイズ取得
 	inline VECTOR2D GetDisplaySize() const { return mstDisplaySize; }

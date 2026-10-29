@@ -6,6 +6,7 @@
 
 #include "../H_Katou/Singleton/KeyState.h"
 
+#include "../Z_Except/DxLibDataManager.h"
 #include "../Z_Except/SoundManager.h"
 #include "../Z_Except/Master.h"
 
@@ -46,6 +47,12 @@ int OptionScene::Create()
     newElement.mnMoveVec = +2;
     this->mdMoveData.Add(newElement);
 
+    FullScreen = true;
+    ColorVisionSupport = false;
+
+    mnVolumeBGM = 80;
+    mnVolumeSE = 80;
+
     return 0;
 }
 
@@ -58,8 +65,6 @@ int OptionScene::Initialize()
     mbFullScreen = false;
     mbColorVisionSupport = false;
 
-    mnVolumeBGM = 80;
-    mnVolumeSE = 80;
 
     return 0;
 }
@@ -178,9 +183,24 @@ int OptionScene::UpdateModeSelect()
         if (currentRight || currentLeft)
             FullScreen = !FullScreen;
 
+            VECTOR2D DispSize;
+        if(FullScreen)
+        {
+            DispSize.SetX(1920);
+            DispSize.SetY(1080);
+        }
+        else
+        {
+            DispSize.SetX(1280);
+            DispSize.SetY(720);
+        }
+
         // A‚ð‰Ÿ‚µ‚½‚ç•ÏX‚ðI—¹‚·‚é
         if (sceneMove)
+        {
             mbFullScreen = false;
+            Master::mpDxLibDataManager->SettingNewDisplaySize(DispSize, !FullScreen);
+        }
     }
     else if (mbColorVisionSupport)
     {

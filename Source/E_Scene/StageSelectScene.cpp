@@ -7,13 +7,17 @@
 #include "../E_Scene/BaseSceneManager.h"
 #include "../E_Scene/BasePuzzleScene.h"
 #include "../H_Katou/Singleton/KeyState.h"
+
+#include "../Z_Except/ResourceManager.h"
 #include "../Z_Except/Master.h"
 
 // 
 StageSelectScene::StageSelectScene() :
     mnCurrentStage(0),
-    mnUnlockStageCount(100),
+    mnUnlockStageCount(StageMax),
     mdMoveData(),
+    StageNum(0),
+    MoveDirection(0),
     BaseScene(SceneTag::ST_StageSelect)
 {
 }
@@ -39,6 +43,28 @@ int StageSelectScene::Create()
     element.mnMoveVec = +1;
     this->mdMoveData.Add(element);
 
+    CubeHandle[0 ] = Master::mpResourceManager->LoadGraphics("Resource/kari1.png");
+    CubeHandle[1 ] = Master::mpResourceManager->LoadGraphics("Resource/kari2.png");
+    CubeHandle[2 ] = Master::mpResourceManager->LoadGraphics("Resource/kari3.png");
+    CubeHandle[3 ] = Master::mpResourceManager->LoadGraphics("Resource/kari4.png");
+    CubeHandle[4 ] = Master::mpResourceManager->LoadGraphics("Resource/kari5.png");
+    CubeHandle[5 ] = Master::mpResourceManager->LoadGraphics("Resource/kari6.png");
+    /*CubeHandle[6 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[7 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[8 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[9 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[10] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[11] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[12] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[13] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[14] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[15] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[16] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[17] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[18] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[19] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");*/
+
+
     // 
     return 0;
 }
@@ -47,6 +73,51 @@ int StageSelectScene::Create()
 int StageSelectScene::Initialize()
 {
     // 
+    mnCurrentStage = 0;
+    for (StageNum = 0; StageNum < StageMax; StageNum++)
+    {
+        /*switch (StageNum)
+        {
+        case 0:
+            CubeSize[StageNum] = 150;
+            CubeX[StageNum] = 0;
+            CubeY[StageNum] = 150;
+            break;
+
+        case 1:
+            CubeSize[StageNum] = 100;
+            CubeX[StageNum] = 300;
+            CubeY[StageNum] = 0;
+            break;
+
+        case 2:
+            CubeSize[StageNum] = 50;
+            CubeX[StageNum] = 0;
+            CubeY[StageNum] = -150;
+            break;
+
+        case 3:
+            CubeSize[StageNum] = 100;
+            CubeX[StageNum] = -300;
+            CubeY[StageNum] = 0;
+            break;
+        }*/
+
+        if (StageNum < StageMax / 2)
+        {
+            CubeSize[StageNum] = 150;// -(70 * StageNum);
+            CubeX[StageNum] = (600 * StageNum);
+            CubeY[StageNum] = 300;
+        }
+        else
+        {
+            CubeSize[StageNum] = 150;// +(-70 * (StageMax / 2) + (70 * (StageNum - StageMax / 2)));
+            CubeX[StageNum] = -600 * (StageMax / 2) + (600 * (StageNum - StageMax / 2));
+            CubeY[StageNum] = 300;
+        }
+
+        CubeStage[StageNum] = StageNum;
+    }
     return 0;
 }
 
@@ -100,14 +171,18 @@ int StageSelectScene::Update()
     // 
     bool push = false;
 
+
+    ChangeFlag = false;
+
     // 
     int stageMove = 0;
 
     // 
     Master::mpCursorMoveSupporter->Move(this->mdMoveData, stageMove);
 
+
     // 
-    if (stageMove != 0)
+    if (stageMove != 0 && MoveCount == 0)
     {
         // 
         this->mnCurrentStage += this->mnUnlockStageCount;
@@ -117,6 +192,9 @@ int StageSelectScene::Update()
 
         // 
         this->mnCurrentStage %= this->mnUnlockStageCount;
+
+		ChangeFlag = true;
+        MoveDirection = stageMove;
     }
 
     // 
@@ -162,6 +240,80 @@ int StageSelectScene::Draw()
         150 * 3,
         message.c_str(),
         GetColor(255, 255, 255));
+
+
+    if(ChangeFlag)
+    {
+        for (StageNum = 0; StageNum < StageMax; StageNum++)
+        {
+            CubeStage[StageNum] += MoveDirection;
+            // ’´‚¦‚½‚ç–ß‚·
+            if (CubeStage[StageNum] > StageMax - 1)
+            {
+                CubeStage[StageNum] -= StageMax;
+            }
+            else if (CubeStage[StageNum] < 0)
+            {
+                CubeStage[StageNum] += StageMax;
+            }
+
+        }
+        MoveCount = 10;
+    }
+
+    if (MoveCount > 0)
+    {
+        MoveCount--;
+
+        for (StageNum = 0; StageNum < StageMax; StageNum++)
+        {
+            if (MoveDirection == 1)// i‚ß‚é
+            {
+                if (CubeStage[(StageMax / 2) - 1] == StageNum)
+                {
+                    CubeX[StageNum] = 600 * ((StageMax / 2) - 1);
+                }
+                else
+                {
+                    //CubeSize[StageNum] += 7;
+                    CubeX[StageNum] -= 60;
+                }
+            } 
+
+            if (MoveDirection == -1)// –ß‚·
+            {
+                if (CubeStage[StageMax / 2] == StageNum)
+                {
+                    CubeX[StageNum] = -600 * (StageMax / 2);
+                }
+                else
+                {
+                    //CubeSize[StageNum] -= 7;
+                    CubeX[StageNum] += 60;
+
+                }
+            }
+        }
+
+    }
+
+    DrawTriangle(960, -100, 660, 880, 1260, 880, 0xFFF2CC, true);
+
+    for (StageNum = 0; StageNum < StageMax; StageNum++)
+    {
+        DxLib::DrawExtendGraph(
+            960 + CubeX[StageNum] - CubeSize[StageNum],
+            300 + CubeY[StageNum] - CubeSize[StageNum],
+            960 + CubeX[StageNum] + CubeSize[StageNum],
+            300 + CubeY[StageNum] + CubeSize[StageNum],
+            CubeHandle[StageNum],
+            true);
+    }
+
+    
+
+
+
 
     // 
     return 0;

@@ -70,7 +70,10 @@ int Master::DxInitPreInitialize()
     ChangeWindowMode(true);
 
     // 画面サイズ
-    SetGraphMode(1280, 960, 32);
+    SetGraphMode(Master::Window_SizeX, Master::Window_SizeY, 32);
+    SetWindowSizeChangeEnableFlag(FALSE, TRUE); //ウィンドウの端をつかんでサイズ変更可能にするかどうか
+    SetMainWindowText("ZWEI MIMK");            //ウィンドウのタイトルを設定
+
 
     mpDxLibDataManager = new DxLibDataManager();
     mpDxLibDataManager->DxInitPreInitialize();

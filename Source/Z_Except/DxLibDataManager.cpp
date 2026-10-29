@@ -34,7 +34,7 @@ void DxLibDataManager::DxInitPreInitialize()
     DxLib::SetAlwaysRunFlag(FALSE);
 
     int screenW, screenH;
-    GetScreenState(&screenW, &screenH, NULL);
+    GetScreenState(&screenW, &screenH, NULL); // 現在の画面の大きさとカラービット数を得る
     mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
 }
 
@@ -51,9 +51,16 @@ void DxLibDataManager::Finalize()
 }
 
 // 新しく描画するディスプレイのサイズを設定
-void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize)
+void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windowmode)
 {
-    SetDrawArea(0, 0, newDisplaySize.GetX(), newDisplaySize.GetY());
+
+    //ChangeWindowMode(windowmode); // ウィンドウモードで描画するか
+    Master::Window_SizeX = newDisplaySize.GetX();
+    Master::Window_SizeY = newDisplaySize.GetY();
+    float Win_Size_Rat = Master::Window_SizeY / static_cast<float>(1080);
+    //SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
+    SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
+    SetDrawArea(0, 0, newDisplaySize.GetX(), newDisplaySize.GetY()); // 描画可能領域のセット
     mstDisplaySize = newDisplaySize;
 }
 
