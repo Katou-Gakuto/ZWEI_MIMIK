@@ -34,6 +34,8 @@
 */
 
 int Master::PlayerSizeXY = 120;
+float Master::Window_SizeX = 1920;
+float Master::Window_SizeY = 1080;
 
 
 /// <summary>
@@ -87,6 +89,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// log.txtを生成しない
 	SetOutApplicationLogValidFlag(FALSE);
 #endif
+	
+
+	// フォント等の設定
+	SetFontSize(22);                  //フォントの大きさ
+	SetFontThickness(3);              //フォントの太さ
+	ChangeFont("HGS創英ﾌﾟﾚｾﾞﾝｽEB");   //フォントの種類
+	ChangeFontType(DX_FONTTYPE_EDGE); //フォントの種類(縁取り)
+
 
 	// フォント等の設定
 	SetFontSize(22);                  //フォントの大きさ

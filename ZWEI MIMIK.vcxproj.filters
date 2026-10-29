@@ -62,6 +62,9 @@
     <Filter Include="Source\H_Katou\DebugLogs\imgui\backends">
       <UniqueIdentifier>{9559afa6-8194-4fdd-85af-321186ee14f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Sound">
+      <UniqueIdentifier>{521fae31-8db9-472c-bf3a-390be9ed37b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\A_GameObject\GameObject.cpp">
@@ -399,6 +402,12 @@
     </ClCompile>
     <ClCompile Include="Source\T_Model\DXModelRotaObj.cpp">
       <Filter>Source\T_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Z_Except\SoundManager.cpp">
+      <Filter>Source\Z_Except</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\CreditScene.cpp">
+      <Filter>Source\E_Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Y_Tool\MyEasing.cpp">
       <Filter>Source\Y_Tool</Filter>
@@ -789,6 +798,12 @@
     <ClInclude Include="Source\T_Model\DXModelRotaObj.h">
       <Filter>Source\T_Model</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Z_Except\SoundManager.h">
+      <Filter>Source\Z_Except</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Scene\CreditScene.h">
+      <Filter>Source\E_Scene</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Y_Tool\MyEasing.h">
       <Filter>Source\Y_Tool</Filter>
     </ClInclude>
@@ -832,5 +847,31 @@
     <Image Include="Resource\invader.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="Resource\kari1.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari2.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari3.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari4.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari5.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resource\kari6.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resource\Sound\入店音.mp3">
+      <Filter>リソース ファイル\Sound</Filter>
+    </Media>
+    <Media Include="Resource\Sound\空.wav">
+      <Filter>リソース ファイル\Sound</Filter>
+    </Media>
   </ItemGroup>
 </Project>

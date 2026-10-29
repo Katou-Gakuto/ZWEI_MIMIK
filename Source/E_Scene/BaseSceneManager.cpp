@@ -3,6 +3,7 @@
 #include "BaseScene.h"
 #include "TitleScene.h"
 #include "OptionScene.h"
+#include "CreditScene.h"
 #include "StageSelectScene.h"
 #include "PuzzleScene1.h"
 #include "TestScene.h"
@@ -71,6 +72,7 @@ int BaseSceneManager::Create()
         this->mpSceneBox[SceneTag::ST_Title] = new TitleScene();
         this->mpSceneBox[SceneTag::ST_StageSelect] = new StageSelectScene();
         this->mpSceneBox[SceneTag::ST_Option] = new OptionScene();
+        this->mpSceneBox[SceneTag::ST_Credit] = new CreditScene();
 
         this->mpSceneBox[SceneTag::ST_Puzzle1_1] = new PuzzleScene1_1();
         this->mpSceneBox[SceneTag::ST_Puzzle1_2] = new PuzzleScene1_2();

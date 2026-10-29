@@ -7,6 +7,7 @@
 #include "../H_Katou/Singleton/KeyState.h"
 
 #include "../Z_Except/ResourceManager.h"
+#include "../Z_Except/SoundManager.h"
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 
@@ -39,6 +40,15 @@ int TitleScene::Create()
     newElement.mnMoveVec = +1;
     this->mdMoveData.Add(newElement);
 
+
+    // タイトルの一番最初のやつを描画するフェーズに設定する
+    this->mbLogoPhase = true;
+
+    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
+    Master::mpSoundManager->SetBGMVolume(180);
+    Master::mpSoundManager->SetSEVolume(180);
+    Master::mpSoundManager->ChangeVolume();
+
     // 
     return 0;
 }
@@ -46,14 +56,13 @@ int TitleScene::Create()
 // 
 int TitleScene::Initialize()
 {
-	// タイトルの一番最初のやつを描画するフェーズに設定する
+    // 
     this->mbLogoPhase = true;
 
 	// カーソルを一番上に設定する
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
-    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
-
+    // 
     return 0;
 }
 
@@ -94,14 +103,14 @@ int TitleScene::Draw()
     {
         // タイトルの一番最初のやつを描画する
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(600, 400),
+            VECTOR2D(900, 400),
             "   ZWEI MIMIK   \n"
             "                \n"
             "PRESS ANY BUTTON",
             GetColor(255, 255, 255));
 
         // タイトルロゴを描画
-        DrawExtendGraph(300, 100,950,200, TitleLogo, true);
+        DrawExtendGraph(700, 200,1250,300, TitleLogo, true);
     }
     else
     {
@@ -145,8 +154,31 @@ int TitleScene::Draw()
         message += "OPTION";
 
         // 文字列を描画する
-        DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 400),
+        DxLib::DrawString(
+            400,
+            400,
+            message.c_str(),
+            GetColor(255, 255, 255));
+
+        // 現在CREDITを指している場合と層でない場合で処理を変える
+        if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_Credit)
+        {
+            // 右矢印を設定する
+            message = "⇒";
+        }
+        else
+        {
+            // 矢印分の空白を設定する
+            message = "　";
+        }
+
+        // 
+        message += "CREDIT";
+
+        // 文字列を描画する
+        DxLib::DrawString(
+            400,
+            600,
             message.c_str(),
             GetColor(255, 255, 255));
 
@@ -167,7 +199,7 @@ int TitleScene::Draw()
 
         // 文字列を描画する
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 600),
+            VECTOR2D(400, 800),
             message.c_str(),
             GetColor(255, 255, 255));
     }
@@ -213,8 +245,14 @@ int TitleScene::UpdateModeSelect()
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1);
 
-        // Bが押されたら最初の画面に戻る
-        if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, 0))
+		// キャンセルボタンが押されているか
+		bool Back = 
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0) ||
+			Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1);
+
+
+        // Bが押されたらロゴの画面に戻る
+        if (Back)
         {
             // 
             this->mbLogoPhase = true;
@@ -246,14 +284,12 @@ int TitleScene::UpdateModeSelect()
                 }
             }
             break;
+
         case TitleSelectMode::TitleSelectMode_Option:
             if (sceneMove)
             {
                 // 
                 Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
-
-                // 
-                Master::mpBaseSceneManager->SetResreveScene(SceneTag::ST_Title);
             }
             else
             {
@@ -265,10 +301,32 @@ int TitleScene::UpdateModeSelect()
                 if (currentDown)
                 {
                     // 
-                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Exit;
+                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Credit;
                 }
             }
             break;
+
+		case TitleSelectMode::TitleSelectMode_Credit:
+			if (sceneMove)
+			{
+				// 
+				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit);
+			}
+			else
+			{
+				if (currentUp)
+				{
+					// 
+					this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Option;
+				}
+				if (currentDown)
+				{
+					// 
+					this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Exit;
+				}
+			}
+			break;
+
         case TitleSelectMode::TitleSelectMode_Exit:
             if (sceneMove)
             {
@@ -283,7 +341,7 @@ int TitleScene::UpdateModeSelect()
                 if (currentUp)
                 {
                     // 
-                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Option;
+                    this->mnCurrentMode = TitleSelectMode::TitleSelectMode_Credit;
                 }
                 if (currentDown)
                 {

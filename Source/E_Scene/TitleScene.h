@@ -10,6 +10,7 @@ enum TitleSelectMode
     TitleSelectMode_ModeSelect = 0,     // モード選択
     TitleSelectMode_StageSelect,        // ステージ選択に移る
     TitleSelectMode_Option,             // 設定(音量とか)に移る
+	TitleSelectMode_Credit,             // クレジット画面に移る
     TitleSelectMode_Exit,               // ゲーム終了
 
     TitleSelectMode_Max,
@@ -49,7 +50,7 @@ private:
     // カーソルで選択しているモード
     TitleSelectMode mnCurrentMode;
 
-    // 
+	// 上下入力のためのデータ
     CursorMoveData mdMoveData;
 
 	// タイトルロゴの画像ハンドル

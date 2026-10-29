@@ -69,7 +69,7 @@ int DXAnimModel::Finalize()
 }
 
 // 色々設定(画像パス アニメーションの枚数 ページをめくるまでのフレーム数 1枚目の右下のUV値 アニメーションの番号)
-int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright, int animnum)
+int DXAnimModel::SetAnimModel(std::string pathName, int maxPage, int maxPageFrame, float uvright, float uvdown, int animnum)
 {
 	// モデルの読み込み
 	int modelHandle = Master::mpResourceManager->LoadGraphics(pathName);

@@ -48,6 +48,7 @@ public:
     void ChangeScene(SceneTag nextSceneTag) { this->mnChangeScene = nextSceneTag; }
     void ChangeSceneMySelf() { this->mnChangeScene = this->mnResreveScene; }
     void SetResreveScene(SceneTag tag) { this->mnResreveScene = tag; }
+	bool CheckNowScene(SceneTag thisScene) { return mnSceneNow == thisScene; } // 指定したシーンが現在のシーンか確認する
 
     void *GetCSD(CSDN number);
 };

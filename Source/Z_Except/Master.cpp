@@ -18,6 +18,7 @@
 #include "../T_Model/DXModelAnim.h"
 #include "../Z_Except/CursorMoveSupporter.h"
 #include "../Z_Except/ResourceManager.h"
+#include "../Z_Except/SoundManager.h"
 
 #include "DrawSystem.h"
 
@@ -28,6 +29,8 @@ BaseSceneManager *Master::mpBaseSceneManager = nullptr;
 EndManager* Master::mpEndManager = nullptr;
 TimeManager* Master::mpTimeManager = nullptr;
 ResourceManager *Master::mpResourceManager = nullptr;
+SoundManager *Master::mpSoundManager = nullptr;
+
 KeyState* Master::mpKeyState = nullptr;
 DxLibDataManager* Master::mpDxLibDataManager = nullptr;
 
@@ -68,7 +71,10 @@ int Master::DxInitPreInitialize()
     ChangeWindowMode(true);
 
     // 画面サイズ
-    SetGraphMode(1280, 960, 32);
+    SetGraphMode(Master::Window_SizeX, Master::Window_SizeY, 32);
+    SetWindowSizeChangeEnableFlag(FALSE, TRUE); //ウィンドウの端をつかんでサイズ変更可能にするかどうか
+    SetMainWindowText("ZWEI MIMK");            //ウィンドウのタイトルを設定
+
 
     mpDxLibDataManager = new DxLibDataManager();
     mpDxLibDataManager->DxInitPreInitialize();
@@ -84,7 +90,7 @@ int Master::Initialize()
     mpTimeManager = new TimeManager(/*/1/*/17/**/);
     mpTimeManager->Initilize();
 	mpResourceManager = new ResourceManager();
-
+	mpSoundManager = new SoundManager();
     // mpDXAnimModel = new DXAnimModel();
 
     mpKeyState = new KeyState();
@@ -123,6 +129,7 @@ int Master::Finalize()
     delete mpEndManager;
     delete mpTimeManager;
 	delete mpResourceManager;
+	delete mpSoundManager;
     delete mpKeyState;
     delete mpDxLibDataManager;
 

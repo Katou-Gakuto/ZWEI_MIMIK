@@ -26,7 +26,7 @@ public:
 	int Finalize();
 
 	// 画像とページ数、間隔、アニメーションの保存番号を設定する
-	int SetAnimModel(string pathName, int maxPage, int maxPageFrame, float uvdown, float uvright, int animnum);
+	int SetAnimModel(string pathName, int maxPage, int maxPageFrame, float uvright, float uvdown, int animnum);
 
 	
 	void SetNowPage(int nowpage) { NowPage = nowpage; }// 現在のページを設定する
