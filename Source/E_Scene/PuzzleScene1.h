@@ -18,7 +18,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const override;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_2 : public BasePuzzleScene
@@ -37,7 +40,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_3 : public BasePuzzleScene
@@ -56,7 +62,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_4 : public BasePuzzleScene
@@ -75,7 +84,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_5 : public BasePuzzleScene
@@ -94,7 +106,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_6 : public BasePuzzleScene
@@ -113,7 +128,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_7 : public BasePuzzleScene
@@ -132,7 +150,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_8 : public BasePuzzleScene
@@ -151,7 +172,10 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };
 
 class PuzzleScene1_9 : public BasePuzzleScene
@@ -170,5 +194,30 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos);
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
+};
+
+class PuzzleScene1_10 : public BasePuzzleScene
+{
+public:
+    // 
+    PuzzleScene1_10();
+
+    // 
+    ~PuzzleScene1_10() override;
+
+    // 
+    int MapCreate(GameObjectManager &objManager) override;
+
+    void GetMasterObjectsInitPos(
+        VECTOR2D &playerLightPos,
+        VECTOR2D &playerShadowPos,
+        VECTOR2D &goalLightPos,
+        VECTOR2D &goalShadowPos) const;
+
+    // 
+    uint32_t GetUseLightAreaCount() const override;
 };

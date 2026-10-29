@@ -61,6 +61,9 @@ public:
     // ベクトルの正規化→大きさの掛け算(√なし)※使用非推奨の関数です
     VECTOR2D SetMagnitudeNoSqrt(const float size) const;
 
+    // ベクトルの角度を取得する関数(内部でatan2fを使っているので比較的重いです)
+    float GetAngle() const;
+
 
     // 全ての値が0のVECTORを取得する関数
     static VECTOR2D GetZero();

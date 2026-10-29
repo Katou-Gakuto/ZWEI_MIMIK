@@ -16,7 +16,7 @@ BaseCollision2D::BaseCollision2D(
     mvMoveVec(VECTOR2D::GetZero()),
     mpPrevWorld(nullptr),
     mpNextWorld(nullptr),
-    mbLoseHitCollision0(false),
+    mbHitMoveLose(false),
     BaseCollision(object, type, tag, normNum, penetrate, hitMove, moveLate)
 {
 

@@ -19,6 +19,7 @@ enum SceneTag : unsigned char
     ST_Puzzle1_7,
     ST_Puzzle1_8,
     ST_Puzzle1_9,
+    ST_Puzzle1_10,
 
     ST_Test,
 

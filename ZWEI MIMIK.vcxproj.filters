@@ -313,7 +313,7 @@
     <ClCompile Include="Source\E_Scene\BasePuzzleScene.cpp">
       <Filter>Source\E_Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\E_Scene\PuzzleScene.cpp">
+    <ClCompile Include="Source\E_Scene\PuzzleScene1.cpp">
       <Filter>Source\E_Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\T_Model\BaseModelHandle.cpp">
@@ -696,7 +696,7 @@
     <ClInclude Include="Source\E_Scene\OptionScene.h">
       <Filter>Source\E_Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\E_Scene\PuzzleScene.h">
+    <ClInclude Include="Source\E_Scene\PuzzleScene1.h">
       <Filter>Source\E_Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\T_Model\BaseModelHandle.h">
@@ -791,6 +791,9 @@
     </ClInclude>
     <ClInclude Include="Source\Y_Tool\MyEasing.h">
       <Filter>Source\Y_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\F_PuzzleGimmick\FalseTrigger.h">
+      <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

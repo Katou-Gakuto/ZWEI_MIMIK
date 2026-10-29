@@ -51,7 +51,7 @@ public:
     float GetRadianPlayerToHold(const VECTOR2D &playerPos, int debugNum) const;
 
     // 
-    bool SetSwingParam(const VECTOR2D &centerPos, float radian, float distance);
+    bool SetSwingAfterPos(const VECTOR2D &centerPos, float radian, float distance);
 
     // 
     void SyncMoveVecToHold(const VECTOR2D &moveVec);
@@ -61,6 +61,9 @@ public:
 
     // 
     bool GetSwingFlag() const;
+
+    // 
+    bool GetMoveFlag() const;
 
 private:
     // 

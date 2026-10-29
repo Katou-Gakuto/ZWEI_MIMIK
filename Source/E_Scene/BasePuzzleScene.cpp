@@ -1,4 +1,4 @@
-#include "PuzzleScene.h"
+#include "BasePuzzleScene.h"
 
 #include "DxLib.h"
 
@@ -31,7 +31,8 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mbPouse(false),
     mbGoal(false),
     mbFailed(false),
-    mnCursorPos(0),
+    mnPouseCursorPos(0),
+    mnResultCursorPos(0),
     BaseScene(tag)
 {
 }
@@ -59,6 +60,9 @@ int BasePuzzleScene::Create()
     this->mpGameObjectManager = new GameObjectManager();
     this->mpBaseCollision2DManager = new BaseCollision2DManager();    
 
+    // 
+    Master::mpLightManager->ResizeArea(this->GetUseLightAreaCount());
+
     // それぞれのマップを生成する
     this->MapCreate(*this->mpGameObjectManager);
 
@@ -72,6 +76,9 @@ int BasePuzzleScene::Create()
 int BasePuzzleScene::Initialize()
 {
     // 
+    Master::mpLightManager->ResizeArea(this->GetUseLightAreaCount());
+
+    // 
     VECTOR2D initPosBox[4];
     this->GetMasterObjectsInitPos(initPosBox[0], initPosBox[1], initPosBox[2], initPosBox[3]);
 
@@ -80,7 +87,6 @@ int BasePuzzleScene::Initialize()
     this->mpPlayerShadow->InitPosition(initPosBox[1]);
     this->mpGoalLight->InitPosition(initPosBox[2]);
     this->mpGoalShadow->InitPosition(initPosBox[3]);
-
 
     // 
     this->mpGameObjectManager->Initialize();
@@ -130,9 +136,7 @@ int BasePuzzleScene::Update()
     this->mbFailed = 
         this->mpPlayerLight->GetInLightArea() == false ||
         this->mpPlayerShadow->GetInLightArea() == true;
-
-    // @Debug
-    this->mbFailed = false;
+    // this->mbFailed = false;
     if (this->mbFailed)
     {
         // 
@@ -155,7 +159,7 @@ int BasePuzzleScene::Update()
         this->mbPouse = !this->mbPouse;
 
         // 
-        this->mnCursorPos = 0;
+        this->mnPouseCursorPos = 0;
     }
 
     // 
@@ -264,7 +268,55 @@ SceneTag BasePuzzleScene::StageNum2SceneTag(unsigned long stageNum)
     case 8:
         temp = SceneTag::ST_Puzzle1_9;
         break;
+    case 9:
+        temp = SceneTag::ST_Puzzle1_10;
+        break;
 
+    default:
+        break;
+    }
+
+    // 
+    return temp;
+}
+
+// 
+unsigned long BasePuzzleScene::SceneTag2StageNum(SceneTag sceneTag)
+{
+    // 
+    unsigned long temp = 0;
+    switch (sceneTag)
+    {
+    case SceneTag::ST_Puzzle1_1:
+        temp = 0;
+        break;
+    case SceneTag::ST_Puzzle1_2:
+        temp = 1;
+        break;
+    case SceneTag::ST_Puzzle1_3:
+        temp = 2;
+        break;
+    case SceneTag::ST_Puzzle1_4:
+        temp = 3;
+        break;
+    case SceneTag::ST_Puzzle1_5:
+        temp = 4;
+        break;
+    case SceneTag::ST_Puzzle1_6:
+        temp = 5;
+        break;
+    case SceneTag::ST_Puzzle1_7:
+        temp = 6;
+        break;
+    case SceneTag::ST_Puzzle1_8:
+        temp = 7;
+        break;
+    case SceneTag::ST_Puzzle1_9:
+        temp = 8;
+        break;
+    case SceneTag::ST_Puzzle1_10:
+        temp = 9;
+        break;
     default:
         break;
     }
@@ -337,7 +389,7 @@ int BasePuzzleScene::PouseUpdate()
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
     {
         // 
-        switch (this->mnCursorPos)
+        switch (this->mnPouseCursorPos)
         {
         case PouseMenu::PouseMenu_Option:
             Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
@@ -371,13 +423,13 @@ int BasePuzzleScene::PouseUpdate()
     if (menuMove != 0)
     {
         // 
-        this->mnCursorPos += PouseMenu::PouseMenu_Max;
+        this->mnPouseCursorPos += PouseMenu::PouseMenu_Max;
 
         // 
-        this->mnCursorPos += menuMove;
+        this->mnPouseCursorPos += menuMove;
 
         // 
-        this->mnCursorPos %= PouseMenu::PouseMenu_Max;
+        this->mnPouseCursorPos %= PouseMenu::PouseMenu_Max;
     }
 
     // 
@@ -400,7 +452,7 @@ int BasePuzzleScene::PouseDraw()
     for (int i = 0; i < PouseMenu::PouseMenu_Max; i++)
     {
         // 
-        if (this->mnCursorPos == i)
+        if (this->mnPouseCursorPos == i)
         {
             message = "⇒";
         }
@@ -434,7 +486,7 @@ int BasePuzzleScene::PouseDraw()
 
         // 
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 60 + 120 * i),
+            VECTOR2D(400, 120 + 120 * i),
             message.c_str(),
             GetColor(255, 255, 255));
     }
@@ -455,10 +507,42 @@ int BasePuzzleScene::ResultUpdate()
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
     {
         // 
-        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+        unsigned long temp = 0;
 
         // 
-        this->OnResetFlag();
+        switch (this->mnResultCursorPos)
+        {
+        case ResultMenu::ResultMenu_NextStage:
+            temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag());
+
+            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp + 1));
+            this->OnResetFlag();
+            break;
+        case ResultMenu::ResultMenu_StageSelect:
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+            this->OnResetFlag();
+            break;
+        default:
+            // 何もしない
+            break;
+        }
+    }
+
+    // 
+    int menuMove = 0;
+
+    // 
+    Master::mpCursorMoveSupporter->Move(this->smdMoveData, menuMove);
+    if (menuMove != 0)
+    {
+        // 
+        this->mnResultCursorPos += ResultMenu::ResultMenu_Max;
+
+        // 
+        this->mnResultCursorPos += menuMove;
+
+        // 
+        this->mnResultCursorPos %= ResultMenu::ResultMenu_Max;
     }
 
     // 
@@ -470,15 +554,46 @@ int BasePuzzleScene::ResultDraw()
 {
     // 
     DRAW_SYSTEM::DrawString(
-        VECTOR2D(500, 60 + 120 * 0),
+        VECTOR2D(500, 60),
         "STAGE CLEAR!",
         GetColor(255, 255, 255));
 
     // 
-    DRAW_SYSTEM::DrawString(
-        VECTOR2D(500, 60 + 120 * 1),
-        "Pless A Key",
-        GetColor(255, 255, 255));
+    std::string message = "";
+
+    // 
+    for (uint64_t i = 0; i < ResultMenu::ResultMenu_Max; i++)
+    {
+        // 
+        if (this->mnResultCursorPos == i)
+        {
+            message = "⇒";
+        }
+        else
+        {
+            message = "　";
+        }
+
+        // 
+        switch (i)
+        {
+        case ResultMenu::ResultMenu_NextStage:
+            message += "NEXT STAGE";
+            break;
+        case ResultMenu::ResultMenu_StageSelect:
+            message += "STAGE SELECT";
+            break;
+        default:
+            message += "ERROR";
+            break;
+        }
+
+        // 
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(450, 60 + 120 * (i + 1)),
+            message.c_str(),
+            GetColor(255, 255, 255));
+    }
 
     // 
     return 0;

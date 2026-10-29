@@ -4,7 +4,7 @@
 #include "TitleScene.h"
 #include "OptionScene.h"
 #include "StageSelectScene.h"
-#include "PuzzleScene.h"
+#include "PuzzleScene1.h"
 #include "TestScene.h"
 
 #include "../Y_Tool/MyTimer.h"
@@ -81,6 +81,7 @@ int BaseSceneManager::Create()
         this->mpSceneBox[SceneTag::ST_Puzzle1_7] = new PuzzleScene1_7();
         this->mpSceneBox[SceneTag::ST_Puzzle1_8] = new PuzzleScene1_8();
         this->mpSceneBox[SceneTag::ST_Puzzle1_9] = new PuzzleScene1_9();
+        this->mpSceneBox[SceneTag::ST_Puzzle1_10] = new PuzzleScene1_10();
 
         this->mpSceneBox[SceneTag::ST_Test] = new TestScene();
 

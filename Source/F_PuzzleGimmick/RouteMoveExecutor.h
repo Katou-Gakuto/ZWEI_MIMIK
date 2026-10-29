@@ -41,7 +41,7 @@ public:
     RouteData() = delete;
 
     // コンストラクタ
-    RouteData(RouteOffMode offMode, bool loop);
+    RouteData(RouteOffMode offMode, bool loop, uint32_t keyFrameCount);
 
     // コピーコンストラクタ
     RouteData(const RouteData &src);
@@ -66,6 +66,9 @@ public:
 
     // この移動ルートの最後のフレーム(LoopがOnなら時計でいうなら0:00で、0フレームと同じ扱いができそうなところ)
     uint32_t GetFinalFrame() const;
+
+    // 
+    const RouteKeyFrame &GetKeyFrame(uint32_t index) const;
 
 private:
     // 登録されたキーフレームを記憶する動的配列
@@ -126,11 +129,20 @@ private:
     RouteData mdMoveData;
 
     // 
-    uint32_t mnFrameCount;
+    uint32_t mnFrameCountNow;
+
+    // 
+    uint32_t mnFrameCountOld;
 
     // 
     GameObject2D *mpMyObject;
 
     // 
+    bool mbMoveNow;
+
+    // 
     bool MoveRouteOnTargetFrame(bool triggerSignal);
+
+    // 
+    bool SetNowFrameData();
 };

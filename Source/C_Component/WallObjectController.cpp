@@ -18,7 +18,7 @@
 
 WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D &centerPos, const VECTOR2D &blockSize, float radian) :
     mvCenterPosInit(centerPos),
-    mvBlockSizeInit(blockSize),
+    mvBlockSizeInit(blockSize * 0.5f),
     mfRadianInit(radian),
     mfRadian(0.0f),
     mdModel(),
@@ -43,7 +43,7 @@ int WallObjectController::Create()
     // ƒ‚ƒfƒ‹Ý’è
     //obj->SetRotation(180.0f);
     DXModelRotaObj* myModel = new DXModelRotaObj(obj);
-    myModel->SetObjModel("Resource/wall.png", mvBlockSizeInit);
+    myModel->SetObjModel("Resource/wall.png", this->mvBlockSizeInit);
     if (obj->AddModel(myModel, this->mdModel) != 0)
     {
         // 

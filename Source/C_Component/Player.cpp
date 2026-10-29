@@ -170,7 +170,7 @@ int Player::Update()
     if (this->mbHoldFlag)
     {
         // 
-        result = this->HoldSwing();
+        result = this->TryHoldSwing();
 
         // 
         if (result != 0)
@@ -182,13 +182,13 @@ int Player::Update()
         if (!this->mbSwingFlag)
         {
             // 
-            this->HoldMove(moveVec);
+            this->TryHoldMove(moveVec);
         }
     }
     else
     {
         // 
-        this->ResetHold();
+        this->ClearHold();
     }
 
     // 
@@ -226,7 +226,7 @@ int Player::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollisi
     if (this->CheckHoldNow())
     {
         //
-        HoldMove(this->GetMyObject2D()->GetMoveVec2D());
+        TryHoldMove(this->GetMyObject2D()->GetMoveVec2D());
     }
 
     // 
@@ -367,7 +367,8 @@ int Player::TryHold()
     bool holdCommandFlag = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::A, mnPlayerNum - 1);
 
     // 
-    if (this->mpHold != nullptr)
+    if (this->mpHold != nullptr &&
+        this->mpHold->GetMoveFlag())
     {
         // 
         if (holdCommandFlag)
@@ -507,12 +508,13 @@ int Player::TryHold()
 
             // 
             this->SetHoldRadian();
+        }
 
+        // 
+        if (this->mpHold->GetMoveFlag())
+        {
             // 
             this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(true, false, true, 1.0f);
-
-            // 
-
         }
     }
 
@@ -520,11 +522,18 @@ int Player::TryHold()
     return 0;
 }
 
-// オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
-int Player::HoldSwing()
+// オブジェクトをつかんでいる状態で「自身を中心として振り回す」ことを試してみる関数
+int Player::TryHoldSwing()
 {
     // 
     if (!this->mpHold->GetSwingFlag())
+    {
+        // 
+        return 0;
+    }
+
+    // 
+    if (!this->mpHold->GetMoveFlag())
     {
         // 
         return 0;
@@ -568,7 +577,7 @@ int Player::HoldSwing()
     float newRadian = this->mfNowSwingRadian + addRad;
 
     // 
-    bool result = this->mpHold->SetSwingParam(nowPos, newRadian, distanceMag);
+    bool result = this->mpHold->SetSwingAfterPos(nowPos, newRadian, distanceMag);
 
     // 
     this->mbSwingFlag = true;
@@ -577,18 +586,13 @@ int Player::HoldSwing()
     return 0;
 }
 
-// 
-int Player::HoldMove(const VECTOR2D &moveVec)
+// オブジェクトをつかんでいる状態で「自身と同じようにオブジェクトを動かす」ことを試してみる関数
+int Player::TryHoldMove(const VECTOR2D &moveVec)
 {
     // 
-    if (this->mpHold != nullptr)
+    if (this->mpHold != nullptr &&
+        this->mpHold->GetMoveFlag())
     {
-        // ほぼ0ベクトルの場合は処理を行う
-        if (moveVec == VECTOR2D::GetZero())
-        {
-            this->mpHold = this->mpHold;
-        }
-
         // 現状のMoveVecを更新する
         this->mpHold->SyncMoveVecToHold(moveVec);
 
@@ -602,14 +606,13 @@ int Player::HoldMove(const VECTOR2D &moveVec)
             Player *target = Master::GetPlayerController(targetPlayerNum);
             target->SyncPlayerMoveVec(moveVec);
         }
-
     }
 
     // 
     return 0;
 }
 
-// 
+// オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
 bool Player::SyncPlayerMoveVec(const VECTOR2D &holdMoveVec)
 {
     // 
@@ -631,13 +634,13 @@ bool Player::SyncPlayerMoveVec(const VECTOR2D &holdMoveVec)
 }
 
 // 
-bool Player::ResetHold()
+bool Player::ClearHold()
 {
     // 
     if (this->mpHold != nullptr)
     {
         // 
-        this->HoldMove(VECTOR2D::GetZero());
+        this->TryHoldMove(VECTOR2D::GetZero());
 
         // 
         this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(false, false, false, 0.0f);
@@ -658,26 +661,30 @@ VECTOR2D Player::GetMoveVecNowFrame()const
 {
     VECTOR2D moveVec = VECTOR2D::GetZero();
 
+    // 
+    float moveX = 0;
+    float moveY = 0;
+
     //十字ボタン
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::UP, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::UP, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
-        moveVec.SetY(-1);
+        moveY += -1;
     }
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::DOWN, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
-        moveVec.SetY(1);
+        moveY += 1;
     }
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::LEFT, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::LEFT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
-        moveVec.SetX(-1);
+        moveX += -1;
     }
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::RIGHT, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::RIGHT, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
     {
-        moveVec.SetX(1);
+        moveX += 1;
     }
 
     // 
-    moveVec = moveVec.SetMagnitude(mfMoveMagnitude);
+    moveVec = (VECTOR2D(moveX, moveY).Normalize()) * this->mfMoveMagnitude;
 
     // 
     return moveVec;

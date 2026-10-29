@@ -16,11 +16,13 @@
 #include "../Y_Tool/MyFunctions.h"
 
 // コンストラクタ
-RouteData::RouteData(RouteOffMode offMode, bool loop) :
+RouteData::RouteData(RouteOffMode offMode, bool loop, uint32_t keyFrameCount) :
     mlKeyFrameBox(),
     mbLoop(loop),
     mnOffMode(offMode)
 {
+    // 
+    this->mlKeyFrameBox.reserve(keyFrameCount);
 }
 
 // コピーコンストラクタ
@@ -111,6 +113,13 @@ uint32_t RouteData::GetFinalFrame() const
 }
 
 // 
+const RouteKeyFrame &RouteData::GetKeyFrame(uint32_t index) const
+{
+    // 
+    return this->mlKeyFrameBox[index];
+}
+
+// 
 bool RouteData::GetCurrentKeyNumber(uint32_t frameCount, uint32_t &outCurrent, uint32_t &outEnd) const
 {
     // 
@@ -196,8 +205,10 @@ bool RouteData::GetTargetTimming(uint32_t frameCount, uint32_t currentIndex, uin
 // コンストラクタ
 RouteMoveExecutor::RouteMoveExecutor(PuzzleGimmickActiveParam param, GameObject2D *myObject, const RouteData &routeData) :
     mdMoveData(routeData),
-    mnFrameCount(0),
+    mnFrameCountNow(0),
+    mnFrameCountOld(0),
     mpMyObject(myObject),
+    mbMoveNow(false),
     BaseGimmickExecutor(param)
 {
 }
@@ -212,7 +223,18 @@ RouteMoveExecutor::~RouteMoveExecutor()
 int RouteMoveExecutor::Initilize()
 {
     // 
-    this->mnFrameCount = 0;
+    this->mnFrameCountNow = 0;
+
+    // 
+    auto list = this->mpMyObject->GetBaseCollisionList();
+    if (list == nullptr)
+    {
+        // 
+        return 0;
+    }
+
+    // 
+    list->SetHitMoveParam(true, false, false, 0.0f);
 
     // 
     return 0;
@@ -222,6 +244,9 @@ int RouteMoveExecutor::Initilize()
 // ※GameObject::EarlyUpdate()のタイミングで呼ばれます
 int RouteMoveExecutor::EarlyUpdate(bool triggerSignal)
 {
+    // 
+    this->mnFrameCountOld = this->mnFrameCountNow;
+
     // 
     return 0;
 }
@@ -266,6 +291,23 @@ int RouteMoveExecutor::LateUpdate(bool triggerSignal)
 int RouteMoveExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision *hitCollision)
 {
     // 
+    if (this->mbMoveNow)
+    {
+        // 
+        if (hitCollision->GetCollisionTag() != CollisionTag::CollisionTag_Wall)
+        {
+            // 
+            this->mbMoveNow = false;
+
+            // 
+            this->mnFrameCountNow = this->mnFrameCountOld;
+
+            // 
+            this->SetNowFrameData();
+        }
+    }
+
+    // 
     return 0;
 }
 
@@ -273,7 +315,7 @@ int RouteMoveExecutor::HitOnCollision(BaseCollision *myCollision, BaseCollision 
 void RouteMoveExecutor::SetFrameCount(uint32_t frameCount)
 {
     // 
-    this->mnFrameCount = frameCount;
+    this->mnFrameCountNow = frameCount;
 }
 
 // 
@@ -292,7 +334,7 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
         if (!this->mdMoveData.GetLoopFlag())
         {
             // 最後のフレーム以降になっていたら処理を行う
-            if (this->mdMoveData.GetFinalFrame() <= this->mnFrameCount)
+            if (this->mdMoveData.GetFinalFrame() <= this->mnFrameCountNow)
             {
                 // 
                 move = false;
@@ -308,7 +350,7 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
         if (this->GetActiveParam().GetOnePushActive())
         {
             // 既に動き始めている場合は処理を行う
-            if (0 < this->mnFrameCount)
+            if (0 < this->mnFrameCountNow)
             {
                 // 
                 move = true;
@@ -320,7 +362,7 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
             if (this->mdMoveData.GetReturnFlag())
             {
                 // 戻り切っていない場合場合は処理を行う
-                if (0 < this->mnFrameCount)
+                if (0 < this->mnFrameCountNow)
                 {
                     // 
                     move = true;
@@ -336,6 +378,9 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
     if (!move)
     {
         // 
+        this->mbMoveNow = false;
+
+        // 
         return true;
     }
 
@@ -346,31 +391,38 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
         if (this->mdMoveData.GetLoopFlag())
         {
             // 
-            this->mnFrameCount++;
+            this->mnFrameCountNow++;
 
             // 
-            this->mnFrameCount %= this->mdMoveData.GetFinalFrame();
+            this->mnFrameCountNow %= this->mdMoveData.GetFinalFrame();
         }
         else
         {
             // 
-            if (this->mnFrameCount < this->mdMoveData.GetFinalFrame())
+            if (this->mnFrameCountNow < this->mdMoveData.GetFinalFrame())
             {
                 // 
-                this->mnFrameCount++;
+                this->mnFrameCountNow++;
             }
         }
     }
     else
     {
         // Returnの場合しか-方向には進まないので
-        this->mnFrameCount--;
+        this->mnFrameCountNow--;
     }
 
     // 
+    return this->SetNowFrameData();
+}
+
+// 
+bool RouteMoveExecutor::SetNowFrameData()
+{
+    // 
     float nextRadian = 0.0f;
     VECTOR2D nextPos;
-    if (!this->mdMoveData.GetTargetFrameData(this->mnFrameCount, nextRadian, nextPos))
+    if (!this->mdMoveData.GetTargetFrameData(this->mnFrameCountNow, nextRadian, nextPos))
     {
         // 
         return false;
@@ -390,6 +442,9 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
         BaseCollisionList *list = this->mpMyObject->GetBaseCollisionList();
         if (list == nullptr)
         {
+            // 
+            this->mbMoveNow = true;
+
             // 
             return true;
         }
@@ -452,6 +507,9 @@ bool RouteMoveExecutor::MoveRouteOnTargetFrame(bool triggerSignal)
         wallController->SetMoveVecObjAndBody(moveVec);
         wallController->SetBodyCollisionRotateAtNowPos(nextRadian);
     }
+
+    // 
+    this->mbMoveNow = true;
 
     // 
     return true;

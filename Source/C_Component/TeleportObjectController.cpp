@@ -135,7 +135,7 @@ int TeleportObjectController::LateUpdate()
             mySidePlayer->InitPosition(this->mpPair->GetMyObject2D()->GetPosition());
 
             // 
-            mySidePlayer->ResetHold();
+            mySidePlayer->ClearHold();
 
             // 
             this->mpPair->mbTeleportedFromPair = true;

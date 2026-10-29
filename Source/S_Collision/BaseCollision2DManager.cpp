@@ -296,8 +296,8 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
     bMoveLate = 0.0f;
 
     // 
-    if (collision2DA->mbLoseHitCollision0 &&
-        collision2DB->GetMoveVec() == VECTOR2D::GetZero())
+    if (collision2DA->mbHitMoveLose &&
+        !collision2DB->mbHitMoveLose)
     {
         // 
         aMoveLate = 2.0f;
@@ -308,8 +308,8 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
     }
 
     // 
-    if (collision2DB->mbLoseHitCollision0 &&
-        collision2DA->GetMoveVec() == VECTOR2D::GetZero())
+    if (!collision2DA->mbHitMoveLose &&
+        collision2DB->mbHitMoveLose)
     {
         // 
         aMoveLate = 0.0f;
@@ -317,6 +317,31 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
 
         // 
         return true;
+    }
+
+    // 
+    if (collision2DA->mbHitMoveLose &&
+        collision2DB->mbHitMoveLose)
+    {
+        // 
+        if (collision2DA->GetMoveVec() == VECTOR2D::GetZero() && collision2DB->GetMoveVec() != VECTOR2D::GetZero())
+        {
+            // 
+            aMoveLate = 0.0f;
+            bMoveLate = 2.0f;
+
+            // 
+            return true;
+        }
+        else if (collision2DA->GetMoveVec() != VECTOR2D::GetZero() && collision2DB->GetMoveVec() == VECTOR2D::GetZero())
+        {
+            // 
+            aMoveLate = 2.0f;
+            bMoveLate = 0.0f;
+
+            // 
+            return true;
+        }
     }
 
     // 

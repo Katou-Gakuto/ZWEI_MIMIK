@@ -319,7 +319,7 @@ float HoldObjectController::GetRadianPlayerToHold(const VECTOR2D &playerPos, int
 }
 
 // 
-bool HoldObjectController::SetSwingParam(const VECTOR2D &centerPos, float radian, float distance)
+bool HoldObjectController::SetSwingAfterPos(const VECTOR2D &centerPos, float radian, float distance)
 {
     // 
     if (!this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_Swing])
@@ -425,4 +425,11 @@ bool HoldObjectController::GetSwingFlag() const
 {
     // 
     return this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_Swing];
+}
+
+// 
+bool HoldObjectController::GetMoveFlag() const
+{
+    // 
+    return this->mbFlags[HoldFlagBitIndex::HoldFlagBitIndex_MoveSync];
 }

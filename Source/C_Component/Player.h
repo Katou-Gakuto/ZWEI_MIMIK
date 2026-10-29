@@ -30,17 +30,17 @@ public:
     // オブジェクトが掴める際に掴む関数
     int TryHold();
 
-    // オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
-    int HoldSwing();
+    // オブジェクトをつかんでいる状態で「自身を中心として振り回す」ことを試してみる関数
+    int TryHoldSwing();
+
+    // オブジェクトをつかんでいる状態で「自身と同じようにオブジェクトを動かす」ことを試してみる関数
+    int TryHoldMove(const VECTOR2D &moveVec);
 
     // オブジェクトをつかんでいる状態でHitOnCollision()が呼ばれたら行う関数
-    int HoldMove(const VECTOR2D &moveVec);
-
-    // 
     bool SyncPlayerMoveVec(const VECTOR2D &vec);
 
-    // 
-    bool ResetHold();
+    // ホールド関係を完全に0にし、何も持っていない状態にする関数
+    bool ClearHold();
 
     // 
     VECTOR2D GetMoveVecNowFrame()const;
@@ -102,5 +102,4 @@ private:
 
     // 
     int UpdateInLightArea();
-
 };

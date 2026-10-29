@@ -160,6 +160,12 @@ VECTOR2D VECTOR2D::SetMagnitudeNoSqrt(const float size) const
     return NormalizeNoSqrt() * size;
 }
 
+// ベクトルの角度を取得する関数(内部でatan2fを使っているので比較的重いです)
+float VECTOR2D::GetAngle() const
+{
+    return atan2f(-this->mfParamX, this->mfParamY);
+}
+
 VECTOR2D VECTOR2D::GetZero()
 {
     return VECTOR2D(0.0f, 0.0f);
@@ -360,8 +366,8 @@ VECTOR2D VECTOR2D::GetLerpPos(const VECTOR2D &startPos, const VECTOR2D &targetPo
 
     // 矢印ベクトルに倍率(補間率)をかける
     VECTOR2D lerpVec;
-    lerpVec.mfParamX = distanceVec.mfParamX * rate.mfParamX;
-    lerpVec.mfParamY = distanceVec.mfParamY * rate.mfParamY;
+    lerpVec.mfParamX = distanceVec.mfParamX * tempRate.mfParamX;
+    lerpVec.mfParamY = distanceVec.mfParamY * tempRate.mfParamY;
 
     // 倍率のかかった矢印ベクトルを世界座標に直す
     temp = lerpVec + startPos;
@@ -369,7 +375,6 @@ VECTOR2D VECTOR2D::GetLerpPos(const VECTOR2D &startPos, const VECTOR2D &targetPo
     // 値を返す
     return temp;
 }
-
 
 // 円形補間
 VECTOR2D VECTOR2D::GetSlerpPos(const VECTOR2D &centerPos, const VECTOR2D &startPos, const VECTOR2D &targetPos, float rate)

@@ -79,7 +79,7 @@ int BaseCollisionList::SetHitMoveParam(bool loseHit0, bool prenetrate, bool hitM
         if (current->GetCollisionDimension() == CollisionDimension_2D)
         {
             // 
-            static_cast<BaseCollision2D *>(current)->mbLoseHitCollision0 = loseHit0;
+            static_cast<BaseCollision2D *>(current)->mbHitMoveLose = loseHit0;
         }
         current->SetPenetrate(prenetrate);
         current->SetHitMove(hitMove);

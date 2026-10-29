@@ -4,6 +4,8 @@
 
 #include "../Z_Except/CursorMoveSupporter.h"
 
+#include <cstdint>
+
 class Player;
 class GoalObjectController;
 class VECTOR2D;
@@ -20,6 +22,15 @@ private:
         PouseMenu_Title,
 
         PouseMenu_Max,
+    };
+
+    // 
+    enum ResultMenu
+    {
+        ResultMenu_NextStage,
+        ResultMenu_StageSelect,
+
+        ResultMenu_Max,
     };
 
 public:
@@ -40,10 +51,16 @@ public:
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
-        VECTOR2D &goalShadowPos) = 0;
+        VECTOR2D &goalShadowPos) const = 0;
+
+    // 
+    virtual uint32_t GetUseLightAreaCount() const = 0;
 
     // 
     static SceneTag StageNum2SceneTag(unsigned long stageNum);
+
+    // 
+    static unsigned long SceneTag2StageNum(SceneTag sceneTag);
 
     // 
     Player *GetPlayer(int playerNumber)const;
@@ -79,7 +96,10 @@ private:
     bool mbFailed;
 
     // 
-    int mnCursorPos;
+    int mnPouseCursorPos;
+
+    // 
+    int mnResultCursorPos;
 
     // 
     static CursorMoveData smdMoveData;

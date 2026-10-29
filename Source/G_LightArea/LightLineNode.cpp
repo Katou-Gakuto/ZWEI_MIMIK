@@ -69,7 +69,9 @@ bool LightLineNode::CalculateEndPos(
 
     // 
     VECTOR2D start2current;
+    float s2cMagNoSqrt = 0.0f;
     VECTOR2D start2newr;
+    float s2nMagNoSqrt = 0.0f;
 
     // 
     tempResultCurrent.mnResultParam = -1;
@@ -100,9 +102,10 @@ bool LightLineNode::CalculateEndPos(
 
         // 今回のレイの開始地点から、当たった場所までの距離を取得する
         start2current = tempResultCurrent.mvHitPos - tempRay.GetStartPos();
+        s2cMagNoSqrt = start2current.MagnitudeNoSqrt();
 
         // スタート地点からあまりにも近すぎたら処理を行う
-        if (MyFunctions::EqualInRangeF(start2current.Magnitude(), 0.0f, 0.01f))
+        if (MyFunctions::EqualInRangeF(s2cMagNoSqrt, 0.0f, 0.01f))
         {
             // 今回は飛ばす
             continue;
@@ -110,10 +113,11 @@ bool LightLineNode::CalculateEndPos(
 
         // 今回初めてオブジェクトに当たった場合、もしくはこれまでのどれよりも当たった場所が近かった場合は処理を行う
         if (tempResultNewr.mnResultParam < 0 ||
-            start2current.Magnitude() < start2newr.Magnitude())
+            s2cMagNoSqrt < s2nMagNoSqrt)
         {
             // スタート地点から今回当たった地点までのベクトルを記憶しておく
             start2newr = start2current;
+            s2nMagNoSqrt = s2cMagNoSqrt;
 
             // 今回の結果をそのまま記憶しておく
             tempResultNewr = tempResultCurrent;
@@ -144,9 +148,10 @@ bool LightLineNode::CalculateEndPos(
 
         // 今回のレイの開始地点から、当たった場所までの距離を取得する
         start2current = tempResultCurrent.mvHitPos - tempRay.GetStartPos();
+        s2cMagNoSqrt = start2current.MagnitudeNoSqrt();
 
         // スタート地点からあまりにも近すぎたら処理を行う
-        if (MyFunctions::EqualInRangeF(start2current.Magnitude(), 0.0f, 0.001f))
+        if (MyFunctions::EqualInRangeF(s2cMagNoSqrt, 0.0f, 0.01f))
         {
             // 今回は飛ばす
             continue;
@@ -158,12 +163,10 @@ bool LightLineNode::CalculateEndPos(
         {
             // スタート地点から今回当たった地点までのベクトルを記憶しておく
             start2newr = start2current;
+            s2nMagNoSqrt = s2cMagNoSqrt;
 
             // 今回の結果をそのまま記憶しておく
             tempResultNewr = tempResultCurrent;
-
-            // 
-            wallHit = true;
 
             // 
             this->mpHitCollision = objectCollBox[i];

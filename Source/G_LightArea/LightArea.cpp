@@ -95,7 +95,7 @@ bool LightArea::CalculateNode(
     LightLineNode *nextNode = nullptr;
 
     // 
-    float tempMagnitudeNoSqrt = 0.0f;
+    float tempMagnitude = 0.0f;
 
     VECTOR2D tempStartPos;
 
@@ -115,7 +115,7 @@ bool LightArea::CalculateNode(
         currentNode = this->mlLightFirstNode[i];
 
         // 
-        tempMagnitudeNoSqrt = stockMagunitude;
+        tempMagnitude = stockMagunitude;
 
         // 計算を行い、次のノードに移る場合は処理を行う
         while (currentNode->CalculateEndPos(
@@ -123,7 +123,7 @@ bool LightArea::CalculateNode(
             toEndNorm,
             objectCollBox,
             mirrorCollBox,
-            tempMagnitudeNoSqrt,
+            tempMagnitude,
             tempRay,
             tempResultCurrent,
             tempResultNewr))
