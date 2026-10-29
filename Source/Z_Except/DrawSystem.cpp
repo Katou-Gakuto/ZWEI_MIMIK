@@ -104,6 +104,16 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handl
     //DxLib::DrawModiGraph(x[0], y[0], x[1], y[1], x[2], y[2], x[3], y[3], handle, TransFlag);
 }
 
+// âÊëúï`âÊ
+void DRAW_SYSTEM::DrawImage(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VECTOR2D pos4, int handle, int flag)
+{
+    pos1 = WorldSizeToDisplaySize(pos1);
+    pos2 = WorldSizeToDisplaySize(pos2);
+    pos3 = WorldSizeToDisplaySize(pos3);
+    pos4 = WorldSizeToDisplaySize(pos4);
+    DxLib::DrawModiGraph(pos1.GetX(), pos1.GetY(), pos2.GetX(), pos2.GetY(), pos3.GetX(), pos3.GetY(), pos4.GetX(), pos4.GetY(), handle, flag);
+}
+
 // åªèÛåıóÃàÊï`âÊóp
 void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag, bool redrawFlag)
 {
