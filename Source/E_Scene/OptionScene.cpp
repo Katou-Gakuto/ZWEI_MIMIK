@@ -302,7 +302,7 @@ int OptionScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // ここをBaseSceneManagerのSearchSceneOldで前のシーンに戻るようにする
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
+                Master::mpBaseSceneManager->ChangeScene(Master::mpBaseSceneManager->GetSneceOld());
 
                 // 
                 this->OnResetFlag();
@@ -338,234 +338,238 @@ int OptionScene::Draw()
         "OPTION SCENE",
         GetColor(255, 255, 255));
 
-    DxLib::DrawString(
-        400,
-        100,
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 100),
         "CONFIG",
         GetColor(255, 255, 255));
 
 
-        // 描画する文字列
-        std::string message = "";
+    // 描画する文字列
+    std::string message = "";
 
-        // 現在EXITを指している場合と層でない場合で処理を変える
-        // BGM
-        if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_BGMVolume)
+    // 現在EXITを指している場合と層でない場合で処理を変える
+    // BGM
+    if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_BGMVolume)
+    {
+        if (mbBGMVolumeChange)
         {
-            if (mbBGMVolumeChange)
-            {
-                message = "◎";
-            }
-            else
-            {
-                // 右矢印を設定する
-                message = "⇒";
-            }
+            message = "◎";
         }
         else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 文字列をさらに追加する
-        message += "BGMVolume";
-
-        // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            200,
-            message.c_str(),
-            GetColor(255, 255, 255));
-		DxLib::DrawLine(
-			600,
-            210,
-			700,
-            210,
-			GetColor(255, 255, 255));
-		DxLib::DrawCircle(
-			600 + mnVolumeBGM,
-            210,
-            5,
-			GetColor(255, 255, 255));
-        DxLib::DrawFormatString(
-            720,
-            200,
-            GetColor(255, 255, 255),
-            "%d%",
-			mnVolumeBGM);
-        
-
-        // SE
-        if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_SEVolume)
-        {
-            if (mbSEVolumeChange)
-            {
-                message = "◎";
-            }
-            else
-            {
-                // 右矢印を設定する
-                message = "⇒";
-            }
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 文字列をさらに追加する
-        message += "SEVolume";
-
-        // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            300,
-            message.c_str(),
-            GetColor(255, 255, 255));
-        DxLib::DrawLine(
-            600,
-            310,
-            700,
-            310,
-            GetColor(255, 255, 255));
-        DxLib::DrawCircle(
-            600 + mnVolumeSE,
-            310,
-            5,
-            GetColor(255, 255, 255));
-        DxLib::DrawFormatString(
-            720,
-            300,
-            GetColor(255, 255, 255),
-            "%d %",
-            mnVolumeSE);
-
-
-        // フルスクリーン
-        if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_FullScreen)
-        {
-            if (mbFullScreen)
-            {
-                message = "◎";
-            }
-            else
-            {
-                // 右矢印を設定する
-                message = "⇒";
-            }
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 文字列をさらに追加する
-        message += "FullScreen";
-
-        // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            400,
-            message.c_str(),
-            GetColor(255, 255, 255));
-
-        if(FullScreen)
-            DxLib::DrawString(
-                700,
-                400,
-                "ON",
-                GetColor(255, 255, 255));
-        else
-			DxLib::DrawString(
-				700,
-				400,
-				"OFF",
-				GetColor(255, 255, 255));
-        if (mbFullScreen)
-        {
-            DxLib::DrawString(
-                660,
-                400,
-                "←　　　→",
-                GetColor(255, 255, 255));
-        }
-        
-
-        // 色覚サポート
-        if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_ColorVisionSupport)
-        {
-            if (mbColorVisionSupport)
-            {
-                message = "◎";
-            }
-            else
-            {
-                // 右矢印を設定する
-                message = "⇒";
-            }
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 文字列をさらに追加する
-        message += "ColorVisionSupport";
-
-        // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            500,
-            message.c_str(),
-            GetColor(255, 255, 255));
-
-        if (ColorVisionSupport)
-            DxLib::DrawString(
-                700,
-                500,
-                "ON",
-                GetColor(255, 255, 255));
-        else
-            DxLib::DrawString(
-                700,
-                500,
-                "OFF",
-                GetColor(255, 255, 255));
-
-        if (mbColorVisionSupport)
-        {
-            DxLib::DrawString(
-                660,
-                500,
-                "←　　　→",
-                GetColor(255, 255, 255));
-        }
-
-
-        // タイトルへ
-        if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_Exit)
         {
             // 右矢印を設定する
             message = "⇒";
         }
+    }
+    else
+    {
+        // 矢印分の空白を設定する
+        message = "　";
+    }
+
+    // 文字列をさらに追加する
+    message += "BGMVolume";
+
+    // 文字列を描画する
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 200),
+        message.c_str(),
+        GetColor(255, 255, 255));
+
+    DRAW_SYSTEM::DrawLine(
+        VECTOR2D(600, 210),
+        VECTOR2D(700, 210),
+        GetColor(255, 255, 255));
+
+    DxLib::DrawCircle(
+        600 + mnVolumeBGM,
+        210,
+        5,
+        GetColor(255, 255, 255)),
+        true;
+
+    DxLib::DrawFormatString(
+        720,
+        200,
+        GetColor(255, 255, 255),
+        "%d%",
+        mnVolumeBGM);
+
+
+
+    // SE
+    if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_SEVolume)
+    {
+        if (mbSEVolumeChange)
+        {
+            message = "◎";
+        }
         else
         {
-            // 矢印分の空白を設定する
-            message = "　";
+            // 右矢印を設定する
+            message = "⇒";
         }
+    }
+    else
+    {
+        // 矢印分の空白を設定する
+        message = "　";
+    }
 
-        // 
-        message += "TITLE";
+    // 文字列をさらに追加する
+    message += "SEVolume";
 
-        // 文字列を描画する
+    // 文字列を描画する
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 300),
+        message.c_str(),
+        GetColor(255, 255, 255));
+
+    DRAW_SYSTEM::DrawLine(
+        VECTOR2D(600, 310),
+        VECTOR2D(700, 310),
+        GetColor(255, 255, 255));
+
+    DxLib::DrawCircle(
+        600 + mnVolumeSE,
+        310,
+        5,
+        GetColor(255, 255, 255)),
+        true;
+
+    DxLib::DrawFormatString(
+        720,
+        300,
+        GetColor(255, 255, 255),
+        "%d %",
+        mnVolumeSE);
+
+
+    // フルスクリーン
+    if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_FullScreen)
+    {
+        if (mbFullScreen)
+        {
+            message = "◎";
+        }
+        else
+        {
+            // 右矢印を設定する
+            message = "⇒";
+        }
+    }
+    else
+    {
+        // 矢印分の空白を設定する
+        message = "　";
+    }
+
+    // 文字列をさらに追加する
+    message += "FullScreen";
+
+    // 文字列を描画する
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 400),
+        message.c_str(),
+        GetColor(255, 255, 255));
+
+    if (FullScreen)
+    {
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 600),
-            message.c_str(),
+            VECTOR2D(700, 400),
+            "ON",
             GetColor(255, 255, 255));
+    }
+    else
+    {
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(700, 400),
+            "OFF",
+            GetColor(255, 255, 255));
+    }
+
+
+    if (mbFullScreen)
+    {
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(660, 400),
+            "←　　　→",
+            GetColor(255, 255, 255));
+    }
+
+
+    // 色覚サポート
+    if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_ColorVisionSupport)
+    {
+        if (mbColorVisionSupport)
+        {
+            message = "◎";
+        }
+        else
+        {
+            // 右矢印を設定する
+            message = "⇒";
+        }
+    }
+    else
+    {
+        // 矢印分の空白を設定する
+        message = "　";
+    }
+
+    // 文字列をさらに追加する
+    message += "ColorVisionSupport";
+
+    // 文字列を描画する
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 500),
+        message.c_str(),
+        GetColor(255, 255, 255));
+
+    if (ColorVisionSupport)
+    {
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(700, 500),
+            "ON",
+            GetColor(255, 255, 255));
+    }
+    else
+    {
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(700, 500),
+            "OFF",
+            GetColor(255, 255, 255));
+    }
+
+    if (mbColorVisionSupport)
+    {
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(660, 500),
+            "←　　　→",
+            GetColor(255, 255, 255));
+    }
+
+
+    // タイトルへ
+    if (this->mnCurrentMode == OptionSelectMode::OptionSelectMode_Exit)
+    {
+        // 右矢印を設定する
+        message = "⇒";
+    }
+    else
+    {
+        // 矢印分の空白を設定する
+        message = "　";
+    }
+
+    // 
+    message += "BACK";
+
+    // 文字列を描画する
+    DRAW_SYSTEM::DrawString(
+        VECTOR2D(400, 600),
+        message.c_str(),
+        GetColor(255, 255, 255));
 
     // 
     return 0;
