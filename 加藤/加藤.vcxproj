@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -120,12 +120,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Imgui;$(ProjectDir)Imgui\backends;$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(ProjectDir)Source;$(ProjectDir)Source\Animation;$(ProjectDir)Source\Container;$(ProjectDir)Source\Enum;$(ProjectDir)Source\Model;$(ProjectDir)Source\Object;$(ProjectDir)Source\Object\Attack;$(ProjectDir)Source\Object\Building;$(ProjectDir)Source\Object\Character;$(ProjectDir)Source\Object\UI;$(ProjectDir)Source\Shine;$(ProjectDir)Source\Singleton;$(ProjectDir)Source\Singleton\ResourceSingleton;$(ProjectDir)Source\State;$(ProjectDir)Source\State\Character;$(ProjectDir)Source\State\Fsm;$(ProjectDir)Source\State\StateBase;$(ProjectDir)Source\State\UI;$(ProjectDir)Source\Struct;$(ProjectDir)Source\TemplateTypeRestriction;$(ProjectDir)Source\Util;$(ProjectDir)XML_Excel;$(ProjectDir)Source\川田\C_Component;$(ProjectDir)Source\川田\Y_Tool;$(ProjectDir)Source\川田\Z_Except</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)Imgui;$(ProjectDir)Imgui\backends;$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(ProjectDir)Source;$(ProjectDir)Source\Animation;$(ProjectDir)Source\Container;$(ProjectDir)Source\Enum;$(ProjectDir)Source\Model;$(ProjectDir)Source\Object;$(ProjectDir)Source\Object\Attack;$(ProjectDir)Source\Object\Building;$(ProjectDir)Source\Object\Character;$(ProjectDir)Source\Object\UI;$(ProjectDir)Source\Shine;$(ProjectDir)Source\Singleton;$(ProjectDir)Source\Singleton\ResourceSingleton;$(ProjectDir)Source\State;$(ProjectDir)Source\State\Character;$(ProjectDir)Source\State\Fsm;$(ProjectDir)Source\State\StateBase;$(ProjectDir)Source\State\UI;$(ProjectDir)Source\Struct;$(ProjectDir)Source\TemplateTypeRestriction;$(ProjectDir)Source\Util;$(ProjectDir)XML_Excel;$(ProjectDir)Source\川田\C_Component;$(ProjectDir)Source\川田\Y_Tool;$(ProjectDir)Source\川田\Z_Except</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

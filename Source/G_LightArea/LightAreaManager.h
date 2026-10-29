@@ -7,6 +7,12 @@
 
 #include "../Y_Tool/VECTOR.h"
 
+struct HIT_COLLISION_LINE;
+
+class Triangle2D;
+
+class BaseCollision;
+
 // 
 class LightArea;
 
@@ -19,6 +25,13 @@ private:
     {
         VECTOR2D maskSize;
         unsigned char* maskData = nullptr;
+    };
+
+    struct LIGHT_SCREEN_HANDLE
+    {
+        int SceneObjectScreenHandle;
+        int FilpScreenHandle;
+        int ScreenHandle;
     };
 
 
@@ -62,6 +75,23 @@ private:
     // ライト描画終了時処理
     void EndLightDraw();
 
+    // 光領域内の描画済み画面を反転
+    void FlipLightAreaScreen();
+
+    // 光領域を描画用に調整する
+    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber);
+
+    // 角を取得する
+    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos);
+
+    // 	2本のラインの間にある頂点まで描画用ラインを追加する
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
+
+    // 当たっている辺を求める
+    std::vector<VECTOR2D> GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
+
+    // 延長した光を取得する
+    bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
 private:
     // 
     std::vector<LightArea *> mlNode;
@@ -70,7 +100,10 @@ private:
     uint16_t mnDeactivateStartIndex;
 
     // ライトスクリーンハンドル
-    std::vector<int> mnLightScreenHandle;
+    std::vector<LIGHT_SCREEN_HANDLE> mnLightScreenHandle;
+
+    // 全ライトまとめ用スクリーンハンドル
+    int mnAllLightScreenHandle;
 
     // マスクデータ
     MASK_DATA mstMaskData;

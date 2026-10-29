@@ -104,23 +104,36 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handl
     //DxLib::DrawModiGraph(x[0], y[0], x[1], y[1], x[2], y[2], x[3], y[3], handle, TransFlag);
 }
 
-// Œ»óŒõ—Ìˆæ•`‰æ—p
-void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag)
+// ‰æ‘œ•`‰æ
+void DRAW_SYSTEM::DrawImage(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VECTOR2D pos4, int handle, int flag)
 {
-    for (int i = 0; i < polygonNumber; ++i)
+    pos1 = WorldSizeToDisplaySize(pos1);
+    pos2 = WorldSizeToDisplaySize(pos2);
+    pos3 = WorldSizeToDisplaySize(pos3);
+    pos4 = WorldSizeToDisplaySize(pos4);
+    DxLib::DrawModiGraph(pos1.GetX(), pos1.GetY(), pos2.GetX(), pos2.GetY(), pos3.GetX(), pos3.GetY(), pos4.GetX(), pos4.GetY(), handle, flag);
+}
+
+// Œ»óŒõ—Ìˆæ•`‰æ—p
+void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag, bool redrawFlag)
+{
+    if (!redrawFlag)
     {
-        VECTOR2D setPos1 = VECTOR2D(triangleVertex[(i * 3) + 0].pos.x, triangleVertex[(i * 3) + 0].pos.y);
-        VECTOR2D setPos2 = VECTOR2D(triangleVertex[(i * 3) + 1].pos.x, triangleVertex[(i * 3) + 1].pos.y);
-        VECTOR2D setPos3 = VECTOR2D(triangleVertex[(i * 3) + 2].pos.x, triangleVertex[(i * 3) + 2].pos.y);
-        setPos1 = WorldSizeToDisplaySize(setPos1);
-        setPos2 = WorldSizeToDisplaySize(setPos2);
-        setPos3 = WorldSizeToDisplaySize(setPos3);
-        triangleVertex[(i * 3) + 0].pos.x = setPos1.GetX();
-        triangleVertex[(i * 3) + 0].pos.y = setPos1.GetY();
-        triangleVertex[(i * 3) + 1].pos.x = setPos2.GetX();
-        triangleVertex[(i * 3) + 1].pos.y = setPos2.GetY();
-        triangleVertex[(i * 3) + 2].pos.x = setPos3.GetX();
-        triangleVertex[(i * 3) + 2].pos.y = setPos3.GetY();
+        for (int i = 0; i < polygonNumber; ++i)
+        {
+            VECTOR2D setPos1 = VECTOR2D(triangleVertex[(i * 3) + 0].pos.x, triangleVertex[(i * 3) + 0].pos.y);
+            VECTOR2D setPos2 = VECTOR2D(triangleVertex[(i * 3) + 1].pos.x, triangleVertex[(i * 3) + 1].pos.y);
+            VECTOR2D setPos3 = VECTOR2D(triangleVertex[(i * 3) + 2].pos.x, triangleVertex[(i * 3) + 2].pos.y);
+            setPos1 = WorldSizeToDisplaySize(setPos1);
+            setPos2 = WorldSizeToDisplaySize(setPos2);
+            setPos3 = WorldSizeToDisplaySize(setPos3);
+            triangleVertex[(i * 3) + 0].pos.x = setPos1.GetX();
+            triangleVertex[(i * 3) + 0].pos.y = setPos1.GetY();
+            triangleVertex[(i * 3) + 1].pos.x = setPos2.GetX();
+            triangleVertex[(i * 3) + 1].pos.y = setPos2.GetY();
+            triangleVertex[(i * 3) + 2].pos.x = setPos3.GetX();
+            triangleVertex[(i * 3) + 2].pos.y = setPos3.GetY();
+        }
     }
     DxLib::DrawPolygon2D(triangleVertex, polygonNumber, graphHandle, flag);
 }

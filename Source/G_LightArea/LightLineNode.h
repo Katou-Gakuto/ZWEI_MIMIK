@@ -55,6 +55,9 @@ public:
     // 
     bool CheckHitEqual(LightLineNode *target) const;
 
+    // “–‚½‚Á‚Ä‚¢‚éƒRƒŠƒWƒ‡ƒ“Žæ“¾
+    inline BaseCollision *GetHitCollision() const { return mpHitCollision; }
+
 private:
     // 
     void *mpParentObject;

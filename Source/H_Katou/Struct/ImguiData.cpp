@@ -6,13 +6,18 @@
 
 // コンストラクタ
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA()
+#ifdef _DEBUG
 : VariableType(IMGUI_VARIABLE_TYPE::NONE)
 , CharValue(nullptr)
+#endif
 {
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(char* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -67,10 +72,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(char* value, IMGUI_VARIAB
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned char* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -125,10 +134,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned char* value, IMG
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(short* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -183,10 +196,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(short* value, IMGUI_VARIA
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned short* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -241,10 +258,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned short* value, IM
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(int* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -299,10 +320,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(int* value, IMGUI_VARIABL
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned int* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -357,10 +382,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned int* value, IMGU
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -415,10 +444,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long* value, IMGUI_VARIAB
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned long* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -473,10 +506,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned long* value, IMG
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long long* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -531,10 +568,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long long* value, IMGUI_V
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned long long* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -589,10 +630,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(unsigned long long* value
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(float* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -647,10 +692,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(float* value, IMGUI_VARIA
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(double* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -705,10 +754,14 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(double* value, IMGUI_VARI
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long double* value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -763,12 +816,16 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(long double* value, IMGUI
         this->LongDoubleValue = reinterpret_cast<long double*>(value);
         break;
     }
+#endif
 }
 
 // コピー・ムーブ
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(const IMGUI_VARIABLE_POITER_DATA& other)
+#ifdef _DEBUG
 : VariableType(other.VariableType)
+#endif
 {
+#ifdef _DEBUG
     switch (other.VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -823,11 +880,15 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(const IMGUI_VARIABLE_POIT
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 }
 
 IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(IMGUI_VARIABLE_POITER_DATA&& other)
+#ifdef _DEBUG
 : VariableType(other.VariableType)
+#endif
 {
+#ifdef _DEBUG
     switch (other.VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -882,10 +943,12 @@ IMGUI_VARIABLE_POITER_DATA::IMGUI_VARIABLE_POITER_DATA(IMGUI_VARIABLE_POITER_DAT
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 }
 
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(const IMGUI_VARIABLE_POITER_DATA& other)
 {
+#ifdef _DEBUG
     this->VariableType = other.VariableType;
     switch (other.VariableType)
     {
@@ -941,12 +1004,14 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(const IMGUI_VA
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 
     return *this;
 }
 
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(IMGUI_VARIABLE_POITER_DATA&& other)
 {
+#ifdef _DEBUG
     this->VariableType = other.VariableType;
     switch (other.VariableType)
     {
@@ -1002,6 +1067,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(IMGUI_VARIABLE
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 
     return *this;
 }
@@ -1015,6 +1081,7 @@ IMGUI_VARIABLE_POITER_DATA::~IMGUI_VARIABLE_POITER_DATA()
 // 値の代入
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(char value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1082,11 +1149,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(char value)
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(short value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1154,11 +1223,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(short value)
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(int value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1226,11 +1297,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(int value)
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(long value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1298,11 +1371,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(long value)
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(long long value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1370,11 +1445,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(long long valu
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(float value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1442,11 +1519,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(float value)
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(double value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1514,11 +1593,13 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(double value)
         *this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(const IMGUI_VARIABLE_DATA& valueData)
 {
+#ifdef _DEBUG
     if (this->VariableType != valueData.VariableType)
     {
         return *this;
@@ -1590,12 +1671,15 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator=(const IMGUI_VA
         *this->LongDoubleValue = valueData.LongDoubleValue;
         break;
     }
+#endif
+
     return *this;
 }
 
 // 値の取得
 void IMGUI_VARIABLE_POITER_DATA::GetValueToChar(char& charValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1663,9 +1747,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToChar(char& charValue) const
         charValue = static_cast<char>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedChar(unsigned char& unsignedCharValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1733,9 +1819,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedChar(unsigned char& unsignedC
         unsignedCharValue = static_cast<unsigned char>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToShort(short& shortValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1803,9 +1891,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToShort(short& shortValue) const
         shortValue = static_cast<short>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedShort(unsigned short& unsignedShortValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1873,9 +1963,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedShort(unsigned short& unsigne
         unsignedShortValue = static_cast<unsigned short>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToInt(int& intValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -1943,9 +2035,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToInt(int& intValue) const
         intValue = static_cast<int>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedInt(unsigned int& unsignedIntValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2013,9 +2107,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedInt(unsigned int& unsignedInt
         unsignedIntValue = static_cast<unsigned int>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToLong(long& longValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2083,9 +2179,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLong(long& longValue) const
         longValue = static_cast<long>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedLong(unsigned long& unsignedLongValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2153,9 +2251,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedLong(unsigned long& unsignedL
         unsignedLongValue = static_cast<unsigned long>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToLongLong(long long& longlongValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2223,9 +2323,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLongLong(long long& longlongValue) co
         longlongValue = static_cast<long long>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedLongLong(unsigned long long& unsignedLongLongValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2293,9 +2395,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToUnsignedLongLong(unsigned long long& 
         unsignedLongLongValue = static_cast<unsigned long long>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToFloat(float& floatValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2363,10 +2467,12 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToFloat(float& floatValue) const
         floatValue = static_cast<float>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 
 void IMGUI_VARIABLE_POITER_DATA::GetValueToDouble(double& doubleValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2434,9 +2540,11 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToDouble(double& doubleValue) const
         doubleValue = static_cast<double>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_POITER_DATA::GetValueToLongDouble(long double& longDoubleValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2504,11 +2612,13 @@ void IMGUI_VARIABLE_POITER_DATA::GetValueToLongDouble(long double& longDoubleVal
         longDoubleValue = static_cast<long double>(*this->LongDoubleValue);
         break;
     }
+#endif
 }
 
 // インクリメント・デクリメント
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator++()
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2576,12 +2686,14 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator++()
         this->LongDoubleValue++;
         break;
     }
+#endif
 
     return *this;
 }
 
 IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator--()
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2649,6 +2761,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator--()
         this->LongDoubleValue--;
         break;
     }
+#endif
 
     return *this;
 }
@@ -2656,6 +2769,7 @@ IMGUI_VARIABLE_POITER_DATA& IMGUI_VARIABLE_POITER_DATA::operator--()
 
 const void* IMGUI_VARIABLE_POITER_DATA::GetPointer() const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2710,6 +2824,7 @@ const void* IMGUI_VARIABLE_POITER_DATA::GetPointer() const
         if (this->LongDoubleValue == nullptr) { break; }
         return this->LongDoubleValue;
     }
+#endif
 
     return nullptr;
 }
@@ -2721,13 +2836,18 @@ const void* IMGUI_VARIABLE_POITER_DATA::GetPointer() const
 
 // コンストラクタ
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA()
+#ifdef _DEBUG
 : VariableType(IMGUI_VARIABLE_TYPE::NONE)
 , LongDoubleValue(0)
+#endif
 {
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(char value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2782,10 +2902,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(char value, IMGUI_VARIABLE_TYPE variabl
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned char value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2840,10 +2964,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned char value, IMGUI_VARIABLE_TYP
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(short value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2898,10 +3026,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(short value, IMGUI_VARIABLE_TYPE variab
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned short value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -2956,10 +3088,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned short value, IMGUI_VARIABLE_TY
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(int value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3014,10 +3150,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(int value, IMGUI_VARIABLE_TYPE variable
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned int value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3072,10 +3212,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned int value, IMGUI_VARIABLE_TYPE
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(long value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3130,10 +3274,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(long value, IMGUI_VARIABLE_TYPE variabl
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned long value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3188,10 +3336,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned long value, IMGUI_VARIABLE_TYP
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(long long value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3246,10 +3398,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(long long value, IMGUI_VARIABLE_TYPE va
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned long long value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3304,10 +3460,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(unsigned long long value, IMGUI_VARIABL
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(float value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3362,10 +3522,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(float value, IMGUI_VARIABLE_TYPE variab
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(double value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3420,10 +3584,14 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(double value, IMGUI_VARIABLE_TYPE varia
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(long double value, IMGUI_VARIABLE_TYPE variableType)
+#ifdef _DEBUG
 : VariableType(variableType)
+#endif
 {
+#ifdef _DEBUG
     switch (variableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3478,12 +3646,16 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(long double value, IMGUI_VARIABLE_TYPE 
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 }
 
 // コピー・ムーブ
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(const IMGUI_VARIABLE_DATA& other)
+#ifdef _DEBUG
 : VariableType(other.VariableType)
+#endif
 {
+#ifdef _DEBUG
     switch (other.VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3538,11 +3710,15 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(const IMGUI_VARIABLE_DATA& other)
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 }
 
 IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(IMGUI_VARIABLE_DATA&& other)
+#ifdef _DEBUG
 : VariableType(other.VariableType)
+#endif
 {
+#ifdef _DEBUG
     switch (other.VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3597,10 +3773,12 @@ IMGUI_VARIABLE_DATA::IMGUI_VARIABLE_DATA(IMGUI_VARIABLE_DATA&& other)
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 }
 
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(const IMGUI_VARIABLE_DATA& other)
 {
+#ifdef _DEBUG
     this->VariableType = other.VariableType;
     switch (other.VariableType)
     {
@@ -3656,12 +3834,14 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(const IMGUI_VARIABLE_DATA& o
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 
     return *this;
 }
 
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(IMGUI_VARIABLE_DATA&& other)
 {
+#ifdef _DEBUG
     this->VariableType = other.VariableType;
     switch (other.VariableType)
     {
@@ -3717,6 +3897,7 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(IMGUI_VARIABLE_DATA&& other)
         this->LongDoubleValue = other.LongDoubleValue;
         break;
     }
+#endif
 
     return *this;
 }
@@ -3730,6 +3911,7 @@ IMGUI_VARIABLE_DATA::~IMGUI_VARIABLE_DATA()
 // 値の代入
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(char value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3784,11 +3966,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(char value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(short value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3843,11 +4027,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(short value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(int value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3902,11 +4088,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(int value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(long value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -3961,11 +4149,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(long value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(long long value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4020,11 +4210,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(long long value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(float value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4079,11 +4271,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(float value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(double value)
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4138,11 +4332,13 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(double value)
         this->LongDoubleValue = static_cast<long double>(value);
         break;
     }
+#endif
 
     return *this;
 }
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(const IMGUI_VARIABLE_POITER_DATA& poiterData)
 {
+#ifdef _DEBUG
     if (this->VariableType != poiterData.VariableType)
     {
         return *this;
@@ -4214,12 +4410,15 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator=(const IMGUI_VARIABLE_POITER_
         this->LongDoubleValue = *poiterData.LongDoubleValue;
         break;
     }
+#endif
+
     return *this;
 }
 
 // 値の取得
 void IMGUI_VARIABLE_DATA::GetValueToChar(char& charValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4274,10 +4473,11 @@ void IMGUI_VARIABLE_DATA::GetValueToChar(char& charValue) const
         charValue = static_cast<char>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToUnsignedChar(unsigned char& unsignedCharValue) const
 {
-
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4332,9 +4532,11 @@ void IMGUI_VARIABLE_DATA::GetValueToUnsignedChar(unsigned char& unsignedCharValu
         unsignedCharValue = static_cast<unsigned char>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToShort(short& shortValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4389,10 +4591,11 @@ void IMGUI_VARIABLE_DATA::GetValueToShort(short& shortValue) const
         shortValue = static_cast<short>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToUnsignedShort(unsigned short& unsignedShortValue) const
 {
-
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4447,9 +4650,11 @@ void IMGUI_VARIABLE_DATA::GetValueToUnsignedShort(unsigned short& unsignedShortV
         unsignedShortValue = static_cast<unsigned short>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToInt(int& intValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4504,10 +4709,11 @@ void IMGUI_VARIABLE_DATA::GetValueToInt(int& intValue) const
         intValue = static_cast<int>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToUnsignedInt(unsigned int& unsignedIntValue) const
 {
-
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4562,9 +4768,11 @@ void IMGUI_VARIABLE_DATA::GetValueToUnsignedInt(unsigned int& unsignedIntValue) 
         unsignedIntValue = static_cast<unsigned int>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToLong(long& longValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4619,10 +4827,11 @@ void IMGUI_VARIABLE_DATA::GetValueToLong(long& longValue) const
         longValue = static_cast<long>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToUnsignedLong(unsigned long& unsignedLongValue) const
 {
-
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4677,9 +4886,11 @@ void IMGUI_VARIABLE_DATA::GetValueToUnsignedLong(unsigned long& unsignedLongValu
         unsignedLongValue = static_cast<unsigned long>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToLongLong(long long& longlongValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4734,10 +4945,11 @@ void IMGUI_VARIABLE_DATA::GetValueToLongLong(long long& longlongValue) const
         longlongValue = static_cast<long long>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToUnsignedLongLong(unsigned long long& unsignedLongLongValue) const
 {
-
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4792,9 +5004,11 @@ void IMGUI_VARIABLE_DATA::GetValueToUnsignedLongLong(unsigned long long& unsigne
         unsignedLongLongValue = static_cast<unsigned long long>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToFloat(float& floatValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4849,9 +5063,11 @@ void IMGUI_VARIABLE_DATA::GetValueToFloat(float& floatValue) const
         floatValue = static_cast<float>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToDouble(double& doubleValue) const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4906,10 +5122,11 @@ void IMGUI_VARIABLE_DATA::GetValueToDouble(double& doubleValue) const
         doubleValue = static_cast<double>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 void IMGUI_VARIABLE_DATA::GetValueToLongDouble(long double& doubleValue) const
 {
-
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -4964,11 +5181,13 @@ void IMGUI_VARIABLE_DATA::GetValueToLongDouble(long double& doubleValue) const
         doubleValue = static_cast<long double>(this->LongDoubleValue);
         break;
     }
+#endif
 }
 
 // インクリメント・デクリメント
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator++()
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -5023,12 +5242,14 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator++()
         ++this->LongDoubleValue;
         break;
     }
+#endif
 
     return *this;
 }
 
 IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator--()
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -5083,6 +5304,7 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator--()
         --this->LongDoubleValue;
         break;
     }
+#endif
 
     return *this;
 }
@@ -5090,6 +5312,7 @@ IMGUI_VARIABLE_DATA& IMGUI_VARIABLE_DATA::operator--()
 
 const void* IMGUI_VARIABLE_DATA::GetPointer() const
 {
+#ifdef _DEBUG
     switch (VariableType)
     {
     case IMGUI_VARIABLE_TYPE::CHAR:
@@ -5131,6 +5354,7 @@ const void* IMGUI_VARIABLE_DATA::GetPointer() const
     case IMGUI_VARIABLE_TYPE::LONG_DOUBLE:
         return &this->LongDoubleValue;
     }
+#endif
 
     return nullptr;
 }
@@ -5143,48 +5367,61 @@ const void* IMGUI_VARIABLE_DATA::GetPointer() const
 /*-----------------------------------------------------------------------*/
 // コンストラクタ
 IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA()
+#ifdef _DEBUG
 : MyImguiDrawMode(IMGUI_DRAW_MODE::NONE)
+#endif
 {
 }
 
 IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_VARIABLE_CONTROL value)
+#ifdef _DEBUG
 : MyImguiDrawMode(IMGUI_DRAW_MODE::VARIABLE)
 , ImguiVariableControl(value)
+#endif
 {
 }
 
 IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_BUTTON_CONTROL value)
+#ifdef _DEBUG
 : MyImguiDrawMode(IMGUI_DRAW_MODE::BUTTON)
 , ImguiButtonControl(value)
+#endif
 {
 }
 
 IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_LAYOUT_CONTROL value)
+#ifdef _DEBUG
 : MyImguiDrawMode(IMGUI_DRAW_MODE::LAYOUT)
 , ImguiLayoutControl(value)
+#endif
 {
 }
 
 // コピー・ムーブコンストラクタ
 IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(const IMGUI_ALL_DRAW_ONE_DATA& other)
+#ifdef _DEBUG
 : MyImguiDrawMode(other.MyImguiDrawMode)
 , ImguiVariableControl(other.ImguiVariableControl)
 , ImguiButtonControl(other.ImguiButtonControl)
 , ImguiLayoutControl(other.ImguiLayoutControl)
+#endif
 {
 }
 
 IMGUI_ALL_DRAW_ONE_DATA::IMGUI_ALL_DRAW_ONE_DATA(IMGUI_ALL_DRAW_ONE_DATA&& other)
+#ifdef _DEBUG
 : MyImguiDrawMode(other.MyImguiDrawMode)
 , ImguiVariableControl(other.ImguiVariableControl)
 , ImguiButtonControl(other.ImguiButtonControl)
 , ImguiLayoutControl(other.ImguiLayoutControl)
+#endif
 {
 }
 
 // コピー代入演算子
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_ALL_DRAW_ONE_DATA& other)
 {
+#ifdef _DEBUG
     if (this != &other)
     {
         MyImguiDrawMode = other.MyImguiDrawMode;
@@ -5192,6 +5429,7 @@ IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_ALL_DRAW
         ImguiButtonControl = other.ImguiButtonControl;
         ImguiLayoutControl = other.ImguiLayoutControl;
     }
+#endif
 
     return *this;
 }
@@ -5199,6 +5437,7 @@ IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_ALL_DRAW
 // ムーブ代入演算子
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_ALL_DRAW_ONE_DATA&& other)
 {
+#ifdef _DEBUG
     if (this != &other)
     {
         MyImguiDrawMode = other.MyImguiDrawMode;
@@ -5206,6 +5445,7 @@ IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_ALL_DRAW_ONE_D
         ImguiButtonControl = other.ImguiButtonControl;
         ImguiLayoutControl = other.ImguiLayoutControl;
     }
+#endif
 
     return *this;
 }
@@ -5218,16 +5458,20 @@ IMGUI_ALL_DRAW_ONE_DATA::~IMGUI_ALL_DRAW_ONE_DATA()
 // 変数コントロール代入
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_VARIABLE_CONTROL& other)
 {
+#ifdef _DEBUG
     MyImguiDrawMode = IMGUI_DRAW_MODE::VARIABLE;
     ImguiVariableControl = other;
+#endif
 
     return *this;
 }
 
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_VARIABLE_CONTROL&& other)
 {
+#ifdef _DEBUG
     MyImguiDrawMode = IMGUI_DRAW_MODE::VARIABLE;
     ImguiVariableControl = other;
+#endif
 
     return *this;
 }
@@ -5235,16 +5479,20 @@ IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_VARIABLE_CONTR
 // ボタンコントロール代入
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_BUTTON_CONTROL& other)
 {
+#ifdef _DEBUG
     MyImguiDrawMode = IMGUI_DRAW_MODE::BUTTON;
     ImguiButtonControl = other;
+#endif
 
     return *this;
 }
 
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_BUTTON_CONTROL&& other)
 {
+#ifdef _DEBUG
     MyImguiDrawMode = IMGUI_DRAW_MODE::BUTTON;
     ImguiButtonControl = other;
+#endif
 
     return *this;
 }
@@ -5252,16 +5500,20 @@ IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_BUTTON_CONTROL
 // レイアウトコントロール代入
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(const IMGUI_LAYOUT_CONTROL& other)
 {
+#ifdef _DEBUG
     MyImguiDrawMode = IMGUI_DRAW_MODE::LAYOUT;
     ImguiLayoutControl = other;
+#endif
 
     return *this;
 }
 
 IMGUI_ALL_DRAW_ONE_DATA& IMGUI_ALL_DRAW_ONE_DATA::operator=(IMGUI_LAYOUT_CONTROL&& other)
 {
+#ifdef _DEBUG
     MyImguiDrawMode = IMGUI_DRAW_MODE::LAYOUT;
     ImguiLayoutControl = other;
+#endif
 
     return *this;
 }

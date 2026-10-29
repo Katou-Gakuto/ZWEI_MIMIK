@@ -72,6 +72,7 @@ public:
 
     const void* GetPointer() const;
 
+#ifdef _DEBUG
     union
     {
         char* CharValue;                            //                 char型変数へのポインタ
@@ -90,6 +91,7 @@ public:
     };
 
     IMGUI_VARIABLE_TYPE VariableType; // 変数の型
+#endif
 };
 /*変数データ(値)*/
 struct IMGUI_VARIABLE_DATA
@@ -151,6 +153,7 @@ public:
 
     const void* GetPointer() const;
 
+#ifdef _DEBUG
     union
     {
         char CharValue;                            //                 char型変数へのポインタ
@@ -169,6 +172,7 @@ public:
     };
 
     IMGUI_VARIABLE_TYPE VariableType; // 変数の型
+#endif
 };
 
 
@@ -241,8 +245,17 @@ public:
         , VariableFlag(other.VariableFlag)
         , VariableImguiType(other.VariableImguiType)
         , AddNumberDrawFlag(other.AddNumberDrawFlag)
+        , VariableBeforeImguiLayoutControl(other.VariableBeforeImguiLayoutControl)
+        , VariableAfterImguiLayoutControl(other.VariableAfterImguiLayoutControl)
 #endif
     {
+#ifdef _DEBUG
+        for (int i = 0; i < IMGUI_VARIABLE_MAX; ++i)
+        {
+            PreVariable[i] = other.PreVariable[i];
+            ChangeVariable[i] = other.ChangeVariable[i];
+        }
+#endif
     }
 
     // 引数付きコンストラクタ
@@ -259,7 +272,9 @@ public:
         const std::string& format = "%.6f",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberFlag = true
+        bool addNumberFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
 #ifdef _DEBUG
         : VariableDatas(variableDatas)
@@ -273,6 +288,8 @@ public:
         , VariableFlag(flag)
         , VariableImguiType(imguiType)
         , AddNumberDrawFlag(addNumberFlag)
+        , VariableBeforeImguiLayoutControl(variableBeforeImguiLayoutControl)
+        , VariableAfterImguiLayoutControl(variableAfterImguiLayoutControl)
 #endif
     {
 #ifdef _DEBUG
@@ -612,6 +629,22 @@ public:
 #endif
     }
 
+    // 描画前レイアウト設定
+    void SetVariableBeforeImguiLayoutControl(std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl)
+    {
+#ifdef _DEBUG
+        this->VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+#endif
+    }
+
+    // 描画後レイアウト設定
+    void SetVariableAfterImguiLayoutControl(std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl)
+    {
+#ifdef _DEBUG
+        this->VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
+#endif
+    }
+
     // float用データ生成
     static IMGUI_VARIABLE_CONTROL GetImguiData(
         const std::vector<float*>& variableDatas,
@@ -624,7 +657,9 @@ public:
         const std::string& format = "%.6f",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberDrawFlag = true
+        bool addNumberDrawFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
     {
         IMGUI_VARIABLE_CONTROL imguiData;
@@ -638,6 +673,8 @@ public:
         imguiData.VariableFlag = flag;
         imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+        imguiData.VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+        imguiData.VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
 
         for (float* variable : variableDatas)
         {
@@ -662,7 +699,9 @@ public:
         const std::string& format = "%d",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberDrawFlag = true
+        bool addNumberDrawFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
     {
         IMGUI_VARIABLE_CONTROL imguiData;
@@ -676,6 +715,8 @@ public:
         imguiData.VariableFlag = flag;
         imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+        imguiData.VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+        imguiData.VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
 
         for (int* variable : variableDatas)
         {
@@ -699,7 +740,9 @@ public:
         const std::string& format = "%d",
         ImGuiSliderFlags flag = 0,
         IMGUI_TYPE imguiType = IMGUI_TYPE::SLIDER1,
-        bool addNumberDrawFlag = true
+        bool addNumberDrawFlag = true,
+        std::vector<IMGUI_LAYOUT_CONTROL> variableBeforeImguiLayoutControl = {},
+        std::vector<IMGUI_LAYOUT_CONTROL> variableAfterImguiLayoutControl = {}
     )
     {
         IMGUI_VARIABLE_CONTROL imguiData;
@@ -713,6 +756,8 @@ public:
         imguiData.VariableFlag = flag;
         imguiData.VariableImguiType = imguiType;
         imguiData.AddNumberDrawFlag = addNumberDrawFlag;
+        imguiData.VariableBeforeImguiLayoutControl = variableBeforeImguiLayoutControl;
+        imguiData.VariableAfterImguiLayoutControl = variableAfterImguiLayoutControl;
 
         imguiData.VariableDatas = variableDatas;
 #endif
@@ -735,7 +780,7 @@ struct IMGUI_BUTTON_CONTROL
     // 押すキーの文字列
     std::string PressKeyString = "NONE";
     // url
-    std::string Url = "https://github.com/Katou-Gakuto";
+    std::string Url = "https://github.com";
 
     // ImGuiのenum設定値
     union
@@ -756,11 +801,11 @@ struct IMGUI_BUTTON_CONTROL
     bool ButtonDrawFlag;
 
     // ボタンフラグ
-    bool ButtonFlag;
+    bool *ButtonFlag = nullptr;
     // 引数ボタンフラグ
-    bool ArgumentButtonFlag;
+    bool *ArgumentButtonFlag = nullptr;
     // ボタンビットフラグ
-    BIT_FLAG<unsigned int> ButtonBitFlag;
+    unsigned int* ButtonBitFlag = nullptr;
     // ボタンビットフラグの値
     unsigned int ButtonBitFlagValue = 0;
 
@@ -769,6 +814,293 @@ struct IMGUI_BUTTON_CONTROL
     // 描画後にやるレイアウト描画
     std::vector<IMGUI_LAYOUT_CONTROL> ButtonAfterImguiLayoutControl;
 #endif
+
+    // ボタン種類設定
+    void SetButtonType(IMGUI_BUTTON_TYPE buttonType)
+    {
+#ifdef _DEBUG
+        ButtonType = buttonType;
+#endif
+    }
+
+    // ボタンラベル設定
+    void SetButtonLabel(const std::string& buttonLabel)
+    {
+#ifdef _DEBUG
+        ButtonLabel = buttonLabel;
+#endif
+    }
+
+    // 押下キー文字列設定
+    void SetPressKeyString(const std::string& pressKeyString)
+    {
+#ifdef _DEBUG
+        PressKeyString = pressKeyString;
+#endif
+    }
+
+    // URL設定
+    void SetUrl(const std::string& url)
+    {
+#ifdef _DEBUG
+        Url = url;
+#endif
+    }
+
+    // ImGui列挙型フラグ設定
+    void SetButtonImGuiEnumFlags(int buttonImGuiEnumFlags)
+    {
+#ifdef _DEBUG
+        ButtonImGuiEnumFlags = buttonImGuiEnumFlags;
+#endif
+    }
+
+    // ボタン方向設定
+    void SetButtonDir(ImGuiDir buttonDir)
+    {
+#ifdef _DEBUG
+        ButtonDir = buttonDir;
+#endif
+    }
+
+    // ボタンフラグ設定
+    void SetButtonFlags(ImGuiButtonFlags buttonFlags)
+    {
+#ifdef _DEBUG
+        ButtonFlags = buttonFlags;
+#endif
+    }
+
+    // 色編集フラグ設定
+    void SetButtonColorEditFlags(ImGuiColorEditFlags buttonColorEditFlags)
+    {
+#ifdef _DEBUG
+        ButtonColorEditFlags = buttonColorEditFlags;
+#endif
+    }
+
+    // 選択項目フラグ設定
+    void SetButtonSelectableFlags(ImGuiSelectableFlags buttonSelectableFlags)
+    {
+#ifdef _DEBUG
+        ButtonSelectableFlags = buttonSelectableFlags;
+#endif
+    }
+
+    // タブ項目フラグ設定
+    void SetButtonTabItemFlags(ImGuiTabItemFlags buttonTabItemFlags)
+    {
+#ifdef _DEBUG
+        ButtonTabItemFlags = buttonTabItemFlags;
+#endif
+    }
+
+    // ボタンサイズ設定
+    void SetButtonSize(const ImVec2& buttonSize)
+    {
+#ifdef _DEBUG
+        ButtonSize = buttonSize;
+#endif
+    }
+
+    // ボタン色設定
+    void SetButtonColor(const ImVec4& buttonColor)
+    {
+#ifdef _DEBUG
+        ButtonColor = buttonColor;
+#endif
+    }
+
+    // ボタン描画フラグ設定
+    void SetButtonDrawFlag(bool buttonDrawFlag)
+    {
+#ifdef _DEBUG
+        ButtonDrawFlag = buttonDrawFlag;
+#endif
+    }
+
+    // ボタン状態フラグのポインタ設定
+    void SetButtonFlag(bool* buttonFlag)
+    {
+#ifdef _DEBUG
+        ButtonFlag = buttonFlag;
+#endif
+    }
+
+    // 引数として返すボタン状態フラグのポインタ設定
+    void SetArgumentButtonFlag(bool* argumentButtonFlag)
+    {
+#ifdef _DEBUG
+        ArgumentButtonFlag = argumentButtonFlag;
+#endif
+    }
+
+    // ビットフラグのポインタ設定
+    void SetButtonBitFlag(unsigned int* buttonBitFlag)
+    {
+#ifdef _DEBUG
+        ButtonBitFlag = buttonBitFlag;
+#endif
+    }
+
+    // ビットフラグ値設定
+    void SetButtonBitFlagValue(unsigned int buttonBitFlagValue)
+    {
+#ifdef _DEBUG
+        ButtonBitFlagValue = buttonBitFlagValue;
+#endif
+    }
+
+    // 描画前レイアウト設定
+    void SetButtonBeforeImguiLayoutControl(const std::vector<IMGUI_LAYOUT_CONTROL>& buttonBeforeImguiLayoutControl)
+    {
+#ifdef _DEBUG
+        ButtonBeforeImguiLayoutControl = buttonBeforeImguiLayoutControl;
+#endif
+    }
+
+    // 描画後レイアウト設定
+    void SetButtonAfterImguiLayoutControl(const std::vector<IMGUI_LAYOUT_CONTROL>& buttonAfterImguiLayoutControl)
+    {
+#ifdef _DEBUG
+        ButtonAfterImguiLayoutControl = buttonAfterImguiLayoutControl;
+#endif
+    }
+
+    // ボタン情報リセット
+    void ReSetButton()
+    {
+#ifdef _DEBUG
+        ButtonType = IMGUI_BUTTON_TYPE{};
+        ButtonLabel.clear();
+        PressKeyString = "NONE";
+        Url = "https://github.com";
+
+        ButtonImGuiEnumFlags = 0;
+        ButtonSize = ImVec2(0.0f, 0.0f);
+        ButtonColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+        ButtonDrawFlag = false;
+        ButtonFlag = nullptr;
+        ArgumentButtonFlag = nullptr;
+
+        ButtonBitFlag = nullptr;
+        ButtonBitFlagValue = 0;
+
+        ButtonBeforeImguiLayoutControl.clear();
+        ButtonAfterImguiLayoutControl.clear();
+#endif
+    }
+
+    //==================================================
+    // デフォルトコンストラクタ
+    //==================================================
+    IMGUI_BUTTON_CONTROL()
+#ifdef _DEBUG
+        : ButtonType(IMGUI_BUTTON_TYPE::BUTTON)
+        , ButtonLabel("NONE")
+        , PressKeyString("NONE")
+        , Url("https://github.com/Katou-Gakuto")
+        , ButtonImGuiEnumFlags(0)
+        , ButtonSize(0.0f, 0.0f)
+        , ButtonColor(1.0f, 1.0f, 1.0f, 1.0f)
+        , ButtonDrawFlag(true)
+        , ButtonFlag(nullptr)
+        , ArgumentButtonFlag(nullptr)
+        , ButtonBitFlag(nullptr)
+        , ButtonBitFlagValue(0)
+#endif
+    {
+    }
+
+    //==================================================
+    // コピーコンストラクタ
+    //==================================================
+    IMGUI_BUTTON_CONTROL(const IMGUI_BUTTON_CONTROL& other)
+#ifdef _DEBUG
+        : ButtonType(other.ButtonType)
+        , ButtonLabel(other.ButtonLabel)
+        , PressKeyString(other.PressKeyString)
+        , Url(other.Url)
+        , ButtonImGuiEnumFlags(other.ButtonImGuiEnumFlags)
+        , ButtonSize(other.ButtonSize)
+        , ButtonColor(other.ButtonColor)
+        , ButtonDrawFlag(other.ButtonDrawFlag)
+        , ButtonFlag(other.ButtonFlag)
+        , ArgumentButtonFlag(other.ArgumentButtonFlag)
+        , ButtonBitFlag(other.ButtonBitFlag)
+        , ButtonBitFlagValue(other.ButtonBitFlagValue)
+        , ButtonBeforeImguiLayoutControl(other.ButtonBeforeImguiLayoutControl)
+        , ButtonAfterImguiLayoutControl(other.ButtonAfterImguiLayoutControl)
+#endif
+    {
+    }
+
+    //==================================================
+    // 引数付きコンストラクタ
+    // 全項目設定用
+    //==================================================
+    IMGUI_BUTTON_CONTROL(
+        IMGUI_BUTTON_TYPE buttonType,
+        const std::string& buttonLabel,
+        const std::string& pressKeyString,
+        const std::string& url,
+        int buttonImGuiEnumFlags,
+        const ImVec2& buttonSize,
+        const ImVec4& buttonColor,
+        bool buttonDrawFlag,
+        bool* buttonFlag,
+        bool* argumentButtonFlag,
+        unsigned int* buttonBitFlag,
+        unsigned int buttonBitFlagValue,
+        const std::vector<IMGUI_LAYOUT_CONTROL>& buttonBeforeImguiLayoutControl,
+        const std::vector<IMGUI_LAYOUT_CONTROL>& buttonAfterImguiLayoutControl
+    )
+#ifdef _DEBUG
+        : ButtonType(buttonType)
+        , ButtonLabel(buttonLabel)
+        , PressKeyString(pressKeyString)
+        , Url(url)
+        , ButtonImGuiEnumFlags(buttonImGuiEnumFlags)
+        , ButtonSize(buttonSize)
+        , ButtonColor(buttonColor)
+        , ButtonDrawFlag(buttonDrawFlag)
+        , ButtonFlag(buttonFlag)
+        , ArgumentButtonFlag(argumentButtonFlag)
+        , ButtonBitFlag(buttonBitFlag)
+        , ButtonBitFlagValue(buttonBitFlagValue)
+        , ButtonBeforeImguiLayoutControl(buttonBeforeImguiLayoutControl)
+        , ButtonAfterImguiLayoutControl(buttonAfterImguiLayoutControl)
+#endif
+    {
+    }
+
+    //==================================================
+    // 全項目設定用 GetImguiData
+    //==================================================
+    static IMGUI_BUTTON_CONTROL GetImguiData(
+        IMGUI_BUTTON_TYPE buttonType,
+        const std::string& buttonLabel = "",
+        const std::string& pressKeyString = "NONE",
+        const std::string& url = "https://github.com",
+        int buttonImGuiEnumFlags = 0,
+        const ImVec2& buttonSize = ImVec2(0.0f, 0.0f),
+        const ImVec4& buttonColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f),
+        bool buttonDrawFlag = false,
+        bool* buttonFlag = nullptr,
+        bool* argumentButtonFlag = nullptr,
+        unsigned int* buttonBitFlag = nullptr,
+        unsigned int buttonBitFlagValue = 0,
+        const std::vector<IMGUI_LAYOUT_CONTROL>& buttonBeforeImguiLayoutControl = {},
+        const std::vector<IMGUI_LAYOUT_CONTROL>& buttonAfterImguiLayoutControl = {}
+    )
+    {
+#ifdef _DEBUG
+        return IMGUI_BUTTON_CONTROL(buttonType, buttonLabel, pressKeyString, url, buttonImGuiEnumFlags, buttonSize, buttonColor, buttonDrawFlag, buttonFlag, argumentButtonFlag, buttonBitFlag, buttonBitFlagValue, buttonBeforeImguiLayoutControl, buttonAfterImguiLayoutControl);
+#else
+        return IMGUI_BUTTON_CONTROL();
+#endif
+    }
 };
 
 // imguiのレイアウト描画用構造体
@@ -796,6 +1128,7 @@ struct IMGUI_LAYOUT_CONTROL
         ImGuiTableColumnFlags LayoutTableColumnFlags; // = ImGuiTableColumnFlags_None; 表の列設定
         ImGuiStyleVar LayoutStyleVar; // = ImGuiStyleVar_ItemSpacing; 変更するスタイル項目
         ImGuiCol LayoutStyleColor; // = ImGuiCol_Text; 変更する色の項目
+        ImGuiTabBarFlags LayoutStyleTabBarFlags;    // = ImGuiTabBarFlags_; タブバーの設定
     };
 
     //==================================================
@@ -823,18 +1156,335 @@ struct IMGUI_LAYOUT_CONTROL
     //==================================================
 
     ImVec4 LayoutColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // 変更する色（RGBA）
-    #endif
+#endif
+
+    // レイアウト種類設定
+    void SetLayoutType(IMGUI_LAYOUT_TYPE layoutType)
+    {
+#ifdef _DEBUG
+        LayoutType = layoutType;
+#endif
+    }
+
+    // 表示文字列設定
+    void SetLayoutText(const std::string& layoutText)
+    {
+#ifdef _DEBUG
+        LayoutText = layoutText;
+#endif
+    }
+
+    // カウント設定
+    void SetLayoutCount(int layoutCount)
+    {
+#ifdef _DEBUG
+        LayoutCount = layoutCount;
+#endif
+    }
+
+    // インデックス設定
+    void SetLayoutIndex(int layoutIndex)
+    {
+#ifdef _DEBUG
+        LayoutIndex = layoutIndex;
+#endif
+    }
+
+    // ユーザーID設定
+    void SetLayoutUserID(unsigned int layoutUserID)
+    {
+#ifdef _DEBUG
+        LayoutUserID = layoutUserID;
+#endif
+    }
+
+    // サイズ設定
+    void SetLayoutSize(const ImVec2& layoutSize)
+    {
+#ifdef _DEBUG
+        LayoutSize = layoutSize;
+#endif
+    }
+
+    // 幅設定
+    void SetLayoutWidth(float layoutWidth)
+    {
+#ifdef _DEBUG
+        LayoutWidth = layoutWidth;
+#endif
+    }
+
+    // 間隔設定
+    void SetLayoutSpacing(float layoutSpacing)
+    {
+#ifdef _DEBUG
+        LayoutSpacing = layoutSpacing;
+#endif
+    }
+
+    // 最小高さ設定
+    void SetLayoutMinHeight(float layoutMinHeight)
+    {
+#ifdef _DEBUG
+        LayoutMinHeight = layoutMinHeight;
+#endif
+    }
+
+    // ImGui列挙型フラグ設定
+    void SetLayoutImguiEnumFlags(int layoutImguiEnumFlags)
+    {
+#ifdef _DEBUG
+        LayoutImguiEnumFlags = layoutImguiEnumFlags;
+#endif
+    }
+
+    // ツリーノードフラグ設定
+    void SetLayoutTreeNodeFlags(ImGuiTreeNodeFlags layoutTreeNodeFlags)
+    {
+#ifdef _DEBUG
+        LayoutTreeNodeFlags = layoutTreeNodeFlags;
+#endif
+    }
+
+    // テーブルフラグ設定
+    void SetLayoutTableFlags(ImGuiTableFlags layoutTableFlags)
+    {
+#ifdef _DEBUG
+        LayoutTableFlags = layoutTableFlags;
+#endif
+    }
+
+    // テーブル列フラグ設定
+    void SetLayoutTableColumnFlags(ImGuiTableColumnFlags layoutTableColumnFlags)
+    {
+#ifdef _DEBUG
+        LayoutTableColumnFlags = layoutTableColumnFlags;
+#endif
+    }
+
+    // スタイル変数設定
+    void SetLayoutStyleVar(ImGuiStyleVar layoutStyleVar)
+    {
+#ifdef _DEBUG
+        LayoutStyleVar = layoutStyleVar;
+#endif
+    }
+
+    // スタイル色設定
+    void SetLayoutStyleColor(ImGuiCol layoutStyleColor)
+    {
+#ifdef _DEBUG
+        LayoutStyleColor = layoutStyleColor;
+#endif
+    }
+
+    // タブバーのフラグ設定
+    void SetLayoutStyleTabBarFlags(ImGuiTabBarFlags layoutStyleTabBarFlags)
+    {
+#ifdef _DEBUG
+        LayoutStyleTabBarFlags = layoutStyleTabBarFlags;
+#endif
+    }
+
+    // 変数データ設定
+    void SetLayoutVarable(const IMGUI_VARIABLE_DATA& layoutVarable)
+    {
+#ifdef _DEBUG
+        LayoutVarable = layoutVarable;
+#endif
+    }
+
+    // 子ウィンドウフラグ設定
+    void SetLayoutChildFlags(ImGuiChildFlags layoutChildFlags)
+    {
+#ifdef _DEBUG
+        LayoutChildFlags = layoutChildFlags;
+#endif
+    }
+
+    // ウィンドウフラグ設定
+    void SetLayoutWindowFlags(ImGuiWindowFlags layoutWindowFlags)
+    {
+#ifdef _DEBUG
+        LayoutWindowFlags = layoutWindowFlags;
+#endif
+    }
+
+    // デフォルト展開状態設定
+    void SetLayoutDefaultOpen(bool layoutDefaultOpen)
+    {
+#ifdef _DEBUG
+        LayoutDefaultOpen = layoutDefaultOpen;
+#endif
+    }
+
+    // 色設定
+    void SetLayoutColor(const ImVec4& layoutColor)
+    {
+#ifdef _DEBUG
+        LayoutColor = layoutColor;
+#endif
+    }
+
+    // レイアウト情報リセット
+    void ReSetLayout()
+    {
+#ifdef _DEBUG
+        LayoutType = IMGUI_LAYOUT_TYPE{};
+        LayoutText.clear();
+
+        LayoutCount = 0;
+        LayoutIndex = 0;
+        LayoutUserID = 0;
+
+        LayoutSize = ImVec2(0.0f, 0.0f);
+        LayoutWidth = 0.0f;
+        LayoutSpacing = -1.0f;
+        LayoutMinHeight = 0.0f;
+
+        LayoutImguiEnumFlags = 0;
+
+        LayoutVarable = IMGUI_VARIABLE_DATA();
+
+        LayoutChildFlags = ImGuiChildFlags_None;
+        LayoutWindowFlags = ImGuiWindowFlags_None;
+        LayoutDefaultOpen = false;
+        LayoutColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+#endif
+    }
+
+        //==================================================
+    // デフォルトコンストラクタ
+    //==================================================
+    IMGUI_LAYOUT_CONTROL()
+#ifdef _DEBUG
+        : LayoutType(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_TEXT)
+        , LayoutText("")
+        , LayoutCount(0)
+        , LayoutIndex(0)
+        , LayoutUserID(0)
+        , LayoutSize(0.0f, 0.0f)
+        , LayoutWidth(0.0f)
+        , LayoutSpacing(-1.0f)
+        , LayoutMinHeight(0.0f)
+        , LayoutImguiEnumFlags(0)
+        , LayoutVarable()
+        , LayoutChildFlags(ImGuiChildFlags_None)
+        , LayoutWindowFlags(ImGuiWindowFlags_None)
+        , LayoutDefaultOpen(false)
+        , LayoutColor(1.0f, 0.0f, 0.0f, 1.0f)
+#endif
+    {
+    }
+
+    //==================================================
+    // コピーコンストラクタ
+    //==================================================
+    IMGUI_LAYOUT_CONTROL(const IMGUI_LAYOUT_CONTROL& other)
+#ifdef _DEBUG
+        : LayoutType(other.LayoutType)
+        , LayoutText(other.LayoutText)
+        , LayoutCount(other.LayoutCount)
+        , LayoutIndex(other.LayoutIndex)
+        , LayoutUserID(other.LayoutUserID)
+        , LayoutSize(other.LayoutSize)
+        , LayoutWidth(other.LayoutWidth)
+        , LayoutSpacing(other.LayoutSpacing)
+        , LayoutMinHeight(other.LayoutMinHeight)
+        , LayoutImguiEnumFlags(other.LayoutImguiEnumFlags)
+        , LayoutVarable(other.LayoutVarable)
+        , LayoutChildFlags(other.LayoutChildFlags)
+        , LayoutWindowFlags(other.LayoutWindowFlags)
+        , LayoutDefaultOpen(other.LayoutDefaultOpen)
+        , LayoutColor(other.LayoutColor)
+#endif
+    {
+    }
+
+    //==================================================
+    // 引数付きコンストラクタ
+    // 全項目設定用
+    //==================================================
+    IMGUI_LAYOUT_CONTROL(
+        IMGUI_LAYOUT_TYPE layoutType,
+        const std::string& layoutText,
+        int layoutCount,
+        int layoutIndex,
+        unsigned int layoutUserID,
+        const ImVec2& layoutSize,
+        float layoutWidth,
+        float layoutSpacing,
+        float layoutMinHeight,
+        int layoutImguiEnumFlags,
+        const IMGUI_VARIABLE_DATA& layoutVarable,
+        ImGuiChildFlags layoutChildFlags,
+        ImGuiWindowFlags layoutWindowFlags,
+        bool layoutDefaultOpen,
+        const ImVec4& layoutColor
+    )
+#ifdef _DEBUG
+        : LayoutType(layoutType)
+        , LayoutText(layoutText)
+        , LayoutCount(layoutCount)
+        , LayoutIndex(layoutIndex)
+        , LayoutUserID(layoutUserID)
+        , LayoutSize(layoutSize)
+        , LayoutWidth(layoutWidth)
+        , LayoutSpacing(layoutSpacing)
+        , LayoutMinHeight(layoutMinHeight)
+        , LayoutImguiEnumFlags(layoutImguiEnumFlags)
+        , LayoutVarable(layoutVarable)
+        , LayoutChildFlags(layoutChildFlags)
+        , LayoutWindowFlags(layoutWindowFlags)
+        , LayoutDefaultOpen(layoutDefaultOpen)
+        , LayoutColor(layoutColor)
+#endif
+    {
+    }
+
+    //==================================================
+    // 全項目設定用 GetImguiData
+    //==================================================
+    static IMGUI_LAYOUT_CONTROL GetImguiData(
+        IMGUI_LAYOUT_TYPE layoutType,
+        const std::string& layoutText = "",
+        int layoutCount = 0,
+        int layoutIndex = 0,
+        unsigned int layoutUserID = 0,
+        const ImVec2& layoutSize = ImVec2(0.0f, 0.0f),
+        float layoutWidth = 0.0f,
+        float layoutSpacing = -1.0f,
+        float layoutMinHeight = 0.0f,
+        int layoutImguiEnumFlags = 0,
+        const IMGUI_VARIABLE_DATA& layoutVarable = IMGUI_VARIABLE_DATA(),
+        ImGuiChildFlags layoutChildFlags = ImGuiChildFlags_None,
+        ImGuiWindowFlags layoutWindowFlags = ImGuiWindowFlags_None,
+        bool layoutDefaultOpen = false,
+        const ImVec4& layoutColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f)
+    )
+    {
+#ifdef _DEBUG
+        return IMGUI_LAYOUT_CONTROL(layoutType, layoutText, layoutCount, layoutIndex, layoutUserID, layoutSize, layoutWidth, layoutSpacing, layoutMinHeight, layoutImguiEnumFlags, layoutVarable, layoutChildFlags, layoutWindowFlags, layoutDefaultOpen, layoutColor);
+#else
+        return IMGUI_LAYOUT_CONTROL();
+#endif
+    }
 };
 
 
 // imgui全種類描画用1つ分情報
 struct IMGUI_ALL_DRAW_ONE_DATA
 {
+#ifdef _DEBUG
     IMGUI_DRAW_MODE MyImguiDrawMode;
 
     IMGUI_VARIABLE_CONTROL ImguiVariableControl;
     IMGUI_BUTTON_CONTROL   ImguiButtonControl;
     IMGUI_LAYOUT_CONTROL   ImguiLayoutControl;
+
+    // グループに登録した最終フレーム
+    int LastRegisteredFrame = -1;
+#endif
 
     IMGUI_ALL_DRAW_ONE_DATA();
     IMGUI_ALL_DRAW_ONE_DATA(IMGUI_VARIABLE_CONTROL value);
@@ -917,8 +1567,8 @@ public:
     /*  【追加】  */
     /*------------*/
 
-    /// <summary>Imgui管理変数情報追加</summary>
-    void AddImguiControlVariableData(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData)
+    /// <summary>Imgui管理描画情報追加</summary>
+    void AddImguiControlDrawData(IMGUI_ALL_DRAW_ONE_DATA imguiControlVariableData)
     {
 #ifdef _DEBUG
         ImguiControlVariableDatas.push_back(imguiControlVariableData);

@@ -25,9 +25,10 @@ namespace DRAW_SYSTEM
     // 画像描画
     void DrawImage(VECTOR2D pos, VECTOR2D size, int handle);
     void DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handle, int TransFlag);
+    void DrawImage(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VECTOR2D pos4, int handle, int flag = TRUE);
 
     // 現状光領域描画用
-    void DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag = TRUE);
+    void DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag = TRUE, bool redrawFlag = false);
 
     // プレイヤー描画用
     void DrawRectExtendGraph(VECTOR2D drawLeftUp, VECTOR2D drawRightDown, VECTOR2D graphLeftUpUV, VECTOR2D graphRightDown, int graphHandle, int flag = TRUE);

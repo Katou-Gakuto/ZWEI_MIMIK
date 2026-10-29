@@ -10,8 +10,9 @@
 #include "KeyState.h"
 #include "TimeManager.h"
 
-#ifdef _DEBUG
 #include "ImguiManager.h"
+
+#ifdef _DEBUG
 #include "DebugLogs/DebugLog.h"
 #endif
 
