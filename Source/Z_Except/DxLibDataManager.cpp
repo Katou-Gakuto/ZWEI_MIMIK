@@ -60,7 +60,7 @@ void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windo
     float Win_Size_Rat = Master::Window_SizeY / static_cast<float>(1080);
     //SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
     SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
-    SetDrawArea(0, 0, newDisplaySize.GetX(), newDisplaySize.GetY()); // 描画可能領域のセット
+    //SetDrawArea(0, 0, newDisplaySize.GetX(), newDisplaySize.GetY()); // 描画可能領域のセット
     mstDisplaySize = newDisplaySize;
 }
 
