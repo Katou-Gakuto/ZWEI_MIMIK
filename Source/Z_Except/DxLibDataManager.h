@@ -35,10 +35,10 @@ public:
 	void Finalize();
 
 	// 新しく描画するディスプレイのサイズを設定
-	void SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windowmode);
+	void SettingNewDisplaySize(VECTOR2D newDisplaySize);
 
 	// ディスプレイのサイズ取得
-	inline VECTOR2D GetDisplaySize() const { return mstDisplaySize; }
+	inline VECTOR2D GetDisplaySize() const { return START_DISPLAY_SIZE/*mstDisplaySize*/; }
 	// 開始時ディスプレイのサイズ取得
 	inline VECTOR2D GetStartDisplaySize() const { return START_DISPLAY_SIZE; }
 	// 世界のサイズ取得

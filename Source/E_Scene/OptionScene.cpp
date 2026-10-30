@@ -186,20 +186,22 @@ int OptionScene::UpdateModeSelect()
             VECTOR2D DispSize;
         if(FullScreen)
         {
-            DispSize.SetX(1920);
-            DispSize.SetY(1080);
+            DispSize = Master::mpDxLibDataManager->GetStartDisplaySize();
+            // DispSize.SetX(1920);
+            // DispSize.SetY(1080);
         }
         else
         {
-            DispSize.SetX(1280);
-            DispSize.SetY(720);
+            DispSize = (Master::mpDxLibDataManager->GetStartDisplaySize() * 2.0f) / 3.0f;
+            // DispSize.SetX(1280);
+            // DispSize.SetY(720);
         }
 
         // A‚ð‰Ÿ‚µ‚½‚ç•ÏX‚ðI—¹‚·‚é
         if (sceneMove)
         {
             mbFullScreen = false;
-            Master::mpDxLibDataManager->SettingNewDisplaySize(DispSize, !FullScreen);
+            Master::mpDxLibDataManager->SettingNewDisplaySize(DispSize);
         }
     }
     else if (mbColorVisionSupport)

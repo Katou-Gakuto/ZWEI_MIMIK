@@ -58,16 +58,15 @@ void DxLibDataManager::Finalize()
 }
 
 // 新しく描画するディスプレイのサイズを設定
-void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windowmode)
+void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize)
 {
-    //ChangeWindowMode(windowmode); // ウィンドウモードで描画するか
     float Win_Size_Rat_X = newDisplaySize.GetX() / START_DISPLAY_SIZE.GetX();
     float Win_Size_Rat_Y = newDisplaySize.GetY() / START_DISPLAY_SIZE.GetY();
     SetWindowSizeExtendRate(Win_Size_Rat_X, Win_Size_Rat_Y); // ウィンドウのサイズを変更
     mstDisplaySize = newDisplaySize;
 
     // 描画情報設定
-    //SettingDrawSizeData();
+    SettingDrawSizeData();
 }
 
 // 描画サイズ情報設定
@@ -94,7 +93,7 @@ void DxLibDataManager::SettingDrawSizeData()
         displayMargin.SetY(mstDisplaySize.GetY() - (gameSizeRatioValueY * GAME_DISPLAY_ASPECT_RATIO.GetY()));
     }
 
-    displayMargin *= 0;
+    displayMargin *= 1;
     // 
     VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = {
         START_DISPLAY_SIZE - displayMargin,//mstDisplaySize/* - displayMargin*/,         // ディスプレイ座標

@@ -25,10 +25,6 @@
 #include "ResourceManager.h"
 
 #include "ImguiManager.h"
-static int DrawSelectNumber = 30;
-static int DrawSelectNumber2 = 0;
-static int DrawSelectNumber3 = 2;
-static float DrawSelectNumber4_Float = 0.0f;
 
 // 
 LightAreaManager::LightAreaManager() :
@@ -111,70 +107,6 @@ void LightAreaManager::Initilize()
 // 描画
 void LightAreaManager::Draw()
 {
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            0,
-            30,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber2
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            0,
-            2,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber3
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            0,
-            1,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber4_Float
-            },
-            0.1f,
-            0.1f,
-            0.1f,
-            0,
-            360,
-            "NONE_",
-            "%f",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
 
     // ライト描画処理
     { 
@@ -457,27 +389,7 @@ void LightAreaManager::LightDraw()
             LightArea* lightArea = mlNode[lightAreaIndex];
             if (lightArea->GetLightColor() == colorNumbers[i])
             {
-                if (DrawSelectNumber3 != 0)
-                {
-                    continue;
-                }
                 lightArea->DrawLightArea();
-            }
-        }
-    }
-    for (int i = 0; i < mnLightScreenHandle.size(); ++i)
-    {
-        SetDrawScreen(mnLightScreenHandle[i].ScreenHandle);
-        for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
-        {
-            LightArea* lightArea = mlNode[lightAreaIndex];
-            if (lightArea->GetLightColor() == colorNumbers[i])
-            {
-                if (DrawSelectNumber2 != 1)
-                {
-                    continue;
-                }
-                lightArea->ReDrawLightArea();
             }
         }
     }
@@ -509,42 +421,6 @@ void LightAreaManager::LightDraw()
                 }
 
                 DrawHitCollisionLineData(drawHitCollisionLine);
-            }
-        }
-    }
-
-    if (DrawSelectNumber2 != 2)
-    {
-        return;
-    }
-    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
-    {
-        LightArea* lightArea = mlNode[lightAreaIndex];
-        for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
-        {
-            LightLineNode *currentNode = lightArea->GetFirstNodeBox()[i];
-            LightLineNode *nextNode;
-
-            if (currentNode == nullptr)
-            {
-                continue;
-            }
-
-            while (true)
-            {                
-                // デバッグ用レイの可視化
-                DRAW_SYSTEM::DrawLine(
-                    currentNode->GetMyStartPos(),
-                    currentNode->GetMyEndPos(),
-                    0x00ffff);
-                
-                
-                if (!currentNode->AccessNext(&nextNode))
-                {
-                    break;
-                }
-
-                currentNode = nextNode;
             }
         }
     }
@@ -1304,10 +1180,6 @@ void LightAreaManager::DrawHitCollisionLineData(const std::vector<std::vector<HI
         }
         for (size_t l = 0; l < (hitCollisionLineData[i].size() - 1)/*四角にするために最後を除いて処理*/; ++l)
         {
-            if (((DrawSelectNumber != l) && (DrawSelectNumber != 30)) || (DrawSelectNumber2 != 0))
-            {
-                continue;
-            }
             // 4頂点入力
             {
                 VECTOR2D lightLeftDataStart = hitCollisionLineData[i][l].LineStartPos;
