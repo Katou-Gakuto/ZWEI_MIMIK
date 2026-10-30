@@ -106,13 +106,13 @@ int StageSelectScene::Initialize()
 
         if (StageNum < StageMax / 2)
         {
-            CubeSize[StageNum] = 150;// -(70 * StageNum);
+            CubeSize[StageNum] = 150 -(70 * StageNum);
             CubeX[StageNum] = (600 * StageNum);
             CubeY[StageNum] = 300;
         }
         else
         {
-            CubeSize[StageNum] = 150;// +(-70 * (StageMax / 2) + (70 * (StageNum - StageMax / 2)));
+            CubeSize[StageNum] = 150 +(-70 * (StageMax / 2) + (70 * (StageNum - StageMax / 2)));
             CubeX[StageNum] = -600 * (StageMax / 2) + (600 * (StageNum - StageMax / 2));
             CubeY[StageNum] = 300;
         }
@@ -268,11 +268,16 @@ int StageSelectScene::Draw()
             {
                 if (CubeStage[(StageMax / 2) - 1] == StageNum)
                 {
+                    //CubeSize[StageNum] = 150 - (70 * ((StageMax / 2) - 1));
                     CubeX[StageNum] = 600 * ((StageMax / 2) - 1);
                 }
                 else
                 {
-                    //CubeSize[StageNum] += 7;
+                    //if (CubeStage[(StageMax / 2) - 1] < StageNum)
+                        //CubeSize[StageNum] += 7;
+                    //else
+                        //CubeSize[StageNum] -= 7;
+                
                     CubeX[StageNum] -= 60;
                 }
             } 
