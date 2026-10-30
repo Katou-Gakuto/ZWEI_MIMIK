@@ -69,13 +69,13 @@ GoalObjectController *Master::GetGoalController(bool lightSide)
 // DxLibの前の初期化
 int Master::DxInitPreInitialize()
 {
-    // ウインドウモードで起動
-    ChangeWindowMode(true);
-
 #ifndef _DEBUG
     // log.txtを生成しない
     SetOutApplicationLogValidFlag(FALSE);
 #endif
+
+    // ウインドウモードで起動
+    ChangeWindowMode(true);
 
     // ディスプレイの解像度を取得
     int screenWidth = GetSystemMetrics(SM_CXSCREEN);
