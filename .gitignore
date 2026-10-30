@@ -430,3 +430,9 @@ FodyWeavers.xsd
 *.msp
 **/Log.txt
 **/LogDebug
+/Library
+/Temp
+/UserSettings
+/MERGE_ZWEI__MIMIK.sln
+/Assembly-CSharp-Editor.csproj
+/Assembly-CSharp.csproj
