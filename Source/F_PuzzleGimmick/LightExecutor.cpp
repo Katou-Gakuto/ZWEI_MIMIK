@@ -121,7 +121,6 @@ int LightExecutor::Update(bool triggerSignal)
     this->mbLightOn = triggerSignal;
     this->GetMyLightArea()->SetLightFlag(this->mbLightOn);
 
-
     // 
     return 0;
 }

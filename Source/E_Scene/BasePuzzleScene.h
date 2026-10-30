@@ -54,6 +54,9 @@ public:
         VECTOR2D &goalShadowPos) const = 0;
 
     // 
+    virtual void GetMapSize(VECTOR2D &mapSize) const = 0;
+
+    // 
     virtual uint32_t GetUseLightAreaCount() const = 0;
 
     // 

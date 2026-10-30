@@ -15,7 +15,7 @@
 // 
 StageSelectScene::StageSelectScene() :
     mnCurrentStage(0),
-    mnUnlockStageCount(StageMax),
+    mnUnlockStageCount(10),
     mdMoveData(),
     StageNum(0),
     MoveDirection(0),
@@ -141,15 +141,15 @@ int StageSelectScene::Update()
         {
             // 
             Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test);
+
+            // 
+            this->OnResetFlag();
         }
         else
         {
 			// 選択したステージのシーンに遷移する
             Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage));
         }
-
-        // 
-        this->OnResetFlag();
     }
 
     // 

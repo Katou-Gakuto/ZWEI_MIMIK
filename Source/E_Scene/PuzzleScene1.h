@@ -21,6 +21,9 @@ public:
         VECTOR2D &goalShadowPos) const override;
 
     // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
+
+    // 
     uint32_t GetUseLightAreaCount() const override;
 };
 
@@ -41,6 +44,9 @@ public:
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
         VECTOR2D &goalShadowPos) const;
+
+    // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -65,6 +71,9 @@ public:
         VECTOR2D &goalShadowPos) const;
 
     // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
+
+    // 
     uint32_t GetUseLightAreaCount() const override;
 };
 
@@ -85,6 +94,9 @@ public:
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
         VECTOR2D &goalShadowPos) const;
+
+    // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -109,6 +121,9 @@ public:
         VECTOR2D &goalShadowPos) const;
 
     // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
+
+    // 
     uint32_t GetUseLightAreaCount() const override;
 };
 
@@ -129,6 +144,9 @@ public:
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
         VECTOR2D &goalShadowPos) const;
+
+    // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -153,6 +171,9 @@ public:
         VECTOR2D &goalShadowPos) const;
 
     // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
+
+    // 
     uint32_t GetUseLightAreaCount() const override;
 };
 
@@ -173,6 +194,9 @@ public:
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
         VECTOR2D &goalShadowPos) const;
+
+    // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -197,6 +221,9 @@ public:
         VECTOR2D &goalShadowPos) const;
 
     // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
+
+    // 
     uint32_t GetUseLightAreaCount() const override;
 };
 
@@ -217,6 +244,9 @@ public:
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
         VECTOR2D &goalShadowPos) const;
+
+    // 
+    void GetMapSize(VECTOR2D &mapSize) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
