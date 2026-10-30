@@ -43,7 +43,7 @@ public:
 
     BaseScene *SearchScene(int sceneTag)const;
 
-    SceneTag GetSneceNow() const { return this->mnSceneNow; }
+    SceneTag GetSneceOld() const { return this->mnSceneOld; }
 
     void ChangeScene(SceneTag nextSceneTag) { this->mnChangeScene = nextSceneTag; }
     void ChangeSceneMySelf() { this->mnChangeScene = this->mnResreveScene; }
