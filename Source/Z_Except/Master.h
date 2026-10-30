@@ -81,9 +81,6 @@ public:
     // プレイヤーの大きさ
     static int PlayerSizeXY;
 
-    static float Window_SizeX;
-    static float Window_SizeY;
-
     // 画像を拡大/縮小し、UV座標を指定して描画する関数
     static int DrawGraphAnim(
         const VECTOR2D &posLeftUp, const VECTOR2D &posRightDown,

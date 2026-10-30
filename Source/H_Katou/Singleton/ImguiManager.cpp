@@ -1494,7 +1494,7 @@ void ImguiManager::DrawGameDisplayToImgui(std::string plusName, float magnificat
     // タブ内で画像を描画できる領域のサイズ
     ImVec2 displaySize = ImGui::GetContentRegionAvail();
     // DxLibの元の画面サイズ
-    VECTOR2D dxLibDisplaySize = Master::mpDxLibDataManager->GetDisplaySize();
+    VECTOR2D dxLibDisplaySize = Master::mpDxLibDataManager->GetStartDisplaySize();
     // 元の縦横比を維持して表示サイズを計算
     if (dxLibDisplaySize.GetX() > 0.0f && dxLibDisplaySize.GetY() > 0.0f &&
         displaySize.x > 0.0f && displaySize.y > 0.0f)
