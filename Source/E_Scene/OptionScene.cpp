@@ -126,8 +126,8 @@ int OptionScene::UpdateModeSelect()
         }
         else // タイトルに戻る
         {
-            // 
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
+            // ここをBaseSceneManagerのSearchSceneOldで前のシーンに戻るようにする
+            Master::mpBaseSceneManager->ChangeScene(Master::mpBaseSceneManager->GetSneceOld());
 
             // 
             this->OnResetFlag();
