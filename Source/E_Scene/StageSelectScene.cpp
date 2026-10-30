@@ -35,12 +35,12 @@ int StageSelectScene::Create()
     CursorMoveElement element;
 
     // 
-    element.mnTargetKey = KEY_SHADOW_GAME_TYPE::UP;
+    element.mnTargetKey = KEY_SHADOW_GAME_TYPE::LEFT;
     element.mnMoveVec = -1;
     this->mdMoveData.Add(element);
 
     // 
-    element.mnTargetKey = KEY_SHADOW_GAME_TYPE::DOWN;
+    element.mnTargetKey = KEY_SHADOW_GAME_TYPE::RIGHT;
     element.mnMoveVec = +1;
     this->mdMoveData.Add(element);
 
@@ -50,13 +50,13 @@ int StageSelectScene::Create()
     CubeHandle[3 ] = Master::mpResourceManager->LoadGraphics("Resource/kari4.png");
     CubeHandle[4 ] = Master::mpResourceManager->LoadGraphics("Resource/kari5.png");
     CubeHandle[5 ] = Master::mpResourceManager->LoadGraphics("Resource/kari6.png");
-    /*CubeHandle[6 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
-    CubeHandle[7 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
-    CubeHandle[8 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
-    CubeHandle[9 ] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
-    CubeHandle[10] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
-    CubeHandle[11] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
-    CubeHandle[12] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
+    CubeHandle[6 ] = Master::mpResourceManager->LoadGraphics("Resource/kari7.png");
+    CubeHandle[7 ] = Master::mpResourceManager->LoadGraphics("Resource/kari8.png");
+    CubeHandle[8 ] = Master::mpResourceManager->LoadGraphics("Resource/kari9.png");
+    CubeHandle[9 ] = Master::mpResourceManager->LoadGraphics("Resource/kari10.png");
+    CubeHandle[10] = Master::mpResourceManager->LoadGraphics("Resource/kari11.png");
+    CubeHandle[11] = Master::mpResourceManager->LoadGraphics("Resource/kari12.png");
+    /*CubeHandle[12] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
     CubeHandle[13] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
     CubeHandle[14] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
     CubeHandle[15] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
@@ -106,14 +106,14 @@ int StageSelectScene::Initialize()
 
         if (StageNum < StageMax / 2)
         {
-            CubeSize[StageNum] = 150 -(70 * StageNum);
-            CubeX[StageNum] = (600 * StageNum);
+            CubeSize[StageNum] = 150;// -(70 * StageNum);
+            CubeX[StageNum] = (Interval * StageNum);
             CubeY[StageNum] = 300;
         }
         else
         {
-            CubeSize[StageNum] = 150 +(-70 * (StageMax / 2) + (70 * (StageNum - StageMax / 2)));
-            CubeX[StageNum] = -600 * (StageMax / 2) + (600 * (StageNum - StageMax / 2));
+            CubeSize[StageNum] = 150;// +(-70 * (StageMax / 2) + (70 * (StageNum - StageMax / 2)));
+            CubeX[StageNum] = -Interval * (StageMax / 2) + (Interval * (StageNum - StageMax / 2));
             CubeY[StageNum] = 300;
         }
 
@@ -147,14 +147,18 @@ int StageSelectScene::Update()
         }
         else
         {
-			// 選択したステージのシーンに遷移する
-            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage));
+            // 未開放のステージではなければ
+            if(mnCurrentStage <= mnUnlockStageCount - 1)
+            {
+                // 選択したステージのシーンに遷移する
+                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage));
+            }
         }
     }
 
     // 
-    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 0) ||
-        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 1))
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0) ||
+        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1))
     {
         // 
         Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
@@ -186,13 +190,13 @@ int StageSelectScene::Update()
     if (stageMove != 0 && MoveCount == 0)
     {
         // 
-        this->mnCurrentStage += this->mnUnlockStageCount;
+        this->mnCurrentStage += this->StageMax;
 
         // 
         this->mnCurrentStage += stageMove;
 
         // 
-        this->mnCurrentStage %= this->mnUnlockStageCount;
+        this->mnCurrentStage %= this->StageMax;
 
 		ChangeFlag = true;
         MoveDirection = stageMove;
@@ -230,7 +234,7 @@ int StageSelectScene::Draw()
         GetColor(255, 255, 255));
 
     // 
-    message = "Title (Pless X Key)";
+    message = "Title (Pless B Key)";
 
     // 
     DRAW_SYSTEM::DrawString(
@@ -238,7 +242,7 @@ int StageSelectScene::Draw()
         message.c_str(),
         GetColor(255, 255, 255));
 
-
+    // 
     if(ChangeFlag)
     {
         for (StageNum = 0; StageNum < StageMax; StageNum++)
@@ -266,32 +270,35 @@ int StageSelectScene::Draw()
         {
             if (MoveDirection == 1)// 進める
             {
-                if (CubeStage[(StageMax / 2) - 1] == StageNum)
+                if (StageNum == CubeStage[(StageMax / 2) - 1] )
                 {
                     //CubeSize[StageNum] = 150 - (70 * ((StageMax / 2) - 1));
-                    CubeX[StageNum] = 600 * ((StageMax / 2) - 1);
+                    CubeX[StageNum] = Interval * ((StageMax / 2) - 1);
                 }
                 else
                 {
-                    //if (CubeStage[(StageMax / 2) - 1] < StageNum)
-                        //CubeSize[StageNum] += 7;
-                    //else
-                        //CubeSize[StageNum] -= 7;
-                
-                    CubeX[StageNum] -= 60;
+                    for (int i = 0; i < (StageMax / 2) - 1; i++)
+                    {
+                        /*if (CubeStage[i] == StageNum)
+                            CubeSize[StageNum] += 7;
+                        else
+                            CubeSize[StageNum] -= 7;*/
+
+                    }
+                    CubeX[StageNum] -= Interval / 10;
                 }
             } 
 
             if (MoveDirection == -1)// 戻す
             {
-                if (CubeStage[StageMax / 2] == StageNum)
+                if (StageNum == CubeStage[StageMax / 2])
                 {
-                    CubeX[StageNum] = -600 * (StageMax / 2);
+                    CubeX[StageNum] = -Interval * (StageMax / 2);
                 }
                 else
                 {
                     //CubeSize[StageNum] -= 7;
-                    CubeX[StageNum] += 60;
+                    CubeX[StageNum] += Interval/10;
 
                 }
             }
@@ -299,7 +306,11 @@ int StageSelectScene::Draw()
 
     }
 
-    DrawTriangle(960, -100, 660, 880, 1260, 880, 0xFFF2CC, true);
+    // 未開放のステージではなければスポットライトで照らす
+    if (mnCurrentStage <= mnUnlockStageCount - 1)
+    {
+        DrawTriangle(960, -100, 660, 880, 1260, 880, 0xFFF2CC, true);
+    }
 
     for (StageNum = 0; StageNum < StageMax; StageNum++)
     {

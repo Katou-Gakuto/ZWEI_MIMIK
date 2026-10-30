@@ -30,7 +30,7 @@ public:
 
 private:
    // 
-   int mnCurrentStage;
+   int mnCurrentStage; //選択中のステージ
 
    // 
    unsigned long  mnUnlockStageCount;
@@ -38,7 +38,7 @@ private:
    // 
    CursorMoveData mdMoveData;
 
-   static const int StageMax = 6;
+   static const int StageMax = 12; // ステージの数
 
    int CubeHandle[StageMax];
    float CubeSize[StageMax];
@@ -50,6 +50,8 @@ private:
 
    int MoveCount;     // 回転させてる時間
    int MoveDirection; // どっちに移動してるかの保存
+
+   float Interval = 600; // 
 
    bool ChangeFlag;   // 移動させた瞬間のフラグ
 

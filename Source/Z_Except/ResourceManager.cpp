@@ -12,7 +12,8 @@ ResourceManager::~ResourceManager()
 {
 }
 
-// モデルの読み込み
+// 3Dモデルの読み込み
+// 今回は使わないかも
 int ResourceManager::LoadMadel(string pathName)
 {
 
@@ -21,7 +22,6 @@ int ResourceManager::LoadMadel(string pathName)
         //すでに読み込まれたデータか確認
         if (resourceMapList.at(i).first == pathName)
         {
-            // QUESTION:_ これ3Dモデル用じゃね
             //読み込まれたデータを複製する
             return MV1DuplicateModel(resourceMapList.at(i).second);
         }
