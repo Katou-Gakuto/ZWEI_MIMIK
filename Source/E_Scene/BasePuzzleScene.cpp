@@ -75,8 +75,16 @@ int BasePuzzleScene::Create()
 
 int BasePuzzleScene::Initialize()
 {
-    // 
-    Master::mpLightManager->ResizeArea(this->GetUseLightAreaCount());
+    // ライト設定
+    {
+        // ライトの数
+        Master::mpLightManager->ResizeArea(this->GetUseLightAreaCount());
+
+        // 光の色
+        std::vector<uint32_t> lightsColor;
+        this->GetLightsColor(lightsColor);
+        Master::mpLightManager->SetLightsColor(lightsColor);
+    }
 
     // 
     VECTOR2D initPosBox[4];

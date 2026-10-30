@@ -156,6 +156,12 @@ void PuzzleScene1_1::GetMapSize(VECTOR2D &mapSize) const
 	mapSize.SetXY(1920.0f, 1080.0f);
 }
 
+// ライト達の光取得
+void PuzzleScene1_1::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xffff00);
+}
+
 // 
 uint32_t PuzzleScene1_1::GetUseLightAreaCount() const
 {
@@ -373,6 +379,12 @@ void PuzzleScene1_2::GetMapSize(VECTOR2D &mapSize) const
 	mapSize.SetXY(1920.0f, 1080.0f);
 }
 
+// ライト達の光取得
+void PuzzleScene1_2::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xff0000);
+}
+
 // 
 uint32_t PuzzleScene1_2::GetUseLightAreaCount() const
 {
@@ -546,6 +558,11 @@ void PuzzleScene1_3::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_3::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -750,6 +767,11 @@ void PuzzleScene1_4::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_4::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1034,6 +1056,11 @@ void PuzzleScene1_5::GetMapSize(VECTOR2D &mapSize) const
 	mapSize.SetXY(1920.0f, 1080.0f);
 }
 
+// ライト達の光取得
+void PuzzleScene1_5::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+}
+
 // 
 uint32_t PuzzleScene1_5::GetUseLightAreaCount() const
 {
@@ -1174,6 +1201,11 @@ void PuzzleScene1_6::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_6::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1344,6 +1376,11 @@ void PuzzleScene1_7::GetMapSize(VECTOR2D &mapSize) const
 	mapSize.SetXY(1920.0f, 1080.0f);
 }
 
+// ライト達の光取得
+void PuzzleScene1_7::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+}
+
 // 
 uint32_t PuzzleScene1_7::GetUseLightAreaCount() const
 {
@@ -1507,6 +1544,11 @@ void PuzzleScene1_8::GetMapSize(VECTOR2D &mapSize) const
 	mapSize.SetXY(1920.0f, 1080.0f);
 }
 
+// ライト達の光取得
+void PuzzleScene1_8::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+}
+
 // 
 uint32_t PuzzleScene1_8::GetUseLightAreaCount() const
 {
@@ -1646,6 +1688,11 @@ void PuzzleScene1_9::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_9::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1842,6 +1889,11 @@ void PuzzleScene1_10::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_10::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 

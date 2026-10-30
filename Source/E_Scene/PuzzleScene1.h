@@ -19,9 +19,12 @@ public:
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
         VECTOR2D &goalShadowPos) const override;
-
+    
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -47,6 +50,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -72,6 +78,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -97,6 +106,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -122,6 +134,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -147,6 +162,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -172,6 +190,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -197,6 +218,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -222,6 +246,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;
@@ -247,6 +274,9 @@ public:
 
     // 
     void GetMapSize(VECTOR2D &mapSize) const override;
+    
+    // ライト達の光取得
+    void GetLightsColor(std::vector<uint32_t>& lightsColor) const override;
 
     // 
     uint32_t GetUseLightAreaCount() const override;

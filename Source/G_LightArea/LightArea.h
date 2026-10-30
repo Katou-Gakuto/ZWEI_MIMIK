@@ -10,19 +10,20 @@
 
 #include "BaseCollision.h"
 
-struct HIT_COLLISION_LINE
-{
-    BaseCollision* HitCollision;
-    VECTOR2D LineStartPos;
-    VECTOR2D LineEndPos;
-};
-
 class LightLineNode;
 
 class BaseCollision2D;
 class Point2D;
 class Ray2D;
 struct CollisionCheckResult2D;
+class Triangle2D;
+
+struct HIT_COLLISION_LINE
+{
+    BaseCollision* HitCollision;
+    VECTOR2D LineStartPos;
+    VECTOR2D LineEndPos;
+};
 
 // 
 class LightArea
@@ -104,6 +105,24 @@ private:
     // 指定した2点を通る直線上に点があるかを判定
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
 
+
+    // 光領域を描画用に調整する
+    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber);
+
+    // 角を取得する
+    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos);
+
+    // 	2本のラインの間にある頂点まで描画用ラインを追加する
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
+
+    // 当たっている辺を求める
+    std::vector<VECTOR2D> GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
+
+    // 延長した光を取得する
+    bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
+
+    // 3角情報にして描画
+    void DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData);
 private:
     // とりあえず用意しておこうか
     std::vector<LightLineNode *> mlLightFirstNode;
