@@ -80,13 +80,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		return -1;		// エラーが起きたら直ちに終了
 	}
-
-#ifndef _DEBUG
-	//SetUseDirect3DVersion(DX_DIRECT3D_9EX);
-
-	// log.txtを生成しない
-	SetOutApplicationLogValidFlag(FALSE);
-#endif
 	
 
 	// フォント等の設定

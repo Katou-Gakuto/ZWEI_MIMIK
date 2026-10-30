@@ -72,6 +72,11 @@ int Master::DxInitPreInitialize()
     // ウインドウモードで起動
     ChangeWindowMode(true);
 
+#ifndef _DEBUG
+    // log.txtを生成しない
+    SetOutApplicationLogValidFlag(FALSE);
+#endif
+
     // ディスプレイの解像度を取得
     int screenWidth = GetSystemMetrics(SM_CXSCREEN);
     int screenHeight = GetSystemMetrics(SM_CYSCREEN);
