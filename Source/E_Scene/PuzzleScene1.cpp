@@ -48,7 +48,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 	float objRadius = 0.0f;
 
 	// 
-	VECTOR2D displaySize = Master::mpDxLibDataManager->GetDisplaySize();
+	VECTOR2D displaySize = Master::mpDxLibDataManager->GetWorldSize();
 
 	// 
 	GameObject2D *currentObject = nullptr;

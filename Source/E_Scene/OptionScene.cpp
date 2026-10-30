@@ -193,6 +193,8 @@ int OptionScene::UpdateModeSelect()
         {
             DispSize.SetX(1280);
             DispSize.SetY(720);
+            DispSize.SetX(1200);
+            DispSize.SetY(500);
         }
 
         // A‚ğ‰Ÿ‚µ‚½‚ç•ÏX‚ğI—¹‚·‚é

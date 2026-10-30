@@ -1,3 +1,5 @@
+#include <Windows.h>
+
 #include "Master.h"
 #include "KeyState.h"
 #include "EndManager.h"
@@ -70,13 +72,10 @@ int Master::DxInitPreInitialize()
     // ウインドウモードで起動
     ChangeWindowMode(true);
 
-    // 画面サイズ
-    SetGraphMode(Master::Window_SizeX, Master::Window_SizeY, 32);
-    SetWindowSizeChangeEnableFlag(FALSE, TRUE); //ウィンドウの端をつかんでサイズ変更可能にするかどうか
-    SetMainWindowText("ZWEI MIMK");            //ウィンドウのタイトルを設定
-
-
-    mpDxLibDataManager = new DxLibDataManager();
+    // ディスプレイの解像度を取得
+    int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+    int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    mpDxLibDataManager = new DxLibDataManager(VECTOR2D(screenWidth, screenHeight));
     mpDxLibDataManager->DxInitPreInitialize();
 
     return 0;

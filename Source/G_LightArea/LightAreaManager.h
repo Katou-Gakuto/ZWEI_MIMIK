@@ -92,6 +92,10 @@ private:
 
     // 延長した光を取得する
     bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
+
+        
+    // 3角情報にして描画
+    void DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData);
 private:
     // 
     std::vector<LightArea *> mlNode;
@@ -110,4 +114,7 @@ private:
 
     // ライトエリア画像ハンドル
     int mnLightAreaGraphHandle;
+
+    // ライトエリア三角
+    VERTEX2D* mstLightAreaTriangleVertex;
 };

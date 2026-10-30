@@ -189,6 +189,7 @@ int DRAW_SYSTEM::DrawQuadrangle(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VEC
 // オブジェクトサイズをディスプレイサイズに変換
 VECTOR2D DRAW_SYSTEM::WorldSizeToDisplaySize(const VECTOR2D& objectSize)
 {
+    return objectSize;
     VECTOR2D displaySize = VECTOR2D(ScaleFactor.GetX() * objectSize.GetX(), ScaleFactor.GetY() * objectSize.GetY());
 
     // displaySize = VECTOR2D((objectSize.GetX() / StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_OBJECT_SIZE].GetX()) * StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE].GetX(),

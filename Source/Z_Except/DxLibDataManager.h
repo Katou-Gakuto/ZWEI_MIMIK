@@ -8,16 +8,21 @@
 class DxLibDataManager
 {
 private:
+	const VECTOR2D START_DISPLAY_SIZE;
+
 	// 描画画面サイズ
 	VECTOR2D mstDisplaySize;
 
 	// 世界サイズ
-	VECTOR2D msWorldSize;
+	VECTOR2D mstWorldSize;
+
+	// ゲームディスプレイ画面割合のアスペクト比
+	const VECTOR2D GAME_DISPLAY_ASPECT_RATIO;
 
 	// 初期化フラグ
 	bool mbIsInitialized;
 public:
-	DxLibDataManager();
+	DxLibDataManager(VECTOR2D startDisplaySize);
 	~DxLibDataManager();
 
 	// DXInit前初期化
@@ -34,6 +39,10 @@ public:
 
 	// ディスプレイのサイズ取得
 	inline VECTOR2D GetDisplaySize() const { return mstDisplaySize; }
+	// 開始時ディスプレイのサイズ取得
+	inline VECTOR2D GetStartDisplaySize() const { return START_DISPLAY_SIZE; }
+	// 世界のサイズ取得
+	inline VECTOR2D GetWorldSize() const { return mstWorldSize; }
 
 	/*----------------------------------*/
 	/*【ウィンドウプロシージャ使用関数】*/

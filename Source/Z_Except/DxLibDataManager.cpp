@@ -17,9 +17,11 @@
 
 LRESULT WINAPI DxLibDataManagerWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-DxLibDataManager::DxLibDataManager()
-: mstDisplaySize()
-, msWorldSize(VECTOR2D(1920, 1080))
+DxLibDataManager::DxLibDataManager(VECTOR2D startDisplaySize)
+: START_DISPLAY_SIZE(startDisplaySize)
+, mstDisplaySize(startDisplaySize)
+, mstWorldSize(VECTOR2D(1920, 1080))
+, GAME_DISPLAY_ASPECT_RATIO(VECTOR2D(16, 9))
 , mbIsInitialized(false)
 {
 }
@@ -31,13 +33,14 @@ DxLibDataManager::~DxLibDataManager()
 // DXInit前初期化
 void DxLibDataManager::DxInitPreInitialize()
 {
+    SetGraphMode(mstDisplaySize.GetX(), mstDisplaySize.GetY(), 32);
+    SetWindowSizeChangeEnableFlag(FALSE, TRUE); //ウィンドウの端をつかんでサイズ変更可能にするかどうか
+    SetMainWindowText("ZWEI MIMK");            //ウィンドウのタイトルを設定
+
     SetHookWinProc(DxLibDataManagerWndProc);
     DxLib::SetAlwaysRunFlag(TRUE);
     DxLib::SetAlwaysRunFlag(FALSE);
 
-    int screenW, screenH;
-    GetScreenState(&screenW, &screenH, NULL); // 現在の画面の大きさとカラービット数を得る
-    mstDisplaySize.SetXY(static_cast<float>(screenW), static_cast<float>(screenH));
     // 描画情報設定
     SettingDrawSizeData();
 }
@@ -58,33 +61,48 @@ void DxLibDataManager::Finalize()
 void DxLibDataManager::SettingNewDisplaySize(VECTOR2D newDisplaySize, bool windowmode)
 {
     //ChangeWindowMode(windowmode); // ウィンドウモードで描画するか
-    Master::Window_SizeX = newDisplaySize.GetX();
-    Master::Window_SizeY = newDisplaySize.GetY();
-    float Win_Size_Rat = Master::Window_SizeY / static_cast<float>(1080);
-    //SetGraphMode(newDisplaySize.GetX(), newDisplaySize.GetY(), 32);  // ウィンドウのサイズを変更
-    SetWindowSizeExtendRate(Win_Size_Rat); // ウィンドウのサイズを変更
+    float Win_Size_Rat_X = newDisplaySize.GetX() / START_DISPLAY_SIZE.GetX();
+    float Win_Size_Rat_Y = newDisplaySize.GetY() / START_DISPLAY_SIZE.GetY();
+    SetWindowSizeExtendRate(Win_Size_Rat_X, Win_Size_Rat_Y); // ウィンドウのサイズを変更
     mstDisplaySize = newDisplaySize;
 
     // 描画情報設定
-    SettingDrawSizeData();
+    //SettingDrawSizeData();
 }
 
 // 描画サイズ情報設定
 void DxLibDataManager::SettingDrawSizeData()
 {
+    VECTOR2D displayMargin = VECTOR2D(0.0f, 0.0f);
+
+    int gameSizeRatioValueX = static_cast<int>(mstDisplaySize.GetX() / GAME_DISPLAY_ASPECT_RATIO.GetX());
+    int gameSizeRatioValueY = static_cast<int>(mstDisplaySize.GetY() / GAME_DISPLAY_ASPECT_RATIO.GetY());
+
+    if (gameSizeRatioValueX < gameSizeRatioValueY)
+    {
+        displayMargin.SetX(mstDisplaySize.GetX() - (gameSizeRatioValueX * GAME_DISPLAY_ASPECT_RATIO.GetX()));
+        displayMargin.SetY(mstDisplaySize.GetY() - (gameSizeRatioValueX * GAME_DISPLAY_ASPECT_RATIO.GetY()));
+    }
+    else if (gameSizeRatioValueX > gameSizeRatioValueY)
+    {
+        displayMargin.SetX(mstDisplaySize.GetX() - (gameSizeRatioValueY * GAME_DISPLAY_ASPECT_RATIO.GetX()));
+        displayMargin.SetY(mstDisplaySize.GetY() - (gameSizeRatioValueY * GAME_DISPLAY_ASPECT_RATIO.GetY()));
+    }
+    else
+    {
+        displayMargin.SetX(mstDisplaySize.GetX() - (gameSizeRatioValueX * GAME_DISPLAY_ASPECT_RATIO.GetX()));
+        displayMargin.SetY(mstDisplaySize.GetY() - (gameSizeRatioValueY * GAME_DISPLAY_ASPECT_RATIO.GetY()));
+    }
+
+    displayMargin *= 0;
     // 
     VECTOR2D setStageSize[DRAW_SYSTEM::STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX] = {
-        mstDisplaySize,         // ワールド座標
-        msWorldSize,         // ディスプレイ座標
-        mstDisplaySize * 0.0f   // 左上からのずれ
+        START_DISPLAY_SIZE - displayMargin,//mstDisplaySize/* - displayMargin*/,         // ディスプレイ座標
+        mstWorldSize,           // ワールド座標
+        displayMargin * 0.5f    // 左上からのずれ
     };
 
     DRAW_SYSTEM::SetStazeSize(setStageSize);
-
-    if (Master::mpLightManager != nullptr)
-    {
-        Master::mpLightManager->ScreenSizeChange();
-    }
 }
 
 // 別アプリ移動

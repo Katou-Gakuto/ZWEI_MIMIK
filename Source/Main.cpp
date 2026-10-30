@@ -34,8 +34,6 @@
 */
 
 int Master::PlayerSizeXY = 120;
-float Master::Window_SizeX = 1920;
-float Master::Window_SizeY = 1080;
 
 
 /// <summary>
