@@ -34,6 +34,7 @@ public class SetMapDrawPos : MonoBehaviour
     {
         OBJECT_NOT_CORRECTION,  // そのままの値
         STAGE_CORRECTION,       // DXライブラリの描画ベクトルに変換した値
+        RESOLUTION_1920_1080,     // 左上を起点とした右下()の座標
         STAGE_DRAW_CORRECTION   // DXライブラリの描画ベクトルに変換した上で画面比でにした値
     }
 
@@ -109,8 +110,8 @@ public class SetMapDrawPos : MonoBehaviour
         "⑤ 「マップ設定トリガー」をONにして出力\n" +
         "出力されたマップデータをDXライブラリ側で使用します。\n" +
         "\n" +
-        "\n" +
-        "【ファイル出力名】\nオブジェクトの名前・タグ・レイヤーのどれをファイル名として使用するかを設定します")]
+        "\n")]
+    [Header("【ファイル出力名】\nオブジェクトの名前・タグ・レイヤーのどれをファイル名として使用するかを設定します")]
     [EnumTooltip(
     "オブジェクトの名前をファイル名として出力します。",
     "オブジェクトのタグをファイル名として出力します。",
@@ -123,12 +124,13 @@ public class SetMapDrawPos : MonoBehaviour
 
 
     [SerializeField, Header("【座標基準】\nUIを基準にするか、3D空間を基準にするかを選択します")]
-    private bool UIFlag = true;
+    private bool UIFlag = false;
 
     [SerializeField, Header("【3D出力：座標・サイズ】\n3D空間のオブジェクトを、どの基準の値で出力するかを設定します")]
     [EnumTooltip(
     "オブジェクト自身の座標・サイズをそのまま出力します。",
     "ステージ左上を基準とした座標に変換して出力します。",
+    "ステージ左上を基準とした座標を、max(1920, 1080)で丸めた値を出力します。",
     "ステージ左上を基準とした座標を、ステージサイズに対する割合へ変換して出力します。")]
     private FILE_OUTPUT_PROCESS_MODE FileOutputProcessMode;
 
@@ -199,7 +201,7 @@ public class SetMapDrawPos : MonoBehaviour
     /// <summary>
     /// ファイル出力用ステージサイズ
     /// </summary>
-    private Vector2 FileOutStageSize;
+    public Vector2 FileOutStageSize;
     [SerializeField, Header("ステージ情報左上の座標 ※見る専用")]
     private Vector2 StageLeftUp;
     [SerializeField, Header("ステージ情報真ん中の座標 ※見る専用")]
@@ -210,6 +212,23 @@ public class SetMapDrawPos : MonoBehaviour
     [SerializeField, Header("【出力ファイル名】\nONにすると出力回数をファイル名に追加し、別ファイルとして保存します")]
     private bool FileNamePlusCountFlag = false;
 
+    [SerializeField, Header("【確認用】実際のプレイヤーを表示する")]
+    private bool IsGamePlayerSizeDraw = false;
+
+    private GameObject TestPlayer1;
+    private GameObject TestPlayer2;
+
+    [SerializeField, Header("【開始設定フラグ】スタートで意図した設定をするかどうか")]
+    private bool IsStartSet = true;
+
+    /// <summary>
+    /// IsStartSetがfalseの場合、設定する情報保存用
+    /// </summary>
+    private bool PreIsStartSet;
+    private bool UIFlag_IsStartSet_False;
+    private FILE_OUTPUT_PROCESS_MODE FileOutputProcessMode_IsStartSet_False;
+    private STAGE_SIZE_SET_MODE StageSetMode_IsStartSet_False;
+
     private void Start()
     {
         if (Application.isPlaying)
@@ -218,11 +237,95 @@ public class SetMapDrawPos : MonoBehaviour
         }
 
         OutPutFixedRatio = new Vector2(1900.0f, 1070.0f);
+
+        if (IsStartSet)
+        {
+            PreIsStartSet = true;
+            UIFlag_IsStartSet_False = UIFlag;
+            FileOutputProcessMode_IsStartSet_False = FileOutputProcessMode;
+            StageSetMode_IsStartSet_False = StageSetMode;
+            UIFlag = false;
+            FileOutputProcessMode = FILE_OUTPUT_PROCESS_MODE.RESOLUTION_1920_1080;
+            StageSetMode = STAGE_SIZE_SET_MODE.ONE_OBJECT;
+        }
+        else
+        {
+            PreIsStartSet = false;
+        }
     }
 
 
     private void Update()
     {
+        if (PreIsStartSet != IsStartSet)
+        {
+            if (IsStartSet)
+            {
+                PreIsStartSet = true;
+                UIFlag_IsStartSet_False = UIFlag;
+                FileOutputProcessMode_IsStartSet_False = FileOutputProcessMode;
+                StageSetMode_IsStartSet_False = StageSetMode;
+                UIFlag = false;
+                FileOutputProcessMode = FILE_OUTPUT_PROCESS_MODE.RESOLUTION_1920_1080;
+                StageSetMode = STAGE_SIZE_SET_MODE.ONE_OBJECT;
+            }
+            else
+            {
+                PreIsStartSet = false;
+                UIFlag = UIFlag_IsStartSet_False;
+                FileOutputProcessMode = FileOutputProcessMode_IsStartSet_False;
+                StageSetMode = StageSetMode_IsStartSet_False;
+            }
+        }
+
+        if (IsGamePlayerSizeDraw)
+        {
+            if (TestPlayer1 == null)
+            {
+                TestPlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                // 子オブジェクトとして設定
+                TestPlayer1.transform.SetParent(transform);
+                TestPlayer1.transform.position = this.transform.position;
+            }
+            if (TestPlayer2 == null)
+            {
+                TestPlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                // 子オブジェクトとして設定
+                TestPlayer2.transform.SetParent(transform);
+                TestPlayer2.transform.position = this.transform.position;
+            }
+            float magnificationX = FileOutStageSize.x / 1920.0f;
+            float magnificationY = FileOutStageSize.y / 1080.0f;
+
+            TestPlayer1.transform.localScale = new Vector3(120.0f * magnificationX, 1.0f, 120.0f * magnificationX);
+            TestPlayer2.transform.localScale = new Vector3(120.0f * magnificationY, 1.0f, 120.0f * magnificationY);
+        }
+        else
+        {
+            if (TestPlayer1 != null)
+            {
+                if (Application.isPlaying)
+                {
+                    Destroy(TestPlayer1);
+                }
+                else
+                {
+                    DestroyImmediate(TestPlayer1);
+                }
+            }
+            if (TestPlayer2 != null)
+            {
+                if (Application.isPlaying)
+                {
+                    Destroy(TestPlayer2);
+                }
+                else
+                {
+                    DestroyImmediate(TestPlayer2);
+                }
+            }
+        }
+
         if (Application.isPlaying)
         {
             return;
@@ -606,6 +709,21 @@ public class SetMapDrawPos : MonoBehaviour
                         "sizeX:" + (objectData.OutPutDatas.MySize.x / FileOutStageSize.x) +
                         " sizeY:" + (objectData.OutPutDatas.MySize.y / FileOutStageSize.y)
                         );
+                    break;
+
+                case FILE_OUTPUT_PROCESS_MODE.RESOLUTION_1920_1080:
+                    {
+                        float magnificationX = 1920.0f / FileOutStageSize.x;
+                        float magnificationY = 1080.0f / FileOutStageSize.y;
+
+                        mapDataString += (
+                            "posX:" + (objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX +
+                            " posY:" + (StageLeftUp.y - objectData.OutPutDatas.MyPos.y) * magnificationY +
+                            "\n" +
+                            "sizeX:" + objectData.OutPutDatas.MySize.x +
+                            " sizeY:" + objectData.OutPutDatas.MySize.y 
+                        );
+                    }
                     break;
             }
             mapDataString += "\n\n";

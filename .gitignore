@@ -76,3 +76,4 @@ crashlytics-build.properties
 /x64/Debug
 /ZWEI MIMIK/x64
 /Log.txt
+/.vscode
