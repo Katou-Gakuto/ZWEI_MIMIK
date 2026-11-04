@@ -413,37 +413,6 @@ void LightAreaManager::LightDraw()
             }
         }
     }
-
-    //// 当たっているオブジェクトに沿った描画を行う
-    //for (int i = 0; i < mnLightScreenHandle.size(); ++i)
-    //{
-    //    SetDrawScreen(mnLightScreenHandle[i].ScreenHandle);
-    //    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
-    //    {
-    //        LightArea* lightArea = mlNode[lightAreaIndex];
-    //        if (lightArea->GetLightColor() == colorNumbers[i])
-    //        {
-    //            std::vector<std::vector<HIT_COLLISION_LINE>> hitCollisionLine = lightArea->DrawLingAreaHitCollisionsGetProcess();
-    //            std::vector<std::vector<HIT_COLLISION_LINE>> drawHitCollisionLine = hitCollisionLine;
-    //            if (hitCollisionLine.size() == 0)
-    //            {
-    //                continue;
-    //            }
-
-    //            // 光の中に入る影の線をすべて描画用データとして追加する
-    //            for (int hitCollisionLinesIterator = 0; hitCollisionLinesIterator < hitCollisionLine.size(); ++hitCollisionLinesIterator)
-    //            {
-    //                int drawHitCollisionLineIteratorPlusNumber = 0;
-    //                for (int hitLineIndex = 0; (hitLineIndex + 1) < hitCollisionLine[hitCollisionLinesIterator].size(); ++hitLineIndex)
-    //                {
-    //                    drawHitCollisionLineIteratorPlusNumber += SetupLightAreaForDrawing(hitCollisionLine[hitCollisionLinesIterator], drawHitCollisionLine[hitCollisionLinesIterator], hitLineIndex, drawHitCollisionLineIteratorPlusNumber);
-    //                }
-    //            }
-
-    //            DrawHitCollisionLineData(drawHitCollisionLine);
-    //        }
-    //    }
-    //}
 }
 
 // ライト描画終了時処理
