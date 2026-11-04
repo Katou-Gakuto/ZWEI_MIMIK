@@ -1,0 +1,541 @@
+#include "DebugVariableToImgui.h"
+
+#include <map>
+#include <string>
+
+#include "Master.h"
+#include "Singleton/ImguiManager.h"
+
+// デバッグ変数の実体実装。
+// ImGui 側の制御生成と DX 描画用の登録情報保持をここで扱う。
+namespace DebugVariableToImgui
+{
+    namespace PrivateDetail
+    {
+        const char* GetDrawTypeName(DrawType type)
+        {
+            switch (type)
+            {
+            case DrawType_Point: return "Point";
+            case DrawType_Line: return "Line";
+            case DrawType_Circle: return "Circle";
+            case DrawType_Rectangle: return "Rectangle";
+            case DrawType_Text: return "Text";
+            case DrawType_FillCircle: return "FillCircle";
+            case DrawType_FillRectangle: return "FillRectangle";
+            default: return "Unknown";
+            }
+        }
+
+        inline void ColorIntToFloatArray(int color, float out[4])
+        {
+            const int r = (color >> 16) & 0xff;
+            const int g = (color >> 8) & 0xff;
+            const int b = color & 0xff;
+            out[0] = static_cast<float>(r) / 255.0f;
+            out[1] = static_cast<float>(g) / 255.0f;
+            out[2] = static_cast<float>(b) / 255.0f;
+            out[3] = 1.0f;
+        }
+
+        inline int ColorFloatArrayToInt(const float value[4])
+        {
+            const int r = static_cast<int>(value[0] * 255.0f + 0.5f);
+            const int g = static_cast<int>(value[1] * 255.0f + 0.5f);
+            const int b = static_cast<int>(value[2] * 255.0f + 0.5f);
+            return (r << 16) | (g << 8) | b;
+        }
+
+        void DrawEntrySettingEditor(PrivateVariable::Entry& entry)
+        {
+            if (!entry.drawState || entry.drawState->settings.empty())
+            {
+                return;
+            }
+
+            if (!ImGui::CollapsingHeader(entry.label.c_str(), nullptr, ImGuiTreeNodeFlags_None))
+            {
+                return;
+            }
+
+            DrawSetting& activeSetting = entry.drawState->settings.front();
+            bool visible = activeSetting.enabled;
+            if (ImGui::Checkbox("Visible", &visible))
+            {
+                activeSetting.enabled = visible;
+                for (auto& setting : entry.drawState->settings)
+                {
+                    setting.enabled = visible;
+                }
+            }
+
+            ImGui::Checkbox("Basic Enable", &activeSetting.basicEnabled);
+            ImGui::Checkbox("Type Enable", &activeSetting.typeEnabled);
+            ImGui::Checkbox("Element Enable", &activeSetting.elementEnabled);
+
+            for (size_t i = 0; i < entry.drawState->settings.size(); ++i)
+            {
+                DrawSetting& setting = entry.drawState->settings[i];
+                const std::string id = entry.label + "_" + std::to_string(i);
+                if (ImGui::TreeNode((id + " / " + GetDrawTypeName(setting.type)).c_str()))
+                {
+                    float colorValue[4] = {};
+                    ColorIntToFloatArray(setting.color, colorValue);
+                    if (ImGui::ColorEdit4("Color", colorValue, ImGuiColorEditFlags_AlphaPreviewHalf))
+                    {
+                        setting.color = ColorFloatArrayToInt(colorValue);
+                    }
+
+                    bool settingVisible = setting.enabled;
+                    if (ImGui::Checkbox("Visible", &settingVisible))
+                    {
+                        setting.enabled = settingVisible;
+                    }
+                    ImGui::SameLine();
+                    ImGui::Checkbox("Fill", &setting.fill);
+
+                    ImGui::DragFloat("X", &setting.x, 1.0f, -2000.0f, 2000.0f);
+                    ImGui::DragFloat("Y", &setting.y, 1.0f, -2000.0f, 2000.0f);
+                    ImGui::DragFloat("Width", &setting.width, 1.0f, 0.0f, 2000.0f);
+                    ImGui::DragFloat("Height", &setting.height, 1.0f, 0.0f, 2000.0f);
+                    ImGui::DragFloat("Radius", &setting.radius, 1.0f, 0.0f, 2000.0f);
+                    ImGui::DragInt("Thickness", &setting.thickness, 0.5f, 1, 32);
+
+                    ImGui::TreePop();
+                }
+            }
+
+            entry.drawSetting = activeSetting;
+            entry.drawSettings = entry.drawState->settings;
+        }
+
+        void DrawTypeTab(DrawType targetType)
+        {
+            auto& entries = PrivateVariable::GetEntries();
+            bool any = false;
+            for (auto& entry : entries)
+            {
+                if (!entry.drawState || entry.drawState->settings.empty())
+                {
+                    continue;
+                }
+
+                const bool containsType = std::any_of(entry.drawState->settings.begin(), entry.drawState->settings.end(), [targetType](const DrawSetting& s)
+                {
+                    return s.type == targetType;
+                });
+
+                if (!containsType)
+                {
+                    continue;
+                }
+
+                any = true;
+                DrawEntrySettingEditor(entry);
+            }
+
+            if (!any)
+            {
+                ImGui::TextUnformatted("No entries for this type.");
+            }
+        }
+    }
+
+    namespace PrivateFunction
+    {
+        template <typename T>
+        void RegisterManagerVariable(const std::string& label, T& value, float step, float stepFast, T min, T max, const char* format, IMGUI_TYPE type)
+        {
+#ifdef _DEBUG
+            if (Master::mpImguiManager == nullptr)
+            {
+                return;
+            }
+
+            std::vector<T*> variableDatas;
+            variableDatas.push_back(&value);
+
+            IMGUI_VARIABLE_CONTROL ctrl = IMGUI_VARIABLE_CONTROL::GetImguiData(
+                variableDatas,
+                1.0f,
+                step,
+                stepFast,
+                min,
+                max,
+                label,
+                format,
+                0,
+                type,
+                false);
+
+            Master::mpImguiManager->AddDrawImgui(ctrl, "DebugVariableToImgui");
+#endif
+        }
+
+        void RegisterImguiInt(const std::string& label, int& value, int min, int max)
+        {
+#ifdef _DEBUG
+            RegisterManagerVariable<int>(label, value, 1.0f, 1.0f, static_cast<float>(min), static_cast<float>(max), "%d", IMGUI_TYPE::SLIDER1);
+#endif
+        }
+
+        void RegisterImguiFloat(const std::string& label, float& value, float min, float max)
+        {
+#ifdef _DEBUG
+            RegisterManagerVariable<float>(label, value, 0.1f, 0.1f, min, max, "%.2f", IMGUI_TYPE::SLIDER1);
+#endif
+        }
+
+        void RegisterImguiDouble(const std::string& label, double& value, double min, double max)
+        {
+#ifdef _DEBUG
+            if (Master::mpImguiManager == nullptr)
+            {
+                return;
+            }
+
+            std::vector<IMGUI_VARIABLE_POITER_DATA> variableDatas;
+            variableDatas.push_back(IMGUI_VARIABLE_POITER_DATA(&value, IMGUI_VARIABLE_TYPE::DOUBLE));
+            IMGUI_VARIABLE_CONTROL ctrl = IMGUI_VARIABLE_CONTROL::GetImguiData(
+                variableDatas,
+                1.0f,
+                0.1f,
+                0.1f,
+                label,
+                "%.2f",
+                0,
+                IMGUI_TYPE::SLIDER1,
+                false);
+            Master::mpImguiManager->AddDrawImgui(ctrl, "DebugVariableToImgui");
+#endif
+        }
+    }
+
+    namespace PrivateVariable
+    {
+        std::vector<Entry>& GetEntries()
+        {
+            static std::vector<Entry> entries;
+            return entries;
+        }
+
+        void AddEntry(Entry entry)
+        {
+            for (auto& current : GetEntries())
+            {
+                if (current.key == entry.key)
+                {
+                    current = entry;
+                    return;
+                }
+            }
+
+            GetEntries().push_back(entry);
+        }
+
+        void RemoveEntry(const std::string& key)
+        {
+            auto& entries = GetEntries();
+            for (size_t i = 0; i < entries.size(); ++i)
+            {
+                if (entries[i].key == key)
+                {
+                    entries.erase(entries.begin() + static_cast<std::ptrdiff_t>(i));
+                    return;
+                }
+            }
+        }
+
+        bool HasEntry(const std::string& key)
+        {
+            const auto& entries = GetEntries();
+            for (const auto& entry : entries)
+            {
+                if (entry.key == key)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    void Update()
+    {
+        PrivateFunction::Update();
+    }
+
+    void Draw()
+    {
+        PrivateFunction::Draw();
+    }
+
+    void SetBasicEnabled(const std::string& key, bool enabled)
+    {
+        auto& entries = PrivateVariable::GetEntries();
+        for (auto& entry : entries)
+        {
+            if (entry.key == key)
+            {
+                entry.basicEnabled = enabled;
+                if (entry.drawState)
+                {
+                    for (auto& setting : entry.drawState->settings)
+                    {
+                        setting.basicEnabled = enabled;
+                    }
+                    if (!entry.drawState->settings.empty())
+                    {
+                        entry.drawSetting = entry.drawState->settings.front();
+                    }
+                }
+                entry.drawSettings = entry.drawState ? entry.drawState->settings : entry.drawSettings;
+                return;
+            }
+        }
+    }
+
+    void SetTypeEnabled(const std::string& key, DrawType type, bool enabled)
+    {
+        auto& entries = PrivateVariable::GetEntries();
+        for (auto& entry : entries)
+        {
+            if (entry.key == key)
+            {
+                entry.typeEnabled = enabled;
+                if (entry.drawState)
+                {
+                    for (auto& setting : entry.drawState->settings)
+                    {
+                        if (setting.type == type)
+                        {
+                            setting.typeEnabled = enabled;
+                        }
+                    }
+                    if (!entry.drawState->settings.empty())
+                    {
+                        entry.drawSetting = entry.drawState->settings.front();
+                    }
+                }
+                entry.drawSettings = entry.drawState ? entry.drawState->settings : entry.drawSettings;
+                return;
+            }
+        }
+    }
+
+    void SetElementEnabled(const std::string& key, bool enabled, size_t elementIndex)
+    {
+        auto& entries = PrivateVariable::GetEntries();
+        for (auto& entry : entries)
+        {
+            if (entry.key == key)
+            {
+                if (entry.drawState && elementIndex < entry.drawState->settings.size())
+                {
+                    entry.drawState->settings[elementIndex].elementEnabled = enabled;
+                    entry.drawSetting = entry.drawState->settings.front();
+                }
+                entry.drawSettings = entry.drawState ? entry.drawState->settings : entry.drawSettings;
+                return;
+            }
+        }
+    }
+
+    void SetDefaultDrawSetting(const std::string& key, const DrawSetting& setting)
+    {
+        auto& entries = PrivateVariable::GetEntries();
+        for (auto& entry : entries)
+        {
+            if (entry.key == key)
+            {
+                if (entry.drawState == nullptr)
+                {
+                    entry.drawState = std::make_shared<LiveDrawState>(setting);
+                }
+                else
+                {
+                    entry.drawState->mainSetting = setting;
+                    entry.drawState->settings.assign(1, setting);
+                }
+                entry.drawSetting = setting;
+                entry.drawSettings = entry.drawState->settings;
+                return;
+            }
+        }
+    }
+
+    void SetDrawColor(const std::string& key, int color)
+    {
+        auto& entries = PrivateVariable::GetEntries();
+        for (auto& entry : entries)
+        {
+            if (entry.key == key)
+            {
+                if (entry.drawState)
+                {
+                    for (auto& setting : entry.drawState->settings)
+                    {
+                        setting.color = color;
+                    }
+                    if (!entry.drawState->settings.empty())
+                    {
+                        entry.drawSetting = entry.drawState->settings.front();
+                    }
+                }
+                entry.drawSettings = entry.drawState ? entry.drawState->settings : entry.drawSettings;
+                return;
+            }
+        }
+    }
+
+    void SetDrawType(const std::string& key, DrawType type)
+    {
+        auto& entries = PrivateVariable::GetEntries();
+        for (auto& entry : entries)
+        {
+            if (entry.key == key)
+            {
+                if (entry.drawState)
+                {
+                    for (auto& setting : entry.drawState->settings)
+                    {
+                        setting.type = type;
+                    }
+                    if (!entry.drawState->settings.empty())
+                    {
+                        entry.drawSetting = entry.drawState->settings.front();
+                    }
+                }
+                entry.drawSettings = entry.drawState ? entry.drawState->settings : entry.drawSettings;
+                return;
+            }
+        }
+    }
+
+    namespace PrivateFunction
+    {
+        void Update()
+        {
+            auto& entries = PrivateVariable::GetEntries();
+            for (auto& entry : entries)
+            {
+                if (entry.updateImgui)
+                {
+                    entry.updateImgui();
+                }
+            }
+
+            if (!ImGui::Begin("DebugVariableToImgui"))
+            {
+                ImGui::End();
+                return;
+            }
+
+            if (ImGui::BeginTabBar("DebugVariableToImguiTabBar"))
+            {
+                if (ImGui::BeginTabItem("Basic"))
+                {
+                    if (entries.empty())
+                    {
+                        ImGui::TextUnformatted("No debug variables registered.");
+                    }
+                    else
+                    {
+                        for (auto& entry : entries)
+                        {
+                            PrivateDetail::DrawEntrySettingEditor(entry);
+                        }
+                    }
+                    ImGui::EndTabItem();
+                }
+
+                if (ImGui::BeginTabItem("Point"))
+                {
+                    PrivateDetail::DrawTypeTab(DrawType_Point);
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Line"))
+                {
+                    PrivateDetail::DrawTypeTab(DrawType_Line);
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Circle"))
+                {
+                    PrivateDetail::DrawTypeTab(DrawType_Circle);
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Rectangle"))
+                {
+                    PrivateDetail::DrawTypeTab(DrawType_Rectangle);
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Text"))
+                {
+                    PrivateDetail::DrawTypeTab(DrawType_Text);
+                    ImGui::EndTabItem();
+                }
+
+                ImGui::EndTabBar();
+            }
+
+            ImGui::End();
+        }
+
+        void Draw()
+        {
+            auto& entries = PrivateVariable::GetEntries();
+            constexpr int startX = 20;
+            constexpr int startY = 24;
+            constexpr int textLineHeight = 24;
+            constexpr int textColumnGap = 1;
+            constexpr int maxRowsPerColumn = 18;
+            int globalTextIndex = 0;
+
+            for (auto& entry : entries)
+            {
+                if (!entry.drawState || entry.drawState->settings.empty())
+                {
+                    continue;
+                }
+
+                bool hasTextSetting = false;
+                for (const auto& setting : entry.drawState->settings)
+                {
+                    if (setting.type == DrawType_Text && setting.IsVisible())
+                    {
+                        hasTextSetting = true;
+                        break;
+                    }
+                }
+
+                if (hasTextSetting && entry.getDisplayValue)
+                {
+                    const std::string valueText = entry.getDisplayValue();
+                    for (size_t i = 0; i < entry.drawState->settings.size(); ++i)
+                    {
+                        const DrawSetting& setting = entry.drawState->settings[i];
+                        if (setting.type != DrawType_Text || !setting.IsVisible())
+                        {
+                            continue;
+                        }
+
+                        const int columnIndex = globalTextIndex / maxRowsPerColumn;
+                        const int rowIndex = globalTextIndex % maxRowsPerColumn;
+                        const int drawX = startX + columnIndex * textColumnGap;
+                        const int drawY = startY + rowIndex * textLineHeight;
+                        const std::string displayText = setting.label.empty() ? (setting.text.empty() ? valueText : setting.text + ": " + valueText) : setting.label + ": " + valueText;
+
+                        DxLib::DrawString(drawX, drawY, displayText.c_str(), setting.color);
+                        ++globalTextIndex;
+                    }
+                    continue;
+                }
+
+                if (entry.drawDx)
+                {
+                    entry.drawDx();
+                }
+            }
+        }
+    }
+}
