@@ -297,8 +297,8 @@ public class SetMapDrawPos : MonoBehaviour
             float magnificationX = FileOutStageSize.x / 1920.0f;
             float magnificationY = FileOutStageSize.y / 1080.0f;
 
-            TestPlayer1.transform.localScale = new Vector3(120.0f * magnificationX, 1.0f, 120.0f * magnificationX);
-            TestPlayer2.transform.localScale = new Vector3(120.0f * magnificationY, 1.0f, 120.0f * magnificationY);
+            TestPlayer1.transform.localScale = new Vector3(120.0f * magnificationX * 0.5f, 1.0f, 120.0f * magnificationX * 0.5f);
+            TestPlayer2.transform.localScale = new Vector3(120.0f * magnificationY * 0.5f, 1.0f, 120.0f * magnificationY * 0.5f);
         }
         else
         {
@@ -515,6 +515,7 @@ public class SetMapDrawPos : MonoBehaviour
         {
             string sceneName = SceneManager.GetActiveScene().name;
             string openFileName = "";
+
             if (FileNamePlusCountFlag)
             {
                 openFileName = "MapData_" + sceneName + "_" + SetMapObjectTriggerCount + ".txt";
@@ -523,11 +524,24 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 openFileName = "MapData" + sceneName + ".txt";
             }
-            string path = Path.Combine(Application.dataPath, openFileName);
+            // 出力先フォルダ
+            string folderPath = Path.Combine(Application.dataPath, sceneName);
+
+            // フォルダが存在しない場合は作成
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // ファイル出力
+            string path = Path.Combine(folderPath, openFileName);
             File.WriteAllText(path, mapDataString);
+
             AssetDatabase.Refresh();
         }
 
+        // ライト情報をファイルに出力
+        OutputLightDataToFile();
     }
 
     /// <summary>
@@ -607,22 +621,22 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.NORMALIZE:
                     mapDataString +=
-                        "posX:" + (posX / canvasWidth) +
-                        " posY:" + (posY / canvasHeight) +
+                        "posX:" + FloatToOutputString(posX / canvasWidth) +
+                        " posY:" + FloatToOutputString(posY / canvasHeight) +
                         "\n";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.COORDINATE:
                     mapDataString +=
-                        "posX:" + posX +
-                        " posY:" + posY +
+                        "posX:" + FloatToOutputString(posX) +
+                        " posY:" + FloatToOutputString(posY) +
                         "\n";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.MAGNIFICATION:
                     mapDataString +=
-                        "posX:" + ((posX / canvasWidth) * OutPutMagnificationPos.x) +
-                        " posY:" + ((posY / canvasHeight) * OutPutMagnificationPos.y) +
+                        "posX:" + FloatToOutputString((posX / canvasWidth) * OutPutMagnificationPos.x) +
+                        " posY:" + FloatToOutputString((posY / canvasHeight) * OutPutMagnificationPos.y) +
                         "\n";
                     break;
             }
@@ -632,32 +646,32 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.ORIGINAL:
                     mapDataString +=
-                        "sizeX:" + sizeX +
-                        " sizeY:" + sizeY;
+                        "sizeX:" + FloatToOutputString(sizeX) +
+                        " sizeY:" + FloatToOutputString(sizeY);
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.FIXED_RATIO:
                     mapDataString +=
-                        "sizeX:" + (sizeX / OutPutFixedRatio.x) +
-                        " sizeY:" + (sizeY / OutPutFixedRatio.y);
+                        "sizeX:" + FloatToOutputString(sizeX / OutPutFixedRatio.x) +
+                        " sizeY:" + FloatToOutputString(sizeY / OutPutFixedRatio.y);
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.EDITOR_RATIO:
                     mapDataString +=
-                        "sizeX:" + (sizeX / OutPutRatio.x) +
-                        " sizeY:" + (sizeY / OutPutRatio.y);
+                        "sizeX:" + FloatToOutputString(sizeX / OutPutRatio.x) +
+                        " sizeY:" + FloatToOutputString(sizeY / OutPutRatio.y);
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.FIXED_RATIO_EDITOR_SCALE:
                     mapDataString +=
-                        "sizeX:" + ((sizeX / OutPutFixedRatio.x) * OutPutMagnificationSize.x) +
-                        " sizeY:" + ((sizeY / OutPutFixedRatio.y) * OutPutMagnificationSize.y);
+                        "sizeX:" + FloatToOutputString((sizeX / OutPutFixedRatio.x) * OutPutMagnificationSize.x) +
+                        " sizeY:" +FloatToOutputString((sizeY / OutPutFixedRatio.y) * OutPutMagnificationSize.y);
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.EDITOR_RATIO_EDITOR_SCALE:
                     mapDataString +=
-                        "sizeX:" + ((sizeX / OutPutRatio.x) * OutPutMagnificationSize.x) +
-                        " sizeY:" + ((sizeY / OutPutRatio.y) * OutPutMagnificationSize.y);
+                        "sizeX:" + FloatToOutputString((sizeX / OutPutRatio.x) * OutPutMagnificationSize.x) +
+                        " sizeY:" + FloatToOutputString((sizeY / OutPutRatio.y) * OutPutMagnificationSize.y);
                     break;
             }
 
@@ -683,31 +697,31 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_MODE.OBJECT_NOT_CORRECTION:
                     mapDataString += (
-                        "posX:"  + objectData.OutPutDatas.MyPos.x  +
-                        " posY:"  + (-objectData.OutPutDatas.MyPos.y) +
+                        "posX:"  + FloatToOutputString(objectData.OutPutDatas.MyPos.x)  +
+                        " posY:"  + FloatToOutputString(-objectData.OutPutDatas.MyPos.y) +
                         "\n" +
-                        "sizeX:" + objectData.OutPutDatas.MySize.x +
-                        " sizeY:" + objectData.OutPutDatas.MySize.y
+                        "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
+                        " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y)
                         );
                     break;
 
                 case FILE_OUTPUT_PROCESS_MODE.STAGE_CORRECTION:
                     mapDataString += (
-                        "posX:"  + (objectData.OutPutDatas.MyPos.x - StageLeftUp.x)  +
-                        " posY:"  + (StageLeftUp.y - objectData.OutPutDatas.MyPos.y) +
+                        "posX:"  + FloatToOutputString(objectData.OutPutDatas.MyPos.x - StageLeftUp.x)  +
+                        " posY:"  + FloatToOutputString(StageLeftUp.y - objectData.OutPutDatas.MyPos.y) +
                         "\n" +
-                        "sizeX:" + objectData.OutPutDatas.MySize.x +
-                        " sizeY:" + objectData.OutPutDatas.MySize.y
+                        "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
+                        " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y)
                         );
                     break;
 
                 case FILE_OUTPUT_PROCESS_MODE.STAGE_DRAW_CORRECTION:
                     mapDataString += (
-                        "posX:"  + ((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) / FileOutStageSize.x)  +
-                        " posY:"  + ((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) / FileOutStageSize.y) +
+                        "posX:"  + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) / FileOutStageSize.x)  +
+                        " posY:"  + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) / FileOutStageSize.y) +
                         "\n" +
-                        "sizeX:" + (objectData.OutPutDatas.MySize.x / FileOutStageSize.x) +
-                        " sizeY:" + (objectData.OutPutDatas.MySize.y / FileOutStageSize.y)
+                        "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x / FileOutStageSize.x) +
+                        " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y / FileOutStageSize.y)
                         );
                     break;
 
@@ -717,11 +731,11 @@ public class SetMapDrawPos : MonoBehaviour
                         float magnificationY = 1080.0f / FileOutStageSize.y;
 
                         mapDataString += (
-                            "posX:" + (objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX +
-                            " posY:" + (StageLeftUp.y - objectData.OutPutDatas.MyPos.y) * magnificationY +
+                            "posX:" + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX) +
+                            " posY:" + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) * magnificationY) +
                             "\n" +
-                            "sizeX:" + objectData.OutPutDatas.MySize.x +
-                            " sizeY:" + objectData.OutPutDatas.MySize.y 
+                            "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x * magnificationX) +
+                            " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y * magnificationY)
                         );
                     }
                     break;
@@ -933,5 +947,79 @@ public class SetMapDrawPos : MonoBehaviour
                 break;
         }
         return outPutName;
+    }
+
+    /// <summary>
+    /// floatを出力用文字列に変換
+    /// 小数点以下1桁は必ず表示し、それ以降は必要な桁数だけ表示する
+    /// </summary>
+    private string FloatToOutputString(float value)
+    {
+        return value.ToString("0.0############");
+    }
+
+    /// <summary>
+    /// ライト情報をファイルに出力
+    /// </summary>
+    private void OutputLightDataToFile()
+    {
+        string lightDataString = "";
+
+        // 現在開いているSceneを取得
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        // Scene直下のGameObjectを取得
+        GameObject[] rootObjects = currentScene.GetRootGameObjects();
+
+        // 全GameObjectを調査
+        foreach (GameObject rootObject in rootObjects)
+        {
+            // 子オブジェクトも含めて調査
+            Transform[] allTransforms = rootObject.GetComponentsInChildren<Transform>(true);
+
+            foreach (Transform target in allTransforms)
+            {
+                // LightAreaが付いているか確認
+                LightArea lightArea = target.GetComponent<LightArea>();
+
+                if (lightArea == null)
+                {
+                    continue;
+                }
+
+                lightDataString += target.name + "\n";
+
+                lightDataString +=
+                    "angle:" + lightArea.mfMainAngle.ToString("0.0############") +
+                    " angleRange:" + lightArea.mfAngleRange.ToString("0.0############") +
+                    "\n\n";
+            }
+        }
+
+        // ライト情報が存在しない場合は終了
+        if (lightDataString.Length <= 0)
+        {
+            return;
+        }
+
+        string sceneName = currentScene.name;
+        string openFileName = "";
+
+        if (FileNamePlusCountFlag)
+        {
+            openFileName = "LightData_" + sceneName + "_" + SetMapObjectTriggerCount + ".txt";
+        }
+        else
+        {
+            openFileName = "LightData_" + sceneName + ".txt";
+        }
+
+        // マップデータと同じフォルダに出力
+        string folderPath = Path.Combine(Application.dataPath, sceneName);
+        string path = Path.Combine(folderPath, openFileName);
+
+        File.WriteAllText(path, lightDataString);
+
+        AssetDatabase.Refresh();
     }
 }

@@ -147,7 +147,7 @@ public class LightArea : MonoBehaviour
         // 扇形の中心
         vertices[0] = Vector3.zero;
 
-        float startAngle = MainAngle - mfAngleRange * 0.5f;
+        float startAngle = mfPlusMainAngle - mfAngleRange * 0.5f;
 
         for (int i = 0; i <= segmentCount; i++)
         {
@@ -186,7 +186,7 @@ public class LightArea : MonoBehaviour
         Gizmos.color = Color.yellow;
 
         Vector3 center = mvPosition;
-        float startAngle = MainAngle - mfAngleRange * 0.5f;
+        float startAngle = mfPlusMainAngle + mfMainAngle - mfAngleRange * 0.5f;
 
         int segmentCount = Mathf.Max(
             1,
@@ -218,7 +218,7 @@ public class LightArea : MonoBehaviour
 
         // 中心から扇形の左右端へ線を引く
         float leftAngle = startAngle * Mathf.Deg2Rad;
-        float rightAngle = (MainAngle + mfAngleRange * 0.5f)
+        float rightAngle = (mfPlusMainAngle + mfMainAngle + mfAngleRange * 0.5f)
                            * Mathf.Deg2Rad;
 
         Vector3 leftDirection = new Vector3(
