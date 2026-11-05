@@ -24,7 +24,6 @@
 #include "DebugLogs/DebugVariableToImgui.h"
 #endif
 
-
 ImguiManager::ImguiManager(bool isImguiExecute)
 #ifdef _DEBUG
 : mnAddNumber(0)
@@ -92,15 +91,30 @@ void ImguiManager::Update()
     {
         return;
     }
+
     
     // ImGui フレーム開始
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
+
+    // DXLib独自の処理
+    {
+        // マウスポジション修正
+        ImGuiIO& io = ImGui::GetIO();
+        int mouseX, mouseY;
+        GetMousePoint(&mouseX, &mouseY);
+        io.AddMousePosEvent(mouseX, mouseY);
+        
+
+        // 画面修正
+        io.DisplaySize = ImVec2(Master::mpDxLibDataManager->GetStartDisplaySize().GetX(), Master::mpDxLibDataManager->GetStartDisplaySize().GetY());
+    }
+
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
     ImGui::ShowDemoWindow();
 
-    DebugVariableToImgui::Update();
+    DebugVariableToImgui::PrivateFunction::Update();
 
     mnAddNumber = 0;
     // グループ
@@ -130,10 +144,10 @@ void ImguiManager::Draw()
         return;
     }
 
-    DebugVariableToImgui::Draw();
+    DebugVariableToImgui::PrivateFunction::Draw();
 
     DrawGameDisplayToImgui();
-    
+
     // ImGui フレーム終了と描画
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

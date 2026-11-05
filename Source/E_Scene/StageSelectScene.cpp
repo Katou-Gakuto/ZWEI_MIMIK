@@ -225,7 +225,7 @@ int StageSelectScene::Draw()
         GetColor(255, 255, 255));
 
     // 
-    message = "Current Select Stage : " + std::to_string(this->mnCurrentStage);
+    message = "Current Select Stage : " + std::to_string(this->mnCurrentStage) + "(+ 1)";
 
     // 
     DRAW_SYSTEM::DrawString(

@@ -11,6 +11,8 @@
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 
+#include "EndManager.h"
+
 // 
 TitleScene::TitleScene() :
     mbLogoPhase(true),
@@ -339,7 +341,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpEndManager;
+                Master::mpEndManager->SetEndFlag(true, END_FLAG_NUMBER::GAME_END_FLAG);
 
                 // 
                 this->OnResetFlag();

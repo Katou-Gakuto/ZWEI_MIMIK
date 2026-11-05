@@ -1,18 +1,10 @@
 #pragma once
 
-// #include <algorithm>
-// #include <cmath>
-// #include <functional>
-// #include <memory>
-// #include <sstream>
+#include <functional>
 #include <string>
-// #include <type_traits>
 #include <vector>
 
-// #include "DxLib.h"
-// #include "ImguiData.h"
-// #include "ImguiManager.h"
-// #include "Master.h"
+#include "ImguiData.h"
 
 // DebugVariableToImgui
 // 変数の値を ImGui の表示と DX ライブラリの描画の両方に同期させるための
@@ -20,731 +12,159 @@
 // PrivateVariable / PrivateFunction に分離して管理する。
 namespace DebugVariableToImgui
 {
-    // // PrivateVariable は内部のエントリ情報を格納し、登録・参照・削除などを
-    // // 管理するための専用名前空間。
-    // namespace PrivateVariable
-    // {
-    //     struct Entry;
-    // }
+    struct StructMemberIndexData;
+    namespace PrivateEnum
+    {
+        // ImGui の操作設定を管理する列挙型。
+        // 色、サイズ、位置などの描画設定を識別する。
+    
+        enum class DEBUG_VAR_DRAW_IMGUI_SETTING_TYPE
+        {
+            IMGUI_OPERATION_NONE = -1,
 
-    // // PrivateDetail は ImGui への入力値や描画設定の補助変換を担当する内部名前空間。
-    // // ここに置かれた処理は公開 API から直接使われるより、登録時の補助として利用される。
-    // namespace PrivateDetail
-    // {
-    //     const char* GetDrawTypeName(DrawType type);
-    //     void ColorIntToFloatArray(int color, float out[4]);
-    //     int ColorFloatArrayToInt(const float value[4]);
-    //     void DrawEntrySettingEditor(PrivateVariable::Entry& entry);
-    //     void DrawTypeTab(DrawType targetType);
-    // }
+            IMGUI_OPERATION_COLOR,
 
-    // // DrawSetting は 1 つの描画要素に対する見た目と挙動を保持する構造体。
-    // // x, y, width, height, radius, color, label などを持ち、
-    // // DX 描画と ImGui の両方で共通の状態として利用される。
-    // struct DrawSetting
-    // {
-    //     DrawType type;
-    //     int color;
-    //     int thickness;
-    //     float radius;
-    //     float width;
-    //     float height;
-    //     float x;
-    //     float y;
-    //     float leftX;
-    //     float leftY;
-    //     float rightX;
-    //     float rightY;
-    //     bool fill;
-    //     std::string label;
-    //     std::string text;
-    //     bool enabled;
-    //     bool basicEnabled;
-    //     bool typeEnabled;
-    //     bool elementEnabled;
+            IMGUI_OPERATION_SIZE,
+            IMGUI_OPERATION_WIDTH,
+            IMGUI_OPERATION_HEIGHT,
+            
+            IMGUI_OPERATION_RADIUS,
+            
+            IMGUI_OPERATION_POS,
+            IMGUI_OPERATION_POS_X,
+            IMGUI_OPERATION_POS_Y,
+            
+            IMGUI_OPERATION_LEFT_POS,
+            IMGUI_OPERATION_LEFT_POS_X,
+            IMGUI_OPERATION_LEFT_POS_Y,
 
-    //     DrawSetting()
-    //         : type(DrawType_Text)
-    //         , color(0xffffff)
-    //         , thickness(1)
-    //         , radius(8.0f)
-    //         , width(16.0f)
-    //         , height(16.0f)
-    //         , x(0.0f)
-    //         , y(0.0f)
-    //         , leftX(0.0f)
-    //         , leftY(0.0f)
-    //         , rightX(0.0f)
-    //         , rightY(0.0f)
-    //         , fill(false)
-    //         , label()
-    //         , text()
-    //         , enabled(true)
-    //         , basicEnabled(true)
-    //         , typeEnabled(true)
-    //         , elementEnabled(true)
-    //     {
-    //     }
-
-    //     DrawSetting(
-    //         DrawType typeValue,
-    //         int colorValue,
-    //         int thicknessValue,
-    //         float radiusValue,
-    //         float widthValue,
-    //         float heightValue,
-    //         float xValue,
-    //         float yValue,
-    //         bool fillValue,
-    //         const std::string& labelValue,
-    //         const std::string& textValue,
-    //         bool enabledValue)
-    //         : type(typeValue)
-    //         , color(colorValue)
-    //         , thickness(thicknessValue)
-    //         , radius(radiusValue)
-    //         , width(widthValue)
-    //         , height(heightValue)
-    //         , x(xValue)
-    //         , y(yValue)
-    //         , leftX(xValue)
-    //         , leftY(yValue)
-    //         , rightX(xValue + widthValue)
-    //         , rightY(yValue + heightValue)
-    //         , fill(fillValue)
-    //         , label(labelValue)
-    //         , text(textValue)
-    //         , enabled(enabledValue)
-    //         , basicEnabled(true)
-    //         , typeEnabled(true)
-    //         , elementEnabled(true)
-    //     {
-    //     }
-
-    //     void SetLinePoints(float startX, float startY, float endX, float endY)
-    //     {
-    //         leftX = startX;
-    //         leftY = startY;
-    //         rightX = endX;
-    //         rightY = endY;
-    //         x = startX;
-    //         y = startY;
-    //         width = endX >= startX ? endX - startX : startX - endX;
-    //         height = endY >= startY ? endY - startY : startY - endY;
-    //     }
-
-    //     bool IsVisible() const
-    //     {
-    //         return basicEnabled && typeEnabled && elementEnabled && enabled;
-    //     }
-    // };
-
-    // // StructMemberInfo は構造体のメンバ変数をデバッグ表示用に束ねる情報を持つ。
-    // // 例: position.x のような階層メンバも、名前とポインタの組み合わせで
-    // // 1 つのデバッグ項目として扱える。
-    // template <typename T, typename MemberType>
-    // struct StructMemberInfo
-    // {
-    //     std::string name;
-    //     MemberType T::* member;
-    // };
-
-    // template <typename T, typename MemberType>
-    // using StructMemberBinding = StructMemberInfo<T, MemberType>;
-
-    // // MakeDefaultDrawSetting は標準の描画設定をまとめて生成するヘルパー。
-    // // DX 描画と ImGui の両方で共通の初期値として使うための関数。
-    // inline DrawSetting MakeDefaultDrawSetting(
-    //     DrawType typeValue = DrawType_Text,
-    //     int colorValue = 0xffffff,
-    //     int thicknessValue = 1,
-    //     float radiusValue = 8.0f,
-    //     float widthValue = 16.0f,
-    //     float heightValue = 16.0f,
-    //     float xValue = 0.0f,
-    //     float yValue = 0.0f,
-    //     bool fillValue = false,
-    //     const std::string& labelValue = std::string(),
-    //     const std::string& textValue = std::string(),
-    //     bool enabledValue = true)
-    // {
-    //     DrawSetting setting;
-    //     setting.type = typeValue;
-    //     setting.color = colorValue;
-    //     setting.thickness = thicknessValue;
-    //     setting.radius = radiusValue;
-    //     setting.width = widthValue;
-    //     setting.height = heightValue;
-    //     setting.x = xValue;
-    //     setting.y = yValue;
-    //     setting.leftX = xValue;
-    //     setting.leftY = yValue;
-    //     setting.rightX = xValue + widthValue;
-    //     setting.rightY = yValue + heightValue;
-    //     setting.fill = fillValue;
-    //     setting.label = labelValue;
-    //     setting.text = textValue;
-    //     setting.enabled = enabledValue;
-    //     setting.basicEnabled = true;
-    //     setting.typeEnabled = true;
-    //     setting.elementEnabled = true;
-
-    //     switch (typeValue)
-    //     {
-    //     case DrawType_Point:
-    //         setting.radius = 4.0f;
-    //         setting.width = 6.0f;
-    //         setting.height = 6.0f;
-    //         break;
-    //     case DrawType_Line:
-    //         setting.thickness = 2;
-    //         setting.leftX = xValue;
-    //         setting.leftY = yValue;
-    //         setting.rightX = xValue + (widthValue > 0.0f ? widthValue : 40.0f);
-    //         setting.rightY = yValue + (heightValue > 0.0f ? heightValue : 0.0f);
-    //         setting.width = setting.rightX - setting.leftX;
-    //         setting.height = setting.rightY - setting.leftY;
-    //         setting.x = setting.leftX;
-    //         setting.y = setting.leftY;
-    //         break;
-    //     case DrawType_Circle:
-    //     case DrawType_FillCircle:
-    //         setting.radius = radiusValue > 0.0f ? radiusValue : 24.0f;
-    //         setting.width = radiusValue > 0.0f ? radiusValue : 24.0f;
-    //         setting.height = radiusValue > 0.0f ? radiusValue : 24.0f;
-    //         break;
-    //     case DrawType_Rectangle:
-    //     case DrawType_FillRectangle:
-    //         setting.width = widthValue > 0.0f ? widthValue : 32.0f;
-    //         setting.height = heightValue > 0.0f ? heightValue : 18.0f;
-    //         break;
-    //     case DrawType_Text:
-    //         setting.width = 120.0f;
-    //         setting.height = 18.0f;
-    //         break;
-    //     default:
-    //         break;
-    //     }
-
-    //     return setting;
-    // }
-
-    // // MakeLineDrawSetting は始点と終点を直接指定して、
-    // // 線の DrawSetting を生成するヘルパー関数。
-    // inline DrawSetting MakeLineDrawSetting(
-    //     int colorValue = 0x00bbff,
-    //     int thicknessValue = 2,
-    //     float leftXValue = 0.0f,
-    //     float leftYValue = 0.0f,
-    //     float rightXValue = 40.0f,
-    //     float rightYValue = 0.0f,
-    //     const std::string& labelValue = std::string(),
-    //     const std::string& textValue = std::string(),
-    //     bool enabledValue = true)
-    // {
-    //     DrawSetting setting = MakeDefaultDrawSetting(DrawType_Line, colorValue, thicknessValue, 8.0f, 40.0f, 0.0f, leftXValue, leftYValue, false, labelValue, textValue, enabledValue);
-    //     setting.SetLinePoints(leftXValue, leftYValue, rightXValue, rightYValue);
-    //     return setting;
-    // }
-
-    // // ToDebugString は任意の型を文字列に変換する補助関数。
-    // // bool だけは true / false を返すように特殊化する。
-    // template <typename T>
-    // inline std::string ToDebugString(const T& value)
-    // {
-    //     std::ostringstream stream;
-    //     stream << value;
-    //     return stream.str();
-    // }
-
-    // template <>
-    // inline std::string ToDebugString<bool>(const bool& value)
-    // {
-    //     return value ? "true" : "false";
-    // }
-
-    // // LiveDrawState は 1 つの要素に対して、
-    // // メイン設定と複数の表示設定をまとめて管理する。
-    // struct LiveDrawState
-    // {
-    //     DrawSetting mainSetting;
-    //     std::vector<DrawSetting> settings;
-
-    //     LiveDrawState()
-    //         : mainSetting()
-    //         , settings()
-    //     {
-    //         settings.push_back(mainSetting);
-    //     }
-
-    //     explicit LiveDrawState(const DrawSetting& initialSetting)
-    //         : mainSetting(initialSetting)
-    //         , settings(1, initialSetting)
-    //     {
-    //     }
-    // };
-
-    // namespace PrivateVariable
-    // {
-    //     // Entry は 1 つのデバッグ項目の実体を表す。
-    //     // key は識別用のキー、label は UI 上の表示名、drawSetting や drawSettings
-    //     // は実際の描画状態を保持する。
-    //     struct Entry
-    //     {
-    //         std::string key;
-    //         std::string label;
-    //         std::string tabName;
-    //         bool basicEnabled;
-    //         bool typeEnabled;
-    //         DrawSetting drawSetting;
-    //         std::vector<DrawSetting> drawSettings;
-    //         std::shared_ptr<LiveDrawState> drawState;
-    //         std::function<void()> updateImgui;
-    //         std::function<void()> drawDx;
-    //         std::function<std::string()> getDisplayValue;
-
-    //         Entry()
-    //             : key()
-    //             , label()
-    //             , tabName()
-    //             , basicEnabled(true)
-    //             , typeEnabled(true)
-    //             , drawSetting()
-    //             , drawSettings()
-    //             , drawState(std::make_shared<LiveDrawState>())
-    //             , updateImgui()
-    //             , drawDx()
-    //             , getDisplayValue()
-    //         {
-    //             drawSettings = drawState->settings;
-    //             drawSetting = drawState->mainSetting;
-    //         }
-    //     };
-
-    //     std::vector<Entry>& GetEntries();
-    //     void AddEntry(Entry entry);
-    //     void RemoveEntry(const std::string& key);
-    //     bool HasEntry(const std::string& key);
-    // }
-
-    // namespace PrivateFunction
-    // {
-    //     // Update は ImGui 側の入力状態と内部変数の状態を同期させる。
-    //     void Update();
-    //     // Draw は DX 側で図形やテキストを実際に描画する。
-    //     void Draw();
-
-    //     // RegisterImguiInt / Float / Double は ImGui 上で値を編集する登録関数。
-    //     void RegisterImguiInt(const std::string& label, int& value, int min, int max);
-    //     void RegisterImguiFloat(const std::string& label, float& value, float min, float max);
-    //     void RegisterImguiDouble(const std::string& label, double& value, double min, double max);
-    // }
-
-    // // RegisterValueHelper は型ごとに ImGui に与える登録方法を吸収する。
-    // // int / float / double / bool などの基本型の違いをまとめて扱う。
-    // template <typename T>
-    // struct RegisterValueHelper;
-
-    // template <>
-    // struct RegisterValueHelper<int>
-    // {
-    //     static void Apply(const std::string& label, int& value, const DrawSetting& setting)
-    //     {
-    //         (void)setting;
-    //         PrivateFunction::RegisterImguiInt(label, value, 0, 1000);
-    //     }
-    // };
-
-    // template <>
-    // struct RegisterValueHelper<float>
-    // {
-    //     static void Apply(const std::string& label, float& value, const DrawSetting& setting)
-    //     {
-    //         (void)setting;
-    //         PrivateFunction::RegisterImguiFloat(label, value, -1000.0f, 1000.0f);
-    //     }
-    // };
-
-    // template <>
-    // struct RegisterValueHelper<double>
-    // {
-    //     static void Apply(const std::string& label, double& value, const DrawSetting& setting)
-    //     {
-    //         (void)setting;
-    //         PrivateFunction::RegisterImguiDouble(label, value, -1000.0, 1000.0);
-    //     }
-    // };
-
-    // template <>
-    // struct RegisterValueHelper<bool>
-    // {
-    //     static void Apply(const std::string& label, bool& value, const DrawSetting& setting)
-    //     {
-    //         (void)label;
-    //         (void)value;
-    //         (void)setting;
-    //     }
-    // };
-
-    // template <typename T>
-    // inline void DrawSingleValue(const T& value, const DrawSetting& setting, int textOffsetX = 0, int textOffsetY = 0)
-    // {
-    //     if (!setting.IsVisible())
-    //     {
-    //         return;
-    //     }
-
-    //     const std::string valueText = ToDebugString(value);
-
-    //     switch (setting.type)
-    //     {
-    //     case DrawType_Point:
-    //         DxLib::DrawPixel(static_cast<int>(setting.x), static_cast<int>(setting.y), setting.color);
-    //         break;
-    //     case DrawType_Line:
-    //     {
-    //         const bool hasExplicitLine = setting.leftX != 0.0f || setting.leftY != 0.0f || setting.rightX != 0.0f || setting.rightY != 0.0f;
-    //         const float startX = hasExplicitLine ? setting.leftX : setting.x;
-    //         const float startY = hasExplicitLine ? setting.leftY : setting.y;
-    //         const float endX = hasExplicitLine ? setting.rightX : setting.x + setting.width;
-    //         const float endY = hasExplicitLine ? setting.rightY : setting.y + setting.height;
-    //         DxLib::DrawLine(static_cast<int>(startX), static_cast<int>(startY), static_cast<int>(endX), static_cast<int>(endY), setting.color);
-    //         break;
-    //     }
-    //     case DrawType_Circle:
-    //     case DrawType_FillCircle:
-    //         DxLib::DrawCircle(static_cast<int>(setting.x), static_cast<int>(setting.y), static_cast<int>(setting.radius), setting.color, setting.fill ? TRUE : FALSE);
-    //         break;
-    //     case DrawType_Rectangle:
-    //     case DrawType_FillRectangle:
-    //         DxLib::DrawBox(static_cast<int>(setting.x), static_cast<int>(setting.y), static_cast<int>(setting.x + setting.width), static_cast<int>(setting.y + setting.height), setting.color, setting.fill ? TRUE : FALSE);
-    //         break;
-    //     case DrawType_Text:
-    //     {
-    //         std::string displayText = valueText;
-    //         if (!setting.label.empty())
-    //         {
-    //             displayText = setting.label + ": " + valueText;
-    //         }
-    //         else if (!setting.text.empty())
-    //         {
-    //             displayText = setting.text + ": " + valueText;
-    //         }
-
-    //         const int drawX = static_cast<int>(setting.x) + textOffsetX;
-    //         const int drawY = static_cast<int>(setting.y) + textOffsetY;
-    //         DxLib::DrawString(drawX, drawY, displayText.c_str(), setting.color);
-    //         break;
-    //     }
-    //     default:
-    //         break;
-    //     }
-    // }
-
-    // template <typename T>
-    // inline void DrawValueSettings(const T& value, const std::vector<DrawSetting>& settings, int textOffsetIndex = 0)
-    // {
-    //     for (size_t i = 0; i < settings.size(); ++i)
-    //     {
-    //         const auto& setting = settings[i];
-    //         const int offsetX = (setting.type == DrawType_Text) ? (static_cast<int>(textOffsetIndex) * 12) : 0;
-    //         const int offsetY = (setting.type == DrawType_Text) ? (static_cast<int>(i) * 18) : 0;
-    //         DrawSingleValue(value, setting, offsetX, offsetY);
-    //     }
-    // }
-
-    // // Register はデバッグ対象を登録する公開 API の入口。
-    // // 各種の値や設定を Entry, LiveDrawState, ImGui 側の管理と結び付ける。
-    // inline void Register()
-    // {
-    // }
-
-    // template <typename T>
-    // inline void Register(const std::string& label, T& value)
-    // {
-    //     RegisterValue(label, value, MakeDefaultDrawSetting(DrawType_Text, 0xffffff, 1, 8.0f, 120.0f, 18.0f, 0.0f, 0.0f, false, label, label, true));
-    // }
-
-    // template <typename T>
-    // inline void Register(const std::string& label, T& value, DrawType type)
-    // {
-    //     DrawSetting setting = MakeDefaultDrawSetting(type, type == DrawType_Text ? 0xffffff : 0x00bbff, 1, 8.0f, 120.0f, 18.0f, 0.0f, 0.0f, false, label, label, true);
-    //     setting.type = type;
-    //     RegisterValue(label, value, setting);
-    // }
-
-    // template <typename T, typename... Rest>
-    // inline void Register(const std::string& label, T& value, Rest&&... rest)
-    // {
-    //     Register(label, value);
-    //     Register(std::forward<Rest>(rest)...);
-    // }
-
-    // template <typename T, typename... Rest>
-    // inline void Register(const std::string& label, T& value, DrawType type, Rest&&... rest)
-    // {
-    //     Register(label, value, type);
-    //     Register(std::forward<Rest>(rest)...);
-    // }
-
-    // // ApplyInitialTextLayout は文字列の初期位置を計算して、
-    // // 登録順が重ならないようにテキストの配置を決める。
-    // inline void ApplyInitialTextLayout(DrawSetting& setting)
-    // {
-    //     if (setting.type != DrawType_Text)
-    //     {
-    //         return;
-    //     }
-
-    //     constexpr int startX = 20;
-    //     constexpr int startY = 20;
-    //     constexpr int lineHeight = 18;
-    //     constexpr int columnGap = 220;
-    //     constexpr int rowsPerColumn = 18;
-
-    //     const int entryIndex = static_cast<int>(PrivateVariable::GetEntries().size());
-    //     const int column = entryIndex / rowsPerColumn;
-    //     const int row = entryIndex % rowsPerColumn;
-
-    //     setting.x = static_cast<float>(startX + column * columnGap);
-    //     setting.y = static_cast<float>(startY + row * lineHeight);
-    // }
-
-    // // RegisterValue は 1 つの変数を Entry と LiveDrawState に包み込み、
-    // // ImGui 表示用と DX 描画用の両方で扱えるように登録する。
-    // template <typename T>
-    // inline void RegisterValue(const std::string& label, T& value, const DrawSetting& drawSetting = DrawSetting())
-    // {
-    //     DrawSetting setting = drawSetting;
-    //     if (setting.label.empty())
-    //     {
-    //         setting.label = label;
-    //     }
-    //     if (setting.text.empty())
-    //     {
-    //         setting.text = label;
-    //     }
-    //     if (setting.type == DrawType_Line)
-    //     {
-    //         setting.SetLinePoints(setting.leftX, setting.leftY, setting.rightX, setting.rightY);
-    //     }
-    //     else if (setting.type == DrawType_Text)
-    //     {
-    //         ApplyInitialTextLayout(setting);
-    //     }
-
-    //     auto drawState = std::make_shared<LiveDrawState>(setting);
-
-    //     PrivateVariable::Entry entry;
-    //     entry.key = label;
-    //     entry.label = label;
-    //     entry.basicEnabled = true;
-    //     entry.typeEnabled = true;
-    //     entry.drawSetting = drawState->mainSetting;
-    //     entry.drawSettings = drawState->settings;
-    //     entry.drawState = drawState;
-    //     entry.getDisplayValue = [&value]() -> std::string
-    //     {
-    //         return ToDebugString(value);
-    //     };
-    //     entry.updateImgui = [&value, label, drawState]()
-    //     {
-    //         if (drawState && !drawState->settings.empty())
-    //         {
-    //             RegisterValueHelper<T>::Apply(label, value, drawState->settings.front());
-    //         }
-    //     };
-    //     entry.drawDx = [&value, drawState]()
-    //     {
-    //         if (drawState)
-    //         {
-    //             DrawValueSettings(value, drawState->settings);
-    //         }
-    //     };
-    //     PrivateVariable::AddEntry(entry);
-    // }
-
-    // // RegisterVector は vector の各要素を個別のデバッグ項目として登録する。
-    // // 配列やリストの値を 1 要素ずつ見たい場合に利用する。
-    // template <typename T>
-    // inline void RegisterVector(const std::string& label, std::vector<T>& values, const DrawSetting& drawSetting = DrawSetting())
-    // {
-    //     if (values.empty())
-    //     {
-    //         return;
-    //     }
-
-    //     for (size_t i = 0; i < values.size(); ++i)
-    //     {
-    //         std::string entryLabel = label + "[" + std::to_string(i) + "]";
-    //         DrawSetting setting = drawSetting;
-    //         setting.label = entryLabel;
-    //         setting.text = entryLabel;
-    //         if (setting.type == DrawType_Text)
-    //         {
-    //             ApplyInitialTextLayout(setting);
-    //         }
-
-    //         auto drawState = std::make_shared<LiveDrawState>(setting);
-
-    //         PrivateVariable::Entry entry;
-    //         entry.key = entryLabel;
-    //         entry.label = entryLabel;
-    //         entry.basicEnabled = true;
-    //         entry.typeEnabled = true;
-    //         entry.drawSetting = drawState->mainSetting;
-    //         entry.drawSettings = drawState->settings;
-    //         entry.drawState = drawState;
-    //         std::vector<T>* valuesPtr = &values;
-    //         const size_t elementIndex = i;
-    //         entry.getDisplayValue = [valuesPtr, elementIndex]() -> std::string
-    //         {
-    //             if (valuesPtr == nullptr || elementIndex >= valuesPtr->size())
-    //             {
-    //                 return std::string();
-    //             }
-    //             return ToDebugString((*valuesPtr)[elementIndex]);
-    //         };
-    //         entry.updateImgui = [valuesPtr, elementIndex, entryLabel, drawState]()
-    //         {
-    //             if (valuesPtr == nullptr || elementIndex >= valuesPtr->size() || !drawState || drawState->settings.empty())
-    //             {
-    //                 return;
-    //             }
-    //             T& current = (*valuesPtr)[elementIndex];
-    //             RegisterValueHelper<T>::Apply(entryLabel, current, drawState->settings.front());
-    //         };
-    //         entry.drawDx = [valuesPtr, elementIndex, drawState]()
-    //         {
-    //             if (valuesPtr == nullptr || elementIndex >= valuesPtr->size() || !drawState)
-    //             {
-    //                 return;
-    //             }
-    //             DrawValueSettings((*valuesPtr)[elementIndex], drawState->settings);
-    //         };
-    //         PrivateVariable::AddEntry(entry);
-    //     }
-    // }
-
-    // // RegisterStructMember は構造体メンバを 1 つのデバッグ項目として登録する。
-    // // 例: camera.position.x のようなネストしたメンバも簡潔なラベルで扱える。
-    // template <typename T, typename MemberType>
-    // inline void RegisterStructMember(const std::string& label, T& object, const StructMemberBinding<T, MemberType>& member, const DrawSetting& drawSetting = DrawSetting())
-    // {
-    //     std::string memberLabel = label;
-    //     if (!member.name.empty())
-    //     {
-    //         if (memberLabel.empty())
-    //         {
-    //             memberLabel = member.name;
-    //         }
-    //         else
-    //         {
-    //             memberLabel += ".";
-    //             memberLabel += member.name;
-    //         }
-    //     }
-
-    //     DrawSetting setting = drawSetting;
-    //     if (setting.label.empty())
-    //     {
-    //         setting.label = memberLabel;
-    //     }
-    //     if (setting.text.empty())
-    //     {
-    //         setting.text = memberLabel;
-    //     }
-    //     if (setting.type == DrawType_Text)
-    //     {
-    //         ApplyInitialTextLayout(setting);
-    //     }
-
-    //     auto drawState = std::make_shared<LiveDrawState>(setting);
-
-    //     T* objectPtr = &object;
-    //     MemberType T::* memberPtr = member.member;
-    //     PrivateVariable::Entry entry;
-    //     entry.key = memberLabel;
-    //     entry.label = memberLabel;
-    //     entry.basicEnabled = true;
-    //     entry.typeEnabled = true;
-    //     entry.drawSetting = drawState->mainSetting;
-    //     entry.drawSettings = drawState->settings;
-    //     entry.drawState = drawState;
-    //     entry.getDisplayValue = [objectPtr, memberPtr]() -> std::string
-    //     {
-    //         if (objectPtr == nullptr)
-    //         {
-    //             return std::string();
-    //         }
-    //         return ToDebugString((*objectPtr).*memberPtr);
-    //     };
-    //     entry.updateImgui = [objectPtr, memberPtr, memberLabel, drawState]()
-    //     {
-    //         if (objectPtr == nullptr || !drawState || drawState->settings.empty())
-    //         {
-    //             return;
-    //         }
-    //         MemberType& memberValue = (*objectPtr).*memberPtr;
-    //         RegisterValueHelper<MemberType>::Apply(memberLabel, memberValue, drawState->settings.front());
-    //     };
-    //     entry.drawDx = [objectPtr, memberPtr, drawState]()
-    //     {
-    //         if (objectPtr == nullptr || !drawState)
-    //         {
-    //             return;
-    //         }
-    //         const MemberType& memberValue = (*objectPtr).*memberPtr;
-    //         DrawValueSettings(memberValue, drawState->settings);
-    //     };
-    //     PrivateVariable::AddEntry(entry);
-    // }
-
-    // template <typename T>
-    // inline void RegisterStructMembers(const std::string& label, T& object)
-    // {
-    //     (void)label;
-    //     (void)object;
-    // }
-
-    // template <typename T, typename MemberType>
-    // inline void RegisterStructMembers(const std::string& label, T& object, const StructMemberBinding<T, MemberType>& member)
-    // {
-    //     RegisterStructMember(label, object, member);
-    // }
-
-    // template <typename T, typename First, typename... Rest>
-    // inline void RegisterStructMembers(const std::string& label, T& object, const StructMemberBinding<T, First>& first, const StructMemberBinding<T, Rest>&... rest)
-    // {
-    //     RegisterStructMember(label, object, first);
-    //     RegisterStructMembers(label, object, rest...);
-    // }
-
-    // // ここから公開 API の更新・描画・設定変更の関数群。
-    // void Update();
-    // void Draw();
-    // void SetBasicEnabled(const std::string& key, bool enabled);
-    // void SetTypeEnabled(const std::string& key, DrawType type, bool enabled);
-    // void SetElementEnabled(const std::string& key, bool enabled, size_t elementIndex = 0);
-    // void SetDefaultDrawSetting(const std::string& key, const DrawSetting& setting);
-    // void SetDrawColor(const std::string& key, int color);
-    // void SetDrawType(const std::string& key, DrawType type);
-
-
+            IMGUI_OPERATION_RIGHT_POS,
+            IMGUI_OPERATION_RIGHT_POS_X,
+            IMGUI_OPERATION_RIGHT_POS_Y,
+        };
+    }
+    
     // DX 描画の種類を管理する列挙型。
     // 点、線、円、矩形、テキストなどの描画形式を識別する。
-    enum DrawType
+    enum class DEBUG_VAR_DRAW_TYPE
     {
-        DrawType_Point,
-        DrawType_Line,
-        DrawType_Circle,
-        DrawType_Rectangle,
-        DrawType_Text,
-        DrawType_FillCircle,
-        DrawType_FillRectangle
+        DRAW_TYPE_NONE = -1,
+        DRAW_TYPE_POINT,
+        DRAW_TYPE_LINE,
+        DRAW_TYPE_CIRCLE,
+        DRAW_TYPE_RECTANGLE,
+        DRAW_TYPE_TEXT,
+        DRAW_TYPE_FILL_CIRCLE,
+        DRAW_TYPE_FILL_RECTANGLE
     };
+
+    using namespace PrivateEnum;
+    namespace PrivateStruct
+    {
+        struct DrawSetting
+        {
+            DEBUG_VAR_DRAW_TYPE type;
+            int color;
+            float radius;
+            float width;
+            float height;
+            float PosX;
+            float PosY;
+            float leftX;
+            float leftY;
+            float rightX;
+            float rightY;
+            bool fill;
+            std::string label;
+            std::string text;
+            bool enabled;
+            bool basicEnabled;
+            bool typeEnabled;
+            bool elementEnabled;
+
+            DrawSetting()
+            : type(DEBUG_VAR_DRAW_TYPE::DRAW_TYPE_NONE)
+            , color(0xffffff)
+            , radius(8.0f)
+            , width(16.0f)
+            , height(16.0f)
+            , PosX(0.0f)
+            , PosY(0.0f)
+            , leftX(0.0f)
+            , leftY(0.0f)
+            , rightX(0.0f)
+            , rightY(0.0f)
+            , fill(false)
+            , label()
+            , text()
+            , enabled(true)
+            , basicEnabled(true)
+            , typeEnabled(true)
+            , elementEnabled(true)
+            {
+            }
+
+            DrawSetting(DEBUG_VAR_DRAW_TYPE typeValue, int colorValue, float radiusValue, float widthValue, float heightValue, float xValue, float yValue, bool fillValue, const std::string& labelValue, const std::string& textValue, bool enabledValue)
+            : type(typeValue)
+            , color(colorValue)
+            , radius(radiusValue)
+            , width(widthValue)
+            , height(heightValue)
+            , PosX(xValue)
+            , PosY(yValue)
+            , leftX(xValue)
+            , leftY(yValue)
+            , rightX(xValue + widthValue)
+            , rightY(yValue + heightValue)
+            , fill(fillValue)
+            , label(labelValue)
+            , text(textValue)
+            , enabled(enabledValue)
+            , basicEnabled(true)
+            , typeEnabled(true)
+            , elementEnabled(true)
+            {
+            }
+
+            bool IsVisible() const
+            {
+                return basicEnabled && typeEnabled && elementEnabled && enabled;
+            }
+        };
+
+        // imgui の操作設定を管理する構造体。
+        struct ImguiOperationSetting
+        {
+            DEBUG_VAR_DRAW_IMGUI_SETTING_TYPE type;
+            std::vector<StructMemberIndexData> memberData;
+            DrawSetting drawSetting;
+        };
+    }
+        
+    
+    // StructMemberIndexData は構造体のメンバ変数をデバッグ表示用に束ねる情報を持つ。
+    // 例: position.x のような階層メンバも、名前とポインタの組み合わせで1つのデバッグ項目として扱える。
+    struct StructMemberIndexData
+    {
+        std::string Name;
+        std::function<void*(void*)> GetPointer;
+
+        
+        template <typename MemberType>
+        MemberType* GetMemberPointer(void* objectPtr) const
+        {
+            return static_cast<MemberType*>(GetPointer(objectPtr));
+        }
+    };
+
+    using namespace PrivateStruct;
+
     namespace PrivateVariable
     {
+        // デバッグ変数の情報を保持する変数(一時的に保持)
+        // デバッグ変数の情報を保持する変数(削除指示があるまで保持)
+
+        // 描画のみ情報を持つ
     }
     namespace PrivateFunction
     {
@@ -752,9 +172,157 @@ namespace DebugVariableToImgui
         void Update();
         // 描画
         void Draw();
+
+        // MakeDefaultDrawSetting は標準の描画設定をまとめて生成するヘルパー。
+        // DX 描画と ImGui の両方で共通の初期値として使うための関数。
+        inline DrawSetting MakeDrawSetting(
+            DEBUG_VAR_DRAW_TYPE typeValue = DEBUG_VAR_DRAW_TYPE::DRAW_TYPE_NONE,
+            int colorValue = 0xffffff,
+            int thicknessValue = 1,
+            float radiusValue = 8.0f,
+            float widthValue = 16.0f,
+            float heightValue = 16.0f,
+            float xValue = 0.0f,
+            float yValue = 0.0f,
+            bool fillValue = false,
+            const std::string& labelValue = std::string(),
+            const std::string& textValue = std::string(),
+            bool enabledValue = true);
     }
 
-    void DrawDebugVariables(std::vector<DrawType> drawType = {}, std::string TabName = "");
+    template <typename T, typename MemberType>
+    StructMemberIndexData MakeMemberData(const std::string& nameValue, MemberType T::* member)
+    {
+        static_assert(
+            std::is_same<MemberType, char>::value ||
+            std::is_same<MemberType, unsigned char>::value ||
+            std::is_same<MemberType, short>::value ||
+            std::is_same<MemberType, unsigned short>::value ||
+            std::is_same<MemberType, int>::value ||
+            std::is_same<MemberType, unsigned int>::value ||
+            std::is_same<MemberType, long>::value ||
+            std::is_same<MemberType, unsigned long>::value ||
+            std::is_same<MemberType, long long>::value ||
+            std::is_same<MemberType, unsigned long long>::value ||
+            std::is_same<MemberType, float>::value ||
+            std::is_same<MemberType, double>::value ||
+            std::is_same<MemberType, long double>::value,
+            "登録されたメンバ変数は正常に稼働できない型です。"
+        );
+
+        return
+        {
+            nameValue,
+            [member](void* objectPtr) -> void*
+            {
+                T* object = static_cast<T*>(objectPtr);
+                return &(object->*member);
+            }
+        };
+    }
+
+    // 最後のメンバーへのアクセス
+    template <typename T, typename MemberType>
+    MemberType* GetMemberPointer(T* object, MemberType T::* member)
+    {
+        static_assert(
+            std::is_same<MemberType, char>::value ||
+            std::is_same<MemberType, unsigned char>::value ||
+            std::is_same<MemberType, short>::value ||
+            std::is_same<MemberType, unsigned short>::value ||
+            std::is_same<MemberType, int>::value ||
+            std::is_same<MemberType, unsigned int>::value ||
+            std::is_same<MemberType, long>::value ||
+            std::is_same<MemberType, unsigned long>::value ||
+            std::is_same<MemberType, long long>::value ||
+            std::is_same<MemberType, unsigned long long>::value ||
+            std::is_same<MemberType, float>::value ||
+            std::is_same<MemberType, double>::value ||
+            std::is_same<MemberType, long double>::value,
+            "登録されたメンバ変数は正常に稼働できない型です。"
+        );
+
+        return &(object->*member);
+    }
+
+    // 階層メンバーへのアクセス
+    template <typename T, typename ParentType, typename MemberType, typename... Rest>
+    auto GetMemberPointer(T* object, ParentType T::* parentMember, MemberType ParentType::* member, Rest... rest)-> decltype(GetMemberPointer(&(object->*parentMember), member, rest...))
+    {
+        return GetMemberPointer(&(object->*parentMember), member, rest...);
+    }
+
+    // メンバー情報作成
+    template <typename T, typename... Members>
+    StructMemberIndexData MakeMemberData(const std::string& nameValue, Members... members)
+    {
+        // 最終メンバーの型を取得する処理は別途必要
+        return
+        {
+            nameValue,
+            [members...](void* objectPtr) -> void*
+            {
+                T* object = static_cast<T*>(objectPtr);
+                return GetMemberPointer(object, members...);
+            }
+        };
+    }
+
+    // 単品設定
+    template <typename T>
+    void SettingDrawDebugVariable(std::string TabName, T* variable, std::vector<StructMemberIndexData> memberData = {}, std::vector<DEBUG_VAR_DRAW_TYPE> drawType = {})
+    {
+        if (memberData.size() <= 0)
+        {
+            static_assert(
+                std::is_same<T, char>::value ||
+                std::is_same<T, unsigned char>::value ||
+                std::is_same<T, short>::value ||
+                std::is_same<T, unsigned short>::value ||
+                std::is_same<T, int>::value ||
+                std::is_same<T, unsigned int>::value ||
+                std::is_same<T, long>::value ||
+                std::is_same<T, unsigned long>::value ||
+                std::is_same<T, long long>::value ||
+                std::is_same<T, unsigned long long>::value ||
+                std::is_same<T, float>::value ||
+                std::is_same<T, double>::value ||
+                std::is_same<T, long double>::value,
+                "登録されたメンバ変数は正常に稼働できない型です。"
+            );
+        }
+        else
+        {
+        }
+    }
+
+    // 複数設定
+    template <typename T>
+    void SettingDrawDebugVariable(std::string TabName, std::vector<T>* variables, std::vector<StructMemberIndexData> memberData = {}, std::vector<DEBUG_VAR_DRAW_TYPE> drawType = {})
+    {
+        if (memberData.size() <= 0)
+        {
+            static_assert(
+                std::is_same<T, char>::value ||
+                std::is_same<T, unsigned char>::value ||
+                std::is_same<T, short>::value ||
+                std::is_same<T, unsigned short>::value ||
+                std::is_same<T, int>::value ||
+                std::is_same<T, unsigned int>::value ||
+                std::is_same<T, long>::value ||
+                std::is_same<T, unsigned long>::value ||
+                std::is_same<T, long long>::value ||
+                std::is_same<T, unsigned long long>::value ||
+                std::is_same<T, float>::value ||
+                std::is_same<T, double>::value ||
+                std::is_same<T, long double>::value,
+                "登録されたメンバ変数は正常に稼働できない型です。"
+            );
+        }
+        else
+        {
+        }
+    }
 }
 
 namespace debugVar = DebugVariableToImgui;
