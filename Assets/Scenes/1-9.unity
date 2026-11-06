@@ -670,7 +670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FileOutPutNameMode: 0
   SetMapObjectTrigger: 0
-  SetMapObjectTriggerCount: 1
+  SetMapObjectTriggerCount: 2
   UIFlag: 0
   FileOutputProcessMode: 2
   FileOutputProcess2DPosMode: 0
@@ -681,23 +681,23 @@ MonoBehaviour:
   ObjectDatas:
   - TargetObject: {fileID: 1523700782}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: -3.889141}
+      MyPos: {x: 0, y: 0}
       MySize: {x: 16, y: 10}
   - TargetObject: {fileID: 1375787950}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: 1.1108589}
+      MyPos: {x: 0, y: 5}
       MySize: {x: 16.5, y: 0.5}
   - TargetObject: {fileID: 1763756955}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: -8.889141}
+      MyPos: {x: 0, y: -5}
       MySize: {x: 16.5, y: 0.5}
   - TargetObject: {fileID: 1706744846}
     OutPutDatas:
-      MyPos: {x: -5.928151, y: -3.889141}
+      MyPos: {x: -8, y: 0}
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 1169796108}
     OutPutDatas:
-      MyPos: {x: 10.071849, y: -3.889141}
+      MyPos: {x: 8, y: 0}
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 1114586775}
     OutPutDatas:
@@ -705,7 +705,7 @@ MonoBehaviour:
       MySize: {x: 8, y: 0.5}
   - TargetObject: {fileID: 1933567295}
     OutPutDatas:
-      MyPos: {x: -5.5, y: 5}
+      MyPos: {x: -5.5, y: 4.7}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1174191102}
     OutPutDatas:
@@ -750,10 +750,13 @@ MonoBehaviour:
   SetOneObjectStage_GameObject: {fileID: 1343953092}
   SetTwoObjectStage_GameObjectLeftUp: {fileID: 0}
   SetTwoObjectStage_GameObjectRightDown: {fileID: 0}
-  StageLeftUp: {x: -8.25, y: 6}
-  StageMiddle: {x: 0, y: 1}
-  StageRightDown: {x: 8.25, y: -4}
+  FileOutStageSize: {x: 16.5, y: 10}
+  StageLeftUp: {x: -8.25, y: 5}
+  StageMiddle: {x: 0, y: 0}
+  StageRightDown: {x: 8.25, y: -5}
   FileNamePlusCountFlag: 1
+  IsGamePlayerSizeDraw: 0
+  IsStartSet: 1
 --- !u!4 &1021160931
 Transform:
   m_ObjectHideFlags: 0
@@ -1133,7 +1136,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343953092}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2005,7 +2008,7 @@ Transform:
   m_GameObject: {fileID: 1933567295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.5, y: 0.5, z: 5}
+  m_LocalPosition: {x: -5.5, y: 0.5, z: 4.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

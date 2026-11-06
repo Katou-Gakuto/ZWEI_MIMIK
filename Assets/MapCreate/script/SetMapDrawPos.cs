@@ -629,22 +629,22 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.NORMALIZE:
                     mapDataString +=
-                        "posX:" + FloatToOutputString(posX / canvasWidth) +
-                        " posY:" + FloatToOutputString(posY / canvasHeight) +
+                        "pos(x, y):(" + FloatToOutputString(posX / canvasWidth) +
+                        ", " + FloatToOutputString(posY / canvasHeight) + ")" +
                         "\n";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.COORDINATE:
                     mapDataString +=
-                        "posX:" + FloatToOutputString(posX) +
-                        " posY:" + FloatToOutputString(posY) +
+                        "pos(x, y):(" + FloatToOutputString(posX) +
+                        ", " + FloatToOutputString(posY) + ")" +
                         "\n";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.MAGNIFICATION:
                     mapDataString +=
-                        "posX:" + FloatToOutputString((posX / canvasWidth) * OutPutMagnificationPos.x) +
-                        " posY:" + FloatToOutputString((posY / canvasHeight) * OutPutMagnificationPos.y) +
+                        "pos(x, y):(" + FloatToOutputString((posX / canvasWidth) * OutPutMagnificationPos.x) +
+                        ", " + FloatToOutputString((posY / canvasHeight) * OutPutMagnificationPos.y) + ")" +
                         "\n";
                     break;
             }
@@ -654,32 +654,32 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.ORIGINAL:
                     mapDataString +=
-                        "sizeX:" + FloatToOutputString(sizeX) +
-                        " sizeY:" + FloatToOutputString(sizeY);
+                        "size(x, y):(" + FloatToOutputString(sizeX) +
+                        ", " + FloatToOutputString(sizeY) + ")";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.FIXED_RATIO:
                     mapDataString +=
-                        "sizeX:" + FloatToOutputString(sizeX / OutPutFixedRatio.x) +
-                        " sizeY:" + FloatToOutputString(sizeY / OutPutFixedRatio.y);
+                        "size(x, y):(" + FloatToOutputString(sizeX / OutPutFixedRatio.x) +
+                        ", " + FloatToOutputString(sizeY / OutPutFixedRatio.y) + ")";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.EDITOR_RATIO:
                     mapDataString +=
-                        "sizeX:" + FloatToOutputString(sizeX / OutPutRatio.x) +
-                        " sizeY:" + FloatToOutputString(sizeY / OutPutRatio.y);
+                        "size(x, y):(" + FloatToOutputString(sizeX / OutPutRatio.x) +
+                        ", " + FloatToOutputString(sizeY / OutPutRatio.y) + ")";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.FIXED_RATIO_EDITOR_SCALE:
                     mapDataString +=
-                        "sizeX:" + FloatToOutputString((sizeX / OutPutFixedRatio.x) * OutPutMagnificationSize.x) +
-                        " sizeY:" +FloatToOutputString((sizeY / OutPutFixedRatio.y) * OutPutMagnificationSize.y);
+                        "size(x, y):(" + FloatToOutputString((sizeX / OutPutFixedRatio.x) * OutPutMagnificationSize.x) +
+                        ", " +FloatToOutputString((sizeY / OutPutFixedRatio.y) * OutPutMagnificationSize.y) + ")";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_SIZE_MODE.EDITOR_RATIO_EDITOR_SCALE:
                     mapDataString +=
-                        "sizeX:" + FloatToOutputString((sizeX / OutPutRatio.x) * OutPutMagnificationSize.x) +
-                        " sizeY:" + FloatToOutputString((sizeY / OutPutRatio.y) * OutPutMagnificationSize.y);
+                        "size(x, y)X:" + FloatToOutputString((sizeX / OutPutRatio.x) * OutPutMagnificationSize.x) +
+                        ", " + FloatToOutputString((sizeY / OutPutRatio.y) * OutPutMagnificationSize.y) + ")";
                     break;
             }
 
@@ -705,31 +705,31 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_MODE.OBJECT_NOT_CORRECTION:
                     mapDataString += (
-                        "posX:"  + FloatToOutputString(objectData.OutPutDatas.MyPos.x)  +
-                        " posY:"  + FloatToOutputString(-objectData.OutPutDatas.MyPos.y) +
+                        "pos(x, y):("  + FloatToOutputString(objectData.OutPutDatas.MyPos.x)  +
+                        ", "  + FloatToOutputString(-objectData.OutPutDatas.MyPos.y) + ")" +
                         "\n" +
-                        "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
-                        " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y)
+                        "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
+                        ", " + FloatToOutputString(objectData.OutPutDatas.MySize.y) + ")"
                         );
                     break;
 
                 case FILE_OUTPUT_PROCESS_MODE.STAGE_CORRECTION:
                     mapDataString += (
-                        "posX:"  + FloatToOutputString(objectData.OutPutDatas.MyPos.x - StageLeftUp.x)  +
-                        " posY:"  + FloatToOutputString(StageLeftUp.y - objectData.OutPutDatas.MyPos.y) +
+                        "pos(x, y):("  + FloatToOutputString(objectData.OutPutDatas.MyPos.x - StageLeftUp.x)  +
+                        ", "  + FloatToOutputString(StageLeftUp.y - objectData.OutPutDatas.MyPos.y) + ")" +
                         "\n" +
-                        "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
-                        " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y)
+                        "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
+                        ", " + FloatToOutputString(objectData.OutPutDatas.MySize.y) + ")"
                         );
                     break;
 
                 case FILE_OUTPUT_PROCESS_MODE.STAGE_DRAW_CORRECTION:
                     mapDataString += (
-                        "posX:"  + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) / FileOutStageSize.x)  +
-                        " posY:"  + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) / FileOutStageSize.y) +
+                        "pos(x, y):("  + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) / FileOutStageSize.x)  +
+                        ", "  + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) / FileOutStageSize.y) + ")" +
                         "\n" +
-                        "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x / FileOutStageSize.x) +
-                        " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y / FileOutStageSize.y)
+                        "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x / FileOutStageSize.x) +
+                        ", " + FloatToOutputString(objectData.OutPutDatas.MySize.y / FileOutStageSize.y) + ")"
                         );
                     break;
 
@@ -739,11 +739,11 @@ public class SetMapDrawPos : MonoBehaviour
                         float magnificationY = 1080.0f / FileOutStageSize.y;
 
                         mapDataString += (
-                            "posX:" + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX) +
-                            " posY:" + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) * magnificationY) +
+                            "pos(x, y):(" + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX) +
+                            ", " + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) * magnificationY) + ")" +
                             "\n" +
-                            "sizeX:" + FloatToOutputString(objectData.OutPutDatas.MySize.x * magnificationX) +
-                            " sizeY:" + FloatToOutputString(objectData.OutPutDatas.MySize.y * magnificationY)
+                            "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x * magnificationX) +
+                            ", " + FloatToOutputString(objectData.OutPutDatas.MySize.y * magnificationY) + ")"
                         );
                     }
                     break;
@@ -822,6 +822,7 @@ public class SetMapDrawPos : MonoBehaviour
                 if (SetOneObjectStage_GameObject == null)
                 {
                     SetOneObjectStage_GameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    SetOneObjectStage_GameObject.GetComponent<MeshRenderer>().enabled = false;
 
                     SetOneObjectStage_GameObject.name = "MyCube_OneObjectStage";
                     SetOneObjectStage_GameObject.transform.SetParent(this.gameObject.transform);
@@ -883,6 +884,7 @@ public class SetMapDrawPos : MonoBehaviour
                 if (SetTwoObjectStage_GameObjectLeftUp == null)
                 {
                     SetTwoObjectStage_GameObjectLeftUp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    SetTwoObjectStage_GameObjectLeftUp.GetComponent<MeshRenderer>().enabled = false;
 
                     SetTwoObjectStage_GameObjectLeftUp.name = "MyCube_TwoObjectStage_LeftUp";
                     SetTwoObjectStage_GameObjectLeftUp.transform.SetParent(this.gameObject.transform);
@@ -893,6 +895,7 @@ public class SetMapDrawPos : MonoBehaviour
                 if (SetTwoObjectStage_GameObjectRightDown == null)
                 {
                     SetTwoObjectStage_GameObjectRightDown = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    SetTwoObjectStage_GameObjectRightDown.GetComponent<MeshRenderer>().enabled = false;
 
                     SetTwoObjectStage_GameObjectRightDown.name = "MyCube_TwoObjectStage_RightDown";
                     SetTwoObjectStage_GameObjectRightDown.transform.SetParent(this.gameObject.transform);
@@ -975,7 +978,7 @@ public class SetMapDrawPos : MonoBehaviour
     /// </summary>
     private string FloatToOutputString(float value)
     {
-        return value.ToString("0.0############");
+        return value.ToString("0.0############") + "f";
     }
 
     /// <summary>
@@ -1010,8 +1013,8 @@ public class SetMapDrawPos : MonoBehaviour
                 lightDataString += target.name + "\n";
 
                 lightDataString +=
-                    "angle:" + lightArea.mfMainAngle.ToString("0.0############") +
-                    " angleRange:" + lightArea.mfAngleRange.ToString("0.0############") +
+                    "angle:" + FloatToOutputString(lightArea.mfMainAngle) +
+                    " angleRange:" + FloatToOutputString(lightArea.mfAngleRange) +
                     "\n\n";
             }
         }
