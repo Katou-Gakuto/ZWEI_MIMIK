@@ -76,6 +76,19 @@ void ImguiManager::Finalize()
     {
         return;
     }
+
+    // DX11ƒŠƒ\[ƒX‰ð•ú
+    if (mbCopySRV != nullptr)
+    {
+        mbCopySRV->Release();
+        mbCopySRV = nullptr;
+    }
+
+    if (mdCopyTexture != nullptr)
+    {
+        mdCopyTexture->Release();
+        mdCopyTexture = nullptr;
+    }
     
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();

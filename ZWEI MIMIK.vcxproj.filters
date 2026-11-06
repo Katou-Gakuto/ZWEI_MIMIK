@@ -406,7 +406,9 @@
     <ClCompile Include="Source\Y_Tool\MyEasing.cpp">
       <Filter>Source\Y_Tool</Filter>
     </ClCompile>
-    <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.cpp">
+      <Filter>Source\H_Katou\DebugLogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -790,7 +792,9 @@
     <ClInclude Include="Source\F_PuzzleGimmick\FalseTrigger.h">
       <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
-    <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.h">
+      <Filter>Source\H_Katou\DebugLogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
