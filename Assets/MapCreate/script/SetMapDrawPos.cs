@@ -525,7 +525,15 @@ public class SetMapDrawPos : MonoBehaviour
                 openFileName = "MapData" + sceneName + ".txt";
             }
             // 出力先フォルダ
-            string folderPath = Path.Combine(Application.dataPath, sceneName);
+            string folderPath = Path.Combine(Application.dataPath, "MapDataFolder");
+
+            // フォルダが存在しない場合は作成
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            // 出力先フォルダ
+            folderPath = Path.Combine(folderPath, sceneName);
 
             // フォルダが存在しない場合は作成
             if (!Directory.Exists(folderPath))
@@ -740,6 +748,12 @@ public class SetMapDrawPos : MonoBehaviour
                     }
                     break;
             }
+            const float EPSILON = 0.0001f;
+            if (!(Mathf.Abs(objectData.TargetObject.transform.localEulerAngles.y) < EPSILON))
+            {
+                mapDataString += "\n" +
+                    "angle:" + FloatToOutputString(objectData.TargetObject.transform.localEulerAngles.y);
+            }
             mapDataString += "\n\n";
         }
         return mapDataString;
@@ -845,9 +859,11 @@ public class SetMapDrawPos : MonoBehaviour
                 }
             }
             Vector2 halfSize = objectScale * 0.5f;
-            Vector2 objectPos = SetOneObjectStage_GameObject.transform.localPosition;
-            // ポジション&サイズ情報設定
-            {
+            Vector2 objectPos;
+            objectPos.x = SetOneObjectStage_GameObject.transform.localPosition.x;
+            objectPos.y = SetOneObjectStage_GameObject.transform.localPosition.z;
+                    // ポジション&サイズ情報設定
+                    {
                 FileOutStageSize = objectScale;
                 StageLeftUp = new Vector2(
                     objectPos.x - halfSize.x,
@@ -897,8 +913,12 @@ public class SetMapDrawPos : MonoBehaviour
                     SetTwoObjectStage_GameObjectRightDown.SetActive(true);
                 }
             }
-            Vector2 objectLeftUpPos = SetTwoObjectStage_GameObjectLeftUp.transform.localPosition;
-            Vector2 objectRightDownPos = SetTwoObjectStage_GameObjectRightDown.transform.localPosition;
+            Vector2 objectLeftUpPos;
+            objectLeftUpPos.x = SetTwoObjectStage_GameObjectLeftUp.transform.localPosition.x;
+            objectLeftUpPos.y = SetTwoObjectStage_GameObjectLeftUp.transform.localPosition.z;
+            Vector2 objectRightDownPos;
+            objectRightDownPos.x = SetTwoObjectStage_GameObjectRightDown.transform.localPosition.x;
+            objectRightDownPos.y = SetTwoObjectStage_GameObjectRightDown.transform.localPosition.z;
             // オブジェクトの位置関係が正しいか確認
             {
                 if ((objectRightDownPos.x - objectLeftUpPos.x) <= 0.0f)
@@ -1014,12 +1034,30 @@ public class SetMapDrawPos : MonoBehaviour
             openFileName = "LightData_" + sceneName + ".txt";
         }
 
+
         // マップデータと同じフォルダに出力
-        string folderPath = Path.Combine(Application.dataPath, sceneName);
-        string path = Path.Combine(folderPath, openFileName);
+        {
+            // 出力先フォルダ
+            string folderPath = Path.Combine(Application.dataPath, "MapDataFolder");
+            // フォルダが存在しない場合は作成
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            // 出力先フォルダ
+            folderPath = Path.Combine(folderPath, sceneName);
+            // フォルダが存在しない場合は作成
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            string path = Path.Combine(folderPath, openFileName);
 
-        File.WriteAllText(path, lightDataString);
+            File.WriteAllText(path, lightDataString);
 
-        AssetDatabase.Refresh();
+
+
+            AssetDatabase.Refresh();
+        }
     }
 }
