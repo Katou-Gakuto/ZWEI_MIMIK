@@ -275,7 +275,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
 
                 // 
                 this->OnResetFlag();
@@ -299,7 +299,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option, SCAN::SCAN_None, false, SOAN_None, false);
             }
             else
             {
@@ -320,7 +320,7 @@ int TitleScene::UpdateModeSelect()
 			if (sceneMove)
 			{
 				// 
-				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit);
+				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit, SCAN::SCAN_None, false, SOAN_None, false);
 			}
 			else
 			{

@@ -48,7 +48,7 @@ public:
     bool SetHoldFlag(bool lightPlayer, bool flag);
 
     // 
-    float GetRadianPlayerToHold(const VECTOR2D &playerPos, int debugNum) const;
+    float GetRadianPlayerToHold(const VECTOR2D &playerPos) const;
 
     // 
     bool SetSwingAfterPos(const VECTOR2D &centerPos, float radian, float distance);

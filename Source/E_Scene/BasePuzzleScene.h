@@ -47,7 +47,7 @@ public:
     virtual int MapCreate(GameObjectManager &objectManager) = 0;
 
     // 
-    virtual void GetMasterObjectsInitPos(
+    virtual void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -69,7 +69,6 @@ public:
 
     // 
     Player *GetPlayer(int playerNumber)const;
-
 
     // 
     GoalObjectController *GetGoal(bool lightSide)const;
@@ -111,9 +110,6 @@ private:
 
     // 
     void CreateAndAddMastObject();
-
-    // 
-    void AddMasterObjects();
 
     // 
     int PouseUpdate();

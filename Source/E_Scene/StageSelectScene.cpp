@@ -75,6 +75,10 @@ int StageSelectScene::Initialize()
 {
     // 
     mnCurrentStage = 0;
+
+    // 
+    this->mnCurrentStage = Master::mnLastPlayStageNum;
+
     for (StageNum = 0; StageNum < StageMax; StageNum++)
     {
         /*switch (StageNum)
@@ -140,20 +144,22 @@ int StageSelectScene::Update()
         if (moveTestScene)
         {
             // 
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test);
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test, SCAN::SCAN_None, false, SOAN_None, false);
+        }
+        else
+        {
+			// 選択したステージのシーンに遷移する
+            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage), SCAN::SCAN_None, false, SOAN_None, false);
+
+            // 
+            Master::mnLastPlayStageNum = this->mnCurrentStage;
 
             // 
             this->OnResetFlag();
         }
-        else
-        {
-            // 未開放のステージではなければ
-            if(mnCurrentStage <= mnUnlockStageCount - 1)
-            {
-                // 選択したステージのシーンに遷移する
-                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage));
-            }
-        }
+
+        // 
+        return 0;
     }
 
     // 
@@ -161,10 +167,10 @@ int StageSelectScene::Update()
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1))
     {
         // 
-        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
+        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_None, false, SOAN_None, false);
 
         // 
-        this->OnResetFlag();
+        return 0;
     }
 
     // 
@@ -322,11 +328,6 @@ int StageSelectScene::Draw()
             CubeHandle[StageNum],
             true);
     }
-
-    
-
-
-
 
     // 
     return 0;

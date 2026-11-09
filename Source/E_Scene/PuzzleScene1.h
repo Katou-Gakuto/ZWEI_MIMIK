@@ -14,7 +14,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -42,7 +42,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -70,7 +70,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -98,7 +98,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -126,7 +126,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -154,7 +154,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -182,7 +182,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -210,7 +210,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -238,7 +238,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -266,7 +266,7 @@ public:
     // 
     int MapCreate(GameObjectManager &objManager) override;
 
-    void GetMasterObjectsInitPos(
+    void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
