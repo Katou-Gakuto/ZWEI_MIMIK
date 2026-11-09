@@ -414,6 +414,27 @@ VECTOR2D VECTOR2D::GetSlerpPos(const VECTOR2D &centerPos, const VECTOR2D &startP
     return temp;
 }
 
+// 現在のベクトルの角度をn度とし、現在のベクトルが目的の角度になった場合の方向ベクトルを返す関数
+VECTOR2D VECTOR2D::GetRotated(const VECTOR2D &nowVec, float nowRadian, float targetRadian)
+{
+    // 現在角度から目的角度までの回転量
+    const float deltaRadian = targetRadian - nowRadian;
+
+    // スクリーン座標系ではY軸が下向きなので符号を反転
+    const float rad = -deltaRadian;
+
+    const float cosA = std::cos(rad);
+    const float sinA = std::sin(rad);
+
+
+    VECTOR2D result;
+    result.mfParamX = nowVec.mfParamX * cosA - nowVec.mfParamY * sinA;
+    result.mfParamY = nowVec.mfParamX * sinA + nowVec.mfParamY * cosA;
+
+    // 
+    return result;
+}
+
 // ベクトルAがベクトルBを軸に+方向か-方向か、それともまったく別の方向に向かっているのかを判断する関数
 // プラスなら1、マイナスなら-1、別ベクトルなら0を返す
 int VECTOR2D::CheckAxisVecPlusOrMinus(const VECTOR2D &targetVec, const VECTOR2D &axisVec)

@@ -64,6 +64,9 @@ public:
     static CursorMoveSupporter *mpCursorMoveSupporter;
 
     // 
+    static int mnLastPlayStageNum;
+
+    // 
     static Player *GetPlayerController(int playerNumber);
 
     // 

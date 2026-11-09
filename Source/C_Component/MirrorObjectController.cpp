@@ -65,16 +65,10 @@ int MirrorObjectController::Create()
 int MirrorObjectController::Initialize()
 {
     // 
-    ;
-
-    // 
     this->GetMyObject2D()->SetPosition(this->mvCenterPosInit);
 
     // 
     this->SetBodyCollisionRotateAtNowPos(this->mfRadianInit);
-
-    // 
-    this->mfRadian = this->mfRadianInit;
 
     // 
     auto list = this->GetMyObject()->GetBaseCollisionList();

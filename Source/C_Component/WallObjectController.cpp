@@ -20,7 +20,6 @@ WallObjectController::WallObjectController(GameObject *myObject, const VECTOR2D 
     mvCenterPosInit(centerPos),
     mvBlockSizeInit(blockSize * 0.5f),
     mfRadianInit(radian),
-    mfRadian(0.0f),
     mdModel(),
     BaseComponent(myObject, ComponentTagAndOrder::CTAO_WallController)
 {
@@ -106,9 +105,6 @@ int WallObjectController::Initialize()
     }
 
     // 
-    this->mfRadian = this->mfRadianInit;
-
-    // 
     return 0;
 }
 
@@ -164,6 +160,13 @@ int WallObjectController::Draw()
 }
 
 // 
+float WallObjectController::GetNowRadian() const
+{
+    // 
+    return this->GetMyObject2D()->GetRotation();
+}
+
+// 
 bool WallObjectController::SetMoveVecObjAndBody(const VECTOR2D &moveVec)
 {
     // 
@@ -212,9 +215,6 @@ bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
     }
 
     // 
-    VECTOR2D pos = obj->GetPosition();
-
-    // 
     const MyMatrix rotateMatrix = MyMatrix::GetRotation2D(radian);
     if (!rotateMatrix.CheckActive())
     {
@@ -243,6 +243,9 @@ bool WallObjectController::SetBodyCollisionRotateAtNowPos(float radian)
     }
 
     // 
+    VECTOR2D pos = obj->GetPosition();
+
+    // 
     VECTOR2D tempPosBox[4];
     tempPosBox[0] = pos + tempVecBox[0];
     tempPosBox[1] = pos + tempVecBox[1];
@@ -268,7 +271,6 @@ WallObjectController::WallObjectController(GameObject *myObject, ComponentTagAnd
     mvCenterPosInit(centerPos),
     mvBlockSizeInit(blockSize),
     mfRadianInit(radian),
-    mfRadian(0.0f),
     BaseComponent(myObject, ctao)
 {
 }

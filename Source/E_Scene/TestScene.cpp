@@ -226,7 +226,7 @@ int TestScene::Create()
 	WallObject *gimmickObject = new WallObject(true, tempCenter, tempBlockSize, 0.0f);
 	GimmickObjectController *gimmickController = gimmickObject->GetGimmickController();
 	gimmickController->AddGimmick(
-		new ButtonTrigger,
+		new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer),
 		new LightExecutor(
 			PuzzleGimmickActiveParam::Create(true, false),
 			gimmickObject,

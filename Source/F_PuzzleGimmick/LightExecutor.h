@@ -54,6 +54,9 @@ public:
     // このライトの長さを取得する関数
     float GetLength() const;
 
+    // このライトの基本角度を取得する関数
+    float GetBaseAngle() const;
+
     // このライトの長さを設定する関数
     void SetLength(float length);
 

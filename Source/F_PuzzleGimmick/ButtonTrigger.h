@@ -5,6 +5,13 @@
 // 
 class ButtonObject;
 
+// 
+enum ButtonTriggerMode : uint8_t
+{
+    ButtonTriggerMode_OneLayer = 0,         // 
+    ButtonTriggerMode_TrueCount,            // 
+};
+
 // ボタンの状態を確認し、シミュレーションを行うかを判断するクラス
 class ButtonTrigger : public BaseGimmickTrigger
 {
@@ -20,7 +27,7 @@ private:
 
 public:
     // コンストラクタ
-    ButtonTrigger();
+    ButtonTrigger(ButtonTriggerMode activeLayerMode);
 
     // デストラクタ
     ~ButtonTrigger() override;
@@ -38,4 +45,8 @@ public:
 private:
     // これらのやつが全てFlagとなるので
     std::vector<Node> mlNodeBox;
+
+    // 0だったら1つでも条件がOKならOK。
+    // 1だったらtrueのLayerが奇数個ならOK
+    ButtonTriggerMode mnMode;
 };
