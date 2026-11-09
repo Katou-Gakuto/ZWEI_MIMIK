@@ -186,6 +186,7 @@
     <ClCompile Include="Source\H_Katou\Singleton\ImguiManager.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\KeyState.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\TimeManager.cpp" />
+    <ClCompile Include="Source\H_Katou\Struct\FadeData.cpp" />
     <ClCompile Include="Source\H_Katou\Struct\ImguiData.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\S_Collision\BaseCollision.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="Source\H_Katou\Singleton\KeyState.h" />
     <ClInclude Include="Source\H_Katou\Singleton\TimeManager.h" />
     <ClInclude Include="Source\H_Katou\Struct\BitFlag.h" />
+    <ClInclude Include="Source\H_Katou\Struct\FadeData.h" />
     <ClInclude Include="Source\H_Katou\Struct\ImguiData.h" />
     <ClInclude Include="Source\H_Katou\Struct\TimeData.h" />
     <ClInclude Include="Source\H_Katou\Struct\Vector2.h" />

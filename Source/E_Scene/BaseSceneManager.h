@@ -4,6 +4,8 @@
 #include "../Y_Tool/CreateFlag.h"
 #include "../Y_Tool/VoidList.h"
 
+#include "FadeData.h"
+
 typedef enum CrossSceneDataNumber : unsigned long
 {
     CSDN_SceneTag_BattleMode = 0,
@@ -45,6 +47,14 @@ private:
     uint32_t mnClosingFrame;
     VoidList mlUniqueDataList;
 
+    // フェード用画像ハンドル
+    int mnBlackFadeHandle;
+
+    // フェードを開けるときの情報
+    FadeData mstFadeOpenData;
+    // フェードを閉じるときの情報
+    FadeData mstFadeCloseData;
+
     BaseScene *SearchSceneTag(SceneTag tag);
 
     // シーン遷移(開ける時)のアニメーションを行う関数
@@ -58,6 +68,9 @@ private:
 
     // シーン遷移(閉じる時)のアニメーションが終わったかを確認する関数
     bool CheckSceneCloseEnd() const;
+
+    // シーン遷移アニメーション初期化
+    void SceneTransitionInit();
 
 public:
     BaseSceneManager();

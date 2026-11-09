@@ -16,6 +16,12 @@ namespace DRAW_SYSTEM
         STAGE_SIZE_TYPE_MAX
     };
 
+    enum DRAW_FADE_TYPE
+    {
+        DRAW_FADE_TYPE_NONE = 0,
+        DRAW_FADE_TYPE_CURTAIN,
+    };
+
     static VECTOR2D StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_MAX];
 
     static VECTOR2D ScaleFactor;
@@ -27,6 +33,11 @@ namespace DRAW_SYSTEM
     void DrawImage(VECTOR2D pos, VECTOR2D size, int handle);
     void DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handle, int TransFlag);
     void DrawImage(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VECTOR2D pos4, int handle, int flag = TRUE);
+
+    // フェード用画像描画処理
+    void DrawFadeImage(DRAW_FADE_TYPE drawFadeType, int handle, VECTOR2D leftUpPos, VECTOR2D rightUpPos, VECTOR2D leftDownPos, VECTOR2D rightDownPos, int alpha = 255, int transFlag = FALSE);
+    void DrawFadeImage(DRAW_FADE_TYPE drawFadeType, int handle, VECTOR2D leftUpPos, VECTOR2D rightDownPos, int alpha = 255, int transFlag = FALSE);
+    void DrawFadeImage(DRAW_FADE_TYPE drawFadeType, int handle, VECTOR2D leftUpPos, int alpha = 255, int transFlag = FALSE);
 
     // 現状光領域描画用
     void DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag = TRUE, bool redrawFlag = false);

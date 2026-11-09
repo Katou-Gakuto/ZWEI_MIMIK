@@ -798,7 +798,37 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
             // 凹みも角もを光内にない場合延長してみて角が含まれないか調べる
             if (!isAddDrawHitCollisionLine)
             {
+                // 現在のライン側の頂点を取得
+                std::vector<VECTOR2D> nowVertexPositions = GetVertexPositions(nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos);
 
+                // 次のライン側の頂点を取得
+                std::vector<VECTOR2D> nextVertexPositions = GetVertexPositions(nextCheckHitLine.HitCollision, nextCheckHitLine.LineStartPos);
+
+                // 現在のラインを延長
+                HIT_COLLISION_LINE extendedNowLight = nowCheckHitLine;
+
+                if (!GettingExtendedLight(nowCheckHitLine, nextCheckHitLine, &extendedNowLight))
+                {
+                    break;
+                }
+
+                // 次のラインを延長
+                HIT_COLLISION_LINE extendedNextLight = nextCheckHitLine;
+
+                if (!GettingExtendedLight(nextCheckHitLine, nowCheckHitLine, &extendedNextLight))
+                {
+                    break;
+                }
+
+                // 延長したライン同士で作る三角形
+                Triangle2D extendedTriangle;
+                extendedTriangle.SetShapeParameter(nowCheckHitLine.LineStartPos, extendedNowLight.LineEndPos, extendedNextLight.LineEndPos);
+
+                // 現在のライン側の頂点を確認
+                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nowCheckHitLine.LineStartPos, extendedNowLight.LineEndPos, extendedTriangle, nowVertexPositions, nowCheckHitLine.HitCollision, true);
+
+                // 次のライン側の頂点を確認
+                AddDrawLineToVertexBetweenLines(&addDrawHitCollisionLine, nextCheckHitLine.LineStartPos, extendedNextLight.LineEndPos, extendedTriangle, nextVertexPositions, nextCheckHitLine.HitCollision, false);
             }
         }
         // nowCheckHitLine.HitCollision == nextCheckHitLine.HitCollision

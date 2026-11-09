@@ -39,7 +39,6 @@ void DxLibDataManager::DxInitPreInitialize()
 
     SetHookWinProc(DxLibDataManagerWndProc);
     DxLib::SetAlwaysRunFlag(TRUE);
-    DxLib::SetAlwaysRunFlag(FALSE);
 
     // •`‰æî•ñİ’è
     SettingDrawSizeData();

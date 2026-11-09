@@ -114,6 +114,43 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VECTOR2
     DxLib::DrawModiGraph(pos1.GetX(), pos1.GetY(), pos2.GetX(), pos2.GetY(), pos3.GetX(), pos3.GetY(), pos4.GetX(), pos4.GetY(), handle, flag);
 }
 
+// フェード用画像描画処理
+void DRAW_SYSTEM::DrawFadeImage(DRAW_FADE_TYPE drawFadeType, int handle, VECTOR2D leftUpPos, VECTOR2D rightUpPos, VECTOR2D leftDownPos, VECTOR2D rightDownPos, int alpha, int transFlag)
+{
+    switch (drawFadeType)
+    {
+    case DRAW_FADE_TYPE::DRAW_FADE_TYPE_CURTAIN:
+    {
+        VECTOR2D displaySize = StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE];
+        rightUpPos.SetX(leftUpPos.GetX() + displaySize.GetX());
+        rightUpPos.SetY(leftUpPos.GetY() + 0.0f);
+        
+        leftDownPos.SetX(leftUpPos.GetX() + 0.0f);
+        leftDownPos.SetY(leftUpPos.GetY() + displaySize.GetY());
+        
+        rightDownPos.SetX(leftUpPos.GetX() + displaySize.GetX());
+        rightDownPos.SetY(leftUpPos.GetY() + displaySize.GetY());
+        
+    }
+        break;
+    }
+
+    DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+    DxLib::DrawModiGraph(leftUpPos.GetX(), leftUpPos.GetY(), rightUpPos.GetX(), rightUpPos.GetY(), rightDownPos.GetX(), rightDownPos.GetY(), leftDownPos.GetX(), leftDownPos.GetY(), handle, transFlag);
+    DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255/*max*/);
+}
+// フェード用画像描画処理
+void DRAW_SYSTEM::DrawFadeImage(DRAW_FADE_TYPE drawFadeType, int handle, VECTOR2D leftUpPos, VECTOR2D rightDownPos, int alpha, int transFlag)
+{
+    DRAW_SYSTEM::DrawFadeImage(drawFadeType, handle, leftUpPos, VECTOR2D(rightDownPos.GetX(), leftUpPos.GetY()), VECTOR2D(leftUpPos.GetX(), rightDownPos.GetY()), rightDownPos, alpha, transFlag);
+}
+// フェード用画像描画処理
+void DRAW_SYSTEM::DrawFadeImage(DRAW_FADE_TYPE drawFadeType, int handle, VECTOR2D leftUpPos, int alpha, int transFlag)
+{
+    VECTOR2D displaySize = StageSize[STAGE_SIZE_TYPE::STAGE_SIZE_TYPE_DISPLAY_SIZE];
+    DRAW_SYSTEM::DrawFadeImage(drawFadeType, handle, leftUpPos, VECTOR2D(displaySize.GetX(), leftUpPos.GetY()), VECTOR2D(leftUpPos.GetX(), displaySize.GetY()), displaySize, alpha, transFlag);
+}
+
 // 現状光領域描画用
 void DRAW_SYSTEM::DrawPolygon(VERTEX2D* triangleVertex, int polygonNumber, int graphHandle, int flag, bool redrawFlag)
 {

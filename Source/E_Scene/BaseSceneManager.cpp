@@ -10,6 +10,14 @@
 
 #include "../Y_Tool/MyTimer.h"
 
+#include "Master.h"
+#include "ResourceManager.h"
+#include "TimeManager.h"
+
+#include "DrawSystem.h"
+#include "DxLibDataManager.h"
+
+
 BaseScene *BaseSceneManager::SearchSceneTag(SceneTag tag)
 {
     BaseScene *temp = nullptr;
@@ -37,9 +45,17 @@ int BaseSceneManager::SceneOpen()
     case SOAN::SOAN_None:
         break;
     case SOAN::SOAN_CurtainUp:
+    {
+        // 幕が下がっていくがっていく処理
+        mstFadeOpenData.elapsedTime += Master::mpTimeManager->GetDeltaTime();
+        VECTOR2D displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
+        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY() * (mstFadeOpenData.elapsedTime / mstFadeOpenData.endTime)));
 
-        // @加藤
-        // ここに幕が上がっていく処理を書いてほしい
+        if (mstFadeOpenData.elapsedTime >= mstFadeOpenData.endTime)
+        {
+            mstFadeOpenData.IsFade = false;
+        }
+    }
         break;
     default:
         result = -1;
@@ -65,8 +81,17 @@ int BaseSceneManager::SceneClose()
     case SCAN::SCAN_None:
         break;
     case SCAN::SCAN_CurtainDown:
-        // @加藤
-        // ここに幕が上がっていく処理を書いてほしい
+    {
+        // 幕が上がっていく処理
+        mstFadeCloseData.elapsedTime += Master::mpTimeManager->GetDeltaTime();
+        VECTOR2D displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
+        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY()* (1.0f - (mstFadeCloseData.elapsedTime / mstFadeCloseData.endTime))));
+
+        if (mstFadeCloseData.elapsedTime >= mstFadeCloseData.endTime)
+        {
+            mstFadeCloseData.IsFade = false;
+        }
+    }
         break;
     default:
         result = -1;
@@ -93,8 +118,11 @@ bool BaseSceneManager::CheckSceneOpenEnd() const
         result = true;
         break;
     case SOAN::SOAN_CurtainUp:
-        // @加藤
-        // ここに幕が上がり終わったかを確認する処理を書いてほしい
+        // 幕が上がり終わったかを確認する
+        if (!mstFadeOpenData.IsFade)
+        {
+            result = true;
+        }
         break;
     default:
         result = false;
@@ -118,8 +146,11 @@ bool BaseSceneManager::CheckSceneCloseEnd() const
         result = true;
         break;
     case SCAN::SCAN_CurtainDown:
-        // @加藤
-        // ここに幕が下がり終わったかを確認する処理を書いてほしい
+        // 幕が下がり終わったかを確認する
+        if (!mstFadeCloseData.IsFade)
+        {
+            result = true;
+        }
         break;
     default:
         result = false;
@@ -128,6 +159,13 @@ bool BaseSceneManager::CheckSceneCloseEnd() const
 
     // 
     return result;
+}
+
+// シーン遷移アニメーション初期化
+void BaseSceneManager::SceneTransitionInit()
+{
+    mstFadeOpenData.Init(this->mnOpeningNumber);
+    mstFadeCloseData.Init(this->mnClosingNumber);
 }
 
 BaseSceneManager::BaseSceneManager() :
@@ -144,7 +182,10 @@ BaseSceneManager::BaseSceneManager() :
     mnClosingNumber(SCAN::SCAN_None),
     mnOpeningFrame(0),
     mnClosingFrame(0),
-    mlUniqueDataList()
+    mlUniqueDataList(),
+    mnBlackFadeHandle(-1),
+    mstFadeCloseData(0.5f),
+    mstFadeOpenData(0.5f)
 {
     for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
     {
@@ -206,6 +247,9 @@ int BaseSceneManager::Create()
         this->mlUniqueDataList.Add(new unsigned long, CSDN::CSDN_unsignedLong_OtherPlayerNum);
 
         this->mbFlag.CreateComplate();
+
+        // 画像ハンドル取得
+        mnBlackFadeHandle = Master::mpResourceManager->LoadGraphics(ResourceManager::msResourceFile + "Fade/BlackCurtain - コピー.jpg");
     }
 
     return 0;
@@ -478,6 +522,8 @@ void BaseSceneManager::ChangeScene(
     this->mbClosingUpdate = closingUpdate;
     this->mnOpeningNumber = openAnim;
     this->mbOpeningUpdate = openingUpdate;
+
+    SceneTransitionInit();
 }
 
 void BaseSceneManager::ChangeSceneMySelf()
@@ -497,6 +543,8 @@ void BaseSceneManager::SetResreveScene(
     this->mbClosingUpdate = closingUpdate;
     this->mnOpeningNumber = openAnim;
     this->mbOpeningUpdate = openingUpdate;
+
+    SceneTransitionInit();
 }
 
 // 指定したシーンが現在のシーンか確認する
