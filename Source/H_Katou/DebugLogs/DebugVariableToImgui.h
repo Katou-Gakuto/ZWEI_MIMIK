@@ -1,7 +1,12 @@
 #pragma once
 
+#include <algorithm>
+#include <array>
+#include <cmath>
 #include <functional>
+#include <memory>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "ImguiData.h"
@@ -12,6 +17,30 @@
 // PrivateVariable / PrivateFunction ‚É•ª—£‚µ‚ÄŠÇ—‚·‚éB
 namespace DebugVariableToImgui
 {
+    namespace PrivateConstFunction
+    {
+        // IsSupportedVariableType ‚ÍAƒfƒoƒbƒO•\¦‚É‘Î‰‚·‚é•Ï”Œ^‚©‚Ç‚¤‚©‚ğ”»’è‚·‚éB
+        template <typename T>
+        constexpr bool IsSupportedVariableType()
+        {
+            return
+                std::is_same<T, char>::value ||
+                std::is_same<T, unsigned char>::value ||
+                std::is_same<T, short>::value ||
+                std::is_same<T, unsigned short>::value ||
+                std::is_same<T, int>::value ||
+                std::is_same<T, unsigned int>::value ||
+                std::is_same<T, long>::value ||
+                std::is_same<T, unsigned long>::value ||
+                std::is_same<T, long long>::value ||
+                std::is_same<T, unsigned long long>::value ||
+                std::is_same<T, float>::value ||
+                std::is_same<T, double>::value ||
+                std::is_same<T, long double>::value;
+        }
+    }
+    using namespace PrivateConstFunction;
+
     struct StructMemberIndexData;
     namespace PrivateEnum
     {
@@ -41,6 +70,16 @@ namespace DebugVariableToImgui
             IMGUI_OPERATION_RIGHT_POS,
             IMGUI_OPERATION_RIGHT_POS_X,
             IMGUI_OPERATION_RIGHT_POS_Y,
+        };
+
+        // •ÏXŒ³‚Ì¯•Ê
+        enum class VARIABLE_CHANGE_SOURCE
+        {
+            POINTER,       // ‡@ ÀÛ‚Ì•Ï”
+            DRAW_SETTING,  // ‡A DrawSetting
+            IMGUI_VALUE,   // ‡B ImGui‚É“n‚·’l
+
+            MAX
         };
     }
     
@@ -139,6 +178,23 @@ namespace DebugVariableToImgui
             std::vector<StructMemberIndexData> memberData;
             DrawSetting drawSetting;
         };
+
+
+        struct DebugOneVariableData
+        {
+            std::string TabName;
+            void* Variable;
+
+            std::vector<ImguiOperationSetting> MemberData;
+        };
+
+        struct DebugVariableData
+        {
+            std::string TabName;
+            std::vector<void>* Variable;
+
+            std::vector<ImguiOperationSetting> MemberData;
+        };
     }
         
     
@@ -189,24 +245,13 @@ namespace DebugVariableToImgui
             const std::string& textValue = std::string(),
             bool enabledValue = true);
     }
+    using namespace PrivateFunction;
 
     template <typename T, typename MemberType>
     StructMemberIndexData MakeMemberData(const std::string& nameValue, MemberType T::* member)
     {
         static_assert(
-            std::is_same<MemberType, char>::value ||
-            std::is_same<MemberType, unsigned char>::value ||
-            std::is_same<MemberType, short>::value ||
-            std::is_same<MemberType, unsigned short>::value ||
-            std::is_same<MemberType, int>::value ||
-            std::is_same<MemberType, unsigned int>::value ||
-            std::is_same<MemberType, long>::value ||
-            std::is_same<MemberType, unsigned long>::value ||
-            std::is_same<MemberType, long long>::value ||
-            std::is_same<MemberType, unsigned long long>::value ||
-            std::is_same<MemberType, float>::value ||
-            std::is_same<MemberType, double>::value ||
-            std::is_same<MemberType, long double>::value,
+            IsSupportedVariableType<MemberType>(),
             "“o˜^‚³‚ê‚½ƒƒ“ƒo•Ï”‚Í³í‚É‰Ò“­‚Å‚«‚È‚¢Œ^‚Å‚·B"
         );
 
@@ -226,19 +271,7 @@ namespace DebugVariableToImgui
     MemberType* GetMemberPointer(T* object, MemberType T::* member)
     {
         static_assert(
-            std::is_same<MemberType, char>::value ||
-            std::is_same<MemberType, unsigned char>::value ||
-            std::is_same<MemberType, short>::value ||
-            std::is_same<MemberType, unsigned short>::value ||
-            std::is_same<MemberType, int>::value ||
-            std::is_same<MemberType, unsigned int>::value ||
-            std::is_same<MemberType, long>::value ||
-            std::is_same<MemberType, unsigned long>::value ||
-            std::is_same<MemberType, long long>::value ||
-            std::is_same<MemberType, unsigned long long>::value ||
-            std::is_same<MemberType, float>::value ||
-            std::is_same<MemberType, double>::value ||
-            std::is_same<MemberType, long double>::value,
+            IsSupportedVariableType<MemberType>(),
             "“o˜^‚³‚ê‚½ƒƒ“ƒo•Ï”‚Í³í‚É‰Ò“­‚Å‚«‚È‚¢Œ^‚Å‚·B"
         );
 
@@ -272,22 +305,15 @@ namespace DebugVariableToImgui
     template <typename T>
     void SettingDrawDebugVariable(std::string TabName, T* variable, std::vector<StructMemberIndexData> memberData = {}, std::vector<DEBUG_VAR_DRAW_TYPE> drawType = {})
     {
+        if (variable == nullptr)
+        {
+            return;
+        }
+        
         if (memberData.size() <= 0)
         {
             static_assert(
-                std::is_same<T, char>::value ||
-                std::is_same<T, unsigned char>::value ||
-                std::is_same<T, short>::value ||
-                std::is_same<T, unsigned short>::value ||
-                std::is_same<T, int>::value ||
-                std::is_same<T, unsigned int>::value ||
-                std::is_same<T, long>::value ||
-                std::is_same<T, unsigned long>::value ||
-                std::is_same<T, long long>::value ||
-                std::is_same<T, unsigned long long>::value ||
-                std::is_same<T, float>::value ||
-                std::is_same<T, double>::value ||
-                std::is_same<T, long double>::value,
+                IsSupportedVariableType<T>(),
                 "“o˜^‚³‚ê‚½ƒƒ“ƒo•Ï”‚Í³í‚É‰Ò“­‚Å‚«‚È‚¢Œ^‚Å‚·B"
             );
         }
@@ -300,22 +326,15 @@ namespace DebugVariableToImgui
     template <typename T>
     void SettingDrawDebugVariable(std::string TabName, std::vector<T>* variables, std::vector<StructMemberIndexData> memberData = {}, std::vector<DEBUG_VAR_DRAW_TYPE> drawType = {})
     {
+        if (variables == nullptr)
+        {
+            return;
+        }
+
         if (memberData.size() <= 0)
         {
             static_assert(
-                std::is_same<T, char>::value ||
-                std::is_same<T, unsigned char>::value ||
-                std::is_same<T, short>::value ||
-                std::is_same<T, unsigned short>::value ||
-                std::is_same<T, int>::value ||
-                std::is_same<T, unsigned int>::value ||
-                std::is_same<T, long>::value ||
-                std::is_same<T, unsigned long>::value ||
-                std::is_same<T, long long>::value ||
-                std::is_same<T, unsigned long long>::value ||
-                std::is_same<T, float>::value ||
-                std::is_same<T, double>::value ||
-                std::is_same<T, long double>::value,
+                IsSupportedVariableType<T>(),
                 "“o˜^‚³‚ê‚½ƒƒ“ƒo•Ï”‚Í³í‚É‰Ò“­‚Å‚«‚È‚¢Œ^‚Å‚·B"
             );
         }

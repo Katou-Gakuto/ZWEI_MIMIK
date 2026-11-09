@@ -743,6 +743,8 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                 break;
             }
 
+            bool isAddDrawHitCollisionLine = false;
+
             // ”ÍˆÍ“à‚ÌŠp‚ð’Ç‰Á
             {
                 std::vector<HIT_COLLISION_LINE> setAddDrawHitCollisionLine;
@@ -763,6 +765,7 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                         BaseCollision2D* nowHitCollision = dynamic_cast<BaseCollision2D*>(nowCheckHitLine.HitCollision);
                         if ((nowHitCollision != nullptr) && !(0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, nowHitCollision).mnResultParam))
                         {
+                            isAddDrawHitCollisionLine = true;
                             setAddDrawHitCollisionLine.push_back(setExtendedLight);
                         }
                     }
@@ -784,11 +787,18 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                         BaseCollision2D* nextHitCollision = dynamic_cast<BaseCollision2D*>(nextCheckHitLine.HitCollision);
                         if ((nextHitCollision != nullptr) && !(0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, nextHitCollision).mnResultParam))
                         {
+                            isAddDrawHitCollisionLine = true;
                             setAddDrawHitCollisionLine.insert(setAddDrawHitCollisionLine.begin(), setExtendedLight);
                         }
                     }
                     addDrawHitCollisionLine.insert(addDrawHitCollisionLine.end(), setAddDrawHitCollisionLine.begin(), setAddDrawHitCollisionLine.end());
                 }
+            }
+
+            // ‰š‚Ý‚àŠp‚à‚ðŒõ“à‚É‚È‚¢ê‡‰„’·‚µ‚Ä‚Ý‚ÄŠp‚ªŠÜ‚Ü‚ê‚È‚¢‚©’²‚×‚é
+            if (!isAddDrawHitCollisionLine)
+            {
+
             }
         }
         // nowCheckHitLine.HitCollision == nextCheckHitLine.HitCollision
