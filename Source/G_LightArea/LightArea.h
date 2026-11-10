@@ -121,6 +121,9 @@ private:
     // ‰„’·‚µ‚½Œõ‚ğæ“¾‚·‚é
     bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
 
+    // “–‚½‚Á‚Ä‚¢‚é•ÓˆÈŠO‚Ì•Ó‚Ü‚ÅŒõ‚ğ‰„’·‚·‚é
+    bool GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
+
     // 3Špî•ñ‚É‚µ‚Ä•`‰æ
     void DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData);
 private:
