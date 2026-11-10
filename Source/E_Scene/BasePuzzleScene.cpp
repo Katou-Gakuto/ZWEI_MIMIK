@@ -30,9 +30,11 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mpGoalShadow(nullptr),
     mbPouse(false),
     mbGoal(false),
-    mbFailed(false),
+    mbFailedLight(false),
+    mbFailedShadow(false),
     mnPouseCursorPos(0),
     mnResultCursorPos(0),
+    mnFailedModeFrame(0),
     BaseScene(tag)
 {
 }
@@ -98,7 +100,19 @@ int BasePuzzleScene::Initialize()
     this->mbGoal = false;
 
     // 
-    this->mbFailed = false;
+    this->mbFailedLight = false;
+
+    // 
+    this->mbFailedShadow = false;
+
+    // 
+    this->mnFailedModeFrame = 0;
+
+    // 
+    GameObject *obj = this->mpPlayerLight->GetMyObject();
+    obj->SetDrawFlag(true);
+    obj = this->mpPlayerShadow->GetMyObject();
+    obj->SetDrawFlag(true);
 
     // 
     return 0;
@@ -120,7 +134,7 @@ int BasePuzzleScene::Finalize()
 int BasePuzzleScene::Update()
 {
     // 
-    if (this->mbFailed)
+    if (this->mbFailedLight || this->mbFailedShadow)
     {
         // 
         return this->FailedUpdate();
@@ -132,12 +146,14 @@ int BasePuzzleScene::Update()
         return this->ResultUpdate();
     }
 
-    // 
-    this->mbFailed = 
-        this->mpPlayerLight->GetInLightArea() == false ||
-        this->mpPlayerShadow->GetInLightArea() == true;
-    // this->mbFailed = false;
-    if (this->mbFailed)
+    // @Debug
+    // リトライ機能をONにしたい場合はここをtrueに、OFFにしたい場合はfalseにしてください
+    if (true)
+    {
+        this->mbFailedLight = this->mpPlayerLight->GetInLightArea() == false;
+        this->mbFailedShadow = this->mpPlayerShadow->GetInLightArea() == true;
+    }
+    if (this->mbFailedLight || this->mbFailedShadow)
     {
         // 
         return this->FailedUpdate();
@@ -226,7 +242,7 @@ int BasePuzzleScene::Draw()
     }
 
     // 
-    if (this->mbFailed)
+    if (this->mbFailedLight)
     {
         // 
         this->FailedDraw();
@@ -627,9 +643,45 @@ int BasePuzzleScene::ResultDraw()
 // 
 int BasePuzzleScene::FailedUpdate()
 {
-    // とりあえず強制RETRY
-    Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
-    this->OnResetFlag();
+    // 
+    const uint32_t sceneCloseStart = 119;
+    if (sceneCloseStart == this->mnFailedModeFrame)
+    {
+        // 強制RETRY
+        Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+        this->OnResetFlag();
+    }
+
+    // 
+    const uint32_t highLightCount = 15;
+    if ((this->mnFailedModeFrame % highLightCount) == 0)
+    {
+        // 
+        GameObject *obj = nullptr;
+            
+        // 
+        if (this->mbFailedLight)
+        {
+            // 
+            obj = this->mpPlayerLight->GetMyObject();
+
+            // 
+            obj->SetDrawFlag(!obj->GetDrawFlag());
+        }
+
+        // 
+        if (this->mbFailedShadow)
+        {
+            // 
+            obj = this->mpPlayerShadow->GetMyObject();
+
+            // 
+            obj->SetDrawFlag(!obj->GetDrawFlag());
+        }
+    }
+
+    // 
+    this->mnFailedModeFrame++;
 
     // 
     return 0;

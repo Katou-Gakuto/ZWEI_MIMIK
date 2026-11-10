@@ -95,13 +95,19 @@ private:
     bool mbGoal;
 
     // 
-    bool mbFailed;
+    bool mbFailedLight;
+
+    // 
+    bool mbFailedShadow;
 
     // 
     int mnPouseCursorPos;
 
     // 
     int mnResultCursorPos;
+
+    // 
+    uint32_t mnFailedModeFrame;
 
     // 
     static CursorMoveData smdMoveData;

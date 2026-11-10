@@ -249,20 +249,20 @@ int BaseSceneManager::Update()
         BaseScene *sceneOld = this->SearchSceneTag(this->mnSceneNow);
 
         // 
-        SceneTag oldTag = this->mnSceneOld;
-        SceneTag nowTag = this->mnSceneNow;
-
-        // 
-        this->mnSceneOld = this->mnSceneNow;
-        this->mnSceneNow = this->mnChangeScene;
-
-        // 
         if (this->CheckSceneCloseEnd())
         {
+            // 
+            SceneTag oldTag = this->mnSceneOld;
+            SceneTag nowTag = this->mnSceneNow;
+
             // 
             this->mnClosingFrame = 0;
             this->mnClosingNumber = SCAN::SCAN_None;
             this->mbClosingUpdate = false;
+
+            // 
+            this->mnSceneOld = this->mnSceneNow;
+            this->mnSceneNow = this->mnChangeScene;
 
             // 
             if (sceneOld != nullptr)
@@ -286,11 +286,11 @@ int BaseSceneManager::Update()
                 }
 
                 // 
-                this->mnSceneOld = oldTag;
-                this->mnSceneNow = nowTag;
+                this->mnOpeningFrame++;
 
                 // 
-                this->mnOpeningFrame++;
+                this->mnSceneOld = oldTag;
+                this->mnSceneNow = nowTag;
 
                 // 
                 return 0;
@@ -335,10 +335,6 @@ int BaseSceneManager::Update()
                 // 
                 this->mnOpeningFrame++;
             }
-
-            // 
-            this->mnSceneOld = oldTag;
-            this->mnSceneNow = nowTag;
 
             // 
             return 0;
@@ -473,16 +469,26 @@ void BaseSceneManager::ChangeScene(
     SceneOpenAnimNumber openAnim,
     bool openingUpdate)
 {
-    this->mnChangeScene = nextSceneTag;
-    this->mnClosingNumber = closeAnim;
-    this->mbClosingUpdate = closingUpdate;
-    this->mnOpeningNumber = openAnim;
-    this->mbOpeningUpdate = openingUpdate;
+    // 
+    if (this->mnClosingFrame == 0 &&
+        this->mnOpeningFrame == 0)
+    {
+        this->mnChangeScene = nextSceneTag;
+        this->mnClosingNumber = closeAnim;
+        this->mbClosingUpdate = closingUpdate;
+        this->mnOpeningNumber = openAnim;
+        this->mbOpeningUpdate = openingUpdate;
+    }
 }
 
 void BaseSceneManager::ChangeSceneMySelf()
 {
-    this->mnChangeScene = this->mnResreveScene;
+    // 
+    if (this->mnClosingFrame == 0 &&
+        this->mnOpeningFrame == 0)
+    {
+        this->mnChangeScene = this->mnResreveScene;
+    }
 }
 
 void BaseSceneManager::SetResreveScene(
