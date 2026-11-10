@@ -98,7 +98,7 @@ public:
 
 
     // ライトエリア描画時当たっている
-    std::vector<std::vector<HIT_COLLISION_LINE>> DrawLingAreaHitCollisionsGetProcess();
+    std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> DrawLingAreaHitCollisionsGetProcess();
 
     // ライト有効フラグ設定
     void SetLightFlag(bool flag) { mbIsLightFlag = flag; }

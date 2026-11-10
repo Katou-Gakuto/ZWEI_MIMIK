@@ -48,6 +48,7 @@ int TitleScene::Create()
 
     TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKƒƒSW(‰¼).png");
     Master::mpSoundManager->SetBGMVolume(180);
+    Master::mpSoundManager->SetBGMVolume(0);// DELETE:_
     Master::mpSoundManager->SetSEVolume(180);
     Master::mpSoundManager->ChangeVolume();
 

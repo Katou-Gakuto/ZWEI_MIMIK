@@ -593,9 +593,9 @@ void LightArea::ReDrawLightArea()
 }
 
 // ライトエリア描画時当たっている
-std::vector<std::vector<HIT_COLLISION_LINE>> LightArea::DrawLingAreaHitCollisionsGetProcess()
+std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAreaHitCollisionsGetProcess()
 {
-    std::vector<std::vector<HIT_COLLISION_LINE>> hitCollisionLineData;
+    std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLineData;
     std::vector<std::vector<LIGHT_DATA>> lightLine;
 
     if (!mbIsLightFlag)
@@ -624,19 +624,40 @@ std::vector<std::vector<HIT_COLLISION_LINE>> LightArea::DrawLingAreaHitCollision
             LIGHT_DATA linePosData;
             linePosData.lineOne = currentNode->GetMyStartPos();
             linePosData.lineTwo = currentNode->GetMyEndPos();
+            HIT_COLLISION_LINE hitCollisionLine;
+            hitCollisionLine.HitCollision = currentNode->GetHitCollision();
+            hitCollisionLine.LineStartPos = currentNode->GetMyStartPos();
+            hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
 
             // このループ数最初の判定なら追加だけして次へ
             if (lightLine.size() <= loopCount)
             {
                 // 情報を追加
                 lightLine.push_back({linePosData});
-                hitCollisionLineData.push_back({{currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo}});
+                hitCollisionLineData.push_back({{hitCollisionLine}});
             }
             // 前に設定したことがあるから調べる
             else
             {
+                int lineDataIndexss[3] =
+                {
+                    loopCount,
+                    hitCollisionLineData[loopCount].size() - 1,
+                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].size() - 1
+                };
+                constexpr int LOOP_COUNT = 0;
+                constexpr int LIGHT_AREA_COUNT = 1;
+                constexpr int COLLISION_COUNT = 2;
+
+                // TODO:_ 入れ替え　加筆中
+
+                /*出だしが違うオブジェクト*/
+                if (hitCollisionLineData[lineDataIndexss[LOOP_COUNT]][lineDataIndexss[LIGHT_AREA_COUNT]][lineDataIndexss[COLLISION_COUNT]].HitCollision != hitCollisionLine.HitCollision)
+                {
+
+                }
                 /*このif判定順番厳守、配列の参照でエラー出る*/
-                if (/*二つのラインで四角分がこれまでに作成されているか判定*/
+                else if (/*二つのラインで四角分がこれまでに作成されているか判定*/
                     (lightLine[loopCount].size() >= 2) &&
                     /*前の二つのラインを見て今のラインの頂点が両点座標が直線上にあるか判定*/
                     (IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineOne, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineOne, linePosData.lineOne) &&
@@ -644,15 +665,13 @@ std::vector<std::vector<HIT_COLLISION_LINE>> LightArea::DrawLingAreaHitCollision
                 {
                     // 前回登録した情報を書き換える
                     lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/] = linePosData;
-                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].HitCollision = currentNode->GetHitCollision();
-                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].LineStartPos = linePosData.lineOne;
-                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].LineEndPos = linePosData.lineTwo;
+                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1][lineDataIndexss[COLLISION_COUNT]] = hitCollisionLine;
                 }
                 else
                 {
                     // 情報を追加
                     lightLine[loopCount].push_back(linePosData);
-                    hitCollisionLineData[loopCount].push_back({currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo});
+                    hitCollisionLineData[loopCount].push_back({hitCollisionLine});
                 }
             }
 
