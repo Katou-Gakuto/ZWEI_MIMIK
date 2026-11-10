@@ -16,7 +16,7 @@ class BaseCollision2D;
 class Point2D;
 class Ray2D;
 struct CollisionCheckResult2D;
-class Triangle2D;
+class Quadrangle2D;
 
 struct HIT_COLLISION_LINE
 {
@@ -91,9 +91,11 @@ public:
 
     // ライトエリアの描画
     void DrawLightArea();
+    void A();
 
     // ライトエリア再描画
     void ReDrawLightArea();
+
 
     // ライトエリア描画時当たっている
     std::vector<std::vector<HIT_COLLISION_LINE>> DrawLingAreaHitCollisionsGetProcess();
@@ -113,7 +115,7 @@ private:
     std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos);
 
     // 	2本のラインの間にある頂点まで描画用ラインを追加する
-    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
 
     // 当たっている辺を求める
     std::vector<VECTOR2D> GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
@@ -123,6 +125,9 @@ private:
 
     // 当たっている辺以外の辺まで光を延長する
     bool GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
+
+    // 2本の衝突辺が平行か判定
+    bool IsParallelHitCollisionEdge(const HIT_COLLISION_LINE& firstLine, const HIT_COLLISION_LINE& secondLine);
 
     // 3角情報にして描画
     void DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData);

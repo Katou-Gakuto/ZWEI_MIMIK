@@ -169,7 +169,7 @@ bool LightLineNode::CalculateEndPos(
             tempResultNewr = tempResultCurrent;
 
             // 
-            this->mpHitCollision = objectCollBox[i];
+            this->mpHitCollision = mirrorCollBox[i];
 
             // 
             this->mnHitParam = tempResultNewr.mnResultParam;

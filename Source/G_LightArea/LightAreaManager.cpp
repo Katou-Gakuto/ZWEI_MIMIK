@@ -25,6 +25,8 @@
 #include "ResourceManager.h"
 
 #include "ImguiManager.h"
+static int DrawSelectNumber = 1;
+static int DrawSelectNumber1 = -1;
 
 // 
 LightAreaManager::LightAreaManager() :
@@ -107,6 +109,38 @@ void LightAreaManager::Initilize()
 // 描画
 void LightAreaManager::Draw()
 {
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            0,
+            1,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber1
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            1000,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::DRAG1
+        )
+    );
 
     // ライト描画処理
     { 
@@ -116,6 +150,52 @@ void LightAreaManager::Draw()
         LightDraw();
         // 終了
         EndLightDraw();
+    }
+
+    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
+    {
+        mlNode[lightAreaIndex]->A();
+    }
+
+    if (DrawSelectNumber == 0)
+    {
+        return;
+    }
+    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
+    {
+        LightArea* lightArea = mlNode[lightAreaIndex];
+        for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
+        {
+            if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 == i))
+            {
+                return;
+                //continue;
+            }
+            LightLineNode* currentNode = lightArea->GetFirstNodeBox()[i];
+            LightLineNode* nextNode;
+
+            if (currentNode == nullptr)
+            {
+                continue;
+            }
+
+            while (true)
+            {
+                // デバッグ用レイの可視化
+                DRAW_SYSTEM::DrawLine(
+                    currentNode->GetMyStartPos(),
+                    currentNode->GetMyEndPos(),
+                    0x00ffff);
+
+
+                if (!currentNode->AccessNext(&nextNode))
+                {
+                    break;
+                }
+
+                currentNode = nextNode;
+            }
+        }
     }
 }
 
