@@ -4,6 +4,7 @@
 
 #include "../Z_Except/CursorMoveSupporter.h"
 
+class VECTOR2D;
 // 
 enum TitleSelectMode
 {
@@ -40,7 +41,12 @@ public:
     // 
     int Draw() override;
 
+    float EaseOutSine(float t) { return sinf(t * 3.14159265f * 0.5f); }
+
 private:
+
+    VECTOR2D &Character1;
+    VECTOR2D &Character2;
 
     int UpdateModeSelect();
 
@@ -53,6 +59,27 @@ private:
 	// 上下入力のためのデータ
     CursorMoveData mdMoveData;
 
-	// タイトルロゴの画像ハンドル
+	// 画像等をふわふわさせるための変数
+    float fwfw;
+    float vec;
+	float Time;
+
+    // 操作不能時間
+    int CannotOperate;
+    // 画像を右にずらす 
+    int Swipe;
+
+	// 画像ハンドル
     int TitleLogo;
+    int Light;
+    int PRESSANYBUTTON;
+	int STAGESELECT;
+	int OPTION;
+	int CREDIT;
+	int EXIT;
+
+    int AButtonHandle;
+    int BButtonHandle;
+    int DecisionHandle;
+    int BackHandle;
 };

@@ -14,6 +14,7 @@ enum OptionSelectMode
    
    OptionSelectMode_Max,
 };
+
 class OptionScene : public BaseScene
 {
 public:
@@ -34,17 +35,43 @@ private:
     int UpdateModeSelect();
 
 	OptionSelectMode mnCurrentMode;
+
+    // 選択状態
 	bool mbBGMVolumeChange;
 	bool mbSEVolumeChange;
 	bool mbFullScreen;
 	bool mbColorVisionSupport;
 
+    // 機能のONOFF状態
     bool FullScreen;
 	bool ColorVisionSupport;
 
     // 0～100
     int mnVolumeBGM;
     int mnVolumeSE;
+    int Save;
+
+    // 
+    int BerHandle;
+    int BGMHandle;
+    int SEHandle;
+    int ScreenHandle;
+    int ColorVisionHandle;
+    int ExitHandle;
+
+    int NUMBERHandle;
+    int ONHandle;
+    int OFFHandle;
+    int FullHDHandle;
+    int HDHandle;
+
+    int NowSceneHandle;
+    int AButtonHandle;
+    int BButtonHandle;
+    int DecisionHandle;
+    int Choice;
+    int BackHandle;
+    int CancelHandle;
 
     // 上下入力のためのデータ
     CursorMoveData mdMoveData;
