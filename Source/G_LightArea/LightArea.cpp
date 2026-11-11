@@ -18,9 +18,10 @@
 
 #include "ImguiManager.h"
 static int DrawSelectNumber = 1;
-static int DrawSelectNumber1 = 0;
-static int DrawSelectNumber2 = 0;
-static int DrawSelectNumber3 = 0;
+static int DrawSelectNumber1 = -1;
+static int DrawSelectNumber2 = -1;
+static int DrawSelectNumber3 = -1;
+static int DrawSelectNumber4 = -1;
 
 // 
 LightArea::LightArea() :
@@ -31,7 +32,7 @@ LightArea::LightArea() :
     mbOffLight(false),
     mbFinal2Start(false),
     mnLightColor(0xffffff),
-    mstLightLine(),
+    // mstLightLine(),
     mstLightAreaTriangleVertex(nullptr),
     munLightAreaTriangleSize(0),
     mnPreLightAreaTriangleVertexIndexCount(0),
@@ -451,7 +452,7 @@ bool LightArea::OffLight()
     return true;
 }
 
-std::vector<std::vector<HIT_COLLISION_LINE>> drawHitCollisionLine;
+std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> drawHitCollisionLine;
 // ライトエリアの描画
 void LightArea::DrawLightArea()
 {
@@ -524,9 +525,25 @@ void LightArea::DrawLightArea()
             IMGUI_TYPE::SLIDER1
         )
     );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber4
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            30,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
     
-    std::vector<std::vector<HIT_COLLISION_LINE>> hitCollisionLine = DrawLingAreaHitCollisionsGetProcess();
-    //std::vector<std::vector<HIT_COLLISION_LINE>> drawHitCollisionLine = hitCollisionLine;
+    std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLine = DrawLingAreaHitCollisionsGetProcess();
+    //std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> drawHitCollisionLine = hitCollisionLine;
     drawHitCollisionLine = hitCollisionLine;
     if (hitCollisionLine.size() == 0)
     {
@@ -536,15 +553,18 @@ void LightArea::DrawLightArea()
     // 光の中に入る影の線をすべて描画用データとして追加する
     for (int hitCollisionLinesIterator = 0; hitCollisionLinesIterator < hitCollisionLine.size(); ++hitCollisionLinesIterator)
     {
-        if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 != hitCollisionLinesIterator))
+        for (int lightAreaIterator = 0; lightAreaIterator < hitCollisionLine[hitCollisionLinesIterator].size(); ++lightAreaIterator)
         {
-            continue;
-        }
+            if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 != hitCollisionLinesIterator))
+            {
+                continue;
+            }
 
-        int drawHitCollisionLineIteratorPlusNumber = 0;
-        for (int hitLineIndex = 0; (hitLineIndex + 1) < hitCollisionLine[hitCollisionLinesIterator].size(); ++hitLineIndex)
-        {
-            drawHitCollisionLineIteratorPlusNumber += SetupLightAreaForDrawing(hitCollisionLine[hitCollisionLinesIterator], drawHitCollisionLine[hitCollisionLinesIterator], hitLineIndex, drawHitCollisionLineIteratorPlusNumber);
+            int drawHitCollisionLineIteratorPlusNumber = 0;
+            for (int hitLineIndex = 0; (hitLineIndex + 1) < hitCollisionLine[hitCollisionLinesIterator][lightAreaIterator].size(); ++hitLineIndex)
+            {
+                drawHitCollisionLineIteratorPlusNumber += SetupLightAreaForDrawing(hitCollisionLine[hitCollisionLinesIterator][lightAreaIterator], drawHitCollisionLine[hitCollisionLinesIterator][lightAreaIterator], hitLineIndex, drawHitCollisionLineIteratorPlusNumber);
+            }
         }
     }
 
@@ -562,16 +582,23 @@ void LightArea::A()
     {
         for (uint32_t l = 0; l < drawHitCollisionLine[i].size(); l++)
         {
-            if ((DrawSelectNumber2 != -1) && (DrawSelectNumber2 != i))
+            for (int lightAreaIndex = 0; lightAreaIndex < drawHitCollisionLine[i][l].size(); ++lightAreaIndex)
             {
-                continue;
+                if ((DrawSelectNumber2 != -1) && (DrawSelectNumber2 != i))
+                {
+                    continue;
+                }
+                if ((DrawSelectNumber3 != -1) && (DrawSelectNumber3 != l))
+                {
+                    continue;
+                }
+                if ((DrawSelectNumber4 != -1) && (DrawSelectNumber4 != lightAreaIndex))
+                {
+                    continue;
+                }
+                // デバッグ用レイの可視化
+                DRAW_SYSTEM::DrawLine(drawHitCollisionLine[i][l][lightAreaIndex].LineStartPos, drawHitCollisionLine[i][l][lightAreaIndex].LineEndPos, 0xff0000);
             }
-            if ((DrawSelectNumber3 != -1) && (DrawSelectNumber3 != l))
-            {
-                continue;
-            }
-            // デバッグ用レイの可視化
-            DRAW_SYSTEM::DrawLine(drawHitCollisionLine[i][l].LineStartPos, drawHitCollisionLine[i][l].LineEndPos, 0xff0000);
         }
     }
 }
@@ -595,8 +622,9 @@ void LightArea::ReDrawLightArea()
 // ライトエリア描画時当たっている
 std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAreaHitCollisionsGetProcess()
 {
+    // TODO:_ ノードの最大数取得してそれを基準にハッシュ値を作成する
+
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLineData;
-    std::vector<std::vector<LIGHT_DATA>> lightLine;
 
     if (!mbIsLightFlag)
     {
@@ -606,6 +634,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
     LightLineNode* currentNode;
     LightLineNode* nextNode;
 
+    int preLoopCount = -1;
     for (uint32_t i = 0; i < mnLightLineCount; ++i)
     {
         currentNode = this->GetFirstNodeBox()[i];
@@ -617,29 +646,28 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
         // ループ数
         int loopCount = 0;
+        // 前の当たり判定
+        BaseCollision* preHitCollision = nullptr;
         while (true)
         {
-
             // 情報保存
-            LIGHT_DATA linePosData;
-            linePosData.lineOne = currentNode->GetMyStartPos();
-            linePosData.lineTwo = currentNode->GetMyEndPos();
             HIT_COLLISION_LINE hitCollisionLine;
             hitCollisionLine.HitCollision = currentNode->GetHitCollision();
+            hitCollisionLine.PreLineHitCollision = preHitCollision;
             hitCollisionLine.LineStartPos = currentNode->GetMyStartPos();
             hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
+            preHitCollision = currentNode->GetHitCollision();
 
             // このループ数最初の判定なら追加だけして次へ
-            if (lightLine.size() <= loopCount)
+            if (hitCollisionLineData.size() <= loopCount)
             {
                 // 情報を追加
-                lightLine.push_back({linePosData});
                 hitCollisionLineData.push_back({{hitCollisionLine}});
             }
             // 前に設定したことがあるから調べる
             else
             {
-                int lineDataIndexss[3] =
+                const int lineDataIndexs[3] =
                 {
                     loopCount,
                     hitCollisionLineData[loopCount].size() - 1,
@@ -651,27 +679,28 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
                 // TODO:_ 入れ替え　加筆中
 
-                /*出だしが違うオブジェクト*/
-                if (hitCollisionLineData[lineDataIndexss[LOOP_COUNT]][lineDataIndexss[LIGHT_AREA_COUNT]][lineDataIndexss[COLLISION_COUNT]].HitCollision != hitCollisionLine.HitCollision)
+                /*前回のノード数が少ない今のループより少ない
+                  出だしが違うオブジェクト*/
+                if (((preLoopCount != -1) && (preLoopCount <  loopCount)) ||
+                    (hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].PreLineHitCollision != hitCollisionLine.PreLineHitCollision))
                 {
-
+                    // 新しいライトエリアとして登録
+                    hitCollisionLineData[lineDataIndexs[LOOP_COUNT]].push_back({hitCollisionLine});
                 }
                 /*このif判定順番厳守、配列の参照でエラー出る*/
                 else if (/*二つのラインで四角分がこれまでに作成されているか判定*/
-                    (lightLine[loopCount].size() >= 2) &&
+                    (hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]].size() >= 2) &&
                     /*前の二つのラインを見て今のラインの頂点が両点座標が直線上にあるか判定*/
-                    (IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineOne, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineOne, linePosData.lineOne) &&
-                        IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineTwo, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineTwo, linePosData.lineTwo)))
+                    (IsPointOnLine(hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].LineStartPos, hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT] - 1/*後ろから2番目の配列参照*/].LineStartPos, hitCollisionLine.LineStartPos) &&
+                        IsPointOnLine(hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].LineEndPos, hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT] - 1/*後ろから2番目の配列参照*/].LineEndPos, hitCollisionLine.LineEndPos)))
                 {
                     // 前回登録した情報を書き換える
-                    lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/] = linePosData;
-                    hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1][lineDataIndexss[COLLISION_COUNT]] = hitCollisionLine;
+                    hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]] = hitCollisionLine;
                 }
                 else
                 {
                     // 情報を追加
-                    lightLine[loopCount].push_back(linePosData);
-                    hitCollisionLineData[loopCount].push_back({hitCollisionLine});
+                    hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]].push_back(hitCollisionLine);
                 }
             }
 
@@ -687,6 +716,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
             // ループ数インクリメント
             ++loopCount;
         }
+        preLoopCount = loopCount;
     }
 
     // 一周しているか
@@ -697,42 +727,59 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
         {
             // ループ数
             int loopCount = 0;
+            // 前の当たり判定
+            BaseCollision* preHitCollision = nullptr;
             while (true)
             {
-
                 // 情報保存
-                LIGHT_DATA linePosData;
-                linePosData.lineOne = currentNode->GetMyStartPos();
-                linePosData.lineTwo = currentNode->GetMyEndPos();
+                HIT_COLLISION_LINE hitCollisionLine;
+                hitCollisionLine.HitCollision = currentNode->GetHitCollision();
+                hitCollisionLine.PreLineHitCollision = preHitCollision;
+                hitCollisionLine.LineStartPos = currentNode->GetMyStartPos();
+                hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
+                preHitCollision = currentNode->GetHitCollision();
 
                 // このループ数最初の判定なら追加だけして次へ
-                if (lightLine.size() <= loopCount)
+                if (hitCollisionLineData.size() <= loopCount)
                 {
                     // 情報を追加
-                    lightLine.push_back({ linePosData });
-                    hitCollisionLineData.push_back({{currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo}});
+                    hitCollisionLineData.push_back({{hitCollisionLine}});
                 }
                 // 前に設定したことがあるから調べる
                 else
                 {
+                    const int lineDataIndexs[3] =
+                    {
+                        loopCount,
+                        hitCollisionLineData[loopCount].size() - 1,
+                        hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].size() - 1
+                    };
+                    constexpr int LOOP_COUNT = 0;
+                    constexpr int LIGHT_AREA_COUNT = 1;
+                    constexpr int COLLISION_COUNT = 2;
+
+                    // TODO:_ 入れ替え　加筆中
+
+                    /*出だしが違うオブジェクト*/
+                    if (hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].PreLineHitCollision != hitCollisionLine.PreLineHitCollision)
+                    {
+                        // 新しいライトエリアとして登録
+                        hitCollisionLineData[lineDataIndexs[LOOP_COUNT]].push_back({hitCollisionLine});
+                    }
                     /*このif判定順番厳守、配列の参照でエラー出る*/
-                    if (/*二つのラインで四角分がこれまでに作成されているか判定*/
-                        (lightLine[loopCount].size() >= 2) &&
+                    else if (/*二つのラインで四角分がこれまでに作成されているか判定*/
+                        (hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]].size() >= 2) &&
                         /*前の二つのラインを見て今のラインの頂点が両点座標が直線上にあるか判定*/
-                        (IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineOne, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineOne, linePosData.lineOne) &&
-                            IsPointOnLine(lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/].lineTwo, lightLine[loopCount][lightLine[loopCount].size() - 2/*後ろから2番目の配列参照*/].lineTwo, linePosData.lineTwo)))
+                        (IsPointOnLine(hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].LineStartPos, hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT] - 1/*後ろから2番目の配列参照*/].LineStartPos, hitCollisionLine.LineStartPos) &&
+                            IsPointOnLine(hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].LineEndPos, hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT] - 1/*後ろから2番目の配列参照*/].LineEndPos, hitCollisionLine.LineEndPos)))
                     {
                         // 前回登録した情報を書き換える
-                        lightLine[loopCount][lightLine[loopCount].size() - 1/*後ろから1番目の配列参照*/] = linePosData;
-                        hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].HitCollision = currentNode->GetHitCollision();
-                        hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].LineStartPos = linePosData.lineOne;
-                        hitCollisionLineData[loopCount][hitCollisionLineData[loopCount].size() - 1].LineEndPos = linePosData.lineTwo;
+                        hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]] = hitCollisionLine;
                     }
                     else
                     {
                         // 情報を追加
-                        lightLine[loopCount].push_back(linePosData);
-                        hitCollisionLineData[loopCount].push_back({currentNode->GetHitCollision(), linePosData.lineOne, linePosData.lineTwo});
+                        hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]].push_back(hitCollisionLine);
                     }
                 }
 
@@ -819,17 +866,17 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
             // 当たっている辺同士が交差してるなら交差点を追加
             bool IsAdd_AddDrawHitCollisionLine = false;
             do {// break用
-                std::vector<VECTOR2D> nowCollisionPositions = GettingHitCollisionEdge(nowCheckHitLine);
-                std::vector<VECTOR2D> nextCollisionPositions = GettingHitCollisionEdge(nextCheckHitLine);
+                LIGHT_EDGE_DATA nowCollisionPositions = GettingHitCollisionEdge(nowCheckHitLine);
+                LIGHT_EDGE_DATA nextCollisionPositions = GettingHitCollisionEdge(nextCheckHitLine);
                 std::vector<VECTOR2D> intersectionPos;
 
-                if ((nowCollisionPositions.size() == 2) && (nextCollisionPositions.size() == 2))
+                if (nowCollisionPositions.IsExist && nextCollisionPositions.IsExist)
                 {
-                    const VECTOR2D& nowStart = nowCollisionPositions[0];
-                    const VECTOR2D& nowEnd = nowCollisionPositions[1];
+                    const VECTOR2D& nowStart = nowCollisionPositions.LineOne;
+                    const VECTOR2D& nowEnd = nowCollisionPositions.LineTwo;
 
-                    const VECTOR2D& nextStart = nextCollisionPositions[0];
-                    const VECTOR2D& nextEnd = nextCollisionPositions[1];
+                    const VECTOR2D& nextStart = nextCollisionPositions.LineOne;
+                    const VECTOR2D& nextEnd = nextCollisionPositions.LineTwo;
 
                     const VECTOR2D nowEdgeDirection = nowEnd - nowStart;
                     const VECTOR2D nextEdgeDirection = nextEnd - nextStart;
@@ -856,7 +903,7 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                     intersectionPos.push_back(nowStart + nowEdgeDirection * nowEdgeIntersectionRatio);
                     for (int intersectionPosIndex = 0; intersectionPosIndex < intersectionPos.size(); ++intersectionPosIndex)
                     {
-                        addDrawHitCollisionLine.push_back({nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos, intersectionPos[intersectionPosIndex]});
+                        addDrawHitCollisionLine.push_back({nowCheckHitLine.HitCollision, nowCheckHitLine.PreLineHitCollision, nowCheckHitLine.LineStartPos, intersectionPos[intersectionPosIndex]});
                     }
                     IsAdd_AddDrawHitCollisionLine = true;
                 }
@@ -878,8 +925,8 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                 AddDrawLineToVertexBetweenLines(&setAddDrawHitCollisionLine, nowCheckHitLine.LineStartPos, nowCheckHitLine.LineEndPos, tempQuadrangle, vertexPositions, nowCheckHitLine.HitCollision, true);
                 if (0 < setAddDrawHitCollisionLine.size())
                 {
-                    HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[0];
-                    if (GettingExtendedLight(setAddDrawHitCollisionLine[setAddDrawHitCollisionLine.size() - 1], nextCheckHitLine, &setExtendedLight))
+                    HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[setAddDrawHitCollisionLine.size() - 1];
+                    if (GettingExtendedLight(setExtendedLight, nextCheckHitLine, &setExtendedLight))
                     {
                         // 当たり判定 点
                         Point2D tempPoint;
@@ -901,7 +948,7 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                 if (0 < setAddDrawHitCollisionLine.size())
                 {
                     HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[0];
-                    if (GettingExtendedLight(setAddDrawHitCollisionLine[0], nowCheckHitLine, &setExtendedLight))
+                    if (GettingExtendedLight(setExtendedLight, nowCheckHitLine, &setExtendedLight))
                     {
                         // 当たり判定 点
                         Point2D tempPoint;
@@ -964,9 +1011,9 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                     if (!setAddDrawHitCollisionLine.empty())
                     {
                         // 追加した角から次のオブジェクトまで光を伸ばす
-                        HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[0];
+                        HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine.back();
 
-                        if (GettingExtendedLight(setAddDrawHitCollisionLine.back(), nextCheckHitLine, &setExtendedLight))
+                        if (GettingExtendedLight(setExtendedLight, nextCheckHitLine, &setExtendedLight))
                         {
                             Point2D tempPoint;
                             tempPoint.SetShapeParameter(setExtendedLight.LineEndPos);
@@ -996,7 +1043,7 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                         // 追加した角から現在のオブジェクトまで光を伸ばす
                         HIT_COLLISION_LINE setExtendedLight = setAddDrawHitCollisionLine[0];
 
-                        if (GettingExtendedLight(setAddDrawHitCollisionLine[0], nowCheckHitLine, &setExtendedLight))
+                        if (GettingExtendedLight(setExtendedLight, nowCheckHitLine, &setExtendedLight))
                         {
                             Point2D tempPoint;
                             tempPoint.SetShapeParameter(setExtendedLight.LineEndPos);
@@ -1077,11 +1124,6 @@ std::vector<VECTOR2D> LightArea::GetVertexPositions(BaseCollision* collision, VE
         Ray2D* ray = dynamic_cast<Ray2D*>(collision);
         if (ray != nullptr)
         {
-            // 例
-            //左上: 0
-            //右上: 1
-            //左下: 2
-            // //右下: 3
             vertexPositions.push_back(ray->GetStartPos());
             vertexPositions.push_back(ray->GetEndPos());
         }
@@ -1146,6 +1188,127 @@ std::vector<VECTOR2D> LightArea::GetVertexPositions(BaseCollision* collision, VE
     return visibleVertexPositions;
 }
 
+// 辺を取得する
+std::vector<LIGHT_EDGE_DATA> LightArea::GetVisibleEdges(BaseCollision* collision, const VECTOR2D& viewPos)
+{
+    std::vector<VECTOR2D> vertexPositions = {};
+    switch (collision->GetCollisionType())
+    {
+    case CollisionType::CollisionType_Quadrangle2D:
+    {
+        Quadrangle2D* quadrangle = dynamic_cast<Quadrangle2D*>(collision);
+        if (quadrangle != nullptr)
+        {
+            // 例
+            //左上: 0
+            //右上: 1
+            //左下: 2
+            //右下: 3
+            vertexPositions.push_back(quadrangle->GetVertexPos(0));
+            vertexPositions.push_back(quadrangle->GetVertexPos(1));
+            vertexPositions.push_back(quadrangle->GetVertexPos(3));
+            vertexPositions.push_back(quadrangle->GetVertexPos(2));
+        }
+        break;
+    }
+    
+    case CollisionType::CollisionType_Ray2D:
+    {
+        Ray2D* ray = dynamic_cast<Ray2D*>(collision);
+        if (ray != nullptr)
+        {
+            vertexPositions.push_back(ray->GetStartPos());
+            vertexPositions.push_back(ray->GetEndPos());
+        }
+        break;
+    }
+    }
+
+    // 頂点がが2つ以下なら判定しない
+    if (vertexPositions.size() < 2)
+    {
+        return {};
+    }
+    else if (vertexPositions.size() == 2)
+    {
+        return { LIGHT_EDGE_DATA(vertexPositions[0], vertexPositions[1], true)};
+    }
+
+    std::vector<int> vertexPositionsIndexs = {};
+    // 全頂点を確認
+    for (int i = 0; i < vertexPositions.size(); ++i)
+    {
+        const VECTOR2D& vertexPos = vertexPositions[i];
+
+        bool isVisible = false;
+
+        // 全辺を確認
+        for (int j = 0; j < vertexPositions.size(); ++j)
+        {
+            // 辺の始点と終点
+            const VECTOR2D& edgeStart = vertexPositions[j];
+            const VECTOR2D& edgeEnd = vertexPositions[(j + 1) % vertexPositions.size()];
+
+            // 辺の方向ベクトル
+            const float edgeX = edgeEnd.GetX() - edgeStart.GetX();
+            const float edgeY = edgeEnd.GetY() - edgeStart.GetY();
+
+            // 辺の始点から視点へのベクトル
+            const float viewX = viewPos.GetX() - edgeStart.GetX();
+            const float viewY = viewPos.GetY() - edgeStart.GetY();
+
+            // 外積による可視判定
+            const float cross = edgeX * viewY - edgeY * viewX;
+
+            // 視点側を向いていない辺があれば除外
+            if (cross < 0.0f)
+            {
+                // 調べている頂点がこの辺の始点または終点なら除外
+                if (&vertexPos == &edgeStart || &vertexPos == &edgeEnd)
+                {
+                    isVisible = true;
+                    break;
+                }
+            }
+        }
+
+        // 見えている頂点だけ追加
+        if (isVisible)
+        {
+            vertexPositionsIndexs.push_back(i);
+        }
+    }
+
+    // 頂点がが2つ以下なら判定しない
+    if (vertexPositionsIndexs.size() < 2)
+    {
+        return {};
+    }
+    else if (vertexPositionsIndexs.size() == 2)
+    {
+        const int nextVertexNumber = ((vertexPositionsIndexs[0] + 1) % vertexPositions.size());
+        const int nextIndexNumber = vertexPositionsIndexs[1];
+        if (nextVertexNumber == nextIndexNumber)
+        {
+            return { LIGHT_EDGE_DATA(vertexPositions[vertexPositionsIndexs[0]], vertexPositions[nextIndexNumber], true)};
+        }
+        return {};
+    }
+
+    std::vector<LIGHT_EDGE_DATA> visibleEdges = {};
+    for (size_t i = 0; i < vertexPositionsIndexs.size(); ++i)
+    {
+        const int nextVertexNumber = ((vertexPositionsIndexs[i] + 1) % vertexPositions.size());
+        const int nextIndexNumber = vertexPositionsIndexs[(i + 1) % vertexPositionsIndexs.size()];
+        if (nextVertexNumber == nextIndexNumber)
+        {
+            visibleEdges.push_back(LIGHT_EDGE_DATA(vertexPositions[vertexPositionsIndexs[i]], vertexPositions[nextIndexNumber], true));
+        }
+    }
+
+    return visibleEdges;
+}
+
 // 	2本のラインの間にある頂点まで描画用ラインを追加する
 bool LightArea::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet)
 {
@@ -1205,7 +1368,7 @@ bool LightArea::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>*
         tempPoint.SetShapeParameter(vertexPosition);
         if (0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, &tempQuadrangle).mnResultParam)
         {
-            addDrawHitCollisionLine->push_back({hitCollision, startPos, vertexPosition});
+            addDrawHitCollisionLine->push_back({hitCollision, nullptr, startPos, vertexPosition});
         }
     }
 
@@ -1215,44 +1378,26 @@ bool LightArea::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>*
 
 
 // 当たっている辺を求める
-std::vector<VECTOR2D> LightArea::GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine)
+LIGHT_EDGE_DATA LightArea::GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine)
 {
     if (hitCollisionLine.HitCollision == nullptr)
     {
-        return {};
+        return LIGHT_EDGE_DATA(false);
     }
-    std::vector<VECTOR2D> hitCollisionPositions = GetVertexPositions(hitCollisionLine.HitCollision, hitCollisionLine.LineStartPos);
-    std::vector<VECTOR2D> hitCollisionEdge;
+    std::vector<LIGHT_EDGE_DATA> hitCollisionPositions = GetVisibleEdges(hitCollisionLine.HitCollision, hitCollisionLine.LineStartPos);
+    LIGHT_EDGE_DATA hitCollisionEdge;
 
     const VECTOR2D& hitPos = hitCollisionLine.LineEndPos;
 
     for (size_t i = 0; i < hitCollisionPositions.size(); ++i)
     {
-        const VECTOR2D& edgeStart = hitCollisionPositions[i];
-        const VECTOR2D& edgeEnd = hitCollisionPositions[(i + 1) % hitCollisionPositions.size()];
-
-        const VECTOR2D edgeDirection = edgeEnd - edgeStart;
-        const VECTOR2D hitDirection = hitPos - edgeStart;
-
-        // 外積が0に近ければ同一直線上
-        const float crossProduct = edgeDirection.GetX() * hitDirection.GetY() - edgeDirection.GetY() * hitDirection.GetX();
-
-        if (fabsf(crossProduct) > 0.0001f)
+        // 点が辺上にあるか確認
+        if (!IsPointOnLineSegment(hitPos, hitCollisionPositions[i].LineOne, hitCollisionPositions[i].LineTwo))
         {
             continue;
         }
 
-        // 線分の範囲内にあるか確認
-        const float dotProduct = hitDirection.GetX() * edgeDirection.GetX() + hitDirection.GetY() * edgeDirection.GetY();
-
-        const float edgeLengthSquared = edgeDirection.GetX() * edgeDirection.GetX() + edgeDirection.GetY() * edgeDirection.GetY();
-
-        if (dotProduct < 0.0f || dotProduct > edgeLengthSquared)
-        {
-            continue;
-        }
-        hitCollisionEdge.push_back(edgeStart);
-        hitCollisionEdge.push_back(edgeEnd);
+        hitCollisionEdge = hitCollisionPositions[i];
         break;
     }
 
@@ -1262,17 +1407,17 @@ std::vector<VECTOR2D> LightArea::GettingHitCollisionEdge(const HIT_COLLISION_LIN
 // 延長した光を取得する
 bool LightArea::GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight)
 {
-    std::vector<VECTOR2D> collisionEdge = GettingHitCollisionEdge(hitCollisionLine);
+    LIGHT_EDGE_DATA collisionEdge = GettingHitCollisionEdge(hitCollisionLine);
 
-    if (collisionEdge.size() != 2)
+    if (!collisionEdge.IsExist)
     {
         return false;
     }
     const VECTOR2D& lightStart = extendedLightLine.LineStartPos;
     const VECTOR2D& lightEnd   = extendedLightLine.LineEndPos;
 
-    const VECTOR2D& edgeStart = collisionEdge[0];
-    const VECTOR2D& edgeEnd   = collisionEdge[1];
+    const VECTOR2D& edgeStart = collisionEdge.LineOne;
+    const VECTOR2D& edgeEnd   = collisionEdge.LineTwo;
 
     // 光の方向ベクトル
     const float lightX = lightEnd.GetX() - lightStart.GetX();
@@ -1285,7 +1430,8 @@ bool LightArea::GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const
     // 光と辺が平行な場合
     const float denominator = lightX * edgeY - lightY * edgeX;
 
-    if (denominator == 0.0f)
+    constexpr float FLOAT_EPSILON = 0.00001f;
+    if (std::abs(denominator) < FLOAT_EPSILON)
     {
         return false;
     }
@@ -1354,27 +1500,8 @@ bool LightArea::GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCol
         const VECTOR2D& edgeStart = vertexPositions[i];
         const VECTOR2D& edgeEnd = vertexPositions[(i + 1) % vertexPositions.size()];
 
-        const VECTOR2D edgeDirection = edgeEnd - edgeStart;
-        const VECTOR2D hitDirection = lightEnd - edgeStart;
-
-        const float cross =
-            edgeDirection.GetX() * hitDirection.GetY() -
-            edgeDirection.GetY() * hitDirection.GetX();
-
-        if (fabsf(cross) > 0.0001f)
-        {
-            continue;
-        }
-
-        const float dot =
-            hitDirection.GetX() * edgeDirection.GetX() +
-            hitDirection.GetY() * edgeDirection.GetY();
-
-        const float edgeLengthSquared =
-            edgeDirection.GetX() * edgeDirection.GetX() +
-            edgeDirection.GetY() * edgeDirection.GetY();
-
-        if (dot < 0.0f || dot > edgeLengthSquared)
+        // 光の終点が辺上にあるか確認
+        if (!IsPointOnLineSegment(lightEnd, edgeStart, edgeEnd))
         {
             continue;
         }
@@ -1407,10 +1534,15 @@ bool LightArea::GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCol
 
         const float edgeX = edgeDirection.GetX();
         const float edgeY = edgeDirection.GetY();
-
+    
         const float denominator = lightX * edgeY - lightY * edgeX;
-
-        if (fabsf(denominator) <= 0.0001f)
+        const float edgeLengthSquared = edgeX * edgeX + edgeY * edgeY;
+        const float lightLengthSquared = lightX * lightX + lightY * lightY;
+        // ほぼ平行なら除外
+        constexpr float PARALLEL_EPSILON = 0.0001f;
+        if (denominator * denominator <=
+            PARALLEL_EPSILON * PARALLEL_EPSILON *
+            lightLengthSquared * edgeLengthSquared)
         {
             continue;
         }
@@ -1449,24 +1581,63 @@ bool LightArea::GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCol
 // 2本の衝突辺が平行か判定
 bool LightArea::IsParallelHitCollisionEdge(const HIT_COLLISION_LINE& firstLine, const HIT_COLLISION_LINE& secondLine)
 {
-    const auto firstEdge = GettingHitCollisionEdge(firstLine);
-    const auto secondEdge = GettingHitCollisionEdge(secondLine);
+    const LIGHT_EDGE_DATA firstEdge = GettingHitCollisionEdge(firstLine);
+    const LIGHT_EDGE_DATA secondEdge = GettingHitCollisionEdge(secondLine);
 
-    if (firstEdge.size() < 2 || secondEdge.size() < 2)
+    if (!(firstEdge.IsExist && secondEdge.IsExist))
     {
         return false;
     }
 
-    const VECTOR2D firstDirection = firstEdge[1] - firstEdge[0];
-    const VECTOR2D secondDirection = secondEdge[1] - secondEdge[0];
+    const VECTOR2D firstDirection = firstEdge.LineTwo - firstEdge.LineOne;
+    const VECTOR2D secondDirection = secondEdge.LineTwo - secondEdge.LineOne;
 
     const float cross = VECTOR2D::Cross(firstDirection, secondDirection);
 
     return fabsf(cross) <= 0.0001f;
 }
 
+// 点が線分上にあるか確認
+bool LightArea::IsPointOnLineSegment(const VECTOR2D& point, const VECTOR2D& lineStart, const VECTOR2D& lineEnd)
+{
+    const VECTOR2D edgeDirection = lineEnd - lineStart;
+    const VECTOR2D hitDirection = point - lineStart;
+
+    const float edgeLengthSquared = edgeDirection.MagnitudeNoSqrt();
+
+    // 線分の長さがほぼ0なら除外
+    if (edgeLengthSquared <= 0.0001f)
+    {
+        return false;
+    }
+
+    // 線分の範囲内にあるか確認
+    const float dot =
+        hitDirection.GetX() * edgeDirection.GetX() +
+        hitDirection.GetY() * edgeDirection.GetY();
+
+    if (dot < 0.0f || dot > edgeLengthSquared)
+    {
+        return false;
+    }
+
+    // 線分からの垂直距離を確認
+    const float cross =
+        edgeDirection.GetX() * hitDirection.GetY() -
+        edgeDirection.GetY() * hitDirection.GetX();
+
+    constexpr float DISTANCE_EPSILON = 0.1f;
+
+    if (cross * cross > DISTANCE_EPSILON * DISTANCE_EPSILON * edgeLengthSquared)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 // 3角情報にして描画
-void LightArea::DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData)
+void LightArea::DrawHitCollisionLineData(const std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> &hitCollisionLineData)
 {
     // 四角設定用変数設定
     constexpr unsigned int boxIndexMax = 4;
@@ -1487,12 +1658,15 @@ void LightArea::DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLI
     munLightAreaTriangleSize = 0;
     for (int i = 0; i < hitCollisionLineData.size(); ++i)
     {
-        // 四角ができるか判定
-        if (hitCollisionLineData[i].size() < 2)
+        for (int l = 0; l < hitCollisionLineData[i].size(); ++l)
         {
-            continue;
+            // 四角ができるか判定
+            if (hitCollisionLineData[i][l].size() < 2)
+            {
+                continue;
+            }
+            munLightAreaTriangleSize += hitCollisionLineData[i][l].size() - 1/*一番後ろは計測しない*/;
         }
-        munLightAreaTriangleSize += hitCollisionLineData[i].size() - 1/*一番後ろは計測しない*/;
     }
 
     munLightAreaTriangleSize *= 6;/*一つの4角で6個頂点を登録する*/
@@ -1510,34 +1684,37 @@ void LightArea::DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLI
 
     // 四角を三角で設定
     unsigned int lightAreaIndex = 0;
-    for (size_t i = 0; i < hitCollisionLineData.size(); ++i)
+    for (size_t lightAreaIterator = 0; lightAreaIterator < hitCollisionLineData.size(); ++lightAreaIterator)
     {
-        // 四角ができるか判定
-        if (hitCollisionLineData[i].size() < 2)
+        for (int i = 0; i < hitCollisionLineData[lightAreaIterator].size(); ++i)
         {
-            continue;
-        }
-        for (size_t l = 0; l < (hitCollisionLineData[i].size() - 1)/*四角にするために最後を除いて処理*/; ++l)
-        {
-            // 4頂点入力
+            // 四角ができるか判定
+            if (hitCollisionLineData[lightAreaIterator][i].size() < 2)
             {
-                VECTOR2D lightLeftDataStart = hitCollisionLineData[i][l].LineStartPos;
-                VECTOR2D lightLeftDataEnd = hitCollisionLineData[i][l].LineEndPos;
-                VECTOR2D lightRightDataStart = hitCollisionLineData[i][l + 1].LineStartPos;
-                VECTOR2D lightRightDataEnd = hitCollisionLineData[i][l + 1].LineEndPos;
-
-                setBoxPosDatas[0].pos = VGet(lightLeftDataStart.GetX(), lightLeftDataStart.GetY(), 0.0f);
-                setBoxPosDatas[1].pos = VGet(lightLeftDataEnd.GetX(), lightLeftDataEnd.GetY(), 0.0f);
-                setBoxPosDatas[2].pos = VGet(lightRightDataStart.GetX(), lightRightDataStart.GetY(), 0.0f);
-                setBoxPosDatas[3].pos = VGet(lightRightDataEnd.GetX(), lightRightDataEnd.GetY(), 0.0f);
+                continue;
             }
-            mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[0];
-            mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[1];
-            mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[2];
+            for (size_t l = 0; l < (hitCollisionLineData[lightAreaIterator][i].size() - 1)/*四角にするために最後を除いて処理*/; ++l)
+            {
+                // 4頂点入力
+                {
+                    VECTOR2D lightLeftDataStart = hitCollisionLineData[lightAreaIterator][i][l].LineStartPos;
+                    VECTOR2D lightLeftDataEnd = hitCollisionLineData[lightAreaIterator][i][l].LineEndPos;
+                    VECTOR2D lightRightDataStart = hitCollisionLineData[lightAreaIterator][i][l + 1].LineStartPos;
+                    VECTOR2D lightRightDataEnd = hitCollisionLineData[lightAreaIterator][i][l + 1].LineEndPos;
 
-            mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[1];
-            mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[2];
-            mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[3];
+                    setBoxPosDatas[0].pos = VGet(lightLeftDataStart.GetX(), lightLeftDataStart.GetY(), 0.0f);
+                    setBoxPosDatas[1].pos = VGet(lightLeftDataEnd.GetX(), lightLeftDataEnd.GetY(), 0.0f);
+                    setBoxPosDatas[2].pos = VGet(lightRightDataStart.GetX(), lightRightDataStart.GetY(), 0.0f);
+                    setBoxPosDatas[3].pos = VGet(lightRightDataEnd.GetX(), lightRightDataEnd.GetY(), 0.0f);
+                }
+                mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[0];
+                mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[1];
+                mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[2];
+
+                mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[1];
+                mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[2];
+                mstLightAreaTriangleVertex[lightAreaIndex++] = setBoxPosDatas[3];
+            }
         }
     }
     // 設定した3角を全部描画

@@ -1681,8 +1681,8 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 
 	// Mirror_2
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8333333f, 0.2f));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1212121f, 0.015f));
-	wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(32.0993814f), 2);
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1212121f, 0.015f)) * 2;
+	wallObject = new WallObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(32.0993814f));
 	objManager.Add(wallObject);
 
 	// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
@@ -1691,8 +1691,8 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 	// Mirror
 	{
 		objCenter = VECTOR2D(1150.836f, 78.84f);
-		blockSize = VECTOR2D(232.7273f, 16.2f);
-		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		blockSize = VECTOR2D(232.7273f, 16.2f) * 2;
+		wallObject = new WallObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f));
 		objManager.Add(wallObject);
 
 		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
@@ -1837,7 +1837,7 @@ void PuzzleScene1_9::GetMapSize(VECTOR2D &mapSize) const
 // ƒ‰ƒCƒg’B‚ÌŒõŽæ“¾
 void PuzzleScene1_9::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
-	lightsColor.push_back(0xff00ff);
+	lightsColor.push_back(0xffff00);
 }
 
 // 
