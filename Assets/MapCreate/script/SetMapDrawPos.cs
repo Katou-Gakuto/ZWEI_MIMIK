@@ -629,21 +629,21 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.NORMALIZE:
                     mapDataString +=
-                        "pos(x, y):(" + FloatToOutputString(posX / canvasWidth) +
+                        "pos(x, y): (" + FloatToOutputString(posX / canvasWidth) +
                         ", " + FloatToOutputString(posY / canvasHeight) + ")" +
                         "\n";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.COORDINATE:
                     mapDataString +=
-                        "pos(x, y):(" + FloatToOutputString(posX) +
+                        "pos(x, y): (" + FloatToOutputString(posX) +
                         ", " + FloatToOutputString(posY) + ")" +
                         "\n";
                     break;
 
                 case FILE_OUTPUT_PROCESS_2D_POS_MODE.MAGNIFICATION:
                     mapDataString +=
-                        "pos(x, y):(" + FloatToOutputString((posX / canvasWidth) * OutPutMagnificationPos.x) +
+                        "pos(x, y): (" + FloatToOutputString((posX / canvasWidth) * OutPutMagnificationPos.x) +
                         ", " + FloatToOutputString((posY / canvasHeight) * OutPutMagnificationPos.y) + ")" +
                         "\n";
                     break;
@@ -705,7 +705,7 @@ public class SetMapDrawPos : MonoBehaviour
             {
                 case FILE_OUTPUT_PROCESS_MODE.OBJECT_NOT_CORRECTION:
                     mapDataString += (
-                        "pos(x, y):("  + FloatToOutputString(objectData.OutPutDatas.MyPos.x)  +
+                        "pos(x, y): ("  + FloatToOutputString(objectData.OutPutDatas.MyPos.x)  +
                         ", "  + FloatToOutputString(-objectData.OutPutDatas.MyPos.y) + ")" +
                         "\n" +
                         "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
@@ -715,7 +715,7 @@ public class SetMapDrawPos : MonoBehaviour
 
                 case FILE_OUTPUT_PROCESS_MODE.STAGE_CORRECTION:
                     mapDataString += (
-                        "pos(x, y):("  + FloatToOutputString(objectData.OutPutDatas.MyPos.x - StageLeftUp.x)  +
+                        "pos(x, y): ("  + FloatToOutputString(objectData.OutPutDatas.MyPos.x - StageLeftUp.x)  +
                         ", "  + FloatToOutputString(StageLeftUp.y - objectData.OutPutDatas.MyPos.y) + ")" +
                         "\n" +
                         "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x) +
@@ -725,7 +725,7 @@ public class SetMapDrawPos : MonoBehaviour
 
                 case FILE_OUTPUT_PROCESS_MODE.STAGE_DRAW_CORRECTION:
                     mapDataString += (
-                        "pos(x, y):("  + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) / FileOutStageSize.x)  +
+                        "pos(x, y): ("  + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) / FileOutStageSize.x)  +
                         ", "  + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) / FileOutStageSize.y) + ")" +
                         "\n" +
                         "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x / FileOutStageSize.x) +
@@ -739,7 +739,7 @@ public class SetMapDrawPos : MonoBehaviour
                         float magnificationY = 1080.0f / FileOutStageSize.y;
 
                         mapDataString += (
-                            "pos(x, y):(" + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX) +
+                            "pos(x, y): (" + FloatToOutputString((objectData.OutPutDatas.MyPos.x - StageLeftUp.x) * magnificationX) +
                             ", " + FloatToOutputString((StageLeftUp.y - objectData.OutPutDatas.MyPos.y) * magnificationY) + ")" +
                             "\n" +
                             "size(x, y):(" + FloatToOutputString(objectData.OutPutDatas.MySize.x * magnificationX) +
