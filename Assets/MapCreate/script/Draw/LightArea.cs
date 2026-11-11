@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [ExecuteInEditMode]
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class LightArea : MonoBehaviour
 {
     [SerializeField, Header("光のポジション")]
@@ -87,7 +86,18 @@ public class LightArea : MonoBehaviour
 #endif
         mMeshFilter = GetComponent<MeshFilter>();
 
-        
+        if (mMeshFilter == null)
+        {
+            mMeshFilter = gameObject.AddComponent<MeshFilter>();
+        }
+
+        // MeshRendererがなければ追加
+        if (GetComponent<MeshRenderer>() == null)
+        {
+            gameObject.AddComponent<MeshRenderer>();
+        }
+
+        // メッシュ生成
         {
             mSectorMesh = new Mesh();
             mSectorMesh.name = "LightAreaMesh";
