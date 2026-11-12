@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <cstddef>
 
+#include "../E_Scene/BaseSceneManager.h"
+
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../S_Collision/Point2D.h"
 #include "../S_Collision/Quadrangle2D.h"
@@ -23,6 +25,11 @@
 #include "DrawSystem.h"
 
 #include "ResourceManager.h"
+
+
+#include "ImguiManager.h"
+static int DrawSelectNumber = 1;
+static int DrawSelectNumber1 = -1;
 
 // 
 LightAreaManager::LightAreaManager() :
@@ -105,6 +112,39 @@ void LightAreaManager::Initilize()
 // 描画
 void LightAreaManager::Draw()
 {
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            0,
+            1,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber1
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            1000,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::DRAG1
+        )
+    );
+
     // ライト描画処理
     { 
         // 開始
@@ -113,6 +153,48 @@ void LightAreaManager::Draw()
         LightDraw();
         // 終了
         EndLightDraw();
+    }
+
+    if (DrawSelectNumber == 0)
+    {
+        return;
+    }
+    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
+    {
+        LightArea* lightArea = mlNode[lightAreaIndex];
+        for (uint32_t i = 0; i < lightArea->GetLightLineCount(); i++)
+        {
+            if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 == i))
+            {
+                return;
+                //continue;
+            }
+
+            LightLineNode* currentNode = lightArea->GetFirstNodeBox()[i];
+            LightLineNode* nextNode;
+
+            if (currentNode == nullptr)
+            {
+                continue;
+            }
+
+            while (true)
+            {
+                // デバッグ用レイの可視化
+                DRAW_SYSTEM::DrawLine(
+                    currentNode->GetMyStartPos(),
+                    currentNode->GetMyEndPos(),
+                    0x00ffff);
+
+
+                if (!currentNode->AccessNext(&nextNode))
+                {
+                    break;
+                }
+
+                currentNode = nextNode;
+            }
+        }
     }
 }
 
@@ -174,6 +256,51 @@ bool LightAreaManager::ResizeArea(uint32_t useAreaCount)
 
     // 
     return true;
+}
+
+// 
+bool LightAreaManager::Data()
+{
+    // 
+    std::vector<BaseCollision2D*> objectCollisionBox;
+
+    // 
+    BaseScene* nowScene = Master::mpBaseSceneManager->SearchSceneAuto();
+    if (nowScene->GetBaseCollision2DManager()->SearchTag(CollisionTag::CollisionTag_Wall, objectCollisionBox) != 0)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    std::vector<BaseCollision2D*> mirrorCollisionBox;
+    if (nowScene->GetBaseCollision2DManager()->SearchTag(CollisionTag::CollisionTag_Mirror, mirrorCollisionBox) != 0)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    Ray2D tempRay;
+
+    // 
+    CollisionCheckResult2D resultCurrent = GetCollisionCheckResult2DZero();
+
+    // 
+    CollisionCheckResult2D resultNewr = GetCollisionCheckResult2DZero();
+
+    // 
+    for (uint32_t i = 0; i < this->mnDeactivateStartIndex; i++)
+    {
+        // 
+        this->mlNode[i]->CalculateNode(
+            objectCollisionBox,
+            mirrorCollisionBox,
+            tempRay,
+            resultCurrent,
+            resultNewr);
+    }
+
 }
 
 // どの光域に入っているかを確認する関数

@@ -8,17 +8,17 @@ struct FadeData
 	// フェードフラグ
 	bool IsFade;
 
-	// 経過時間
-	float elapsedTime;
+	// 経過フレーム
+	float elapsedFrame;
 
-	// 終了時間
-	float endTime;
+	// 終了フレーム
+	float endFrame;
 
-	// 幕の終了時間
-	const float CURTAIN_END_TIME;
+	// 幕の終了フレーム
+	const int CURTAIN_END_FRAME;
 
 	FadeData();
-	FadeData(const float curtainEndTime);
+	FadeData(const int curtainEndTime);
 
 	void Init(SceneCloseAnimNumber closeAnim);
 	void Init(SceneOpenAnimNumber openAnim);

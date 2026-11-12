@@ -406,11 +406,17 @@
     <ClCompile Include="Source\Y_Tool\MyEasing.cpp">
       <Filter>Source\Y_Tool</Filter>
     </ClCompile>
-    <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.cpp">
-      <Filter>Source\H_Katou\DebugLogs</Filter>
-    </ClCompile>
     <ClCompile Include="Source\H_Katou\Struct\FadeData.cpp">
       <Filter>Source\H_Katou\Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\PuzzleScene2.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\PuzzleScene3.cpp">
+      <Filter>Source\E_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Scene\PuzzleScene4.cpp">
+      <Filter>Source\E_Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -795,11 +801,17 @@
     <ClInclude Include="Source\F_PuzzleGimmick\FalseTrigger.h">
       <Filter>Source\F_PuzzleGimmick</Filter>
     </ClInclude>
-    <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.h">
-      <Filter>Source\H_Katou\DebugLogs</Filter>
-    </ClInclude>
     <ClInclude Include="Source\H_Katou\Struct\FadeData.h">
       <Filter>Source\H_Katou\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Scene\PuzzleScene2.h">
+      <Filter>Source\E_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Scene\PuzzleScene3.h">
+      <Filter>Source\E_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Scene\PuzzleScene4.h">
+      <Filter>Source\E_Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -163,6 +163,9 @@
     <ClCompile Include="Source\E_Scene\OptionScene.cpp" />
     <ClCompile Include="Source\E_Scene\BasePuzzleScene.cpp" />
     <ClCompile Include="Source\E_Scene\PuzzleScene1.cpp" />
+    <ClCompile Include="Source\E_Scene\PuzzleScene2.cpp" />
+    <ClCompile Include="Source\E_Scene\PuzzleScene3.cpp" />
+    <ClCompile Include="Source\E_Scene\PuzzleScene4.cpp" />
     <ClCompile Include="Source\E_Scene\StageSelectScene.cpp" />
     <ClCompile Include="Source\E_Scene\TestScene.cpp" />
     <ClCompile Include="Source\E_Scene\TitleScene.cpp" />
@@ -174,7 +177,6 @@
     <ClCompile Include="Source\G_LightArea\LightLineNode.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\DebugLog.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImgui.cpp" />
-    <ClCompile Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui.cpp" />
@@ -281,6 +283,9 @@
     <ClInclude Include="Source\E_Scene\OptionScene.h" />
     <ClInclude Include="Source\E_Scene\BasePuzzleScene.h" />
     <ClInclude Include="Source\E_Scene\PuzzleScene1.h" />
+    <ClInclude Include="Source\E_Scene\PuzzleScene2.h" />
+    <ClInclude Include="Source\E_Scene\PuzzleScene3.h" />
+    <ClInclude Include="Source\E_Scene\PuzzleScene4.h" />
     <ClInclude Include="Source\E_Scene\StageSelectScene.h" />
     <ClInclude Include="Source\E_Scene\TestScene.h" />
     <ClInclude Include="Source\E_Scene\TitleScene.h" />
@@ -294,7 +299,6 @@
     <ClInclude Include="Source\G_LightArea\LightLineNode.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\DebugLog.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImgui.h" />
-    <ClInclude Include="Source\H_Katou\DebugLogs\DebugVariableToImguiTest.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imconfig.h" />

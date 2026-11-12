@@ -149,7 +149,7 @@ int StageSelectScene::Update()
         else
         {
 			// 選択したステージのシーンに遷移する
-            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage), SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
 
             // 
             Master::mnLastPlayStageNum = this->mnCurrentStage;

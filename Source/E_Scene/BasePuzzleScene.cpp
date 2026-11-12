@@ -30,9 +30,11 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mpGoalShadow(nullptr),
     mbPouse(false),
     mbGoal(false),
-    mbFailed(false),
+    mbFailedLight(false),
+    mbFailedShadow(false),
     mnPouseCursorPos(0),
     mnResultCursorPos(0),
+    mnFailedModeFrame(0),
     BaseScene(tag)
 {
 }
@@ -106,7 +108,21 @@ int BasePuzzleScene::Initialize()
     this->mbGoal = false;
 
     // 
-    this->mbFailed = false;
+    this->mbFailedLight = false;
+
+    // 
+    this->mbFailedShadow = false;
+
+    // 
+    this->mnFailedModeFrame = 0;
+
+    // 
+    GameObject *obj = this->mpPlayerLight->GetMyObject();
+    obj->SetDrawFlag(true);
+    obj = this->mpPlayerShadow->GetMyObject();
+    obj->SetDrawFlag(true);
+
+    // ここで光域の範囲の初期化をしてほしい
 
     // 
     return 0;
@@ -128,7 +144,7 @@ int BasePuzzleScene::Finalize()
 int BasePuzzleScene::Update()
 {
     // 
-    if (this->mbFailed)
+    if (this->mbFailedLight || this->mbFailedShadow)
     {
         // 
         return this->FailedUpdate();
@@ -140,12 +156,14 @@ int BasePuzzleScene::Update()
         return this->ResultUpdate();
     }
 
-    // 
-    this->mbFailed = 
-        this->mpPlayerLight->GetInLightArea() == false ||
-        this->mpPlayerShadow->GetInLightArea() == true;
-    // this->mbFailed = false;
-    if (this->mbFailed)
+    // @Debug
+    // リトライ機能をONにしたい場合はここをtrueに、OFFにしたい場合はfalseにしてください
+    if (true)
+    {
+        this->mbFailedLight = this->mpPlayerLight->GetInLightArea() == false;
+        this->mbFailedShadow = this->mpPlayerShadow->GetInLightArea() == true;
+    }
+    if (this->mbFailedLight || this->mbFailedShadow)
     {
         // 
         return this->FailedUpdate();
@@ -234,7 +252,7 @@ int BasePuzzleScene::Draw()
     }
 
     // 
-    if (this->mbFailed)
+    if (this->mbFailedLight)
     {
         // 
         this->FailedDraw();
@@ -282,6 +300,45 @@ SceneTag BasePuzzleScene::StageNum2SceneTag(unsigned long stageNum)
         temp = SceneTag::ST_Puzzle1_10;
         break;
 
+    case 10:
+        temp = SceneTag::ST_Puzzle2_1;
+        break;
+    case 11:
+        temp = SceneTag::ST_Puzzle2_2;
+        break;
+    case 12:
+        temp = SceneTag::ST_Puzzle2_3;
+        break;
+    case 13:
+        temp = SceneTag::ST_Puzzle2_4;
+        break;
+
+    case 14:
+        temp = SceneTag::ST_Puzzle3_1;
+        break;
+    case 15:
+        temp = SceneTag::ST_Puzzle3_2;
+        break;
+    case 16:
+        temp = SceneTag::ST_Puzzle3_3;
+        break;
+    case 17:
+        temp = SceneTag::ST_Puzzle3_4;
+        break;
+
+    case 18:
+        temp = SceneTag::ST_Puzzle4_1;
+        break;
+    case 19:
+        temp = SceneTag::ST_Puzzle4_2;
+        break;
+    case 20:
+        temp = SceneTag::ST_Puzzle4_3;
+        break;
+    case 21:
+        temp = SceneTag::ST_Puzzle4_4;
+        break;
+
     default:
         break;
     }
@@ -327,6 +384,46 @@ unsigned long BasePuzzleScene::SceneTag2StageNum(SceneTag sceneTag)
     case SceneTag::ST_Puzzle1_10:
         temp = 9;
         break;
+
+    case SceneTag::ST_Puzzle2_1:
+        temp = 10;
+        break;
+    case SceneTag::ST_Puzzle2_2:
+        temp = 11;
+        break;
+    case SceneTag::ST_Puzzle2_3:
+        temp = 12;
+        break;
+    case SceneTag::ST_Puzzle2_4:
+        temp = 13;
+        break;
+
+    case SceneTag::ST_Puzzle3_1:
+        temp = 14;
+        break;
+    case SceneTag::ST_Puzzle3_2:
+        temp = 15;
+        break;
+    case SceneTag::ST_Puzzle3_3:
+        temp = 16;
+        break;
+    case SceneTag::ST_Puzzle3_4:
+        temp = 17;
+        break;
+
+    case SceneTag::ST_Puzzle4_1:
+        temp = 18;
+        break;
+    case SceneTag::ST_Puzzle4_2:
+        temp = 19;
+        break;
+    case SceneTag::ST_Puzzle4_3:
+        temp = 20;
+        break;
+    case SceneTag::ST_Puzzle4_4:
+        temp = 21;
+        break;
+
     default:
         break;
     }
@@ -635,9 +732,45 @@ int BasePuzzleScene::ResultDraw()
 // 
 int BasePuzzleScene::FailedUpdate()
 {
-    // とりあえず強制RETRY
-    Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
-    this->OnResetFlag();
+    // 
+    const uint32_t sceneCloseStart = 119;
+    if (sceneCloseStart == this->mnFailedModeFrame)
+    {
+        // 強制RETRY
+        Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+        this->OnResetFlag();
+    }
+
+    // 
+    const uint32_t highLightCount = 15;
+    if ((this->mnFailedModeFrame % highLightCount) == 0)
+    {
+        // 
+        GameObject *obj = nullptr;
+            
+        // 
+        if (this->mbFailedLight)
+        {
+            // 
+            obj = this->mpPlayerLight->GetMyObject();
+
+            // 
+            obj->SetDrawFlag(!obj->GetDrawFlag());
+        }
+
+        // 
+        if (this->mbFailedShadow)
+        {
+            // 
+            obj = this->mpPlayerShadow->GetMyObject();
+
+            // 
+            obj->SetDrawFlag(!obj->GetDrawFlag());
+        }
+    }
+
+    // 
+    this->mnFailedModeFrame++;
 
     // 
     return 0;

@@ -82,6 +82,9 @@ int LightExecutor::Initilize()
     this->UpdateLightParam();
 
     // 
+    this->CalculateLineEndPos();
+
+    // 
     return 0;
 }
 
@@ -191,8 +194,6 @@ bool LightExecutor::CalculateLineEndPos()
 
     // 
     return this->GetMyLightArea()->CalculateNode(
-        this->mfBaseAngle,
-        this->mfLength,
         objectCollisionBox,
         mirrorCollisionBox,
         tempRay,
@@ -276,6 +277,7 @@ bool LightExecutor::UpdateLightParam()
         this->GetMyLightArea()->SetParam(
             this->mpParentObject,
             this->mnLineCount,
+            this->mfLength,
             this->mfBaseAngle,
             this->mfLightAngle,
             this->mbFinal2Start);

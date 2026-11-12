@@ -47,11 +47,11 @@ int BaseSceneManager::SceneOpen()
     case SOAN::SOAN_CurtainUp:
     {
         // 幕が下がっていくがっていく処理
-        mstFadeOpenData.elapsedTime += Master::mpTimeManager->GetDeltaTime();
+        mstFadeOpenData.elapsedFrame += 1;
         VECTOR2D displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
-        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY() * (mstFadeOpenData.elapsedTime / mstFadeOpenData.endTime)));
+        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY() * (mstFadeOpenData.elapsedFrame / mstFadeOpenData.endFrame)));
 
-        if (mstFadeOpenData.elapsedTime >= mstFadeOpenData.endTime)
+        if (mstFadeOpenData.elapsedFrame >= mstFadeOpenData.endFrame)
         {
             mstFadeOpenData.IsFade = false;
         }
@@ -83,11 +83,11 @@ int BaseSceneManager::SceneClose()
     case SCAN::SCAN_CurtainDown:
     {
         // 幕が上がっていく処理
-        mstFadeCloseData.elapsedTime += Master::mpTimeManager->GetDeltaTime();
+        mstFadeCloseData.elapsedFrame += 1;
         VECTOR2D displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
-        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY()* (1.0f - (mstFadeCloseData.elapsedTime / mstFadeCloseData.endTime))));
+        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY()* (1.0f - (mstFadeCloseData.elapsedFrame / mstFadeCloseData.endFrame))));
 
-        if (mstFadeCloseData.elapsedTime >= mstFadeCloseData.endTime)
+        if (mstFadeCloseData.elapsedFrame >= mstFadeCloseData.endFrame)
         {
             mstFadeCloseData.IsFade = false;
         }
@@ -184,8 +184,8 @@ BaseSceneManager::BaseSceneManager() :
     mnClosingFrame(0),
     mlUniqueDataList(),
     mnBlackFadeHandle(-1),
-    mstFadeCloseData(0.5f),
-    mstFadeOpenData(0.5f)
+    mstFadeCloseData(30),
+    mstFadeOpenData(30)
 {
     for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
     {
@@ -293,20 +293,16 @@ int BaseSceneManager::Update()
         BaseScene *sceneOld = this->SearchSceneTag(this->mnSceneNow);
 
         // 
-        SceneTag oldTag = this->mnSceneOld;
-        SceneTag nowTag = this->mnSceneNow;
-
-        // 
-        this->mnSceneOld = this->mnSceneNow;
-        this->mnSceneNow = this->mnChangeScene;
-
-        // 
         if (this->CheckSceneCloseEnd())
         {
             // 
             this->mnClosingFrame = 0;
             this->mnClosingNumber = SCAN::SCAN_None;
             this->mbClosingUpdate = false;
+
+            // 
+            this->mnSceneOld = this->mnSceneNow;
+            this->mnSceneNow = this->mnChangeScene;
 
             // 
             if (sceneOld != nullptr)
@@ -328,10 +324,6 @@ int BaseSceneManager::Update()
                     // 
                     sceneNow->Update();
                 }
-
-                // 
-                this->mnSceneOld = oldTag;
-                this->mnSceneNow = nowTag;
 
                 // 
                 this->mnOpeningFrame++;
@@ -379,10 +371,6 @@ int BaseSceneManager::Update()
                 // 
                 this->mnOpeningFrame++;
             }
-
-            // 
-            this->mnSceneOld = oldTag;
-            this->mnSceneNow = nowTag;
 
             // 
             return 0;
@@ -517,18 +505,30 @@ void BaseSceneManager::ChangeScene(
     SceneOpenAnimNumber openAnim,
     bool openingUpdate)
 {
-    this->mnChangeScene = nextSceneTag;
-    this->mnClosingNumber = closeAnim;
-    this->mbClosingUpdate = closingUpdate;
-    this->mnOpeningNumber = openAnim;
-    this->mbOpeningUpdate = openingUpdate;
+    // 
+    if (this->mnClosingFrame == 0 &&
+        this->mnOpeningFrame == 0)
+    {
+        this->mnChangeScene = nextSceneTag;
+        this->mnClosingNumber = closeAnim;
+        this->mbClosingUpdate = closingUpdate;
+        this->mnOpeningNumber = openAnim;
+        this->mbOpeningUpdate = openingUpdate;
+    }
 
     SceneTransitionInit();
 }
 
 void BaseSceneManager::ChangeSceneMySelf()
 {
-    this->mnChangeScene = this->mnResreveScene;
+    // 
+    if (this->mnClosingFrame == 0 &&
+        this->mnOpeningFrame == 0)
+    {
+        this->mnChangeScene = this->mnResreveScene;
+
+        SceneTransitionInit();
+    }
 }
 
 void BaseSceneManager::SetResreveScene(
@@ -543,8 +543,6 @@ void BaseSceneManager::SetResreveScene(
     this->mbClosingUpdate = closingUpdate;
     this->mnOpeningNumber = openAnim;
     this->mbOpeningUpdate = openingUpdate;
-
-    SceneTransitionInit();
 }
 
 // 指定したシーンが現在のシーンか確認する

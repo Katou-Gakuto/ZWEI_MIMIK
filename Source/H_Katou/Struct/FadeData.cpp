@@ -3,18 +3,18 @@
 #include "BaseSceneManager.h"
 
 FadeData::FadeData()
-: CURTAIN_END_TIME(0.0f)
+: CURTAIN_END_FRAME(0)
 , IsFade(false)
-, elapsedTime(0.0f)
-, endTime(0.0f)
+, elapsedFrame(0.0f)
+, endFrame(0.0f)
 {
 }
 
-FadeData::FadeData(const float curtainMoveEndtime)
-: CURTAIN_END_TIME(curtainMoveEndtime)
+FadeData::FadeData(const int curtainMoveEndtime)
+: CURTAIN_END_FRAME(curtainMoveEndtime)
 , IsFade(false)
-, elapsedTime(0.0f)
-, endTime(0.0f)
+, elapsedFrame(0.0f)
+, endFrame(0.0f)
 {
 }
 
@@ -28,8 +28,8 @@ void FadeData::Init(SceneCloseAnimNumber closeAnim)
 
 	case SceneCloseAnimNumber::SCAN_CurtainDown:
 		IsFade = true;
-		elapsedTime = 0.0f;
-		endTime = CURTAIN_END_TIME;
+		elapsedFrame = 0.0f;
+		endFrame = (float)CURTAIN_END_FRAME;
 		break;
 	}
 }
@@ -44,8 +44,8 @@ void FadeData::Init(SceneOpenAnimNumber openAnim)
 
 	case SceneOpenAnimNumber::SOAN_CurtainUp:
 		IsFade = true;
-		elapsedTime = 0.0f;
-		endTime = CURTAIN_END_TIME;
+		elapsedFrame = 0.0f;
+		endFrame = (float)CURTAIN_END_FRAME;
 		break;
 	}
 }

@@ -71,13 +71,11 @@ public:
     ~LightArea();
 
     // 自身の光のレイの角度を設定する関数
-    void SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle, bool final2start);
+    void SetParam(void *parentObject, uint32_t lineCount, float stockMagnitude, float baseAngle, float lightAngle, bool final2start);
 
     // 自身の光の終了地点を計算し、設定する関数
     // 次のノードにつながる場合はtrueを返す
     bool CalculateNode(
-        float baseAngle,
-        float stockMagunitude,
         const std::vector<BaseCollision2D *> &objectCollBox,
         const std::vector<BaseCollision2D *> &mirrorCollBox,
         Ray2D &tempRay,
@@ -175,6 +173,9 @@ private:
 
     // 
     uint32_t mnLightLineCount;
+
+    // 
+    float mfStockMagnitude;
 
     // 
     bool mbOffLight;

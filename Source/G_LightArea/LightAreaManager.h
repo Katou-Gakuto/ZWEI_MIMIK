@@ -51,6 +51,9 @@ public:
     // 
     bool ResizeArea(uint32_t useAreaCount);
 
+    // 
+    bool Data();
+
     // どの光域に入っているかを確認する関数
     // 返り値のintは0で処理の成功の可否、引数のoutは自身が入っているAreaIndexを返す関数
     int CheckInLightArea(const VECTOR2D &pos, std::vector<int> &out);

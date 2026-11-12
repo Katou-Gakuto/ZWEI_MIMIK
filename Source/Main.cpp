@@ -12,7 +12,6 @@
 
 #include "ImguiManager.h"
 #include "DebugLogs/DebugVariableToImgui.h"
-#include "DebugLogs/DebugVariableToImguiTest.h"
 
 #ifdef _DEBUG
 #include "DebugLogs/DebugLog.h"
@@ -100,7 +99,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// DXライブラリ後
 	Master::Initialize();
-	DebugVariableToImguiTest::Initialize();
 
 	/*
 	* ゲームループ
@@ -127,7 +125,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// ↓約17ms経ってるか、とかメッセージの処理とか諸々が終わったよってところから
 		if (Master::mpTimeManager->GetNextUpdateFlag())
 		{
-			DebugVariableToImguiTest::Update();
 			Master::mpImguiManager->Update();
 
 

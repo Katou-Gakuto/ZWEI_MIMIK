@@ -41,7 +41,7 @@ LightArea::~LightArea()
 }
 
 // 
-void LightArea::SetParam(void *parentObject, uint32_t lineCount, float baseAngle, float lightAngle, bool final2start)
+void LightArea::SetParam(void *parentObject, uint32_t lineCount, float stockMagnitude, float baseAngle, float lightAngle, bool final2start)
 {
     // 
     this->mpParentObject = parentObject;
@@ -82,13 +82,14 @@ void LightArea::SetParam(void *parentObject, uint32_t lineCount, float baseAngle
         // 
         this->mlLineAngleBox[i] = MyFunctions::GetArrangeRad(startAngle + (oneAngle * static_cast<float>(i)));
     }
+
+    // 
+    this->mfStockMagnitude = stockMagnitude;
 }
 
 // 自身の光の終了地点を計算し、設定する関数
 // 次のノードにつながる場合はtrueを返す
 bool LightArea::CalculateNode(
-    float baseAngle,
-    float stockMagunitude,
     const std::vector<BaseCollision2D *> &objectCollBox,
     const std::vector<BaseCollision2D *> &mirrorCollBox,
     Ray2D &tempRay,
@@ -120,7 +121,7 @@ bool LightArea::CalculateNode(
         currentNode = this->mlLightFirstNode[i];
 
         // 
-        tempMagnitude = stockMagunitude;
+        tempMagnitude = this->mfStockMagnitude;
 
         // 計算を行い、次のノードに移る場合は処理を行う
         while (currentNode->CalculateEndPos(
