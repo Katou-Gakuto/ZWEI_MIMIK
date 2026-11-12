@@ -391,7 +391,8 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
             // 
             if (checkTri)
             {
-                checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempTriangle);
+                // この三角形があほほど大きくなることが多々ありそうだったので、ひとまずコメントアウト
+                // checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempTriangle);
             }
             else
             {
