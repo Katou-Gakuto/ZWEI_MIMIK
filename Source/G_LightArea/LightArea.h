@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "BitFlag.h"
 #include "VECTOR.h"
 
 #include "DxLib.h"
@@ -24,6 +25,8 @@ struct HIT_COLLISION_LINE
     BaseCollision* PreLineHitCollision;
     VECTOR2D LineStartPos;
     VECTOR2D LineEndPos;
+
+    std::vector<BIT_FLAG<unsigned long long>> LightAreaRoute;
 };
 
 struct LIGHT_EDGE_DATA
@@ -186,8 +189,8 @@ private:
     // 光の色
     uint32_t mnLightColor = 0xffffff;
 
-    // // ライトラインポジションデータ
-    // std::vector<std::vector<LIGHT_DATA>> mstLightLine;
+    // 最大ノード数
+    int mnNodeMaxCount;
 
     // ライトエリア三角
     VERTEX2D* mstLightAreaTriangleVertex;

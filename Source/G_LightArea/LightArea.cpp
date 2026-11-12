@@ -27,7 +27,7 @@ LightArea::LightArea() :
     mbOffLight(false),
     mbFinal2Start(false),
     mnLightColor(0xffffff),
-    // mstLightLine(),
+    mnNodeMaxCount(-1),
     mstLightAreaTriangleVertex(nullptr),
     munLightAreaTriangleSize(0),
     mnPreLightAreaTriangleVertexIndexCount(0),
@@ -458,6 +458,35 @@ void LightArea::DrawLightArea()
         return;
     }
 
+    // 最大ノード数取得
+    int setNodeMaxCount = -1;
+    LightLineNode* currentNode;
+    LightLineNode* nextNode;
+    for (uint32_t i = 0; i < mnLightLineCount; ++i)
+    {
+        currentNode = this->GetFirstNodeBox()[i];
+
+        if (currentNode == nullptr)
+        {
+            continue;
+        }
+        int nodeCount = 0;
+        while (true)
+        {
+            // ノード数インクリメント
+            ++nodeCount;
+            // 次のノードがあるか確認
+            if (!currentNode->AccessNext(&nextNode))
+            {
+                break;
+            }
+            // 次のノード設定
+            currentNode = nextNode;
+        }
+        setNodeMaxCount = max(setNodeMaxCount, nodeCount);
+    }
+    mnNodeMaxCount = setNodeMaxCount;
+
 
     // 光の線取得
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLine = DrawLingAreaHitCollisionsGetProcess();
@@ -511,17 +540,24 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
         return hitCollisionLineData;
     }
 
+    // 最大ノード数に合わせてビット数を増やす
+    if (mnNodeMaxCount == -1)
+    {
+        return hitCollisionLineData;
+    }
+    std::vector<BIT_FLAG<unsigned long long>> lightAreaRoute;
+    // 光エリアルートのビット数
+    constexpr size_t LIGHT_AREA_ROUTE_BIT_NUMBER = sizeof(unsigned long long);
+    lightAreaRoute.resize((mnNodeMaxCount / LIGHT_AREA_ROUTE_BIT_NUMBER) + 1);
+    for (int i  = 0; i < lightAreaRoute.size(); ++i)
+    {
+        lightAreaRoute[i].flags = 0u;
+    }
+    std::vector<BIT_FLAG<unsigned long long>> setLightAreaRoute = lightAreaRoute;
+
+
     LightLineNode* currentNode;
     LightLineNode* nextNode;
-
-    // // 
-    // BIT_FLAG<unsigned long long> s;
-    // while (s.flags >= mnLightLineCount)
-    // {
-    //     s = s.GetFlag_BitShift(1) | 0x1;
-    // }
-    // unsigned long long 
-
     int preLoopCount = -1;
     for (uint32_t i = 0; i < mnLightLineCount; ++i)
     {
@@ -534,6 +570,12 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
         // ループ数
         int loopCount = 0;
+        
+        // 光エリアルート関連
+        int lightAreaRouteNumber = 0;
+        int lightAreaRouteForLoopNumber = 0;
+        setLightAreaRoute = lightAreaRoute;
+
         // 前の当たり判定
         BaseCollision* preHitCollision = nullptr;
         while (true)
@@ -545,6 +587,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
             hitCollisionLine.LineStartPos = currentNode->GetMyStartPos();
             hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
             preHitCollision = currentNode->GetHitCollision();
+            hitCollisionLine.LightAreaRoute = setLightAreaRoute;
 
             // このループ数最初の判定なら追加だけして次へ
             if (hitCollisionLineData.size() <= loopCount)
@@ -603,6 +646,13 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
             // ループ数インクリメント
             ++loopCount;
+
+            ++lightAreaRouteNumber;
+            if (lightAreaRouteNumber >= LIGHT_AREA_ROUTE_BIT_NUMBER)
+            {
+                lightAreaRouteNumber = 0;
+                ++lightAreaRouteForLoopNumber;
+            }
         }
         preLoopCount = loopCount;
     }
