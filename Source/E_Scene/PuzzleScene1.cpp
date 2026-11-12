@@ -107,7 +107,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	falseTrigger = new FalseTrigger;
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(falseTrigger, baseExecutor);
 
 	// ライトにHoldを追加する
@@ -118,7 +118,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 }
 
 // 
-void PuzzleScene1_1::GetMasterObjectsInitPos(
+void PuzzleScene1_1::GetMastObjectsInitPos(
     VECTOR2D &playerLightPos,
     VECTOR2D &playerShadowPos,
     VECTOR2D &goalLightPos,
@@ -154,6 +154,12 @@ void PuzzleScene1_1::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_1::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xffff00);
 }
 
 // 
@@ -269,7 +275,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
-	buttonTrigger = new ButtonTrigger;
+	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, false);
@@ -297,7 +303,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
-	buttonTrigger = new ButtonTrigger;
+	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[2], 0);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 3, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, false);
@@ -325,7 +331,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
-	buttonTrigger = new ButtonTrigger;
+	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[1], 0);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 5, 150, MyFunctions::Deg2Rad(180.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, false);
@@ -335,7 +341,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_2::GetMasterObjectsInitPos(
+void PuzzleScene1_2::GetMastObjectsInitPos(
     VECTOR2D &playerLightPos,
     VECTOR2D &playerShadowPos,
     VECTOR2D &goalLightPos,
@@ -371,6 +377,12 @@ void PuzzleScene1_2::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_2::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -486,7 +498,7 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
-	buttonTrigger = new ButtonTrigger;
+	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	buttonTrigger->AddButton(buttonObject[1], 1);
 	baseExecutor = new LightExecutor(
@@ -510,7 +522,7 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_3::GetMasterObjectsInitPos(
+void PuzzleScene1_3::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -546,6 +558,11 @@ void PuzzleScene1_3::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_3::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -714,7 +731,7 @@ int PuzzleScene1_4::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_4::GetMasterObjectsInitPos(
+void PuzzleScene1_4::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -750,6 +767,11 @@ void PuzzleScene1_4::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_4::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -996,7 +1018,7 @@ int PuzzleScene1_5::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_5::GetMasterObjectsInitPos(
+void PuzzleScene1_5::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -1032,6 +1054,11 @@ void PuzzleScene1_5::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_5::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1138,7 +1165,7 @@ int PuzzleScene1_6::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_6::GetMasterObjectsInitPos(
+void PuzzleScene1_6::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -1174,6 +1201,11 @@ void PuzzleScene1_6::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_6::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1283,7 +1315,7 @@ int PuzzleScene1_7::MapCreate(GameObjectManager &objManager)
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
-	buttonTrigger = new ButtonTrigger;
+	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
@@ -1306,7 +1338,7 @@ int PuzzleScene1_7::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_7::GetMasterObjectsInitPos(
+void PuzzleScene1_7::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -1342,6 +1374,11 @@ void PuzzleScene1_7::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_7::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1380,6 +1417,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 	GimmickObjectController *gimmickController = nullptr;
 	ButtonTrigger *buttonTrigger = nullptr;
 	BaseGimmickExecutor *baseExecutor = nullptr;
+	RouteMoveExecutor *moveExecutor = nullptr;
 	PuzzleGimmickActiveParam tempGimmickParam;
 	TeleportObject *teleportObjectA = nullptr;
 	TeleportObject *teleportObjectB = nullptr;
@@ -1412,7 +1450,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 	objManager.Add(wallObject);
 
 	// Switch_Black
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1363636f, 0.9f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1363636f, 0.7f));
 	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04848485f, 0.08f));
 	buttonObject[0] = new ButtonObject(false, 0, objCenter, blockSize);
 	objManager.Add(buttonObject[0]);
@@ -1422,6 +1460,55 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04848485f, 0.08f));
 	buttonObject[1] = new ButtonObject(false, 0, objCenter, blockSize);
 	objManager.Add(buttonObject[1]);
+
+	// Obstacle_Left
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1f, 0.5f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.2f, 0.05f));
+	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
+	objManager.Add(wallObject);
+
+	// Obstacle_Right
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.9f, 0.5f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.2f, 0.05f));
+	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
+	objManager.Add(wallObject);
+
+	// Moving_Obstacle
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.7f, 0.5f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.2f, 0.05f));
+	wallObject = new WallObject(true, objCenter, blockSize, 0.0f);
+	objManager.Add(wallObject);
+
+	// 自動移動のギミックの詳細を設定する
+	RouteData tempRoute(RouteOffMode::RouteOffMode_Return, false, 5);
+
+	// 回転はずっとしません
+	RouteKeyFrame keyFrame;
+	keyFrame.mfRadian = 0.0f;
+
+	// 1つ目のキーフレーム
+	keyFrame.mnFrameCount = 0;
+	keyFrame.mvPos = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.7f, 0.5f));
+	tempRoute.Add(keyFrame);
+
+	// 2つ目のキーフレーム
+	keyFrame.mnFrameCount = 1000;
+	keyFrame.mvPos = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.3f, 0.5f));
+	tempRoute.Add(keyFrame);
+
+	// 3つ目のキーフレーム
+	keyFrame.mnFrameCount = 1100;
+	keyFrame.mvPos = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.3f, 0.5f));
+	tempRoute.Add(keyFrame);
+
+	// 自動移動のギミックを追加する
+	gimmickController = wallObject->GetGimmickController();
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
+	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
+	buttonTrigger->AddButton(buttonObject[0], 0);
+	buttonTrigger->AddButton(buttonObject[1], 0);
+	moveExecutor = new RouteMoveExecutor(tempGimmickParam, wallObject, tempRoute);
+	gimmickController->AddGimmick(buttonTrigger, moveExecutor);
 
 	// Light_Left
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1363636f, 0.15f));
@@ -1433,7 +1520,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// Light_Center
@@ -1444,13 +1531,10 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
-	buttonTrigger = new ButtonTrigger;
-	buttonTrigger->AddButton(buttonObject[0], 0);
-	buttonTrigger->AddButton(buttonObject[1], 0);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
-	gimmickController->AddGimmick(buttonTrigger, baseExecutor);
+		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
+	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// Light_Right
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8636364f, 0.15f));
@@ -1462,14 +1546,14 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// 
 	return 0;
 }
 
-void PuzzleScene1_8::GetMasterObjectsInitPos(
+void PuzzleScene1_8::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -1487,7 +1571,7 @@ void PuzzleScene1_8::GetMasterObjectsInitPos(
 	playerShadowPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
 		mapSize,
-		VECTOR2D(0.07575758f, 0.9f));
+		VECTOR2D(0.07575758f, 0.7f));
 
 	goalLightPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
@@ -1505,6 +1589,11 @@ void PuzzleScene1_8::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_8::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
 }
 
 // 
@@ -1584,8 +1673,11 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 	// Mirror_1
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1672727f, 0.5f)) + VECTOR2D(100.f, 0.0f);
 	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1212121f, 0.015f));
-	wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(45.0000038f), 0);
+	wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(225.0f), 2);
 	objManager.Add(wallObject);
+
+	// 鏡にHoldを追加する
+	wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
 
 	// Mirror_2
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8333333f, 0.2f));
@@ -1593,24 +1685,30 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 	wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(32.0993814f), 2);
 	objManager.Add(wallObject);
 
+	// 鏡にHoldを追加する
+	wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+
 	// Light_Left
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1666667f, 0.1f)) + VECTOR2D(100.f, 0.0f);
 	objRadius = 40.0f;
 	lightObject = new LightObject(objCenter, objRadius);
 	objManager.Add(lightObject);
 
+	// // 鏡にHoldを追加する
+	// lightObject->AddComponent(new HoldObjectController(lightObject, false, false, false, false, true));
+
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 100, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 1500.0f, true);
+		tempGimmickParam, lightObject, 0, 100, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(60.0f), 30000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// 
 	return 0;
 }
 
-void PuzzleScene1_9::GetMasterObjectsInitPos(
+void PuzzleScene1_9::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -1646,6 +1744,12 @@ void PuzzleScene1_9::GetMapSize(VECTOR2D &mapSize) const
 {
 	// 
 	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene1_9::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xffff00);
 }
 
 // 
@@ -1722,14 +1826,14 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 	objManager.Add(wallObject);
 
 	// Obstacle_Lower
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.4393939f, 0.85f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.4393939f, 0.75f));
 	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8484849f, 0.05f));
 	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
 	objManager.Add(wallObject);
 
 	// Obstacle_Vertical
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.3787879f, 0.4f));
-	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04848485f, 0.2f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.35f, 0.36f));
+	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04848485f, 0.225f));
 	wallObject = new WallObject(false, objCenter, blockSize, 0.0f);
 	objManager.Add(wallObject);
 
@@ -1743,24 +1847,11 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(90.0f), 1500.0f, true);
-	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
-
-	// Light_Center
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04545455f, 0.6f));
-	objRadius = 40.0f;
-	lightObject = new LightObject(objCenter, objRadius);
-	objManager.Add(lightObject);
-
-	// 光のON/OFFのギミック
-	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
-	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(90.0f), 1500.0f, true);
+		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// Light_Right
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.9545454f, 0.7f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.9545454f, 0.625f));
 	objRadius = 40.0f;
 	lightObject = new LightObject(objCenter, objRadius);
 	objManager.Add(lightObject);
@@ -1769,7 +1860,7 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 1500.0f, true);
+		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(60.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// WarpSwitch_Red_1
@@ -1779,7 +1870,7 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 	objManager.Add(teleportObjectA);
 
 	// WarpSwitch_Red_2
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8636364f, 0.7f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8636364f, 0.625f));
 	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04848485f, 0.08f));
 	teleportObjectB = new TeleportObject(objCenter, blockSize);
 	objManager.Add(teleportObjectB);
@@ -1788,7 +1879,7 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 	teleportObjectA->GetTeleportController()->ConnectPair(teleportObjectB->GetTeleportController());
 
 	// WarpSwitch_Green_1
-	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8636364f, 1.0f));
+	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.8636364f, 0.875f));
 	blockSize = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.04848485f, 0.08f));
 	teleportObjectA = new TeleportObject(objCenter, blockSize);
 	objManager.Add(teleportObjectA);
@@ -1806,7 +1897,7 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 	return 0;
 }
 
-void PuzzleScene1_10::GetMasterObjectsInitPos(
+void PuzzleScene1_10::GetMastObjectsInitPos(
 	VECTOR2D &playerLightPos,
 	VECTOR2D &playerShadowPos,
 	VECTOR2D &goalLightPos,
@@ -1824,12 +1915,12 @@ void PuzzleScene1_10::GetMasterObjectsInitPos(
 	playerShadowPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
 		mapSize,
-		VECTOR2D(0.1363636f, 1.0f));
+		VECTOR2D(0.1363636f, 0.875f));
 
 	goalLightPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
 		mapSize,
-		VECTOR2D(0.4393939f, 0.7f));
+		VECTOR2D(0.2393939f, 0.625f));
 
 	goalShadowPos = VECTOR2D::GetLerpPos(
 		VECTOR2D::GetZero(),
@@ -1844,8 +1935,13 @@ void PuzzleScene1_10::GetMapSize(VECTOR2D &mapSize) const
 	mapSize.SetXY(1920.0f, 1080.0f);
 }
 
+// ライト達の光取得
+void PuzzleScene1_10::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+}
+
 // 
 uint32_t PuzzleScene1_10::GetUseLightAreaCount() const
 {
-	return 3;
+	return 2;
 }

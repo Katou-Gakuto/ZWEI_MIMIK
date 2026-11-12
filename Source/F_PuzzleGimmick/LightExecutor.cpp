@@ -82,6 +82,9 @@ int LightExecutor::Initilize()
     this->UpdateLightParam();
 
     // 
+    this->CalculateLineEndPos();
+
+    // 
     return 0;
 }
 
@@ -191,8 +194,6 @@ bool LightExecutor::CalculateLineEndPos()
 
     // 
     return this->GetMyLightArea()->CalculateNode(
-        this->mfBaseAngle,
-        this->mfLength,
         objectCollisionBox,
         mirrorCollisionBox,
         tempRay,
@@ -212,6 +213,13 @@ float LightExecutor::GetLength() const
 {
     // 
     return this->mfLength;
+}
+
+// このライトの基本角度を取得する関数
+float LightExecutor::GetBaseAngle() const
+{
+    // 
+    return this->mfBaseAngle;
 }
 
 // このライトの長さを設定する関数
@@ -269,6 +277,7 @@ bool LightExecutor::UpdateLightParam()
         this->GetMyLightArea()->SetParam(
             this->mpParentObject,
             this->mnLineCount,
+            this->mfLength,
             this->mfBaseAngle,
             this->mfLightAngle,
             this->mbFinal2Start);

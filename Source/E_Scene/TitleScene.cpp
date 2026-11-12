@@ -5,17 +5,23 @@
 #include "BaseSceneManager.h"
 
 #include "../H_Katou/Singleton/KeyState.h"
+#include "../H_Katou/Singleton/EndManager.h"
 
 #include "../Z_Except/ResourceManager.h"
 #include "../Z_Except/SoundManager.h"
 #include "../Z_Except/Master.h"
+
 #include "DrawSystem.h"
+
+#include "EndManager.h"
 
 // 
 TitleScene::TitleScene() :
-    mbLogoPhase(true),
-    mnCurrentMode(TitleSelectMode::TitleSelectMode_StageSelect),
-    BaseScene(SceneTag::ST_Title)
+  mbLogoPhase(true),
+  mnCurrentMode(TitleSelectMode::TitleSelectMode_StageSelect),
+  BaseScene(SceneTag::ST_Title),
+  Character1(*(new VECTOR2D(1920, 250))), // Dynamically allocate VECTOR2D object
+  Character2(*(new VECTOR2D(0, 790)))  // Dynamically allocate VECTOR2D object
 {
 }
 
@@ -44,8 +50,21 @@ int TitleScene::Create()
     // タイトルの一番最初のやつを描画するフェーズに設定する
     this->mbLogoPhase = true;
 
-    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴW(仮).png");
+    TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKロゴ(仮).png");
+    Light = Master::mpResourceManager->LoadGraphics("Resource/仮.png");
+    PRESSANYBUTTON = Master::mpResourceManager->LoadGraphics("Resource/文字/PRESS_ANY_BUTTON_B.png");
+    STAGESELECT    = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGE_SELECT_B.png");
+    OPTION         = Master::mpResourceManager->LoadGraphics("Resource/文字/OPTION_B.png");
+    CREDIT         = Master::mpResourceManager->LoadGraphics("Resource/文字/CREDIT_B.png");
+    EXIT           = Master::mpResourceManager->LoadGraphics("Resource/文字/EXIT_B.png");
+
+    AButtonHandle = Master::mpResourceManager->LoadGraphics("Resource/AButton.png");
+    BButtonHandle = Master::mpResourceManager->LoadGraphics("Resource/BButton.png");
+
+    DecisionHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/決定_B.png");
+    BackHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/戻る_B.png");
     Master::mpSoundManager->SetBGMVolume(180);
+    Master::mpSoundManager->SetBGMVolume(0);// DELETE:_
     Master::mpSoundManager->SetSEVolume(180);
     Master::mpSoundManager->ChangeVolume();
 
@@ -56,14 +75,15 @@ int TitleScene::Create()
 // 
 int TitleScene::Initialize()
 {
-    // 
-    this->mbLogoPhase = true;
-
 	// カーソルを一番上に設定する
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
     Master::mpSoundManager->PlayBGM("Resource/Sound/空.wav");
+    fwfw = 0;
+    Time = 0;
+    vec = 20;
 
+    CannotOperate = 0;
     // 
     return 0;
 }
@@ -71,6 +91,7 @@ int TitleScene::Initialize()
 // 
 int TitleScene::Finalize()
 {
+    
     // 
     return 0;
 }
@@ -84,6 +105,34 @@ int TitleScene::Update()
     // 
     temp = this->UpdateModeSelect();
 
+    // 画像をふわふわさせる
+    Time += 0.05f;
+
+    fwfw = sinf(Time) * vec;
+    Character1.SetX(Character1.GetX() - 10);
+    Character2.SetX(Character2.GetX() + 10);
+
+    if (Character1.GetX() <= -200)
+    {
+		Character1.SetX(2120);
+    }
+    if (Character2.GetX() >= 2120)
+    {
+		Character2.SetX(-200);
+    }
+
+    // 操作不能時間で画像をずらす
+    if(CannotOperate > 0)
+    {
+        CannotOperate--;
+        Swipe += 200;
+    }
+    else if (CannotOperate < 0)
+    {
+        CannotOperate++;
+        Swipe -= 200;
+    }
+
     // 
     return temp;
 }
@@ -93,118 +142,106 @@ int TitleScene::Draw()
 {
     // 
     int returnValue = 0;
+    std::string message;
 
-    // タイトルの一番最初のやつを描画する
-    DRAW_SYSTEM::DrawString(
-        VECTOR2D(0.0f, 0.0f),
-        "TITLE SCENE\n",
-        GetColor(255, 255, 255));
+    DRAW_SYSTEM::DrawBox(VECTOR2D(0, 540), VECTOR2D(1920, 1080), 0xFFFDF7, true);
 
-    // 
-    if (this->mbLogoPhase)
+    DrawBox(Character1.GetX(), Character1.GetY(),
+        Character1.GetX() + 100, Character1.GetY() + 200,
+        0xFF0000, true);
+    DrawBox(Character2.GetX(), Character2.GetY(),
+        Character2.GetX() + 100, Character2.GetY() + 200,
+        0xFF0000, true);
+
+
+    // タイトルロゴを描画
+    DrawExtendGraph(550 + Swipe, 471       , 1375 + Swipe, 611       , TitleLogo, true);
+    DrawExtendGraph(680 + Swipe, 850 + fwfw, 1280 + Swipe, 900 + fwfw, PRESSANYBUTTON, true);
+
+	// モード選択肢を描画(選択中ならふわふわ)
+    if (this->mnCurrentMode == TitleSelectMode_StageSelect)
     {
-        // タイトルの一番最初のやつを描画する
-        DRAW_SYSTEM::DrawString(
-            VECTOR2D(900, 400),
-            "   ZWEI MIMIK   \n"
-            "                \n"
-            "PRESS ANY BUTTON",
-            GetColor(255, 255, 255));
-
-        // タイトルロゴを描画
-        DrawExtendGraph(700, 200,1250,300, TitleLogo, true);
+        DrawExtendGraph(-1310 + Swipe, 575       , -1260 + Swipe, 625       , Light, true);
+        DrawExtendGraph(-1250 + Swipe, 575 + fwfw, -750 + Swipe, 625 + fwfw, STAGESELECT, true);
+        message = "ゲームを開始します";
     }
     else
     {
-        // 描画する文字列
-        std::string message = "";
-
-        // 現在EXITを指している場合と層でない場合で処理を変える
-        if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_StageSelect)
-        {
-            // 右矢印を設定する
-            message = "⇒";
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 文字列をさらに追加する
-        message += "STAGE SELECT";
-
-        // 文字列を描画する
-        DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 200),
-            message.c_str(),
-            GetColor(255, 255, 255));
-
-        // 現在EXITを指している場合と層でない場合で処理を変える
-        if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_Option)
-        {
-            // 右矢印を設定する
-            message = "⇒";
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 文字列をさらに追加する
-        message += "OPTION";
-
-        // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            400,
-            message.c_str(),
-            GetColor(255, 255, 255));
-
-        // 現在CREDITを指している場合と層でない場合で処理を変える
-        if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_Credit)
-        {
-            // 右矢印を設定する
-            message = "⇒";
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 
-        message += "CREDIT";
-
-        // 文字列を描画する
-        DxLib::DrawString(
-            400,
-            600,
-            message.c_str(),
-            GetColor(255, 255, 255));
-
-        // 現在EXITを指している場合と層でない場合で処理を変える
-        if (this->mnCurrentMode == TitleSelectMode::TitleSelectMode_Exit)
-        {
-            // 右矢印を設定する
-            message = "⇒";
-        }
-        else
-        {
-            // 矢印分の空白を設定する
-            message = "　";
-        }
-
-        // 
-        message += "EXIT";
-
-        // 文字列を描画する
-        DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 800),
-            message.c_str(),
-            GetColor(255, 255, 255));
+        DrawExtendGraph(-1250 + Swipe, 575, -750 + Swipe, 625, STAGESELECT, true);
     }
+
+    if (this->mnCurrentMode == TitleSelectMode_Option)
+    {
+        DrawExtendGraph(-1310 + Swipe, 675       , -1260 + Swipe, 725       , Light, true);
+        DrawExtendGraph(-1250 + Swipe, 675 + fwfw, -750 + Swipe, 725 + fwfw, OPTION, true);
+        message = "オプション画面に移動します";
+    }
+    else
+    {
+        DrawExtendGraph(-1250 + Swipe, 675, -750 + Swipe, 725, OPTION, true);
+    }
+
+    if (this->mnCurrentMode == TitleSelectMode_Credit)
+    {
+        DrawExtendGraph(-1310 + Swipe, 775       , -1260 + Swipe, 825       , Light, true);
+        DrawExtendGraph(-1250 + Swipe, 775 + fwfw, -750 + Swipe, 825 + fwfw, CREDIT, true);
+        message = "クレジット表記へ移動します";
+    }
+    else
+    {
+        DrawExtendGraph(-1250 + Swipe, 775, -750 + Swipe, 825, CREDIT, true);
+    }
+
+    if (this->mnCurrentMode == TitleSelectMode_Exit)
+    {
+        DrawExtendGraph(-1310 + Swipe, 875       , -1260 + Swipe, 925       , Light, true);
+        DrawExtendGraph(-1250 + Swipe, 875 + fwfw, -750 + Swipe, 925 + fwfw, EXIT, true);
+        message = "ゲームを終了します";
+    }
+    else
+    {
+        DrawExtendGraph(-1250 + Swipe, 875, -750 + Swipe, 925, EXIT, true);
+    }
+
+
+
+    if (!mbLogoPhase)
+    {
+        // 
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(750, 1000),
+            message.c_str(),
+            GetColor(255, 255, 255));
+
+        // Aボタンの表示
+        DxLib::DrawExtendGraph(
+            1500, 1000,
+            1540, 1040,
+            AButtonHandle,
+            true);
+
+        // Aボタンの説明表示
+        DxLib::DrawExtendGraph(
+            1570, 1000,
+            1630, 1030,
+            DecisionHandle,
+            true);
+
+        // Bボタンの表示
+        DxLib::DrawExtendGraph(
+            1700, 1000,
+            1740, 1040,
+            BButtonHandle,
+            true);
+
+        // Bボタンの説明表示
+        DxLib::DrawExtendGraph(
+            1770, 1000,
+            1830, 1030,
+            BackHandle,
+            true);
+    }
+
 
     // 
     return returnValue;
@@ -233,9 +270,11 @@ int TitleScene::UpdateModeSelect()
 
             // 
             this->mnCurrentMode = TitleSelectMode_StageSelect;
+
+            this->CannotOperate = 10;
         }
     }
-    else
+    else if(CannotOperate == 0)
     {
         // 
         int modeSelect = 0;
@@ -258,12 +297,24 @@ int TitleScene::UpdateModeSelect()
             Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 0) ||
 			Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1);
 
+        if (currentUp || currentDown)
+        {
+            fwfw = 0;
+            Time = 0;
+            vec = 20;
+        }
 
         // Bが押されたらロゴの画面に戻る
         if (Back)
         {
-            // 
+            // ロゴを移すフェーズにする
             this->mbLogoPhase = true;
+
+            // 
+            this->CannotOperate = -10;
+
+            // 同時押しによる例外を防ぐ
+            return returnValue;
         }
 
         // 
@@ -273,7 +324,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
 
                 // 
                 this->OnResetFlag();
@@ -297,7 +348,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option, SCAN::SCAN_None, false, SOAN_None, false);
             }
             else
             {
@@ -318,7 +369,7 @@ int TitleScene::UpdateModeSelect()
 			if (sceneMove)
 			{
 				// 
-				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit);
+				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit, SCAN::SCAN_None, false, SOAN_None, false);
 			}
 			else
 			{
@@ -339,7 +390,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpEndManager;
+                Master::mpEndManager->SetEndFlag(true, END_FLAG_NUMBER::WITHIN_EXPECTATION_GAME_END_FLAG);
 
                 // 
                 this->OnResetFlag();

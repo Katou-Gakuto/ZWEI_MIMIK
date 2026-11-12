@@ -27,8 +27,8 @@ private:
     // 
     enum ResultMenu
     {
-        ResultMenu_NextStage,
         ResultMenu_StageSelect,
+        ResultMenu_NextStage,
 
         ResultMenu_Max,
     };
@@ -47,7 +47,7 @@ public:
     virtual int MapCreate(GameObjectManager &objectManager) = 0;
 
     // 
-    virtual void GetMasterObjectsInitPos(
+    virtual void GetMastObjectsInitPos(
         VECTOR2D &playerLightPos,
         VECTOR2D &playerShadowPos,
         VECTOR2D &goalLightPos,
@@ -55,6 +55,8 @@ public:
 
     // 
     virtual void GetMapSize(VECTOR2D &mapSize) const = 0;
+
+    virtual void GetLightsColor(std::vector<uint32_t>& lightsColor) const = 0;
 
     // 
     virtual uint32_t GetUseLightAreaCount() const = 0;
@@ -67,7 +69,6 @@ public:
 
     // 
     Player *GetPlayer(int playerNumber)const;
-
 
     // 
     GoalObjectController *GetGoal(bool lightSide)const;
@@ -96,7 +97,10 @@ private:
     bool mbGoal;
 
     // 
-    bool mbFailed;
+    bool mbFailedLight;
+
+    // 
+    bool mbFailedShadow;
 
     // 
     int mnPouseCursorPos;
@@ -104,14 +108,17 @@ private:
     // 
     int mnResultCursorPos;
 
+
+    int ResultAnimCount;
+
+    // 
+    uint32_t mnFailedModeFrame;
+
     // 
     static CursorMoveData smdMoveData;
 
     // 
     void CreateAndAddMastObject();
-
-    // 
-    void AddMasterObjects();
 
     // 
     int PouseUpdate();
@@ -130,4 +137,21 @@ private:
 
     // 
     int FailedDraw();
+
+
+    // ポーズの画像類
+    int PoseHandle;
+	int OptionHandle;
+	int RetryHandle;
+	int StageSelectHandle;
+	int TitleHandle;
+
+	// リザルトの画像類
+	int ResultHandle;
+	int NextStageHandle;
+
+    int AButtonHandle;
+    int BButtonHandle;
+    int DecisionHandle;
+    int BackHandle;
 };

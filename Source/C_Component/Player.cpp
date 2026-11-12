@@ -29,18 +29,20 @@
 #include "../S_Collision/Point2D.h"
 #include "../S_Collision/Circle2D.h"
 
+#include "../Y_Tool/MyEasing.h"
 #include "../Y_Tool/MyFunctions.h"
+#include "../Y_Tool/MyMatrix.h"
 
 #include "DrawSystem.h"
-
-const int debugNum = 5;
 
 Player::Player(GameObject *myObject, int playerNumber) :
     mnPlayerNum(playerNumber),
     PlayerGraphHandle(),
     mfSwingDegree(1.0f),
     mfNowSwingRadian(0.0f),
+    mfSetSwingRadian(0.0f),
     mfMoveMagnitude(4),
+    mnHoldMoveFrame(0),
     mpHold(nullptr),
     mdBodyCollision(),
     mdModelHandle(),
@@ -128,7 +130,7 @@ int Player::Initialize()
     this->mbInLightArea = this->mbLightSide;
 
     // 
-    this->mpHold = nullptr;
+    this->ClearHold();
 
     // 
     return 0;
@@ -162,6 +164,7 @@ int Player::Update()
     }
 
     VECTOR2D moveVec = this->GetMoveVecNowFrame();
+    bool moveFlag = moveVec != VECTOR2D::GetZero();
 
     // この中にAを押したときの処理がある
     int result = TryHold();
@@ -176,10 +179,10 @@ int Player::Update()
         if (result != 0)
         {
             // 
-            return -1;
+            return 0;
         }
 
-        if (!this->mbSwingFlag)
+        if (!this->mbSwingFlag && moveFlag)
         {
             // 
             this->TryHoldMove(moveVec);
@@ -189,17 +192,23 @@ int Player::Update()
     {
         // 
         this->ClearHold();
+
+        // 
+        if (moveFlag)
+        {
+            // 
+            obj->SetMoveVec(moveVec);
+
+            // 
+            obj->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+        }
     }
 
     // 
-    if (!this->mbSwingFlag &&
-        moveVec != VECTOR2D::GetZero())
+    if (!this->mbHoldFlag || !moveFlag)
     {
         // 
-        obj->SetMoveVec(moveVec);
-
-        // 
-        obj->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+        this->mnHoldMoveFrame = 0;
     }
 
     if (Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::B, mnPlayerNum - 1)/*(CONTROLLER_KEY_TYPE::DOWN, CONTROLLER_KEY_NUMBER::CONTROLLER_1)*/)
@@ -246,7 +255,14 @@ int Player::LateUpdate()
         this->mbSwingFlag)
     {
         // 
-        this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition(), debugNum);
+        if (this->mpHold->GetMoveFlag())
+        {
+            // 
+            this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition());
+
+            // 
+            this->mfSetSwingRadian = this->mfNowSwingRadian;
+        }
 
         // 
         this->SetHoldRadian();
@@ -349,9 +365,6 @@ int Player::Draw()
             true);
     }
 
-    // 
-    // 
-    // 
     // 
     return 0;
 }
@@ -503,18 +516,25 @@ int Player::TryHold()
         // 
         if (this->mpHold->GetSwingFlag())
         {
-            // これまで持っていなかったオブジェクトをホールドしたので角度を取得
-            this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition(), debugNum);
-
             // 
-            this->SetHoldRadian();
+            if (this->mpHold->GetMoveFlag())
+            {
+                // これまで持っていなかったオブジェクトをホールドしたので角度を取得
+                this->mfNowSwingRadian = this->mpHold->GetRadianPlayerToHold(this->GetMyObject2D()->GetPosition());
+
+                // 
+                this->mfSetSwingRadian = this->mfNowSwingRadian;
+
+                // 
+                this->SetHoldRadian();
+            }
         }
 
         // 
         if (this->mpHold->GetMoveFlag())
         {
             // 
-            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(true, false, true, 1.0f);
+            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(true, false, false, 1.0f);
         }
     }
 
@@ -527,13 +547,6 @@ int Player::TryHoldSwing()
 {
     // 
     if (!this->mpHold->GetSwingFlag())
-    {
-        // 
-        return 0;
-    }
-
-    // 
-    if (!this->mpHold->GetMoveFlag())
     {
         // 
         return 0;
@@ -554,7 +567,7 @@ int Player::TryHoldSwing()
     if (clockwise && counterClockwise)
     {
         // 
-        return 1;
+        return 0;
     }
 
     // 
@@ -565,19 +578,71 @@ int Player::TryHoldSwing()
         addRad = -addRad;
     }
 
+    // 
     VECTOR2D nowPos = this->GetMyObject2D()->GetPosition();
 
     // 
-    VECTOR2D nowDinstance = this->mpHold->GetMyObject2D()->GetPosition() - nowPos;
+    VECTOR2D holdObjPos = this->mpHold->GetMyObject2D()->GetPosition();
 
     // 
-    float distanceMag = nowDinstance.Magnitude();
+    VECTOR2D player2hold = holdObjPos - nowPos;
 
     // 
-    float newRadian = this->mfNowSwingRadian + addRad;
+    if (this->mpHold->GetMoveFlag())
+    {
+        // 
+        float distanceMag = player2hold.Magnitude();
 
-    // 
-    bool result = this->mpHold->SetSwingAfterPos(nowPos, newRadian, distanceMag);
+        // 
+        float newRadian = this->mfNowSwingRadian + addRad;
+
+        // 
+        bool result = this->mpHold->SetSwingAfterPos(nowPos, newRadian, distanceMag);
+    }
+    else
+    {
+        // 
+        addRad = -(addRad * 0.5f);
+
+        // 
+        float nowRadian = 0.0f;
+        if (!this->GetHoldRadian(nowRadian))
+        {
+            // 
+            return -1;
+        }
+
+        {
+            // 
+            MyMatrix rotateMat = MyMatrix::GetRotation2D(-addRad);
+
+            // 
+            VECTOR2D new_player2hold = (player2hold.ToMat() * rotateMat).ToV2D();
+
+            // 
+            VECTOR2D newPos = holdObjPos + (-new_player2hold);
+
+            // 
+            VECTOR2D moveVec = newPos - nowPos;
+
+            // 
+            this->GetMyObject2D()->SetMoveVec(moveVec);
+
+            // 
+            this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &moveVec);
+        }
+
+        {
+            // 
+            addRad = -addRad;
+
+            // 
+            this->mfSetSwingRadian = nowRadian + addRad;
+        }
+
+        // 
+        this->SetHoldRadian();
+    }
 
     // 
     this->mbSwingFlag = true;
@@ -590,11 +655,38 @@ int Player::TryHoldSwing()
 int Player::TryHoldMove(const VECTOR2D &moveVec)
 {
     // 
+    VECTOR2D moveMax = moveVec * 0.5f;
+    VECTOR2D moveParam = moveMax;
+
+    // 
     if (this->mpHold != nullptr &&
         this->mpHold->GetMoveFlag())
     {
+        const uint32_t lerpMax = 100;
+        if (false)
+        {
+            // 
+            if (this->mnHoldMoveFrame <= lerpMax)
+            {
+                float param = 0.0f;
+                MyEasing::GetFrameParam(10, this->mnHoldMoveFrame, param);
+
+                // 
+                float late = MyEasing::GetSquare(EasingProcessNumber::EasingProcessNumber_In, param, 2);
+
+                // 
+                moveParam = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), moveMax, late);
+
+                // 
+                this->mnHoldMoveFrame++;
+            }
+        }
+
+        // 
+        this->SyncPlayerMoveVec(moveParam);
+
         // 現状のMoveVecを更新する
-        this->mpHold->SyncMoveVecToHold(moveVec);
+        this->mpHold->SyncMoveVecToHold(moveParam);
 
         // 
         if (this->mpHold->GetDoubleHold())
@@ -604,7 +696,7 @@ int Player::TryHoldMove(const VECTOR2D &moveVec)
 
             // 
             Player *target = Master::GetPlayerController(targetPlayerNum);
-            target->SyncPlayerMoveVec(moveVec);
+            target->SyncPlayerMoveVec(moveParam);
         }
     }
 
@@ -730,6 +822,32 @@ bool Player::GetInLightArea() const
 }
 
 // 
+bool Player::SetSwingAfterPos(const VECTOR2D &centerPos, float radian, float distance)
+{
+    // 
+    VECTOR2D normVec = VECTOR2D::GetOnUnitCirclePos('x', 'y', radian);
+    if (normVec == VECTOR2D::GetZero())
+    {
+        // 
+        return false;
+    }
+
+    // 
+    VECTOR2D distanceVec = normVec * distance;
+    VECTOR2D newPos = centerPos + distanceVec;
+    VECTOR2D newMoveVec = newPos - this->GetMyObject2D()->GetPosition();
+
+    // 
+    this->GetMyObject2D()->SetMoveVec(newMoveVec);
+
+    // 
+    this->GetMyObject2D()->GetBaseCollisionList()->SetCollisionMoveVec(CollisionDimension::CollisionDimension_2D, &newMoveVec);
+
+    // 
+    return true;
+}
+
+// 
 bool Player::CheckHoldNow() const
 {
     // 
@@ -765,7 +883,7 @@ bool Player::SetHoldRadian()
     }
 
     // 
-    float setRagian = this->mfNowSwingRadian;
+    float setRagian = this->mfSetSwingRadian;
 
     // 
     if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
@@ -863,6 +981,114 @@ bool Player::SetHoldRadian()
             // 
             return false;
         }
+    }
+
+    // 
+    return true;
+}
+
+// 
+bool Player::GetHoldRadian(float &out) const
+{
+    // 
+    if (this->mpHold == nullptr ||
+        this->mpHold->GetMyObject() == nullptr)
+    {
+        // 
+        return false;
+    }
+
+    // 
+    if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Light)
+    {
+        // 
+        GimmickObjectController *gimmickController = (static_cast<LightObject *>(this->mpHold->GetMyObject()))->GetGimmickController();
+        if (gimmickController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        LightExecutor *currentExecutor = nullptr;
+
+        // 
+        auto box = gimmickController->GetGimmickBox();
+        auto count = gimmickController->GetGimmickCount();
+        for (uint32_t i = 0; i < count; i++)
+        {
+            currentExecutor = dynamic_cast<LightExecutor *>(box[i].mpExecutor);
+            if (currentExecutor != nullptr)
+            {
+                // 
+                out = currentExecutor->GetBaseAngle();
+
+                // 
+                if (this->mbLightSide)
+                {
+                    // 
+                    out += MyFunctions::GetMaxRad() * 0.5f;
+
+                    // 
+                    out = MyFunctions::GetArrangeRad(out);
+                }
+
+                // 
+                break;
+            }
+        }
+    }
+    else if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Mirror)
+    {
+        // 
+        auto *mirrorObject = static_cast<MirrorObject *>(this->mpHold->GetMyObject());
+        if (mirrorObject == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        auto mirrorController = mirrorObject->GetMirrorController();
+        if (mirrorController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        out = mirrorController->GetNowRadian();
+
+        // 
+        if (this->mbLightSide)
+        {
+            // 
+            out += MyFunctions::GetMaxRad() * 0.5f;
+
+            // 
+            out = MyFunctions::GetArrangeRad(out);
+        }
+    }
+    else if (this->mpHold->GetMyObject()->GetObjectTag() == GameObjectTag::GOT_Wall)
+    {
+        // 
+        auto *wallObject = static_cast<WallObject *>(this->mpHold->GetMyObject());
+        if (wallObject == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        auto wallController = wallObject->GetWallController();
+        if (wallController == nullptr)
+        {
+            // 
+            return false;
+        }
+
+        // 
+        out = wallController->GetNowRadian();
     }
 
     // 

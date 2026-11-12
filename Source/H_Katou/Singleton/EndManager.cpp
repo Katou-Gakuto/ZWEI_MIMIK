@@ -49,6 +49,10 @@ bool EndManager::EndFlag()
 		{
 			return true;
 		}
+		if ((mullEndFlag & (1llu << (int)END_FLAG_NUMBER::WITHIN_EXPECTATION_GAME_END_FLAG)) != 0)
+		{
+			return true;
+		}
 #endif
 
 		endFlag = true;

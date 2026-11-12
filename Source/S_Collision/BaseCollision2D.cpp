@@ -16,15 +16,14 @@ BaseCollision2D::BaseCollision2D(
     mvMoveVec(VECTOR2D::GetZero()),
     mpPrevWorld(nullptr),
     mpNextWorld(nullptr),
-    mbHitMoveLose(false),
+    mbHitLoseMyMove(false),
+    mnHitCount(0),
     BaseCollision(object, type, tag, normNum, penetrate, hitMove, moveLate)
 {
-
 }
 
 BaseCollision2D::~BaseCollision2D()
 {
-
 }
 
 int BaseCollision2D::Draw(const Material2D &color)

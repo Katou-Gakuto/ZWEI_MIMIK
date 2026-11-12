@@ -7,12 +7,6 @@
 
 #include "../Y_Tool/VECTOR.h"
 
-struct HIT_COLLISION_LINE;
-
-class Triangle2D;
-
-class BaseCollision;
-
 // 
 class LightArea;
 
@@ -48,12 +42,17 @@ public:
     // 描画
     void Draw();
 
+    // 光の色設定
+    void SetLightsColor(std::vector<uint32_t> lightsColor);
 
     // 
     LightArea *SearchArea(int areaIndex);
 
     // 
     bool ResizeArea(uint32_t useAreaCount);
+
+    // 
+    bool Data();
 
     // どの光域に入っているかを確認する関数
     // 返り値のintは0で処理の成功の可否、引数のoutは自身が入っているAreaIndexを返す関数
@@ -77,25 +76,6 @@ private:
 
     // 光領域内の描画済み画面を反転
     void FlipLightAreaScreen();
-
-    // 光領域を描画用に調整する
-    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber);
-
-    // 角を取得する
-    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos);
-
-    // 	2本のラインの間にある頂点まで描画用ラインを追加する
-    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
-
-    // 当たっている辺を求める
-    std::vector<VECTOR2D> GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
-
-    // 延長した光を取得する
-    bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
-
-        
-    // 3角情報にして描画
-    void DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData);
 private:
     // 
     std::vector<LightArea *> mlNode;

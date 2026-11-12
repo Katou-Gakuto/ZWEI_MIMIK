@@ -110,6 +110,9 @@ public:
     // 円形補間
     static VECTOR2D GetSlerpPos(const VECTOR2D &centerPos, const VECTOR2D &startPos, const VECTOR2D &targetPos, float rate);
 
+    // 現在のベクトルの角度をn度とし、現在のベクトルが目的の角度になった場合の方向ベクトルを返す関数
+    static VECTOR2D GetRotated(const VECTOR2D &nowVec, float nowRadian, float targetRadian);
+
     // ベクトルAがベクトルBを軸に+方向か-方向か、それともまったく別の方向に向かっているのかを判断する関数。
     // プラスなら1、マイナスなら-1、別ベクトルなら0を返す
     static int CheckAxisVecPlusOrMinus(const VECTOR2D &targetVec, const VECTOR2D &axisVec);

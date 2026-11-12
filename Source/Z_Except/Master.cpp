@@ -42,6 +42,8 @@ LightAreaManager* Master::mpLightManager = nullptr;
 
 CursorMoveSupporter *Master::mpCursorMoveSupporter = nullptr;
 
+int Master::mnLastPlayStageNum = 0;
+
 // 
 Player *Master::GetPlayerController(int playerNumber)
 {
