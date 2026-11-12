@@ -249,7 +249,7 @@ int BaseSceneManager::Create()
         this->mbFlag.CreateComplate();
 
         // 画像ハンドル取得
-        mnBlackFadeHandle = Master::mpResourceManager->LoadGraphics(ResourceManager::msResourceFile + "Fade/BlackCurtain - コピー.jpg");
+        mnBlackFadeHandle = Master::mpResourceManager->LoadGraphics(ResourceManager::msResourceFile + "Fade/BlackCurtain.png");
     }
 
     return 0;
