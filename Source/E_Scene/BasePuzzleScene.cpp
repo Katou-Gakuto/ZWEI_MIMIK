@@ -290,6 +290,45 @@ SceneTag BasePuzzleScene::StageNum2SceneTag(unsigned long stageNum)
         temp = SceneTag::ST_Puzzle1_10;
         break;
 
+    case 10:
+        temp = SceneTag::ST_Puzzle2_1;
+        break;
+    case 11:
+        temp = SceneTag::ST_Puzzle2_2;
+        break;
+    case 12:
+        temp = SceneTag::ST_Puzzle2_3;
+        break;
+    case 13:
+        temp = SceneTag::ST_Puzzle2_4;
+        break;
+
+    case 14:
+        temp = SceneTag::ST_Puzzle3_1;
+        break;
+    case 15:
+        temp = SceneTag::ST_Puzzle3_2;
+        break;
+    case 16:
+        temp = SceneTag::ST_Puzzle3_3;
+        break;
+    case 17:
+        temp = SceneTag::ST_Puzzle3_4;
+        break;
+
+    case 18:
+        temp = SceneTag::ST_Puzzle4_1;
+        break;
+    case 19:
+        temp = SceneTag::ST_Puzzle4_2;
+        break;
+    case 20:
+        temp = SceneTag::ST_Puzzle4_3;
+        break;
+    case 21:
+        temp = SceneTag::ST_Puzzle4_4;
+        break;
+
     default:
         break;
     }
@@ -335,6 +374,46 @@ unsigned long BasePuzzleScene::SceneTag2StageNum(SceneTag sceneTag)
     case SceneTag::ST_Puzzle1_10:
         temp = 9;
         break;
+
+    case SceneTag::ST_Puzzle2_1:
+        temp = 10;
+        break;
+    case SceneTag::ST_Puzzle2_2:
+        temp = 11;
+        break;
+    case SceneTag::ST_Puzzle2_3:
+        temp = 12;
+        break;
+    case SceneTag::ST_Puzzle2_4:
+        temp = 13;
+        break;
+
+    case SceneTag::ST_Puzzle3_1:
+        temp = 14;
+        break;
+    case SceneTag::ST_Puzzle3_2:
+        temp = 15;
+        break;
+    case SceneTag::ST_Puzzle3_3:
+        temp = 16;
+        break;
+    case SceneTag::ST_Puzzle3_4:
+        temp = 17;
+        break;
+
+    case SceneTag::ST_Puzzle4_1:
+        temp = 18;
+        break;
+    case SceneTag::ST_Puzzle4_2:
+        temp = 19;
+        break;
+    case SceneTag::ST_Puzzle4_3:
+        temp = 20;
+        break;
+    case SceneTag::ST_Puzzle4_4:
+        temp = 21;
+        break;
+
     default:
         break;
     }

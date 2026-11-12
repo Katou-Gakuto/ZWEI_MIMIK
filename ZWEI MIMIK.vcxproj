@@ -163,6 +163,9 @@
     <ClCompile Include="Source\E_Scene\OptionScene.cpp" />
     <ClCompile Include="Source\E_Scene\BasePuzzleScene.cpp" />
     <ClCompile Include="Source\E_Scene\PuzzleScene1.cpp" />
+    <ClCompile Include="Source\E_Scene\PuzzleScene2.cpp" />
+    <ClCompile Include="Source\E_Scene\PuzzleScene3.cpp" />
+    <ClCompile Include="Source\E_Scene\PuzzleScene4.cpp" />
     <ClCompile Include="Source\E_Scene\StageSelectScene.cpp" />
     <ClCompile Include="Source\E_Scene\TestScene.cpp" />
     <ClCompile Include="Source\E_Scene\TitleScene.cpp" />
@@ -281,6 +284,9 @@
     <ClInclude Include="Source\E_Scene\OptionScene.h" />
     <ClInclude Include="Source\E_Scene\BasePuzzleScene.h" />
     <ClInclude Include="Source\E_Scene\PuzzleScene1.h" />
+    <ClInclude Include="Source\E_Scene\PuzzleScene2.h" />
+    <ClInclude Include="Source\E_Scene\PuzzleScene3.h" />
+    <ClInclude Include="Source\E_Scene\PuzzleScene4.h" />
     <ClInclude Include="Source\E_Scene\StageSelectScene.h" />
     <ClInclude Include="Source\E_Scene\TestScene.h" />
     <ClInclude Include="Source\E_Scene\TitleScene.h" />

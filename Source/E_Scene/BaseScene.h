@@ -22,6 +22,21 @@ enum SceneTag : unsigned char
     ST_Puzzle1_9,
     ST_Puzzle1_10,
 
+    ST_Puzzle2_1,
+    ST_Puzzle2_2,
+    ST_Puzzle2_3,
+    ST_Puzzle2_4,
+
+    ST_Puzzle3_1,
+    ST_Puzzle3_2,
+    ST_Puzzle3_3,
+    ST_Puzzle3_4,
+
+    ST_Puzzle4_1,
+    ST_Puzzle4_2,
+    ST_Puzzle4_3,
+    ST_Puzzle4_4,
+
     ST_Test,
 
     ST_Max,
