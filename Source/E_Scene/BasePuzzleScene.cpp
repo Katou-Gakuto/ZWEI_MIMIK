@@ -15,6 +15,8 @@
 #include "../E_Scene/BaseSceneManager.h"
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Y_Tool/VECTOR.h"
+#include "../Y_Tool/MyEasing.h"
+#include "../Z_Except/ResourceManager.h"
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 // 
@@ -33,7 +35,7 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mbFailedLight(false),
     mbFailedShadow(false),
     mnPouseCursorPos(0),
-    mnResultCursorPos(0),
+    mnResultCursorPos(1),
     mnFailedModeFrame(0),
     BaseScene(tag)
 {
@@ -47,6 +49,7 @@ int BasePuzzleScene::Create()
 {
     // 
     CursorMoveElement newElement;
+    CursorMoveElement newElement2;
 
     // 
     newElement.mnTargetKey = KEY_SHADOW_GAME_TYPE::UP;
@@ -56,6 +59,16 @@ int BasePuzzleScene::Create()
     // 
     newElement.mnTargetKey = KEY_SHADOW_GAME_TYPE::DOWN;
     newElement.mnMoveVec = +1;
+    smdMoveData.Add(newElement);
+
+
+    newElement.mnTargetKey = KEY_SHADOW_GAME_TYPE::RIGHT;
+    newElement.mnMoveVec = +2;
+    smdMoveData.Add(newElement);
+
+    // 
+    newElement.mnTargetKey = KEY_SHADOW_GAME_TYPE::LEFT;
+    newElement.mnMoveVec = -2;
     smdMoveData.Add(newElement);
 
     // 
@@ -124,6 +137,26 @@ int BasePuzzleScene::Initialize()
 
     // ここで光域の範囲の初期化をしてほしい
 
+
+	this->ResultAnimCount = -10;
+
+
+
+    PoseHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/PAUSE_W.png");
+    OptionHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/OPTION_W.png");
+    RetryHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/RETRY_W.png");
+    StageSelectHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGE_SELECT_W.png");
+    TitleHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/TITLE_W.png");
+
+    ResultHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/CLEAR_W.png");
+    NextStageHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/NEXT_STAGE_W.png");
+
+
+    AButtonHandle = Master::mpResourceManager->LoadGraphics("Resource/AButton.png");
+    BButtonHandle = Master::mpResourceManager->LoadGraphics("Resource/BButton.png");
+    DecisionHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/決定_W.png");
+    BackHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/戻る_W.png");
+
     // 
     return 0;
 }
@@ -171,6 +204,15 @@ int BasePuzzleScene::Update()
 
     // 
     this->mbGoal = this->mpGoalLight->GetInPlayer() && this->mpGoalShadow->GetInPlayer();
+//
+//#ifdef _DEBUG //マージするときここはしなくてもいい
+//
+//    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 0))
+//    {
+//        mbGoal = true;
+//    }
+//
+//#endif
     if (this->mbGoal)
     {
         // 
@@ -187,6 +229,8 @@ int BasePuzzleScene::Update()
         // 
         this->mnPouseCursorPos = 0;
     }
+
+
 
     // 
     if (this->mbPouse)
@@ -225,24 +269,18 @@ int BasePuzzleScene::Update()
 
 int BasePuzzleScene::Draw()
 {
-    // 
+    /*
     DRAW_SYSTEM::DrawString(
         VECTOR2D(0, 0),
         "BASE PUZZLE SCENE",
         GetColor(255, 255, 255));
+        */
 
     // 
     this->mpGameObjectManager->Draw();
-
     // 
     Master::mpLightManager->Draw();
 
-	// ポーズならポーズメニューを描画する
-    if (this->mbPouse)
-    {
-        // 
-        this->PouseDraw();
-    }
 
     // 
     if (this->mbGoal)
@@ -256,6 +294,13 @@ int BasePuzzleScene::Draw()
     {
         // 
         this->FailedDraw();
+    }
+
+	// ポーズならポーズメニューを描画する
+    if (this->mbPouse)
+    {
+        // 
+        this->PouseDraw();
     }
 
     // 
@@ -527,7 +572,7 @@ int BasePuzzleScene::PouseUpdate()
     Master::mpCursorMoveSupporter->Move(this->smdMoveData, menuMove);
 
     // 
-    if (menuMove != 0)
+    if (menuMove == 1 || menuMove == -1)
     {
         // 
         this->mnPouseCursorPos += PouseMenu::PouseMenu_Max;
@@ -546,85 +591,120 @@ int BasePuzzleScene::PouseUpdate()
 // 
 int BasePuzzleScene::PouseDraw()
 {
-    // 
-    DRAW_SYSTEM::DrawString(
-        VECTOR2D(800, 60 + 120 * 0),
-        "POUSE MENU",
-        GetColor(255, 255, 255));
+    // 背景を暗くする
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+    DrawBox(0, 0, 1920, 1080, 0x000000, true);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
-    // 
-    std::string message;
+    DrawExtendGraph(875, 170, 1375, 220, PoseHandle, true);
+    DrawBox(0, 299, 1920, 301, 0xEEE2CC,true);
+    // 選択中の表示
+    switch (this->mnPouseCursorPos)
+    {
+    case PouseMenu::PouseMenu_Option:
+        DrawBox(750, 400, 1170, 482, 0xEEE2CC, true);
+        break;
+    case PouseMenu::PouseMenu_Retry:
+        DrawBox(750, 550, 1170, 632, 0xEEE2CC, true);
+        break;
+    case PouseMenu::PouseMenu_StageSelect:
+        DrawBox(750, 700, 1170, 782, 0xEEE2CC, true);
+        break;
+    case PouseMenu::PouseMenu_Title:
+        DrawBox(750, 850, 1170, 932, 0xEEE2CC, true);
+        break;
+    }
 
-    // 
-    for (int i = 0; i < PouseMenu::PouseMenu_Max; i++)
+    DrawExtendGraph(860, 420, 1360, 470, OptionHandle, true);
+    DrawExtendGraph(870, 570, 1370, 620, RetryHandle, true);
+    DrawExtendGraph(780, 720, 1280, 770, StageSelectHandle, true);
+    DrawExtendGraph(890, 870, 1390, 920, TitleHandle, true);
+
+    // Aボタンの表示
+    DxLib::DrawExtendGraph(
+        1500, 1000,
+        1540, 1040,
+        AButtonHandle,
+        true);
+
+        // Aボタンの説明表示
+    DxLib::DrawExtendGraph(
+        1570, 1000,
+        1630, 1030,
+        DecisionHandle,
+        true);
+
+
+    // Bボタンの表示
+    DxLib::DrawExtendGraph(
+        1700, 1000,
+        1740, 1040,
+        BButtonHandle,
+        true);
+
+    // Bボタンの説明表示
+    DxLib::DrawExtendGraph(
+        1770, 1000,
+        1830, 1030,
+        BackHandle,
+        true);
+
+
+    /*
     {
         // 
-        if (this->mnPouseCursorPos == i)
-        {
-            message = "⇒";
-        }
-        else
-        {
-            message = "　";
-        }
-
-        // 
-        message += " ";
-
-        // 
-        switch (i)
-        {
-        case PouseMenu::PouseMenu_Option:
-            message += "OPTION";
-            break;
-        case PouseMenu::PouseMenu_Retry:
-            message += "RETRY";
-            break;
-        case PouseMenu::PouseMenu_StageSelect:
-            message += "STAGE SELECT";
-            break;
-        case PouseMenu::PouseMenu_Title:
-            message += "TITLE";
-            break;
-        default:
-            message += "bgbgbgbgbgbgbgbgbgbgbg";
-            break;
-        }
-
-        // 
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(700, 240 + 120 * i),
-            message.c_str(),
+            VECTOR2D(500, 60 + 120 * 0),
+            "POUSE MENU",
             GetColor(255, 255, 255));
-    }
 
-    // 操作説明の描画(ゆくゆくは画像にしたい)
-    for (int i = 0; i < 3; i++)
-    {
         // 
-        switch (i)
+        std::string message;
+
+        // 
+        for (int i = 0; i < PouseMenu::PouseMenu_Max; i++)
         {
-        case 0:
-            message = "MOVE : WASD, L-PAD";
-            break;
-        case 1:
-            message = "HOLD : A";
-            break;
-        case 2:
-            message = "ROTATE : A + RT, A + LT";
-            break;
-        default:
-            message = "bgbgbgbgbgbgbgbgbgbgbg";
-            break;
+            // 
+            if (this->mnPouseCursorPos == i)
+            {
+                message = "⇒";
+            }
+            else
+            {
+                message = "　";
+            }
+
+            // 
+            message += " ";
+
+            // 
+            switch (i)
+            {
+            case PouseMenu::PouseMenu_Option:
+                message += "OPTION";
+                break;
+            case PouseMenu::PouseMenu_Retry:
+                message += "RETRY";
+                break;
+            case PouseMenu::PouseMenu_StageSelect:
+                message += "STAGE SELECT";
+                break;
+            case PouseMenu::PouseMenu_Title:
+                message += "TITLE";
+                break;
+            default:
+                message += "bgbgbgbgbgbgbgbgbgbgbg";
+                break;
+            }
+
+            // 
+            DRAW_SYSTEM::DrawString(
+                VECTOR2D(400, 120 + 120 * i),
+                message.c_str(),
+                GetColor(255, 255, 255));
         }
-
-        // 
-        DRAW_SYSTEM::DrawString(
-            VECTOR2D(1500, 820 + 60 * i),
-            message.c_str(),
-            GetColor(128, 128, 128));
-    }
-
+        
+    }*/
     // 
     return 0;
 }
@@ -633,46 +713,55 @@ int BasePuzzleScene::PouseDraw()
 int BasePuzzleScene::ResultUpdate()
 {
     // 
-    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
-        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
+
+    // 
+    if (ResultAnimCount > 30)
     {
-        // 
-        unsigned long temp = 0;
+        if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
+        {
+            // 
+            unsigned long temp = 0;
+
+            // 
+            switch (this->mnResultCursorPos)
+            {
+            case ResultMenu::ResultMenu_NextStage:
+                temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag()) + 1;
+                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_None, false, SOAN_None, false);
+                Master::mnLastPlayStageNum = temp;
+                this->OnResetFlag();
+                break;
+            case ResultMenu::ResultMenu_StageSelect:
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
+                this->OnResetFlag();
+                break;
+            default:
+                // 何もしない
+                break;
+            }
+        }
 
         // 
-        switch (this->mnResultCursorPos)
+        int menuMove = 0;
+
+        // 
+        Master::mpCursorMoveSupporter->Move(this->smdMoveData, menuMove);
+        if (menuMove == 2 || menuMove == -2)
         {
-        case ResultMenu::ResultMenu_NextStage:
-            temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag()) + 1;
-            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_None, false, SOAN_None, false);
-            Master::mnLastPlayStageNum = temp;
-            this->OnResetFlag();
-            break;
-        case ResultMenu::ResultMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
-            this->OnResetFlag();
-            break;
-        default:
-            // 何もしない
-            break;
+            // 
+            this->mnResultCursorPos += ResultMenu::ResultMenu_Max;
+
+            // 
+            this->mnResultCursorPos += menuMove / 2;
+
+            // 
+            this->mnResultCursorPos %= ResultMenu::ResultMenu_Max;
         }
     }
-
-    // 
-    int menuMove = 0;
-
-    // 
-    Master::mpCursorMoveSupporter->Move(this->smdMoveData, menuMove);
-    if (menuMove != 0)
+    else
     {
-        // 
-        this->mnResultCursorPos += ResultMenu::ResultMenu_Max;
-
-        // 
-        this->mnResultCursorPos += menuMove;
-
-        // 
-        this->mnResultCursorPos %= ResultMenu::ResultMenu_Max;
+		ResultAnimCount++;
     }
 
     // 
@@ -682,6 +771,51 @@ int BasePuzzleScene::ResultUpdate()
 // 
 int BasePuzzleScene::ResultDraw()
 {
+
+    // 背景を暗くする
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+    DrawBox(0, 0, 1920, 1080, 0x000000, true);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+    DrawTriangle(
+        1400, -200,
+        1400 - (ResultAnimCount * 100), -200 + (ResultAnimCount * 60),
+        1400 + (ResultAnimCount * 10 ), -200 + (ResultAnimCount * 60), 0xEEE2CC, true);
+
+    if (ResultAnimCount > 30)
+    {
+        DrawExtendGraph(875, 370, 1375, 420, ResultHandle, true);
+        //DrawBox(0, 299, 1920, 301, 0xEEE2CC, true);
+
+        switch (this->mnResultCursorPos)
+        {
+        case ResultMenu::ResultMenu_StageSelect:
+            DrawBox(350, 860, 770, 930, 0x333333, true);
+            break;
+        case ResultMenu::ResultMenu_NextStage:
+            DrawBox(1150, 860, 1515, 930, 0x333333, true);
+            break;
+        }
+
+        DrawExtendGraph(375, 870, 875, 920, StageSelectHandle, true);
+        DrawExtendGraph(1175, 870, 1675, 920, NextStageHandle, true);
+    }
+
+    // Aボタンの表示
+    DxLib::DrawExtendGraph(
+        1700, 1000,
+        1740, 1040,
+        AButtonHandle,
+        true);
+
+    // Aボタンの説明表示
+    DxLib::DrawExtendGraph(
+        1770, 1000,
+        1830, 1030,
+        DecisionHandle,
+        true);
+
+    /*{
     // 
     DRAW_SYSTEM::DrawString(
         VECTOR2D(800, 60),
@@ -724,7 +858,7 @@ int BasePuzzleScene::ResultDraw()
             message.c_str(),
             GetColor(255, 255, 255));
     }
-
+    }*/
     // 
     return 0;
 }

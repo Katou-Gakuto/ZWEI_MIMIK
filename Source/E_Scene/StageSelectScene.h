@@ -51,13 +51,19 @@ private:
    int MoveCount;     // ‰ñ“]‚³‚¹‚Ä‚éŠÔ
    int MoveDirection; // ‚Ç‚Á‚¿‚ÉˆÚ“®‚µ‚Ä‚é‚©‚Ì•Û‘¶
 
-   float Interval = 600; // 
+   float Interval = 600; // ‰æ‘œŠÔ‚ÌŠÔŠu
 
-   bool ChangeFlag;   // ˆÚ“®‚³‚¹‚½uŠÔ‚Ìƒtƒ‰ƒO
+   int LightColor;
 
-   //      -300
-   //-800        800
-   //       300
+   int STAGE;
+   int StageNameHandle[StageMax];
+   int NotOpenStageHandle;
+   int NUMBERHandle;
 
-   // 3 4 5 0 1 2
+   int NowSceneHandle;
+   int AButtonHandle;
+   int BButtonHandle;
+   int DecisionHandle;
+   int BackHandle;
+
 };

@@ -13,6 +13,7 @@
 #include "ImguiManager.h"
 #include "DebugLogs/DebugVariableToImgui.h"
 
+
 #ifdef _DEBUG
 #include "DebugLogs/DebugLog.h"
 #endif
@@ -84,15 +85,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 
 	// フォント等の設定
-	SetFontSize(22);                  //フォントの大きさ
-	SetFontThickness(3);              //フォントの太さ
-	ChangeFont("HGS創英ﾌﾟﾚｾﾞﾝｽEB");   //フォントの種類
-	ChangeFontType(DX_FONTTYPE_EDGE); //フォントの種類(縁取り)
-
-
-	// フォント等の設定
-	SetFontSize(22);                  //フォントの大きさ
-	SetFontThickness(3);              //フォントの太さ
+	SetFontSize(30);                  //フォントの大きさ
+	SetFontThickness(2);              //フォントの太さ
 	ChangeFont("HGS創英ﾌﾟﾚｾﾞﾝｽEB");   //フォントの種類
 	ChangeFontType(DX_FONTTYPE_EDGE); //フォントの種類(縁取り)
 
@@ -134,7 +128,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			// 
 			Master::mpBaseSceneManager->Update();
 			Master::mpResourceManager->Update();
-			
+
 
 			ClearDrawScreen();
 
@@ -144,6 +138,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 			Master::mpImguiManager->Draw();
+
+#ifdef DEBUG
+			// /*
+			for (int x = 0; x < 1920; x += 192)
+			{
+				DrawLine(x, 0, x, 1080, GetColor(0, 0, 255));
+			}
+			for (int y = 0; y < 1080; y += 108)
+			{
+				DrawLine(0, y, 1980, y, GetColor(0, 0, 255));
+			}
+		
+			DrawLine(960, 0, 960, 1080, GetColor(255, 0, 0));
+			// */
+#endif
 
 			ScreenFlip();
 		}

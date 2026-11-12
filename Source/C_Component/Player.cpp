@@ -130,7 +130,7 @@ int Player::Initialize()
     this->mbInLightArea = this->mbLightSide;
 
     // 
-    this->mpHold = nullptr;
+    this->ClearHold();
 
     // 
     return 0;
@@ -534,7 +534,7 @@ int Player::TryHold()
         if (this->mpHold->GetMoveFlag())
         {
             // 
-            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(true, false, true, 1.0f);
+            this->mpHold->GetMyObject()->GetBaseCollisionList()->SetHitMoveParam(true, false, false, 1.0f);
         }
     }
 
