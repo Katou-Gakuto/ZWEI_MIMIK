@@ -11,17 +11,12 @@
 
 #include "../Y_Tool/MyFunctions.h"
 
+#include "BitFlag.h"
+
 #include "Master.h"
 #include "DxLibDataManager.h"
 #include "LightAreaManager.h"
 #include "DrawSystem.h"
-
-#include "ImguiManager.h"
-static int DrawSelectNumber = 1;
-static int DrawSelectNumber1 = -1;
-static int DrawSelectNumber2 = -1;
-static int DrawSelectNumber3 = -1;
-static int DrawSelectNumber4 = -1;
 
 // 
 LightArea::LightArea() :
@@ -461,87 +456,8 @@ void LightArea::DrawLightArea()
         return;
     }
 
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            0,
-            1,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber1
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            -1,
-            5,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber2
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            -1,
-            5,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber3
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            -1,
-            30,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber4
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            -1,
-            30,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    
+
+    // 光の線取得
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLine = DrawLingAreaHitCollisionsGetProcess();
     //std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> drawHitCollisionLine = hitCollisionLine;
     drawHitCollisionLine = hitCollisionLine;
@@ -555,11 +471,6 @@ void LightArea::DrawLightArea()
     {
         for (int lightAreaIterator = 0; lightAreaIterator < hitCollisionLine[hitCollisionLinesIterator].size(); ++lightAreaIterator)
         {
-            if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 != hitCollisionLinesIterator))
-            {
-                continue;
-            }
-
             int drawHitCollisionLineIteratorPlusNumber = 0;
             for (int hitLineIndex = 0; (hitLineIndex + 1) < hitCollisionLine[hitCollisionLinesIterator][lightAreaIterator].size(); ++hitLineIndex)
             {
@@ -568,39 +479,8 @@ void LightArea::DrawLightArea()
         }
     }
 
+    // 描画
     DrawHitCollisionLineData(drawHitCollisionLine);
-}
-
-void LightArea::A()
-{
-    if (DrawSelectNumber == 0)
-    {
-        return;
-    }
-
-    for (int i = 0; i < drawHitCollisionLine.size(); ++i)
-    {
-        for (uint32_t l = 0; l < drawHitCollisionLine[i].size(); l++)
-        {
-            for (int lightAreaIndex = 0; lightAreaIndex < drawHitCollisionLine[i][l].size(); ++lightAreaIndex)
-            {
-                if ((DrawSelectNumber2 != -1) && (DrawSelectNumber2 != i))
-                {
-                    continue;
-                }
-                if ((DrawSelectNumber3 != -1) && (DrawSelectNumber3 != l))
-                {
-                    continue;
-                }
-                if ((DrawSelectNumber4 != -1) && (DrawSelectNumber4 != lightAreaIndex))
-                {
-                    continue;
-                }
-                // デバッグ用レイの可視化
-                DRAW_SYSTEM::DrawLine(drawHitCollisionLine[i][l][lightAreaIndex].LineStartPos, drawHitCollisionLine[i][l][lightAreaIndex].LineEndPos, 0xff0000);
-            }
-        }
-    }
 }
 
 // ライトエリア再描画
@@ -622,8 +502,6 @@ void LightArea::ReDrawLightArea()
 // ライトエリア描画時当たっている
 std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAreaHitCollisionsGetProcess()
 {
-    // TODO:_ ノードの最大数取得してそれを基準にハッシュ値を作成する
-
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLineData;
 
     if (!mbIsLightFlag)
@@ -633,6 +511,14 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
     LightLineNode* currentNode;
     LightLineNode* nextNode;
+
+    // // 
+    // BIT_FLAG<unsigned long long> s;
+    // while (s.flags >= mnLightLineCount)
+    // {
+    //     s = s.GetFlag_BitShift(1) | 0x1;
+    // }
+    // unsigned long long 
 
     int preLoopCount = -1;
     for (uint32_t i = 0; i < mnLightLineCount; ++i)
@@ -1284,16 +1170,6 @@ std::vector<LIGHT_EDGE_DATA> LightArea::GetVisibleEdges(BaseCollision* collision
     {
         return {};
     }
-    else if (vertexPositionsIndexs.size() == 2)
-    {
-        const int nextVertexNumber = ((vertexPositionsIndexs[0] + 1) % vertexPositions.size());
-        const int nextIndexNumber = vertexPositionsIndexs[1];
-        if (nextVertexNumber == nextIndexNumber)
-        {
-            return { LIGHT_EDGE_DATA(vertexPositions[vertexPositionsIndexs[0]], vertexPositions[nextIndexNumber], true)};
-        }
-        return {};
-    }
 
     std::vector<LIGHT_EDGE_DATA> visibleEdges = {};
     for (size_t i = 0; i < vertexPositionsIndexs.size(); ++i)
@@ -1302,7 +1178,7 @@ std::vector<LIGHT_EDGE_DATA> LightArea::GetVisibleEdges(BaseCollision* collision
         const int nextIndexNumber = vertexPositionsIndexs[(i + 1) % vertexPositionsIndexs.size()];
         if (nextVertexNumber == nextIndexNumber)
         {
-            visibleEdges.push_back(LIGHT_EDGE_DATA(vertexPositions[vertexPositionsIndexs[i]], vertexPositions[nextIndexNumber], true));
+            visibleEdges.push_back(LIGHT_EDGE_DATA(vertexPositions[vertexPositionsIndexs[i]], vertexPositions[vertexPositionsIndexs[(i + 1) % vertexPositionsIndexs.size()]], true));
         }
     }
 

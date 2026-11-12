@@ -119,7 +119,6 @@ public:
 
     // ライトエリアの描画
     void DrawLightArea();
-    void A();
 
     // ライトエリア再描画
     void ReDrawLightArea();
