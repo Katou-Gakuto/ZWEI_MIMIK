@@ -104,6 +104,9 @@ private:
     // 
     int mnResultCursorPos;
 
+
+    int ResultAnimCount;
+
     // 
     static CursorMoveData smdMoveData;
 

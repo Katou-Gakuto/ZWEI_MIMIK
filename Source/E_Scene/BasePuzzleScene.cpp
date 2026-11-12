@@ -15,6 +15,7 @@
 #include "../E_Scene/BaseSceneManager.h"
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Y_Tool/VECTOR.h"
+#include "../Y_Tool/MyEasing.h"
 #include "../Z_Except/ResourceManager.h"
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
@@ -111,6 +112,9 @@ int BasePuzzleScene::Initialize()
 
     // 
     this->mbFailed = false;
+
+
+	this->ResultAnimCount = -10;
 
 
 
@@ -608,46 +612,53 @@ int BasePuzzleScene::ResultUpdate()
     // 
 
     // 
-    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
-        Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
+    if (ResultAnimCount > 30)
     {
-        // 
-        unsigned long temp = 0;
-
-        // 
-        switch (this->mnResultCursorPos)
+        if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
+            Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
         {
-        case ResultMenu::ResultMenu_NextStage:
-            temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag());
+            // 
+            unsigned long temp = 0;
 
-            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp + 1));
-            this->OnResetFlag();
-            break;
-        case ResultMenu::ResultMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
-            this->OnResetFlag();
-            break;
-        default:
-            // ‰½‚à‚µ‚È‚¢
-            break;
+            // 
+            switch (this->mnResultCursorPos)
+            {
+            case ResultMenu::ResultMenu_NextStage:
+                temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag());
+
+                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp + 1));
+                this->OnResetFlag();
+                break;
+            case ResultMenu::ResultMenu_StageSelect:
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+                this->OnResetFlag();
+                break;
+            default:
+                // ‰½‚à‚µ‚È‚¢
+                break;
+            }
+        }
+
+        // 
+        int menuMove = 0;
+
+        // 
+        Master::mpCursorMoveSupporter->Move(this->smdMoveData, menuMove);
+        if (menuMove == 2 || menuMove == -2)
+        {
+            // 
+            this->mnResultCursorPos += ResultMenu::ResultMenu_Max;
+
+            // 
+            this->mnResultCursorPos += menuMove / 2;
+
+            // 
+            this->mnResultCursorPos %= ResultMenu::ResultMenu_Max;
         }
     }
-
-    // 
-    int menuMove = 0;
-
-    // 
-    Master::mpCursorMoveSupporter->Move(this->smdMoveData, menuMove);
-    if (menuMove == 2 || menuMove == -2)
+    else
     {
-        // 
-        this->mnResultCursorPos += ResultMenu::ResultMenu_Max;
-
-        // 
-        this->mnResultCursorPos += menuMove / 2;
-
-        // 
-        this->mnResultCursorPos %= ResultMenu::ResultMenu_Max;
+		ResultAnimCount++;
     }
 
     // 
@@ -663,23 +674,29 @@ int BasePuzzleScene::ResultDraw()
     DrawBox(0, 0, 1920, 1080, 0x000000, true);
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
+    DrawTriangle(
+        1400, -200,
+        1400 - (ResultAnimCount * 100), -200 + (ResultAnimCount * 60),
+        1400 + (ResultAnimCount * 10 ), -200 + (ResultAnimCount * 60), 0xEEE2CC, true);
 
-    DrawExtendGraph(875, 170, 1375, 220, ResultHandle, true);
-    DrawBox(0, 299, 1920, 301, 0xEEE2CC, true);
-
-    switch (this->mnResultCursorPos)
+    if (ResultAnimCount > 30)
     {
-    case ResultMenu::ResultMenu_StageSelect:
-        DrawBox(350, 860, 770, 930, 0xEEE2CC, true);
-        break;
-    case ResultMenu::ResultMenu_NextStage:
-        DrawBox(1150, 860, 1515, 930, 0xEEE2CC, true);
-        break;
+        DrawExtendGraph(875, 370, 1375, 420, ResultHandle, true);
+        //DrawBox(0, 299, 1920, 301, 0xEEE2CC, true);
+
+        switch (this->mnResultCursorPos)
+        {
+        case ResultMenu::ResultMenu_StageSelect:
+            DrawBox(350, 860, 770, 930, 0x333333, true);
+            break;
+        case ResultMenu::ResultMenu_NextStage:
+            DrawBox(1150, 860, 1515, 930, 0x333333, true);
+            break;
+        }
+
+        DrawExtendGraph(375, 870, 875, 920, StageSelectHandle, true);
+        DrawExtendGraph(1175, 870, 1675, 920, NextStageHandle, true);
     }
-
-    DrawExtendGraph( 375, 870,  875, 920, StageSelectHandle, true);
-    DrawExtendGraph(1175, 870, 1675, 920, NextStageHandle, true);
-
 
     // Aƒ{ƒ^ƒ“‚Ì•\Ž¦
     DxLib::DrawExtendGraph(
