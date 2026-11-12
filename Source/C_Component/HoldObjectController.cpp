@@ -274,7 +274,7 @@ bool HoldObjectController::SetHoldFlag(bool lightPlayer, bool flag)
 }
 
 // 
-float HoldObjectController::GetRadianPlayerToHold(const VECTOR2D &playerPos, int debugNum) const
+float HoldObjectController::GetRadianPlayerToHold(const VECTOR2D &playerPos) const
 {
     // 
     VECTOR2D nowPos = this->GetMyObject2D()->GetPosition();
@@ -283,39 +283,7 @@ float HoldObjectController::GetRadianPlayerToHold(const VECTOR2D &playerPos, int
     VECTOR2D distanceVec = nowPos - playerPos;
 
     // 
-    float radian = 0.0f;
-    switch (debugNum)
-    {
-    case 0:
-        radian = atan2f(distanceVec.GetY(), distanceVec.GetX());
-        break;
-    case 1:
-        radian = atan2f(-distanceVec.GetY(), distanceVec.GetX());
-        break;
-    case 2:
-        radian = atan2f(distanceVec.GetY(), -distanceVec.GetX());
-        break;
-    case 3:
-        radian = atan2f(-distanceVec.GetY(), -distanceVec.GetX());
-        break;
-    case 4:
-        radian = atan2f(distanceVec.GetX(), distanceVec.GetY());
-        break;
-    case 5:
-        radian = atan2f(-distanceVec.GetX(), distanceVec.GetY());
-        break;
-    case 6:
-        radian = atan2f(distanceVec.GetX(), -distanceVec.GetY());
-        break;
-    case 7:
-        radian = atan2f(-distanceVec.GetX(), -distanceVec.GetY());
-        break;
-    default:
-        break;
-    }
-    
-    // 
-    return radian;
+    return distanceVec.GetAngle();
 }
 
 // 

@@ -11,6 +11,8 @@
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 
+#include "EndManager.h"
+
 // 
 TitleScene::TitleScene() :
     mbLogoPhase(true),
@@ -46,6 +48,7 @@ int TitleScene::Create()
 
     TitleLogo = Master::mpResourceManager->LoadGraphics("Resource/ZWEI_MIMIKƒƒSW(‰¼).png");
     Master::mpSoundManager->SetBGMVolume(180);
+    Master::mpSoundManager->SetBGMVolume(0);// DELETE:_
     Master::mpSoundManager->SetSEVolume(180);
     Master::mpSoundManager->ChangeVolume();
 
@@ -273,7 +276,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
 
                 // 
                 this->OnResetFlag();
@@ -297,7 +300,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option, SCAN::SCAN_None, false, SOAN_None, false);
             }
             else
             {
@@ -318,7 +321,7 @@ int TitleScene::UpdateModeSelect()
 			if (sceneMove)
 			{
 				// 
-				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit);
+				Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Credit, SCAN::SCAN_None, false, SOAN_None, false);
 			}
 			else
 			{
@@ -339,7 +342,7 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpEndManager;
+                Master::mpEndManager->SetEndFlag(true, END_FLAG_NUMBER::GAME_END_FLAG);
 
                 // 
                 this->OnResetFlag();

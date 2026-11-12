@@ -5,8 +5,9 @@
 #include "../C_Component/ButtonObjectController.h"
 
 // 
-ButtonTrigger::ButtonTrigger() :
+ButtonTrigger::ButtonTrigger(ButtonTriggerMode mode) :
     mlNodeBox(),
+    mnMode(mode),
     BaseGimmickTrigger()
 {
 }
@@ -61,29 +62,39 @@ bool ButtonTrigger::GetSignal()
     }
 
     // 
+    bool trueCount = false;
     for (uint32_t i = 1; i < this->mlNodeBox.size(); i++)
     {
-        // 
+        // 現状、着目レイヤーがtrueのみの場合かで処理を変える
         if (result)
         {
-            // 
+            // レイヤーが変わった場合は処理を行う
             if (this->mlNodeBox[i - 1].mnLayer != this->mlNodeBox[i].mnLayer)
             {
                 // 
-                break;
+                if (this->mnMode == ButtonTriggerMode::ButtonTriggerMode_OneLayer)
+                {
+                    // trueのレイヤーが1つ見つかったので
+                    return true;
+                }
+                else
+                {
+                    // 直近のレイヤーがtrueだったのでフラグを逆転させる
+                    trueCount = !trueCount;
+                }
             }
         }
         else
         {
-            // 
+            // 既にfalseになったレイヤーと同じレイヤーの場合は処理を行う
             if (falseLayer == this->mlNodeBox[i].mnLayer)
             {
-                // 
+                // このループをスキップする
                 continue;
             }
             else
             {
-                // 
+                // レイヤーが変わったので再度trueを前提に処理を進める
                 result = true;
             }
         }
@@ -104,6 +115,27 @@ bool ButtonTrigger::GetSignal()
 
             // 
             result = false;
+        }
+    }
+
+    // 
+    if (this->mnMode == ButtonTriggerMode::ButtonTriggerMode_OneLayer)
+    {
+        // 
+        return result;
+    }
+
+    // 
+    if (this->mnMode == ButtonTriggerMode::ButtonTriggerMode_TrueCount)
+    {
+        // 
+        if (result)
+        {
+            // 
+            trueCount = !trueCount;
+
+            // 
+            return trueCount;
         }
     }
 

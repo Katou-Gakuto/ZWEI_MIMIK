@@ -6,6 +6,7 @@ enum class END_FLAG_NUMBER
 {
 	WITHIN_EXPECTATION_FLAG = 0,	// 期待通り
 	BIT_FLAG,	// ビットフラグ
+	GAME_END_FLAG,	// ゲーム終了
 
 	MAX_COUNT	// 最大値計測用
 };

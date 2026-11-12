@@ -296,8 +296,8 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
     bMoveLate = 0.0f;
 
     // 
-    if (collision2DA->mbHitMoveLose &&
-        !collision2DB->mbHitMoveLose)
+    if ((collision2DA->mbHitLoseMyMove && collision2DA->GetMoveVec() != VECTOR2D::GetZero()) &&
+        !collision2DB->mbHitLoseMyMove)
     {
         // 
         aMoveLate = 2.0f;
@@ -308,8 +308,8 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
     }
 
     // 
-    if (!collision2DA->mbHitMoveLose &&
-        collision2DB->mbHitMoveLose)
+    if (!collision2DA->mbHitLoseMyMove &&
+        (collision2DB->mbHitLoseMyMove && collision2DB->GetMoveVec() != VECTOR2D::GetZero()))
     {
         // 
         aMoveLate = 0.0f;
@@ -320,8 +320,8 @@ bool BaseCollision2DManager::GetCollisionMoveLate(
     }
 
     // 
-    if (collision2DA->mbHitMoveLose &&
-        collision2DB->mbHitMoveLose)
+    if (collision2DA->mbHitLoseMyMove &&
+        collision2DB->mbHitLoseMyMove)
     {
         // 
         if (collision2DA->GetMoveVec() == VECTOR2D::GetZero() && collision2DB->GetMoveVec() != VECTOR2D::GetZero())

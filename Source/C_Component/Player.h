@@ -56,6 +56,9 @@ public:
     // 
     bool GetInLightArea() const;
 
+    // 
+    bool SetSwingAfterPos(const VECTOR2D &centerPos, float radian, float distance);
+
 private:
 
     int mnPlayerNum;        //P1かP2か
@@ -64,9 +67,13 @@ private:
 
     float mfSwingDegree;    // 
 
-    float mfNowSwingRadian;       // 
+    float mfNowSwingRadian; // 現在のPlayer2Holdベクトルの角度
+
+    float mfSetSwingRadian; // 
 
     float mfMoveMagnitude;
+
+    uint32_t mnHoldMoveFrame;    // 
 
     HoldObjectController *mpHold; // 自身がつかんでいるオブジェクト
 
@@ -99,6 +106,9 @@ private:
 
     // 
     bool SetHoldRadian();
+
+    // 
+    bool GetHoldRadian(float &out) const;
 
     // 
     int UpdateInLightArea();

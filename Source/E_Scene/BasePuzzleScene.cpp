@@ -75,12 +75,20 @@ int BasePuzzleScene::Create()
 
 int BasePuzzleScene::Initialize()
 {
-    // 
-    Master::mpLightManager->ResizeArea(this->GetUseLightAreaCount());
+    // ライト設定
+    {
+        // ライトの数
+        Master::mpLightManager->ResizeArea(this->GetUseLightAreaCount());
+
+        // 光の色
+        std::vector<uint32_t> lightsColor;
+        this->GetLightsColor(lightsColor);
+        Master::mpLightManager->SetLightsColor(lightsColor);
+    }
 
     // 
     VECTOR2D initPosBox[4];
-    this->GetMasterObjectsInitPos(initPosBox[0], initPosBox[1], initPosBox[2], initPosBox[3]);
+    this->GetMastObjectsInitPos(initPosBox[0], initPosBox[1], initPosBox[2], initPosBox[3]);
 
     // 
     this->mpPlayerLight->InitPosition(initPosBox[0]);
@@ -165,6 +173,7 @@ int BasePuzzleScene::Update()
     // 
     if (this->mbPouse)
     {
+        // 
         return this->PouseUpdate();
     }
 
@@ -207,6 +216,9 @@ int BasePuzzleScene::Draw()
     // 
     this->mpGameObjectManager->Draw();
 
+    // 
+    Master::mpLightManager->Draw();
+
 	// ポーズならポーズメニューを描画する
     if (this->mbPouse)
     {
@@ -227,8 +239,6 @@ int BasePuzzleScene::Draw()
         // 
         this->FailedDraw();
     }
-
-	Master::mpLightManager->Draw();
 
     // 
     return 0;
@@ -392,19 +402,19 @@ int BasePuzzleScene::PouseUpdate()
         switch (this->mnPouseCursorPos)
         {
         case PouseMenu::PouseMenu_Option:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option);
-            Master::mpBaseSceneManager->SetResreveScene(this->GetTag());
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option, SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->SetResreveScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
             break;
         case PouseMenu::PouseMenu_Retry:
-            Master::mpBaseSceneManager->ChangeScene(this->GetTag());
+            Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
             this->OnResetFlag();
             break;
         case PouseMenu::PouseMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
             this->OnResetFlag();
             break;
         case PouseMenu::PouseMenu_Title:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title);
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_None, false, SOAN_None, false);
             this->OnResetFlag();
             break;
         default:
@@ -441,7 +451,7 @@ int BasePuzzleScene::PouseDraw()
 {
     // 
     DRAW_SYSTEM::DrawString(
-        VECTOR2D(500, 60 + 120 * 0),
+        VECTOR2D(800, 60 + 120 * 0),
         "POUSE MENU",
         GetColor(255, 255, 255));
 
@@ -486,9 +496,36 @@ int BasePuzzleScene::PouseDraw()
 
         // 
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(400, 120 + 120 * i),
+            VECTOR2D(700, 240 + 120 * i),
             message.c_str(),
             GetColor(255, 255, 255));
+    }
+
+    // 操作説明の描画(ゆくゆくは画像にしたい)
+    for (int i = 0; i < 3; i++)
+    {
+        // 
+        switch (i)
+        {
+        case 0:
+            message = "MOVE : WASD, L-PAD";
+            break;
+        case 1:
+            message = "HOLD : A";
+            break;
+        case 2:
+            message = "ROTATE : A + RT, A + LT";
+            break;
+        default:
+            message = "bgbgbgbgbgbgbgbgbgbgbg";
+            break;
+        }
+
+        // 
+        DRAW_SYSTEM::DrawString(
+            VECTOR2D(1500, 820 + 60 * i),
+            message.c_str(),
+            GetColor(128, 128, 128));
     }
 
     // 
@@ -498,10 +535,6 @@ int BasePuzzleScene::PouseDraw()
 // 
 int BasePuzzleScene::ResultUpdate()
 {
-    // リザルトシーンって、どういう機能を持たせたい？
-    // RETRYとか、STAGE SELECTとかそういうの
-    // 
-
     // 
     if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
@@ -513,13 +546,13 @@ int BasePuzzleScene::ResultUpdate()
         switch (this->mnResultCursorPos)
         {
         case ResultMenu::ResultMenu_NextStage:
-            temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag());
-
-            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp + 1));
+            temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag()) + 1;
+            Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mnLastPlayStageNum = temp;
             this->OnResetFlag();
             break;
         case ResultMenu::ResultMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect);
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
             this->OnResetFlag();
             break;
         default:
@@ -554,7 +587,7 @@ int BasePuzzleScene::ResultDraw()
 {
     // 
     DRAW_SYSTEM::DrawString(
-        VECTOR2D(500, 60),
+        VECTOR2D(800, 60),
         "STAGE CLEAR!",
         GetColor(255, 255, 255));
 
@@ -590,7 +623,7 @@ int BasePuzzleScene::ResultDraw()
 
         // 
         DRAW_SYSTEM::DrawString(
-            VECTOR2D(450, 60 + 120 * (i + 1)),
+            VECTOR2D(700, 300 + 240 * i),
             message.c_str(),
             GetColor(255, 255, 255));
     }
@@ -603,7 +636,7 @@ int BasePuzzleScene::ResultDraw()
 int BasePuzzleScene::FailedUpdate()
 {
     // とりあえず強制RETRY
-    Master::mpBaseSceneManager->ChangeScene(this->GetTag());
+    Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
     this->OnResetFlag();
 
     // 

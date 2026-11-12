@@ -7,12 +7,6 @@
 
 #include "../Y_Tool/VECTOR.h"
 
-struct HIT_COLLISION_LINE;
-
-class Triangle2D;
-
-class BaseCollision;
-
 // 
 class LightArea;
 
@@ -48,6 +42,8 @@ public:
     // •`‰æ
     void Draw();
 
+    // Œõ‚ÌFİ’è
+    void SetLightsColor(std::vector<uint32_t> lightsColor);
 
     // 
     LightArea *SearchArea(int areaIndex);
@@ -77,25 +73,6 @@ private:
 
     // Œõ—Ìˆæ“à‚Ì•`‰æÏ‚İ‰æ–Ê‚ğ”½“]
     void FlipLightAreaScreen();
-
-    // Œõ—Ìˆæ‚ğ•`‰æ—p‚É’²®‚·‚é
-    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber);
-
-    // Šp‚ğæ“¾‚·‚é
-    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos);
-
-    // 	2–{‚Ìƒ‰ƒCƒ“‚ÌŠÔ‚É‚ ‚é’¸“_‚Ü‚Å•`‰æ—pƒ‰ƒCƒ“‚ğ’Ç‰Á‚·‚é
-    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Triangle2D& tempTriangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
-
-    // “–‚½‚Á‚Ä‚¢‚é•Ó‚ğ‹‚ß‚é
-    std::vector<VECTOR2D> GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
-
-    // ‰„’·‚µ‚½Œõ‚ğæ“¾‚·‚é
-    bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
-
-        
-    // 3Špî•ñ‚É‚µ‚Ä•`‰æ
-    void DrawHitCollisionLineData(const std::vector<std::vector<HIT_COLLISION_LINE>> &hitCollisionLineData);
 private:
     // 
     std::vector<LightArea *> mlNode;

@@ -18,11 +18,11 @@
 #include "DxLibDataManager.h"
 /*----------------*/
 
+
 #ifdef _DEBUG
 #include "DebugLogs/DebugLog.h"
-
+#include "DebugLogs/DebugVariableToImgui.h"
 #endif
-
 
 ImguiManager::ImguiManager(bool isImguiExecute)
 #ifdef _DEBUG
@@ -76,6 +76,19 @@ void ImguiManager::Finalize()
     {
         return;
     }
+
+    // DX11リソース解放
+    if (mbCopySRV != nullptr)
+    {
+        mbCopySRV->Release();
+        mbCopySRV = nullptr;
+    }
+
+    if (mdCopyTexture != nullptr)
+    {
+        mdCopyTexture->Release();
+        mdCopyTexture = nullptr;
+    }
     
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
@@ -91,13 +104,30 @@ void ImguiManager::Update()
     {
         return;
     }
+
     
     // ImGui フレーム開始
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
+
+    // DXLib独自の処理
+    {
+        // マウスポジション修正
+        ImGuiIO& io = ImGui::GetIO();
+        int mouseX, mouseY;
+        GetMousePoint(&mouseX, &mouseY);
+        io.AddMousePosEvent(mouseX, mouseY);
+        
+
+        // 画面修正
+        io.DisplaySize = ImVec2(Master::mpDxLibDataManager->GetStartDisplaySize().GetX(), Master::mpDxLibDataManager->GetStartDisplaySize().GetY());
+    }
+
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
     ImGui::ShowDemoWindow();
+
+    DebugVariableToImgui::PrivateFunction::Update();
 
     mnAddNumber = 0;
     // グループ
@@ -127,8 +157,10 @@ void ImguiManager::Draw()
         return;
     }
 
+    DebugVariableToImgui::PrivateFunction::Draw();
+
     DrawGameDisplayToImgui();
-    
+
     // ImGui フレーム終了と描画
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -148,14 +180,37 @@ void ImguiManager::AddDrawImgui(IMGUI_VARIABLE_CONTROL imguiControlVariableData,
         return;
     }
 
-    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
-    if (imguiControlVariableData.AddNumberDrawFlag == true)
+    // 同名ラベルが混ざると ImGui 側の識別が崩れるため、管理側では
+    // 追加番号表示を基本 true とし、同名であっても一意なラベルを付与する。
+    imguiControlVariableData.AddNumberDrawFlag = true;
+
+    if (addTabName.empty() || addTabName == "AddTab")
     {
-        imguiControlVariableData.VariableLabel = imguiControlVariableData.VariableLabel + "_" + std::to_string(mnAddNumber);
+        DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+        if (imguiControlVariableData.AddNumberDrawFlag == true)
+        {
+            imguiControlVariableData.VariableLabel = imguiControlVariableData.VariableLabel + "_" + std::to_string(mnAddNumber);
+        }
+        ++mnAddNumber;
+        DrawControlVariableImgui(imguiControlVariableData);
+        DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+        return;
     }
-    ++mnAddNumber;
-    DrawControlVariableImgui(imguiControlVariableData);
-    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+
+    if (ImGui::BeginTabBar("DebugVariableTabBar"))
+    {
+        if (ImGui::BeginTabItem(addTabName.c_str()))
+        {
+            if (imguiControlVariableData.AddNumberDrawFlag == true)
+            {
+                imguiControlVariableData.VariableLabel = imguiControlVariableData.VariableLabel + "_" + std::to_string(mnAddNumber);
+            }
+            ++mnAddNumber;
+            DrawControlVariableImgui(imguiControlVariableData);
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
 #endif
 }
 
@@ -168,11 +223,23 @@ void ImguiManager::AddDrawImgui(IMGUI_BUTTON_CONTROL imguiControlButtonData, std
         return;
     }
 
-    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+    if (addTabName.empty() || addTabName == "AddTab")
+    {
+        DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+        DrawButtonImgui(imguiControlButtonData);
+        DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+        return;
+    }
 
-    DrawButtonImgui(imguiControlButtonData);
-
-    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+    if (ImGui::BeginTabBar("DebugButtonTabBar"))
+    {
+        if (ImGui::BeginTabItem(addTabName.c_str()))
+        {
+            DrawButtonImgui(imguiControlButtonData);
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
 #endif
 }
 
@@ -185,11 +252,23 @@ void ImguiManager::AddDrawImgui(IMGUI_LAYOUT_CONTROL imguiControlLayoutData, std
         return;
     }
 
-    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+    if (addTabName.empty() || addTabName == "AddTab")
+    {
+        DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_NET_TAB_BEGIN, addTabName));
+        DrawLayoutImgui(imguiControlLayoutData);
+        DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+        return;
+    }
 
-    DrawLayoutImgui(imguiControlLayoutData);
-
-    DrawLayoutImgui(IMGUI_LAYOUT_CONTROL::GetImguiData(IMGUI_LAYOUT_TYPE::IMGUI_LAYOUT_DELETE_TAB_END));
+    if (ImGui::BeginTabBar("DebugLayoutTabBar"))
+    {
+        if (ImGui::BeginTabItem(addTabName.c_str()))
+        {
+            DrawLayoutImgui(imguiControlLayoutData);
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
 #endif
 }
 
