@@ -1688,6 +1688,94 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 	// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
 	wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
 
+	// Mirror
+	{
+		objCenter = VECTOR2D(1150.836f, 78.84f);
+		blockSize = VECTOR2D(232.7273f, 16.2f) ;
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(670.2546f, 66.95999f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(294.4f, 853.2f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(252.5091f, 679.32f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(843.6364f, 305.64f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(1348.655f, 374.76f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(1035.636f, 505.44f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
+	// Mirror
+	{
+		objCenter = VECTOR2D(735.4182f, 460.08f);
+		blockSize = VECTOR2D(232.7273f, 16.2f);
+		wallObject = new MirrorObject(false, objCenter, blockSize, MyFunctions::Deg2Rad(12.09938f), 2);
+		objManager.Add(wallObject);
+
+		// ‹¾‚ÉHold‚ð’Ç‰Á‚·‚é
+		wallObject->AddComponent(new HoldObjectController(wallObject, false, false, false, false, true));
+	}
+
 	// Light_Left
 	objCenter = VECTOR2D::GetLerpPos(VECTOR2D::GetZero(), mapSize, VECTOR2D(0.1666667f, 0.1f)) + VECTOR2D(100.f, 0.0f);
 	objRadius = 40.0f;
@@ -1701,7 +1789,7 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 	gimmickController = lightObject->GetGimmickController();
 	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
 	baseExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 0, 100, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(60.0f), 30000.0f, false);
+		tempGimmickParam, lightObject, 0, 100, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(60.0f), 30000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
 
 	// 

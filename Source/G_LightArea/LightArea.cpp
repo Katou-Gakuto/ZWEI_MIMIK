@@ -18,6 +18,13 @@
 #include "LightAreaManager.h"
 #include "DrawSystem.h"
 
+#include "ImguiManager.h"
+static int DrawSelectNumber = 1;
+static int DrawSelectNumber1 = -1;
+static int DrawSelectNumber2 = -1;
+static int DrawSelectNumber3 = -1;
+static int DrawSelectNumber4 = -1;
+
 // 
 LightArea::LightArea() :
     mlLightFirstNode(),
@@ -457,7 +464,88 @@ void LightArea::DrawLightArea()
     {
         return;
     }
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            0,
+            1,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber1
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            5,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber2
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            5,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber3
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            30,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
+    Master::mpImguiManager->AddDrawImgui(
+        IMGUI_VARIABLE_CONTROL::GetImguiData(
+            {
+                &DrawSelectNumber4
+            },
+            1.0f,
+            1.0f,
+            1.0f,
+            -1,
+            30,
+            "NONE_",
+            "%d",
+            0,
+            IMGUI_TYPE::SLIDER1
+        )
+    );
 
+    // TODO:_ ノードを変更している処理で計測する
     // 最大ノード数取得
     int setNodeMaxCount = -1;
     LightLineNode* currentNode;
@@ -502,6 +590,10 @@ void LightArea::DrawLightArea()
     {
         for (int lightAreaIterator = 0; lightAreaIterator < hitCollisionLine[hitCollisionLinesIterator].size(); ++lightAreaIterator)
         {
+            if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 != hitCollisionLinesIterator))
+            {
+                continue;
+            }
             int drawHitCollisionLineIteratorPlusNumber = 0;
             for (int hitLineIndex = 0; (hitLineIndex + 1) < hitCollisionLine[hitCollisionLinesIterator][lightAreaIterator].size(); ++hitLineIndex)
             {
@@ -513,6 +605,39 @@ void LightArea::DrawLightArea()
     // 描画
     DrawHitCollisionLineData(drawHitCollisionLine);
 }
+
+void LightArea::A()
+{
+    if (DrawSelectNumber == 0)
+    {
+        return;
+    }
+
+    for (int i = 0; i < drawHitCollisionLine.size(); ++i)
+    {
+        for (uint32_t l = 0; l < drawHitCollisionLine[i].size(); l++)
+        {
+            for (int lightAreaIndex = 0; lightAreaIndex < drawHitCollisionLine[i][l].size(); ++lightAreaIndex)
+            {
+                if ((DrawSelectNumber2 != -1) && (DrawSelectNumber2 != i))
+                {
+                    continue;
+                }
+                if ((DrawSelectNumber3 != -1) && (DrawSelectNumber3 != l))
+                {
+                    continue;
+                }
+                if ((DrawSelectNumber4 != -1) && (DrawSelectNumber4 != lightAreaIndex))
+                {
+                    continue;
+                }
+                // デバッグ用レイの可視化
+                DRAW_SYSTEM::DrawLine(drawHitCollisionLine[i][l][lightAreaIndex].LineStartPos, drawHitCollisionLine[i][l][lightAreaIndex].LineEndPos, 0xff0000);
+            }
+        }
+    }
+}
+
 
 // ライトエリア再描画
 void LightArea::ReDrawLightArea()
@@ -534,27 +659,30 @@ void LightArea::ReDrawLightArea()
 std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAreaHitCollisionsGetProcess()
 {
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLineData;
+    std::vector<std::vector<std::vector<AREA_ROUTE_JUDGE_DATA>>> areaRuteJudgeDatas;
 
     if (!mbIsLightFlag)
     {
         return hitCollisionLineData;
     }
 
-    // 最大ノード数に合わせてビット数を増やす
+    // 最大ノード数に合わせてメモリを確保しておく
     if (mnNodeMaxCount == -1)
     {
         return hitCollisionLineData;
     }
-    std::vector<BIT_FLAG<unsigned long long>> lightAreaRoute;
-    // 光エリアルートのビット数
-    constexpr size_t LIGHT_AREA_ROUTE_BIT_NUMBER = sizeof(unsigned long long);
-    lightAreaRoute.resize((mnNodeMaxCount / LIGHT_AREA_ROUTE_BIT_NUMBER) + 1);
-    for (int i  = 0; i < lightAreaRoute.size(); ++i)
-    {
-        lightAreaRoute[i].flags = 0u;
-    }
-    std::vector<BIT_FLAG<unsigned long long>> setLightAreaRoute = lightAreaRoute;
-
+    // std::vector<BIT_FLAG<unsigned long long>> lightAreaRoute;
+    // // 光エリアルートのビット数
+    // constexpr size_t LIGHT_AREA_ROUTE_BIT_NUMBER = sizeof(unsigned long long) * 8/*1バイトのビット数*/;
+    // lightAreaRoute.resize((mnNodeMaxCount / LIGHT_AREA_ROUTE_BIT_NUMBER) + 1);
+    // for (int i  = 0; i < lightAreaRoute.size(); ++i)
+    // {
+    //     lightAreaRoute[i].flags = 0u;
+    // }
+    hitCollisionLineData.reserve(mnNodeMaxCount);
+    areaRuteJudgeDatas.reserve(mnNodeMaxCount);
+    HIT_COLLISION_LINE hitCollisionLine;
+    AREA_ROUTE_JUDGE_DATA areaRouteJudge;
 
     LightLineNode* currentNode;
     LightLineNode* nextNode;
@@ -571,33 +699,38 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
         // ループ数
         int loopCount = 0;
         
-        // 光エリアルート関連
-        int lightAreaRouteNumber = 0;
-        int lightAreaRouteForLoopNumber = 0;
-        setLightAreaRoute = lightAreaRoute;
+        // ルートのID初期化
+        areaRouteJudge.LightAreaRouteID = 0;
 
         // 前の当たり判定
         BaseCollision* preHitCollision = nullptr;
         while (true)
         {
             // 情報保存
-            HIT_COLLISION_LINE hitCollisionLine;
             hitCollisionLine.HitCollision = currentNode->GetHitCollision();
-            hitCollisionLine.PreLineHitCollision = preHitCollision;
             hitCollisionLine.LineStartPos = currentNode->GetMyStartPos();
             hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
+            
+            // ラインが出てるコリジョン取得
+            areaRouteJudge.PreLineHitCollision = preHitCollision;
+
             preHitCollision = currentNode->GetHitCollision();
-            hitCollisionLine.LightAreaRoute = setLightAreaRoute;
 
             // このループ数最初の判定なら追加だけして次へ
             if (hitCollisionLineData.size() <= loopCount)
             {
                 // 情報を追加
                 hitCollisionLineData.push_back({{hitCollisionLine}});
+                // 追加IDナンバーがないから0を代入
+                areaRouteJudge.PlusLightAreaRouteID = 0;
+                areaRuteJudgeDatas.push_back({{areaRouteJudge}});
             }
             // 前に設定したことがあるから調べる
             else
             {
+                // 隣のはずの線からエリアルート判定情報取得
+                auto& nowAreaRuteJudgeData = areaRuteJudgeDatas[loopCount].back().back();
+                areaRouteJudge.PlusLightAreaRouteID = nowAreaRuteJudgeData.PlusLightAreaRouteID;
                 const int lineDataIndexs[3] =
                 {
                     loopCount,
@@ -608,15 +741,27 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
                 constexpr int LIGHT_AREA_COUNT = 1;
                 constexpr int COLLISION_COUNT = 2;
 
-                // TODO:_ 入れ替え　加筆中
+                // // ルートが同じか調べる
+                // bool isAreaRoute = true;
+                // for (int i = 0; i <= lightAreaRouteForLoopNumber; ++i)
+                // {
+                //     if (hitCollisionLine.LightAreaRoute[i].flags != hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].LightAreaRoute[i].flags)
+                //     {
+                //         //isAreaRoute = false;
+                //         break;
+                //     }
+                // }
 
-                /*前回のノード数が少ない今のループより少ない
+                /*ルートが違う
+                　前回のノード数が少ない今のループより少ない
                   出だしが違うオブジェクト*/
-                if (((preLoopCount != -1) && (preLoopCount <  loopCount)) ||
+                if ((areaRouteJudge.LightAreaRouteID != nowAreaRuteJudgeData.LightAreaRouteID) ||
+                    ((preLoopCount != -1) && (preLoopCount <  loopCount)) ||
                     (hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].PreLineHitCollision != hitCollisionLine.PreLineHitCollision))
                 {
                     // 新しいライトエリアとして登録
                     hitCollisionLineData[lineDataIndexs[LOOP_COUNT]].push_back({hitCollisionLine});
+                    areaRouteJudge.LightAreaRouteID ;
                 }
                 /*このif判定順番厳守、配列の参照でエラー出る*/
                 else if (/*二つのラインで四角分がこれまでに作成されているか判定*/
@@ -647,6 +792,8 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
             // ループ数インクリメント
             ++loopCount;
 
+            setLightAreaRoute[lightAreaRouteForLoopNumber].flags |= (addBit << lightAreaRouteNumber);
+
             ++lightAreaRouteNumber;
             if (lightAreaRouteNumber >= LIGHT_AREA_ROUTE_BIT_NUMBER)
             {
@@ -665,6 +812,13 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
         {
             // ループ数
             int loopCount = 0;
+        
+        // 光エリアルート関連
+        int lightAreaRouteNumber = 0;
+        int lightAreaRouteForLoopNumber = 0;
+        int addBit = 0;
+        std::vector<BIT_FLAG<unsigned long long>> setLightAreaRoute = lightAreaRoute;
+        
             // 前の当たり判定
             BaseCollision* preHitCollision = nullptr;
             while (true)
@@ -676,6 +830,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
                 hitCollisionLine.LineStartPos = currentNode->GetMyStartPos();
                 hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
                 preHitCollision = currentNode->GetHitCollision();
+                hitCollisionLine.LightAreaRoute = setLightAreaRoute;
 
                 // このループ数最初の判定なら追加だけして次へ
                 if (hitCollisionLineData.size() <= loopCount)
@@ -696,13 +851,23 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
                     constexpr int LIGHT_AREA_COUNT = 1;
                     constexpr int COLLISION_COUNT = 2;
 
-                    // TODO:_ 入れ替え　加筆中
+                    // ルートが同じか調べる
+                    bool isAreaRoute = true;
+                    for (int i = 0; i <= lightAreaRouteForLoopNumber; ++i)
+                    {
+                        if (hitCollisionLine.LightAreaRoute[i].flags != hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].LightAreaRoute[i].flags)
+                        {
+                            //isAreaRoute = false;
+                            break;
+                        }
+                    }
 
                     /*出だしが違うオブジェクト*/
                     if (hitCollisionLineData[lineDataIndexs[LOOP_COUNT]][lineDataIndexs[LIGHT_AREA_COUNT]][lineDataIndexs[COLLISION_COUNT]].PreLineHitCollision != hitCollisionLine.PreLineHitCollision)
                     {
                         // 新しいライトエリアとして登録
                         hitCollisionLineData[lineDataIndexs[LOOP_COUNT]].push_back({hitCollisionLine});
+                        addBit ^= 0x1;
                     }
                     /*このif判定順番厳守、配列の参照でエラー出る*/
                     else if (/*二つのラインで四角分がこれまでに作成されているか判定*/
@@ -732,6 +897,23 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
                 // ループ数インクリメント
                 ++loopCount;
+
+                setLightAreaRoute[lightAreaRouteForLoopNumber].flags |= (addBit << lightAreaRouteNumber);
+
+                ++lightAreaRouteNumber;
+                if (lightAreaRouteNumber >= LIGHT_AREA_ROUTE_BIT_NUMBER)
+                {
+                    if (lightAreaRouteForLoopNumber != 0)
+                    {
+                        lightAreaRouteNumber = 0;
+                        ++lightAreaRouteForLoopNumber;
+                    }
+                    else
+                    {
+                        lightAreaRouteNumber = 0;
+                        ++lightAreaRouteForLoopNumber;
+                    }
+                }
             }
         }
     }
@@ -841,7 +1023,7 @@ int LightArea::SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& h
                     intersectionPos.push_back(nowStart + nowEdgeDirection * nowEdgeIntersectionRatio);
                     for (int intersectionPosIndex = 0; intersectionPosIndex < intersectionPos.size(); ++intersectionPosIndex)
                     {
-                        addDrawHitCollisionLine.push_back({nowCheckHitLine.HitCollision, nowCheckHitLine.PreLineHitCollision, nowCheckHitLine.LineStartPos, intersectionPos[intersectionPosIndex]});
+                        addDrawHitCollisionLine.push_back({nowCheckHitLine.HitCollision, nowCheckHitLine.LineStartPos, intersectionPos[intersectionPosIndex]});
                     }
                     IsAdd_AddDrawHitCollisionLine = true;
                 }
@@ -1296,7 +1478,7 @@ bool LightArea::AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>*
         tempPoint.SetShapeParameter(vertexPosition);
         if (0 <= BaseCollision2DManager::CheckHitCollision2DToCollision2D(&tempPoint, &tempQuadrangle).mnResultParam)
         {
-            addDrawHitCollisionLine->push_back({hitCollision, nullptr, startPos, vertexPosition});
+            addDrawHitCollisionLine->push_back({hitCollision, startPos, vertexPosition});
         }
     }
 

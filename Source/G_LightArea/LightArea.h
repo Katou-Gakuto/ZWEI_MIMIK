@@ -22,11 +22,15 @@ class Quadrangle2D;
 struct HIT_COLLISION_LINE
 {
     BaseCollision* HitCollision;
-    BaseCollision* PreLineHitCollision;
     VECTOR2D LineStartPos;
     VECTOR2D LineEndPos;
+};
 
-    std::vector<BIT_FLAG<unsigned long long>> LightAreaRoute;
+struct AREA_ROUTE_JUDGE_DATA
+{
+    BaseCollision* PreLineHitCollision;
+    int LightAreaRouteID;
+    int PlusLightAreaRouteID;
 };
 
 struct LIGHT_EDGE_DATA
@@ -120,6 +124,7 @@ public:
 
     // ライトエリアの描画
     void DrawLightArea();
+    void A();
 
     // ライトエリア再描画
     void ReDrawLightArea();

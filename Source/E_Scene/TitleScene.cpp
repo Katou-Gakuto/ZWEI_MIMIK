@@ -64,7 +64,6 @@ int TitleScene::Create()
     DecisionHandle = Master::mpResourceManager->LoadGraphics("Resource/•¶Žš/Œˆ’è_B.png");
     BackHandle = Master::mpResourceManager->LoadGraphics("Resource/•¶Žš/–ß‚é_B.png");
     Master::mpSoundManager->SetBGMVolume(180);
-    Master::mpSoundManager->SetBGMVolume(0);// DELETE:_
     Master::mpSoundManager->SetSEVolume(180);
     Master::mpSoundManager->ChangeVolume();
 

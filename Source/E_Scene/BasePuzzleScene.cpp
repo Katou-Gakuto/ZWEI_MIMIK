@@ -141,7 +141,7 @@ int BasePuzzleScene::Initialize()
 	this->ResultAnimCount = -10;
 
 
-
+    // TODO:_ ‚±‚êCreate‚É
     PoseHandle = Master::mpResourceManager->LoadGraphics("Resource/•¶Žš/PAUSE_W.png");
     OptionHandle = Master::mpResourceManager->LoadGraphics("Resource/•¶Žš/OPTION_W.png");
     RetryHandle = Master::mpResourceManager->LoadGraphics("Resource/•¶Žš/RETRY_W.png");
