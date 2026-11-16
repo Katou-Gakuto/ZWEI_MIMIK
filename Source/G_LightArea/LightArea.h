@@ -21,14 +21,15 @@ class Quadrangle2D;
 
 struct HIT_COLLISION_LINE
 {
-    BaseCollision* HitCollision;
+    BaseCollision* HitCollision;      // 当たっているコリジョン
+    BaseCollision* PreHitCollision;   // 前に当たっていたコリジョン
+    BaseCollision* OtherCollision;    // 判定に使ったもう一方のコリジョン
     VECTOR2D LineStartPos;
     VECTOR2D LineEndPos;
 };
 
 struct AREA_ROUTE_JUDGE_DATA
 {
-    BaseCollision* PreLineHitCollision;
     int LightAreaRouteID;
     int PlusLightAreaRouteID;
 };
@@ -122,12 +123,9 @@ public:
     // 光の色取得
     uint32_t GetLightColor() { return mnLightColor; }
 
-    // ライトエリアの描画
+    // ライトエリア描画
     void DrawLightArea();
     void A();
-
-    // ライトエリア再描画
-    void ReDrawLightArea();
 
 
     // ライトエリア描画時当たっている
@@ -137,26 +135,29 @@ public:
     void SetLightFlag(bool flag) { mbIsLightFlag = flag; }
 
 private:
+    // ライトエリアの描画情報設定処理
+    void SettingDrawLightAreaData(const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
+
     // 指定した2点を通る直線上に点があるかを判定
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
 
-
     // 光領域を描画用に調整する
-    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>& drawHitCollisionLine, size_t lineIndex, int drawHitCollisionLineIteratorPlusNumber);
+    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>* drawHitCollisionLine, const size_t& lineIndex, const int& drawHitCollisionLineIteratorPlusNumber, const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
 
     // 角を取得する
-    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, VECTOR2D viewPos);
+    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, const VECTOR2D& viewPos);
     // 辺を取得する
     std::vector<LIGHT_EDGE_DATA> GetVisibleEdges(BaseCollision* collision, const VECTOR2D& viewPos);
 
+    // TODO:_ plusRightStartPosを設定用ポジションにした方が処理数減る
     // 	2本のラインの間にある頂点まで描画用ラインを追加する
-    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, VECTOR2D startPos, VECTOR2D endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D> vertexPositions, BaseCollision* hitCollision, bool isEqualAngleFrontSet);
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, const VECTOR2D& startPos, const VECTOR2D& endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D>& vertexPositions, BaseCollision* hitCollision, BaseCollision* preHitCollision, BaseCollision* otherHitCollision, bool isEqualAngleFrontSet);
 
     // 当たっている辺を求める
     LIGHT_EDGE_DATA GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
 
     // 延長した光を取得する
-    bool GettingExtendedLight(HIT_COLLISION_LINE extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
+    bool GettingExtendedLight(const HIT_COLLISION_LINE& extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
 
     // 当たっている辺以外の辺まで光を延長する
     bool GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);

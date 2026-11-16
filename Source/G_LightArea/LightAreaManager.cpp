@@ -536,7 +536,7 @@ void LightAreaManager::LightDraw()
             LightArea* lightArea = mlNode[lightAreaIndex];
             if (lightArea->GetLightColor() == colorNumbers[i])
             {
-                lightArea->ReDrawLightArea();
+                lightArea->DrawLightArea();
             }
         }
     }
