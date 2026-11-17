@@ -145,13 +145,12 @@ private:
     int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>* drawHitCollisionLine, const size_t& lineIndex, const int& drawHitCollisionLineIteratorPlusNumber, const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
 
     // 角を取得する
-    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, const VECTOR2D& viewPos);
+    std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, const VECTOR2D& viewPos1, const VECTOR2D* viewPos2 = nullptr);
     // 辺を取得する
-    std::vector<LIGHT_EDGE_DATA> GetVisibleEdges(BaseCollision* collision, const VECTOR2D& viewPos);
+    std::vector<LIGHT_EDGE_DATA> GetVisibleEdges(BaseCollision* collision, const VECTOR2D& viewPos1, const VECTOR2D* viewPos2 = nullptr);
 
-    // TODO:_ plusRightStartPosを設定用ポジションにした方が処理数減る
     // 	2本のラインの間にある頂点まで描画用ラインを追加する
-    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, const VECTOR2D& startPos, const VECTOR2D& endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D>& vertexPositions, BaseCollision* hitCollision, BaseCollision* preHitCollision, BaseCollision* otherHitCollision, bool isEqualAngleFrontSet);
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, const VECTOR2D& startPos, const VECTOR2D& endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D>& vertexPositions, BaseCollision* hitCollision, BaseCollision* preHitCollision, BaseCollision* otherHitCollision, bool isEqualAngleFrontSet, std::vector<VECTOR2D>* excludeVertexPositions = nullptr);
 
     // 当たっている辺を求める
     LIGHT_EDGE_DATA GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
@@ -167,6 +166,9 @@ private:
 
     // 点が線分上にあるか確認
     bool IsPointOnLineSegment(const VECTOR2D& point, const VECTOR2D& lineStart, const VECTOR2D& lineEnd);
+        
+    // 2つの線分の交差点を取得
+    bool GetIntersectionPosition(const VECTOR2D& lineOneStart, const VECTOR2D& lineOneEnd, const VECTOR2D& lineTwoStart, const VECTOR2D& lineTwoEnd, VECTOR2D* intersectionPos);
 
     // 3角情報にして描画
     void DrawHitCollisionLineData(const std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> &hitCollisionLineData);

@@ -28,7 +28,7 @@ int ResourceManager::LoadMadel(string pathName)
     }
 
     //“Ç‚İ‚Ü‚ê‚Ä‚¢‚È‚©‚Á‚½‚ç
-	int handle = LoadGraph(pathName.c_str());
+	int handle = MV1LoadModel(pathName.c_str());
     if (handle == -1)
     {
         return -1;

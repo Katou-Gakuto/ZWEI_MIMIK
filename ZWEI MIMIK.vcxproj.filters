@@ -418,6 +418,9 @@
     <ClCompile Include="Source\E_Scene\PuzzleScene4.cpp">
       <Filter>Source\E_Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\H_Katou\DebugLogs\PerformanceTimer.cpp">
+      <Filter>Source\H_Katou\DebugLogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -812,6 +815,9 @@
     </ClInclude>
     <ClInclude Include="Source\E_Scene\PuzzleScene4.h">
       <Filter>Source\E_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\H_Katou\DebugLogs\PerformanceTimer.h">
+      <Filter>Source\H_Katou\DebugLogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

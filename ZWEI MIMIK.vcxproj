@@ -184,6 +184,7 @@
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_draw.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_tables.cpp" />
     <ClCompile Include="Source\H_Katou\DebugLogs\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\H_Katou\DebugLogs\PerformanceTimer.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\EndManager.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\ImguiManager.cpp" />
     <ClCompile Include="Source\H_Katou\Singleton\KeyState.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_rectpack.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_textedit.h" />
     <ClInclude Include="Source\H_Katou\DebugLogs\Imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\H_Katou\DebugLogs\PerformanceTimer.h" />
     <ClInclude Include="Source\H_Katou\Enum\ImguiEnum.h" />
     <ClInclude Include="Source\H_Katou\Enum\KeyStateEnum.h" />
     <ClInclude Include="Source\H_Katou\Singleton\EndManager.h" />
