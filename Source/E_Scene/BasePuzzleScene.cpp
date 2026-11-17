@@ -278,10 +278,10 @@ int BasePuzzleScene::Draw()
         */
 
     // 
-    this->mpGameObjectManager->Draw();
-    // 
     Master::mpLightManager->Draw();
 
+    // 
+    this->mpGameObjectManager->Draw();
 
     // 
     if (this->mbGoal)
@@ -868,7 +868,7 @@ int BasePuzzleScene::ResultDraw()
 int BasePuzzleScene::FailedUpdate()
 {
     // 
-    const uint32_t sceneCloseStart = 119;
+    const uint32_t sceneCloseStart = 89;
     if (sceneCloseStart == this->mnFailedModeFrame)
     {
         // ã≠êßRETRY

@@ -125,9 +125,6 @@ public:
     // ライトエリア描画時当たっている
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> DrawLingAreaHitCollisionsGetProcess();
 
-    // ライト有効フラグ設定
-    void SetLightFlag(bool flag) { mbIsLightFlag = flag; }
-
 private:
     // 指定した2点を通る直線上に点があるかを判定
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
@@ -197,7 +194,4 @@ private:
 
     // 前の三角の配列数
     int mnPreLightAreaTriangleVertexIndexCount;
-
-    // ライト点灯フラグ
-    bool mbIsLightFlag;
 };

@@ -30,8 +30,7 @@ LightArea::LightArea() :
     // mstLightLine(),
     mstLightAreaTriangleVertex(nullptr),
     munLightAreaTriangleSize(0),
-    mnPreLightAreaTriangleVertexIndexCount(0),
-    mbIsLightFlag(true)
+    mnPreLightAreaTriangleVertexIndexCount(0)
 {
 }
 
@@ -453,7 +452,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> drawHitCollisionLine;
 // ライトエリアの描画
 void LightArea::DrawLightArea()
 {
-    if (!mbIsLightFlag)
+    if (this->mbOffLight)
     {
         return;
     }
@@ -488,7 +487,7 @@ void LightArea::DrawLightArea()
 // ライトエリア再描画
 void LightArea::ReDrawLightArea()
 {
-    if (!mbIsLightFlag)
+    if (this->mbOffLight)
     {
         return;
     }
@@ -506,7 +505,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 {
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLineData;
 
-    if (!mbIsLightFlag)
+    if (this->mbOffLight)
     {
         return hitCollisionLineData;
     }

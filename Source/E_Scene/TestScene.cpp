@@ -228,7 +228,7 @@ int TestScene::Create()
 	gimmickController->AddGimmick(
 		new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer),
 		new LightExecutor(
-			PuzzleGimmickActiveParam::Create(true, false),
+			PuzzleGimmickActiveParam::Create(true, false, true),
 			gimmickObject,
 			0,
 			50,
