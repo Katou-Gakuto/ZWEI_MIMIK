@@ -41,6 +41,8 @@ public:
     int ObjectCollisionActivate();
     int ObjectCollisionDeactivate();
 
+    int OnDrawFlag();
+
     int ResetMoveVec();                                     // 移動ベクトルを0ベクトルに設定する
     int EarlyUpdate();                                      // 通常更新の前にしなければいけない何か
     int Update();                                           // 通常更新

@@ -8,6 +8,7 @@
 #include "PuzzleScene1.h"
 #include "TestScene.h"
 
+#include "../A_GameObject/GameObjectManager.h"
 #include "../Y_Tool/MyTimer.h"
 
 #include "Master.h"
@@ -63,9 +64,6 @@ int BaseSceneManager::SceneOpen()
     }
 
     // 
-    this->mnOpeningFrame++;
-
-    // 
     return result;
 }
 
@@ -99,9 +97,6 @@ int BaseSceneManager::SceneClose()
     }
 
     // 
-    this->mnClosingFrame++;
-
-    // 
     return result;
 }
 
@@ -119,7 +114,7 @@ bool BaseSceneManager::CheckSceneOpenEnd() const
         break;
     case SOAN::SOAN_CurtainUp:
         // 幕が上がり終わったかを確認する
-        if (!mstFadeOpenData.IsFade)
+        if (30 <= this->mnOpeningFrame)
         {
             result = true;
         }
@@ -147,7 +142,7 @@ bool BaseSceneManager::CheckSceneCloseEnd() const
         break;
     case SCAN::SCAN_CurtainDown:
         // 幕が下がり終わったかを確認する
-        if (!mstFadeCloseData.IsFade)
+        if (29 <= this->mnClosingFrame)
         {
             result = true;
         }
@@ -297,7 +292,6 @@ int BaseSceneManager::Update()
         {
             // 
             this->mnClosingFrame = 0;
-            this->mnClosingNumber = SCAN::SCAN_None;
             this->mbClosingUpdate = false;
 
             // 
@@ -338,8 +332,11 @@ int BaseSceneManager::Update()
         {
             // 
             this->mnOpeningFrame = 0;
-            this->mnOpeningNumber = SOAN::SOAN_None;
             this->mbOpeningUpdate = false;
+
+            // 
+            this->mnClosingNumber = SCAN::SCAN_None;
+            this->mnOpeningNumber = SOAN::SOAN_None;
 
             // 
             this->mnChangeScene = SceneTag::ST_Max;
@@ -391,9 +388,18 @@ int BaseSceneManager::Update()
 
 int BaseSceneManager::Draw()
 {
+    // 
     BaseScene *sceneNow = this->SearchSceneTag(this->mnSceneNow);
     if (sceneNow != nullptr)
     {
+        // 
+        if (this->mnChangeScene != SceneTag::ST_Max)
+        {
+            // 応急処置でシーン遷移の間は基本的には全てのモデルをONにする
+            sceneNow->GetGameObjectManager()->OnDrawFlag();
+        }
+
+        // 
         sceneNow->Draw();
     }
 

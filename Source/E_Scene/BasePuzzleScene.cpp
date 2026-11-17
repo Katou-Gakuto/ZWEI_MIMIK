@@ -136,6 +136,7 @@ int BasePuzzleScene::Initialize()
     obj->SetDrawFlag(true);
 
     // ‚±‚±‚ÅŒõˆæ‚Ì”ÍˆÍ‚Ì‰Šú‰»‚ð‚µ‚Ä‚Ù‚µ‚¢
+    Master::mpLightManager->CalculateArea();
 
 
 	this->ResultAnimCount = -10;

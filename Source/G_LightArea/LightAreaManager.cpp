@@ -179,7 +179,7 @@ bool LightAreaManager::ResizeArea(uint32_t useAreaCount)
 }
 
 // 
-bool LightAreaManager::Data()
+bool LightAreaManager::CalculateArea()
 {
     // 
     std::vector<BaseCollision2D*> objectCollisionBox;
@@ -221,6 +221,8 @@ bool LightAreaManager::Data()
             resultNewr);
     }
 
+    // 
+    return true;
 }
 
 // ‚Ç‚ÌŒõˆæ‚É“ü‚Á‚Ä‚¢‚é‚©‚ğŠm”F‚·‚éŠÖ”

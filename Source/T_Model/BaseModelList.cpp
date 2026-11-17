@@ -138,6 +138,19 @@ int BaseModelList::Draw()
     return temp;
 }
 
+// 
+int BaseModelList::OnDrawFlag()
+{
+    int temp = 0;
+    BaseModel *current = this->mpFirstModel;
+    while (current != nullptr)
+    {
+        current->SetDrawFlag(true);
+        current = current->GetNext();
+    }
+    return temp;
+}
+
 int BaseModelList::Add(BaseModel *model, BaseModelHandle &modelHandle)
 {
     if (model == nullptr)

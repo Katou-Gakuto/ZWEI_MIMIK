@@ -802,7 +802,7 @@ bool Player::InitPosition(const VECTOR2D &pos)
     bodyCollision->SetShapeParameter(pos, circleRadius);
 
     // 
-    return false;
+    return true;
 }
 
 // 
