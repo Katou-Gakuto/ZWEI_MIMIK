@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.GraphicsBuffer;
@@ -355,6 +357,12 @@ public class SetMapDrawPos : MonoBehaviour
         {
             return;
         }
+
+        foreach (string targetTag in OutPutTags)
+        {
+            AddTagIfNotExists(targetTag);
+        }
+
         SetMapObjectTrigger = false;
         SetMapObjectTriggerCount++;
 
@@ -1063,4 +1071,27 @@ public class SetMapDrawPos : MonoBehaviour
             AssetDatabase.Refresh();
         }
     }
+
+    
+private void AddTagIfNotExists(string tagName)
+{
+    // Tagが既に存在するか確認
+    if (InternalEditorUtility.tags.Contains(tagName))
+    {
+        return;
+    }
+
+    // TagManager取得
+    SerializedObject tagManager =
+        new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+
+    SerializedProperty tagsProperty = tagManager.FindProperty("tags");
+
+    // Tag追加
+    tagsProperty.InsertArrayElementAtIndex(tagsProperty.arraySize);
+    tagsProperty.GetArrayElementAtIndex(tagsProperty.arraySize - 1).stringValue = tagName;
+
+    // 変更を適用
+    tagManager.ApplyModifiedProperties();
+}
 }
