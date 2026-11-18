@@ -125,8 +125,6 @@ public:
 
     // ライトエリア描画
     void DrawLightArea();
-    void A();
-
 
     // ライトエリア描画時当たっている
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> DrawLingAreaHitCollisionsGetProcess();
