@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)プロジェクトに追加すべきファイル_VC用;$(SolutionDir)Source\A_GameObject;$(SolutionDir)Source\B_BehaviorTree;$(SolutionDir)Source\C_Component;$(SolutionDir)Source\E_Scene;$(SolutionDir)Source\F_PuzzleGimmick;$(SolutionDir)Source\G_LightArea;$(SolutionDir)Source\S_Collision;$(SolutionDir)Source\T_Model;$(SolutionDir)Source\Y_Tool;$(SolutionDir)Source\Z_Except;$(SolutionDir)Source\H_Katou;$(SolutionDir)Source\H_Katou\Enum;$(SolutionDir)Source\H_Katou\DebugLogs\imgui;$(SolutionDir)Source\H_Katou\DebugLogs\imgui\backends;$(SolutionDir)Source\H_Katou\Singleton;$(SolutionDir)Source\H_Katou\Struct;$(SolutionDir)Source\H_Katou\TemplateTypeRestriction</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(SolutionDir)Source\pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -267,6 +268,7 @@
     <ClInclude Include="Source\B_BehaviorTree\BehaviorNode.h" />
     <ClInclude Include="Source\B_BehaviorTree\BehaviorTree.h" />
     <ClInclude Include="Source\B_BehaviorTree\MonoBehavior.h" />
+    <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\C_Component\BaseComponent.h" />
     <ClInclude Include="Source\C_Component\BaseComponentList.h" />
     <ClInclude Include="Source\C_Component\ButtonObjectController.h" />

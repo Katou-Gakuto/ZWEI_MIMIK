@@ -211,7 +211,7 @@ int BasePuzzleScene::Update()
     // 
     this->mbGoal = this->mpGoalLight->GetInPlayer() && this->mpGoalShadow->GetInPlayer();
 
-#ifdef _DEBUG //マージするときここはしなくてもいい
+#ifdef DEBUG_SUMIDA //マージするときここはしなくてもいい
 
     if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 0))
     {

@@ -165,3 +165,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ソフトの終了
 	return 0;
 }
+
+// マクロ削除
+#undef DEBUG_SUMIDA
+#undef DEBUG_KAWADA
+#undef DEBUG_KATOU
