@@ -3,12 +3,18 @@
 SoundManager::SoundManager()
 {
     // BGM
-    LoadBGM("Resource/Sound/空.wav");// タイトル
+    LoadBGM("Resource/Sound/audiostock_TitleBGM.mp3");// タイトル
+    LoadBGM("Resource/Sound/audiostock_Select_BGM.mp3");// ステージセレクト
+    LoadBGM("Resource/Sound/audiostock_Stage_BGM2.mp3"); // ステージ
+    LoadBGM("Resource/Sound/audiostock_Result_BGM.mp3");// リザルト
 
 
     // SE
-    LoadSE("Resource/Sound/入店音.mp3"); // ボタンSE
+    LoadSE("Resource/Sound/Cursor.wav"); // ボタンSE
+    LoadSE("Resource/Sound/maou_se_magic_fire08.wav"); // 失敗時に鳴らす
 
+    mnBGMVolume = 204;
+    mnSEVolume = 204;
     ChangeVolume();
 }
 SoundManager::~SoundManager()

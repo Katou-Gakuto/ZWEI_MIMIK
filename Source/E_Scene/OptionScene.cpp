@@ -201,9 +201,15 @@ int OptionScene::UpdateModeSelect()
     {
         // 左右の移動
         if (currentRight)
+        {
             mnVolumeSE++;
+            Master::mpSoundManager->PlaySE("Resource/Sound/Cursor.wav");
+        }
         if (currentLeft)
+        {
             mnVolumeSE--;
+            Master::mpSoundManager->PlaySE("Resource/Sound/Cursor.wav");
+        }
 
         // 音量の上限と下限に制限をかける
         if (mnVolumeSE > 100)
@@ -257,6 +263,10 @@ int OptionScene::UpdateModeSelect()
     }
     else
     {
+        if (currentUp || currentDown)
+        {
+            Master::mpSoundManager->PlaySE("Resource/Sound/Cursor.wav");
+        }
         // 選択中のカーソルに応じてボタンの処理を変える
         switch (this->mnCurrentMode)
         {

@@ -65,7 +65,7 @@ int TitleScene::Create()
     BackHandle = Master::mpResourceManager->LoadGraphics("Resource/•¶Žš/–ß‚é_B.png");
     Master::mpSoundManager->SetBGMVolume(180);
     Master::mpSoundManager->SetSEVolume(180);
-    Master::mpSoundManager->ChangeVolume();
+    //Master::mpSoundManager->ChangeVolume();
 
     // 
     return 0;
@@ -77,7 +77,7 @@ int TitleScene::Initialize()
 	// ƒJ[ƒ\ƒ‹‚ðˆê”Ôã‚ÉÝ’è‚·‚é
     this->mnCurrentMode = TitleSelectMode::TitleSelectMode_StageSelect;
 
-    Master::mpSoundManager->PlayBGM("Resource/Sound/‹ó.wav");
+    Master::mpSoundManager->PlayBGM("Resource/Sound/audiostock_TitleBGM.mp3");
     fwfw = 0;
     Time = 0;
     vec = 20;
@@ -301,6 +301,7 @@ int TitleScene::UpdateModeSelect()
             fwfw = 0;
             Time = 0;
             vec = 20;
+			Master::mpSoundManager->PlaySE("Resource/Sound/Cursor.wav");
         }
 
         // B‚ª‰Ÿ‚³‚ê‚½‚çƒƒS‚Ì‰æ–Ê‚É–ß‚é
@@ -323,8 +324,8 @@ int TitleScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // 
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
-
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+				Master::mpSoundManager->StopBGM();
                 // 
                 this->OnResetFlag();
             }
@@ -390,6 +391,7 @@ int TitleScene::UpdateModeSelect()
             {
                 // 
                 Master::mpEndManager->SetEndFlag(true, END_FLAG_NUMBER::WITHIN_EXPECTATION_GAME_END_FLAG);
+                Master::mpSoundManager->StopBGM();
 
                 // 
                 this->OnResetFlag();

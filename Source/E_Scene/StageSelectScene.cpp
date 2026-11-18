@@ -9,6 +9,7 @@
 #include "../H_Katou/Singleton/KeyState.h"
 
 #include "../Z_Except/ResourceManager.h"
+#include "../Z_Except/SoundManager.h"
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 
@@ -45,6 +46,7 @@ int StageSelectScene::Create()
     this->mdMoveData.Add(element);
 
     mnCurrentStage = 0;
+    OldCurrentStage = 0;
 
     // 
     this->mnCurrentStage = Master::mnLastPlayStageNum;
@@ -115,7 +117,7 @@ int StageSelectScene::Create()
     CubeHandle[18] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");
     CubeHandle[19] = Master::mpResourceManager->LoadGraphics("Resource/mato.png");*/
 
-	StageNameHandle[0] = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGEName0.png");
+	StageNameHandle[0] = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGEName1.png");
     StageNameHandle[1] = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGEName0.png");
     StageNameHandle[2] = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGEName0.png");
     StageNameHandle[3] = Master::mpResourceManager->LoadGraphics("Resource/文字/STAGEName0.png");
@@ -148,6 +150,7 @@ int StageSelectScene::Initialize()
 {
     // 
     LightColor = 0xFFF2CC;
+    Master::mpSoundManager->PlayBGM("Resource/Sound/audiostock_Select_BGM.mp3");
     return 0;
 }
 
@@ -161,6 +164,24 @@ int StageSelectScene::Finalize()
 // 
 int StageSelectScene::Update()
 {
+
+    if (OldCurrentStage != mnCurrentStage)
+    {
+        for (StageNum = 0; StageNum < StageMax; StageNum++)
+        {
+            if (StageNum == CubeStage[(StageMax / 2) - 1])
+            {
+                //CubeSize[StageNum] = 150 - (70 * ((StageMax / 2) - 1));
+                CubeX[StageNum] = Interval * ((StageMax / 2) - 1);
+            }
+            else
+            {
+                //CubeSize[StageNum] += 7;
+                CubeX[StageNum] -= Interval;
+            }
+        }
+    }
+
     // 
     if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 1))
@@ -178,6 +199,7 @@ int StageSelectScene::Update()
             {
                 // 選択したステージのシーンに遷移する
                 Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+                Master::mpSoundManager->StopBGM();
 
                 // 
                 Master::mnLastPlayStageNum = this->mnCurrentStage;
@@ -198,8 +220,10 @@ int StageSelectScene::Update()
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1))
     {
         // 
-        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_None, false, SOAN_None, false);
-
+        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+		Master::mpSoundManager->StopBGM();
+        // 
+        this->OnResetFlag();
         // 
         return 0;
     }
@@ -290,6 +314,7 @@ int StageSelectScene::Update()
 
     }
 
+    OldCurrentStage = mnCurrentStage;
     // 
     return 0;
 }
@@ -297,28 +322,13 @@ int StageSelectScene::Update()
 // 
 int StageSelectScene::Draw()
 {
-	DrawExtendGraph(20, 20, 520, 70, NowSceneHandle, true);
+    DrawExtendGraph(20, 20, 520, 70, NowSceneHandle, true);
 
     // 未開放のステージではなければスポットライトで照らす
     if (mnCurrentStage <= mnUnlockStageCount - 1)
     {
         DrawTriangle(960, -100, 660, 880, 1260, 880, LightColor, true);
         DrawOval(960, 880, 300, 90, LightColor, true);
-        DrawExtendGraph(840, 275, 1340, 325, STAGE, true);
-        if (mnCurrentStage < 9)// ステージ番号
-        {
-            DrawRectExtendGraph(1020, 275, 1070, 325, ((mnCurrentStage + 1) * 128), 0, 128, 128, NUMBERHandle, true);
-        }
-        else
-        {
-            DrawRectExtendGraph(1020, 275, 1070, 325, (((mnCurrentStage + 1) / 10) % 10 * 128), 0, 128, 128, NUMBERHandle, true);
-            DrawRectExtendGraph(1050, 275, 1100, 325, (((mnCurrentStage + 1) / 1 ) % 10 * 128), 0, 128, 128, NUMBERHandle, true);
-        }
-        DrawExtendGraph(710, 375, 1210, 425, StageNameHandle[mnCurrentStage], true);
-    }
-    else //未開放なら文言だけ表示
-    {
-        DrawExtendGraph(740, 300, 1240, 350, NotOpenStageHandle, true);
     }
 
 
@@ -336,6 +346,39 @@ int StageSelectScene::Draw()
         DrawOval(960 + CubeX[StageNum], 880, 150, 50, 0x000000, true);
     }
 
+
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+    DrawTriangle(960, -100, 660, 880, -1000, 780, 0x000000, true);
+    DrawTriangle(960, -100, 3000, 780, 1260, 880, 0x000000, true);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+
+	// ステージ名とステージ番号の表示
+
+    if (mnCurrentStage <= mnUnlockStageCount - 1)
+    {
+        DrawExtendGraph(840, 275, 1340, 325, STAGE, true);
+        if (mnCurrentStage < 9)// ステージ番号
+        {
+            DrawRectExtendGraph(1020, 275, 1070, 325, ((mnCurrentStage + 1) * 128), 0, 128, 128, NUMBERHandle, true);
+        }
+        else
+        {
+            DrawRectExtendGraph(1020, 275, 1070, 325, (((mnCurrentStage + 1) / 10) % 10 * 128), 0, 128, 128, NUMBERHandle, true);
+            DrawRectExtendGraph(1050, 275, 1100, 325, (((mnCurrentStage + 1) / 1) % 10 * 128), 0, 128, 128, NUMBERHandle, true);
+        }
+        DrawExtendGraph(710, 375, 1210, 425, StageNameHandle[mnCurrentStage], true);
+    }
+    else//未開放のステージなら暗くして文言だけ表示
+    {
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+        DrawTriangle(960, -100, 660, 880, 1260, 880, 0x000000, true);
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, 256);
+
+        DrawExtendGraph(740, 300, 1240, 350, NotOpenStageHandle, true);
+    }
+
+
     for (StageNum = 0; StageNum < StageMax; StageNum++)
     {
         if (mnCurrentStage == StageNum)
@@ -344,7 +387,14 @@ int StageSelectScene::Draw()
         }
         else
         {
-			DrawCircle(100 + StageNum * 30, 1000, 10, 0x777777, true);
+            if (StageNum <= mnUnlockStageCount - 1)
+            {
+                DrawCircle(100 + StageNum * 30, 1000, 10, 0x777777, true);
+            }
+            else
+            {
+                DrawCircle(100 + StageNum * 30, 1000, 10, 0x333333, true);
+            }
         }
     }
 

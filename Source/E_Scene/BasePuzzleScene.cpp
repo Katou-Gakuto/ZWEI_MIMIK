@@ -13,10 +13,12 @@
 #include "../G_LightArea/LightAreaManager.h"
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../E_Scene/BaseSceneManager.h"
+#include "../E_Scene/StageSelectScene.h"
 #include "../H_Katou/Singleton/KeyState.h"
 #include "../Y_Tool/VECTOR.h"
 #include "../Y_Tool/MyEasing.h"
 #include "../Z_Except/ResourceManager.h"
+#include "../Z_Except/SoundManager.h"
 #include "../Z_Except/Master.h"
 #include "DrawSystem.h"
 // 
@@ -158,6 +160,9 @@ int BasePuzzleScene::Initialize()
     DecisionHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/決定_W.png");
     BackHandle = Master::mpResourceManager->LoadGraphics("Resource/文字/戻る_W.png");
 
+    Master::mpSoundManager->PlayBGM("Resource/Sound/audiostock_Stage_BGM2.mp3");
+
+
     // 
     return 0;
 }
@@ -205,18 +210,20 @@ int BasePuzzleScene::Update()
 
     // 
     this->mbGoal = this->mpGoalLight->GetInPlayer() && this->mpGoalShadow->GetInPlayer();
-//
-//#ifdef _DEBUG //マージするときここはしなくてもいい
-//
-//    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 0))
-//    {
-//        mbGoal = true;
-//    }
-//
-//#endif
+
+#ifdef _DEBUG //マージするときここはしなくてもいい
+
+    if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::X, 0))
+    {
+        mbGoal = true;
+    }
+
+#endif
     if (this->mbGoal)
     {
         // 
+		Master::mpSoundManager->StopBGM();
+		Master::mpSoundManager->PlayBGM("Resource/Sound/audiostock_Result_BGM.mp3");
         return this->ResultUpdate();
     }
 
@@ -549,23 +556,26 @@ int BasePuzzleScene::PouseUpdate()
             Master::mpBaseSceneManager->SetResreveScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
             break;
         case PouseMenu::PouseMenu_Retry:
-            Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
             this->OnResetFlag();
+            Master::mpSoundManager->StopBGM();
             break;
         case PouseMenu::PouseMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
             this->OnResetFlag();
+            Master::mpSoundManager->StopBGM();
             break;
         case PouseMenu::PouseMenu_Title:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
             this->OnResetFlag();
+			Master::mpSoundManager->StopBGM();
             break;
         default:
             // 何もしない
             break;
         }
     }
-
+    
     // 
     int menuMove = 0;
 
@@ -583,6 +593,8 @@ int BasePuzzleScene::PouseUpdate()
 
         // 
         this->mnPouseCursorPos %= PouseMenu::PouseMenu_Max;
+
+		Master::mpSoundManager->PlaySE("Resource/Sound/Cursor.wav");
     }
 
     // 
@@ -723,18 +735,19 @@ int BasePuzzleScene::ResultUpdate()
         {
             // 
             unsigned long temp = 0;
-
+			StageSelectScene *mpStageSelectScene = new StageSelectScene();
             // 
             switch (this->mnResultCursorPos)
             {
             case ResultMenu::ResultMenu_NextStage:
                 temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag()) + 1;
-                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_None, false, SOAN_None, false);
+                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
                 Master::mnLastPlayStageNum = temp;
                 this->OnResetFlag();
+                mpStageSelectScene->NextCurrentStage();
                 break;
             case ResultMenu::ResultMenu_StageSelect:
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_None, false, SOAN_None, false);
+                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
                 this->OnResetFlag();
                 break;
             default:
@@ -758,6 +771,8 @@ int BasePuzzleScene::ResultUpdate()
 
             // 
             this->mnResultCursorPos %= ResultMenu::ResultMenu_Max;
+
+            Master::mpSoundManager->PlaySE("Resource/Sound/Cursor.wav");
         }
     }
     else
