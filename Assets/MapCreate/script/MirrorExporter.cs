@@ -18,13 +18,18 @@ public class MirrorExporter : MonoBehaviour
     [ContextMenu("‹¾‚Ìî•ñ‚ğo—Í")]
     public void Export()
     {
-        if (mirror1 == null || mirror2 == null)
+        // ‹¾‡@‚Í•K{
+        if (mirror1 == null)
         {
-            Debug.LogError("‹¾‚ª“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogError(
+                "Mirror 1 ‚ª“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB"
+            );
             return;
         }
 
-        string sceneName = SceneManager.GetActiveScene().name;
+        string sceneName =
+            SceneManager.GetActiveScene().name;
+
         string path = Path.Combine(
             Application.dataPath,
             "MirrorData_" + sceneName + ".txt"
@@ -32,21 +37,41 @@ public class MirrorExporter : MonoBehaviour
 
         StringBuilder sb = new StringBuilder();
 
+        // “o˜^‚³‚ê‚½‹¾‚Ì–‡”
+        int mirrorCount = mirror2 == null ? 1 : 2;
+
         sb.AppendLine("MIRROR_DATA");
-        sb.AppendLine("MirrorCount=2");
-        sb.AppendLine(); // ‹ó”’s‚ğ’Ç‰Á
-
-        WriteMirror(sb, mirror1, mirror1Rotatable);
-
-        // ‹¾‡@‚Æ‹¾‡A‚Ìî•ñ‚ÌŠÔ‚É‹ó”’s‚ğ’Ç‰Á
+        sb.AppendLine("MirrorCount=" + mirrorCount);
         sb.AppendLine();
 
-        WriteMirror(sb, mirror2, mirror2Rotatable);
+        // ‹¾‡@‚Ìî•ñ
+        WriteMirror(
+            sb,
+            mirror1,
+            mirror1Rotatable
+        );
 
-        File.WriteAllText(path, sb.ToString(),
-            new UTF8Encoding(false));
+        // ‹¾‡A‚ª‚ ‚éê‡‚Ì‚İo—Í
+        if (mirror2 != null)
+        {
+            sb.AppendLine();
 
-        Debug.Log("‹¾‚Ìî•ñ‚ğo—Í‚µ‚Ü‚µ‚½: " + path);
+            WriteMirror(
+                sb,
+                mirror2,
+                mirror2Rotatable
+            );
+        }
+
+        File.WriteAllText(
+            path,
+            sb.ToString(),
+            new UTF8Encoding(false)
+        );
+
+        Debug.Log(
+            "‹¾‚Ìî•ñ‚ğo—Í‚µ‚Ü‚µ‚½: " + path
+        );
 
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
@@ -58,12 +83,27 @@ public class MirrorExporter : MonoBehaviour
         Transform mirror,
         bool rotatable)
     {
-        sb.AppendLine("MirrorName=" + mirror.name);
-        sb.AppendLine("Position=" + FormatVector(mirror.position));
-        sb.AppendLine("RotationY=" + FormatFloat(mirror.eulerAngles.y));
-        sb.AppendLine("Scale=" + FormatVector(mirror.lossyScale));
-        sb.AppendLine("Rotatable=" +
-            rotatable.ToString().ToLowerInvariant());
+        sb.AppendLine(
+            "MirrorName=" + mirror.name
+        );
+
+        sb.AppendLine(
+            "Position=" + FormatVector(mirror.position)
+        );
+
+        sb.AppendLine(
+            "RotationY=" +
+            FormatFloat(mirror.eulerAngles.y)
+        );
+
+        sb.AppendLine(
+            "Scale=" + FormatVector(mirror.lossyScale)
+        );
+
+        sb.AppendLine(
+            "Rotatable=" +
+            rotatable.ToString().ToLowerInvariant()
+        );
     }
 
     string FormatVector(Vector3 v)
@@ -75,6 +115,9 @@ public class MirrorExporter : MonoBehaviour
 
     string FormatFloat(float value)
     {
-        return value.ToString("R", CultureInfo.InvariantCulture);
+        return value.ToString(
+            "R",
+            CultureInfo.InvariantCulture
+        );
     }
 }

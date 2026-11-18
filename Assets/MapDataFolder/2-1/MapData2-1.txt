@@ -1,0 +1,101 @@
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacle_Right
+pos(x, y): (295.5636f, 540.0f)
+size(x, y):(465.4546f, 54.0f)
+
+Obstacle_Left
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(465.4546f, 54.0f)
+
+Light_Left(固定)
+pos(x, y): (622.5455f, 1074.6f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (622.5455f, 1074.6f)
+size(x, y):(58.18182f, 54.0f)
+
+LightAreaPreview
+pos(x, y): (622.5455f, 1074.6f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_Center(動かせる)
+pos(x, y): (1309.091f, 324.0f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (1309.091f, 324.0f)
+size(x, y):(58.18182f, 54.0f)
+
+LightAreaPreview
+pos(x, y): (1309.091f, 324.0f)
+size(x, y):(116.3636f, 108.0f)
+angle:270.0f
+
+Light_Right(固定)
+pos(x, y): (1659.346f, 1055.16f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (1659.346f, 1055.16f)
+size(x, y):(58.18182f, 54.0f)
+
+LightAreaPreview
+pos(x, y): (1659.346f, 1055.16f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteSpawn
+pos(x, y): (261.8182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (261.8182f, 378.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (1658.182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1658.182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+PushableBlocks
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+PushableBlock_1
+pos(x, y): (619.0546f, 690.12f)
+size(x, y):(116.3636f, 108.0f)
+
+BlockBody
+pos(x, y): (612.0728f, 622.08f)
+size(x, y):(290.9091f, 54.0f)
+
+PushableBlock_2
+pos(x, y): (884.3636f, 456.84f)
+size(x, y):(116.3636f, 108.0f)
+
+BlockBody
+pos(x, y): (877.3818f, 388.8f)
+size(x, y):(81.45454f, 270.0f)
+

@@ -1,0 +1,7 @@
+PUSHABLE_BLOCK
+BlockName=PushableBlock_2
+Position=-0.65,0,0.77
+BodyLocalPosition=-0.06,0.5,0.63
+BodySize=0.7,1,2.5
+PushDirection=左右
+PushSpeed=1

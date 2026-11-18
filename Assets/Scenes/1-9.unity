@@ -672,7 +672,7 @@ MonoBehaviour:
   SetMapObjectTrigger: 0
   SetMapObjectTriggerCount: 2
   UIFlag: 0
-  FileOutputProcessMode: 2
+  FileOutputProcessMode: 1
   FileOutputProcess2DPosMode: 0
   FileOutputProcess2DSizeMode: 0
   OutPutMagnificationPos: {x: 1, y: 1}

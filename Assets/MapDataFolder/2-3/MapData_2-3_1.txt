@@ -1,0 +1,90 @@
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacle_FixedBlue
+pos(x, y): (354.9091f, 540.0f)
+size(x, y):(651.6364f, 86.4f)
+
+RotatingBlock_Pivot
+pos(x, y): (727.2728f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_UpperLeft_1
+pos(x, y): (316.5091f, 0.0f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (316.5091f, 0.0f)
+size(x, y):(58.18182f, 54.0f)
+
+LightAreaPreview
+pos(x, y): (316.5091f, 0.0f)
+size(x, y):(116.3636f, 108.0f)
+angle:180.0f
+
+Light_Center
+pos(x, y): (855.2728f, 0.0f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (855.2728f, 0.0f)
+size(x, y):(58.18182f, 54.0f)
+
+LightAreaPreview
+pos(x, y): (855.2728f, 0.0f)
+size(x, y):(116.3636f, 108.0f)
+angle:180.0f
+
+Light_Right
+pos(x, y): (1381.236f, 882.36f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (1381.236f, 882.36f)
+size(x, y):(58.18182f, 54.0f)
+
+LightAreaPreview
+pos(x, y): (1381.236f, 882.36f)
+size(x, y):(116.3636f, 108.0f)
+
+CoopSwitch_Lower
+pos(x, y): (436.3636f, 864.0f)
+size(x, y):(93.0909f, 86.39999f)
+
+CoopSwitch_Upper
+pos(x, y): (436.3636f, 216.0f)
+size(x, y):(93.0909f, 86.39999f)
+
+WhiteSpawn
+pos(x, y): (261.8182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (261.8182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (1658.182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1658.182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+

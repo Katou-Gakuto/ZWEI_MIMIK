@@ -1938,23 +1938,23 @@ MonoBehaviour:
   ObjectDatas:
   - TargetObject: {fileID: 1383113535}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: -3.889141}
+      MyPos: {x: 0, y: 0}
       MySize: {x: 16, y: 10}
   - TargetObject: {fileID: 1335335560}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: 1.1108589}
+      MyPos: {x: 0, y: 5}
       MySize: {x: 16.5, y: 0.5}
   - TargetObject: {fileID: 2011392964}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: -8.889141}
+      MyPos: {x: 0, y: -5}
       MySize: {x: 16.5, y: 0.5}
   - TargetObject: {fileID: 280432595}
     OutPutDatas:
-      MyPos: {x: -5.928151, y: -3.889141}
+      MyPos: {x: -8, y: 0}
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 266816145}
     OutPutDatas:
-      MyPos: {x: 10.071849, y: -3.889141}
+      MyPos: {x: 8, y: 0}
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 144565700}
     OutPutDatas:
@@ -2034,10 +2034,13 @@ MonoBehaviour:
   SetOneObjectStage_GameObject: {fileID: 1876612897}
   SetTwoObjectStage_GameObjectLeftUp: {fileID: 0}
   SetTwoObjectStage_GameObjectRightDown: {fileID: 0}
-  StageLeftUp: {x: -8.25, y: 6}
-  StageMiddle: {x: 0, y: 1}
-  StageRightDown: {x: 8.25, y: -4}
-  FileNamePlusCountFlag: 1
+  FileOutStageSize: {x: 16.5, y: 10}
+  StageLeftUp: {x: -8.25, y: 5}
+  StageMiddle: {x: 0, y: 0}
+  StageRightDown: {x: 8.25, y: -5}
+  FileNamePlusCountFlag: 0
+  IsGamePlayerSizeDraw: 0
+  IsStartSet: 1
 --- !u!4 &954524251
 Transform:
   m_ObjectHideFlags: 0

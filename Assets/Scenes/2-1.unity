@@ -164,31 +164,31 @@ MonoBehaviour:
   ObjectDatas:
   - TargetObject: {fileID: 1221820714}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: -3.889141}
+      MyPos: {x: 0, y: 0}
       MySize: {x: 16, y: 10}
   - TargetObject: {fileID: 1083193531}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: 1.1108589}
+      MyPos: {x: 0, y: 5}
       MySize: {x: 16.5, y: 0.5}
   - TargetObject: {fileID: 1949073085}
     OutPutDatas:
-      MyPos: {x: 2.0718489, y: -8.889141}
+      MyPos: {x: 0, y: -5}
       MySize: {x: 16.5, y: 0.5}
   - TargetObject: {fileID: 871455884}
     OutPutDatas:
-      MyPos: {x: -5.928151, y: -3.889141}
+      MyPos: {x: -8, y: 0}
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 1238905465}
     OutPutDatas:
-      MyPos: {x: 10.071849, y: -3.889141}
+      MyPos: {x: 8, y: 0}
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 1112459475}
     OutPutDatas:
-      MyPos: {x: -5.71, y: -0}
+      MyPos: {x: -5.71, y: 0}
       MySize: {x: 4, y: 0.5}
   - TargetObject: {fileID: 832767302}
     OutPutDatas:
-      MyPos: {x: 0, y: -0}
+      MyPos: {x: 0, y: 0}
       MySize: {x: 4, y: 0.5}
   - TargetObject: {fileID: 716023521}
     OutPutDatas:
@@ -196,11 +196,11 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1509192938}
     OutPutDatas:
-      MyPos: {x: 0, y: 0}
+      MyPos: {x: -2.9, y: -4.95}
       MySize: {x: 0.5, y: 0.5}
   - TargetObject: {fileID: 123838364}
     OutPutDatas:
-      MyPos: {x: 0, y: 0}
+      MyPos: {x: -2.9, y: -4.95}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 852187143}
     OutPutDatas:
@@ -208,11 +208,11 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1966134102}
     OutPutDatas:
-      MyPos: {x: 0, y: 0}
+      MyPos: {x: 3, y: 2}
       MySize: {x: 0.5, y: 0.5}
   - TargetObject: {fileID: 231370810}
     OutPutDatas:
-      MyPos: {x: 0, y: 0}
+      MyPos: {x: 3, y: 2}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1215278604}
     OutPutDatas:
@@ -220,11 +220,11 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1903610190}
     OutPutDatas:
-      MyPos: {x: 0, y: 0}
+      MyPos: {x: 6.01, y: -4.77}
       MySize: {x: 0.5, y: 0.5}
   - TargetObject: {fileID: 1958844517}
     OutPutDatas:
-      MyPos: {x: 0, y: 0}
+      MyPos: {x: 6.01, y: -4.77}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1319581987}
     OutPutDatas:
@@ -252,7 +252,7 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 831335029}
     OutPutDatas:
-      MyPos: {x: -0.06, y: 0.63}
+      MyPos: {x: -2.99, y: -0.76}
       MySize: {x: 2.5, y: 0.5}
   - TargetObject: {fileID: 625557122}
     OutPutDatas:
@@ -260,7 +260,7 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 129733521}
     OutPutDatas:
-      MyPos: {x: -0.06, y: 0.63}
+      MyPos: {x: -0.71, y: 1.4}
       MySize: {x: 0.7, y: 2.5}
   ExtractionProcessMode: 2
   OutPutObjectNames: []
@@ -280,10 +280,13 @@ MonoBehaviour:
   SetOneObjectStage_GameObject: {fileID: 331946130}
   SetTwoObjectStage_GameObjectLeftUp: {fileID: 0}
   SetTwoObjectStage_GameObjectRightDown: {fileID: 0}
-  StageLeftUp: {x: -8.25, y: 6}
-  StageMiddle: {x: 0, y: 1}
-  StageRightDown: {x: 8.25, y: -4}
-  FileNamePlusCountFlag: 1
+  FileOutStageSize: {x: 16.5, y: 10}
+  StageLeftUp: {x: -8.25, y: 5}
+  StageMiddle: {x: 0, y: 0}
+  StageRightDown: {x: 8.25, y: -5}
+  FileNamePlusCountFlag: 0
+  IsGamePlayerSizeDraw: 0
+  IsStartSet: 1
 --- !u!4 &108690332
 Transform:
   m_ObjectHideFlags: 0
@@ -618,7 +621,7 @@ Transform:
   m_GameObject: {fileID: 311692760}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.93, y: 0, z: -1.39}
+  m_LocalPosition: {x: -2.8, y: 0, z: -0.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -887,7 +890,7 @@ Transform:
   m_GameObject: {fileID: 831335029}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.06, y: 0.5, z: 0.63}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1860,8 +1863,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 058024834cac1394a9f299618d8ab391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pushableBlock: {fileID: 311692761}
-  blockBody: {fileID: 831335030}
+  pushableBlock: {fileID: 625557123}
+  blockBody: {fileID: 129733522}
   canPushHorizontal: 1
   canPushVertical: 0
   pushSpeed: 1
