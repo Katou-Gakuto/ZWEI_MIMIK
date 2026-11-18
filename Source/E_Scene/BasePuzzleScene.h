@@ -9,6 +9,7 @@
 class Player;
 class GoalObjectController;
 class VECTOR2D;
+class StageSelectScene;
 
 class BasePuzzleScene : public BaseScene
 {
@@ -89,6 +90,8 @@ private:
 
     // 
     GoalObjectController *mpGoalShadow;
+
+	StageSelectScene *mpStageSelectScene;
 
 	// É|Å[ÉYèÛë‘Ç©Ç«Ç§Ç©
     bool mbPouse;

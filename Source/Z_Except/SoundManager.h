@@ -39,8 +39,8 @@ public:
     void DeleteSound();
 
     // ‰¹—Ê
-    int mnBGMVolume = 255;
-    int mnSEVolume = 155; 
+    int mnBGMVolume;
+    int mnSEVolume; 
 
 private:
 

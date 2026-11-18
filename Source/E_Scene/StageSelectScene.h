@@ -28,9 +28,12 @@ public:
    // 
    int Draw() override;
 
+   void NextCurrentStage() { this->mnCurrentStage++; }
+
 private:
    // 
    int mnCurrentStage; //選択中のステージ
+   int OldCurrentStage;
 
    // 
    unsigned long  mnUnlockStageCount;

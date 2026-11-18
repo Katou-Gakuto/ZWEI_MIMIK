@@ -404,8 +404,12 @@
     <Image Include="ZWEI_MIMIK.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Resource\Sound\入店音.mp3" />
-    <Media Include="Resource\Sound\空.wav" />
+    <Media Include="Resource\Sound\audiostock_Result_BGM.mp3" />
+    <Media Include="Resource\Sound\audiostock_Select_BGM.mp3" />
+    <Media Include="Resource\Sound\audiostock_Stage_BGM.mp3" />
+    <Media Include="Resource\Sound\audiostock_Stage_BGM2.mp3" />
+    <Media Include="Resource\Sound\audiostock_TitleBGM.mp3" />
+    <Media Include="Resource\Sound\Cursor.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

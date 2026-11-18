@@ -870,10 +870,22 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Resource\Sound\入店音.mp3">
+    <Media Include="Resource\Sound\audiostock_Result_BGM.mp3">
       <Filter>リソース ファイル\Sound</Filter>
     </Media>
-    <Media Include="Resource\Sound\空.wav">
+    <Media Include="Resource\Sound\audiostock_Select_BGM.mp3">
+      <Filter>リソース ファイル\Sound</Filter>
+    </Media>
+    <Media Include="Resource\Sound\audiostock_Stage_BGM.mp3">
+      <Filter>リソース ファイル\Sound</Filter>
+    </Media>
+    <Media Include="Resource\Sound\audiostock_Stage_BGM2.mp3">
+      <Filter>リソース ファイル\Sound</Filter>
+    </Media>
+    <Media Include="Resource\Sound\audiostock_TitleBGM.mp3">
+      <Filter>リソース ファイル\Sound</Filter>
+    </Media>
+    <Media Include="Resource\Sound\Cursor.wav">
       <Filter>リソース ファイル\Sound</Filter>
     </Media>
   </ItemGroup>
