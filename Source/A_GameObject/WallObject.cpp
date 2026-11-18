@@ -47,10 +47,14 @@ int WallObject::Create()
     this->AddComponent(new WallObjectController(this, this->mvCenterPos, this->mvBlockSize, this->mfRadian));
 
     // 
-    this->AddComponent(this->mpTempGimmickPtr);
+    if (this->mbGimmick)
+    {
+        // 
+        this->AddComponent(this->mpTempGimmickPtr);
 
-    // 
-    this->mpTempGimmickPtr = nullptr;
+        // 
+        this->mpTempGimmickPtr = nullptr;
+    }
 
     // 
     return 0;

@@ -1,6 +1,7 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
 
+#include "../T_Model/BaseModelList.h"
 #include "../S_Collision/BaseCollisionList.h"
 #include "../Z_Except/Master.h"
 
@@ -196,6 +197,25 @@ int GameObjectManager::ObjectCollisionDeactivate()
     }
     return 0;
 }
+
+int GameObjectManager::OnDrawFlag()
+{
+    GameObject *current = this->mpFirstGameObject;
+    while (current != nullptr)
+    {
+        if (!current->GetDeleteFlag() &&
+            current->GetActiveFlag())
+        {
+            if (current->GetModelList() != nullptr)
+            {
+                current->GetModelList()->OnDrawFlag();
+            }
+        }
+        current = current->GetNext();
+    }
+    return 0;
+}
+
 
 // 移動ベクトルを0ベクトルに設定する
 int GameObjectManager::ResetMoveVec()

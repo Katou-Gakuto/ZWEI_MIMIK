@@ -129,9 +129,6 @@ public:
     // ライトエリア描画時当たっている
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> DrawLingAreaHitCollisionsGetProcess();
 
-    // ライト有効フラグ設定
-    void SetLightFlag(bool flag) { mbIsLightFlag = flag; }
-
 private:
     // ライトエリアの描画情報設定処理
     void SettingDrawLightAreaData(const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
@@ -206,7 +203,4 @@ private:
 
     // 前の三角の配列数
     int mnPreLightAreaTriangleVertexIndexCount;
-
-    // ライト点灯フラグ
-    bool mbIsLightFlag;
 };

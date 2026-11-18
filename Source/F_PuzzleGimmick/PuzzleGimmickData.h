@@ -45,18 +45,25 @@ public:
     bool GetOnePushActive() const { return this->mbFlags[1]; }
 
     // 
+    bool GetInitSignal() const { return this->mbFlags[2]; }
+
+    // 
     void SetSignalNot(bool flag) { this->mbFlags[0] = flag; }
 
     // 
     void SetOnePushActive(bool flag) { this->mbFlags[1] = flag; }
 
     // 
-    static PuzzleGimmickActiveParam Create(bool signalNot, bool onePushActive)
+    void SetInitSignal(bool flag) { this->mbFlags[2] = flag; }
+
+    // 
+    static PuzzleGimmickActiveParam Create(bool signalNot, bool onePushActive, bool initSignal)
     {
         // 
         PuzzleGimmickActiveParam temp;
         temp.SetSignalNot(signalNot);
         temp.SetOnePushActive(onePushActive);
+        temp.SetInitSignal(initSignal);
 
         // 
         return temp;
@@ -65,7 +72,7 @@ public:
 private:
     // 0 ? NotFlag : Flag(トリガーの条件にNOT演算をするか)
     // 1 ? OnePushActive : HitFrame(細々した計算が必要ならtrueで、トリガーの条件がOffになったらOffがfalse)
-    // 2 ? 
+    // 2 ? InitSignal : bool (普通にExecutorのInitialize()のタイミングで渡すboolの値をどうするかってやつ。trueならtrue)
     // 3 ? 
     // 4 ? 
     // 5 ? 

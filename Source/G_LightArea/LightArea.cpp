@@ -30,8 +30,7 @@ LightArea::LightArea() :
     mnNodeMaxCount(-1),
     mstLightAreaTriangleVertex(nullptr),
     munLightAreaTriangleSize(0),
-    mnPreLightAreaTriangleVertexIndexCount(0),
-    mbIsLightFlag(true)
+    mnPreLightAreaTriangleVertexIndexCount(0)
 {
 }
 
@@ -455,7 +454,7 @@ bool LightArea::OffLight()
 // ライトエリア再描画
 void LightArea::DrawLightArea()
 {
-    if (!mbIsLightFlag)
+    if (this->mbOffLight)
     {
         return;
     }
@@ -474,7 +473,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
     std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> hitCollisionLineData;
     std::vector<std::vector<std::vector<AREA_ROUTE_JUDGE_DATA>>> areaRuteJudgeDatas;
 
-    if (!mbIsLightFlag)
+    if (this->mbOffLight)
     {
         return hitCollisionLineData;
     }
@@ -716,7 +715,7 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 // ライトエリアの描画
 void LightArea::SettingDrawLightAreaData(const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox)
 {
-    if (!mbIsLightFlag)
+    if (mbOffLight)
     {
         return;
     }

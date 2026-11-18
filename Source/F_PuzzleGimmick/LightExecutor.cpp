@@ -33,7 +33,7 @@ LightExecutor::LightExecutor(
     float lightLength,
     bool final2start) :
     mpParentObject(parentObject),
-    mbLightOn(true),
+    mbLightOn(false),
     mbParamUpdate(false),
     mbFinal2Start(false),
     mnAreaIndex(lightAreaIndex),
@@ -79,10 +79,31 @@ int LightExecutor::Initilize()
     this->SetBaseAngle(this->mfBaseAngleInit);
 
     // 
-    this->UpdateLightParam();
+    bool initSignal = this->GetActiveParam().GetInitSignal();
+    if (this->GetActiveParam().GetSignalNot())
+    {
+        // 
+        initSignal = !initSignal;
+    }
 
     // 
-    this->CalculateLineEndPos();
+    this->mbLightOn = initSignal;
+    if (this->mbLightOn)
+    {
+        // 
+        this->GetMyLightArea()->OnLight();
+
+        // 
+        this->UpdateLightParam();
+
+        // 
+        this->CalculateLineEndPos();
+    }
+    else
+    {
+        // 
+        this->GetMyLightArea()->OffLight();
+    }
 
     // 
     return 0;
@@ -122,7 +143,6 @@ int LightExecutor::Update(bool triggerSignal)
 
     // 
     this->mbLightOn = triggerSignal;
-    this->GetMyLightArea()->SetLightFlag(this->mbLightOn);
 
     // 
     return 0;

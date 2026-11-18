@@ -85,11 +85,18 @@ int BaseComponentList::Sort()
         last = last->GetNext();
     }
 
+    // 
+    if (last->GetPrev()->GetTagAndOrder() <= last->GetTagAndOrder())
+    {
+        // 
+        return 0;
+    }
+
     // ‘}“ü‰ÓŠ‚ð’T‚·ƒ‹[ƒv•¶(last‚æ‚è‚à’x‚¢‚à‚Ì‚Ì‚Ð‚Æ‚Â‘O‚Ü‚Åi‚ß‚é)
     for (BaseComponent *current = last->GetPrev(); current != nullptr; current = current->GetPrev())
     {
         // ’…–Úƒm[ƒh‚ÍÅŒã”ö‚æ‚èˆ—‡‚ª’x‚¢‚Ì‚ª‘O’ñ‚È‚Ì‚ÅA‚»‚ê‚ª‡‚Á‚Ä‚¢‚½‚çŽŸ‚Ìƒm[ƒh‚ÉˆÚ‚é
-        if (last->GetTagAndOrder() < current->GetTagAndOrder())
+        if (current->GetTagAndOrder() < last->GetTagAndOrder())
         {
             continue;
         }

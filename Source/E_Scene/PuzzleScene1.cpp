@@ -104,7 +104,7 @@ int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	falseTrigger = new FalseTrigger;
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
@@ -261,7 +261,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -274,7 +274,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false, false);
 	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	baseExecutor = new LightExecutor(
@@ -289,7 +289,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -302,7 +302,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false, false);
 	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[2], 0);
 	baseExecutor = new LightExecutor(
@@ -317,7 +317,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 4, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -330,7 +330,7 @@ int PuzzleScene1_2::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[1], 0);
 	baseExecutor = new LightExecutor(
@@ -484,7 +484,7 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(30.0f), 1000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -497,7 +497,7 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false, false);
 	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	buttonTrigger->AddButton(buttonObject[1], 1);
@@ -513,7 +513,7 @@ int PuzzleScene1_3::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(30.0f), 1000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -684,7 +684,7 @@ int PuzzleScene1_4::MapCreate(GameObjectManager &objManager)
 
 	// 自動移動のギミックを追加する
 	gimmickController = wallObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	moveExecutor = new RouteMoveExecutor(tempGimmickParam, wallObject, tempRoute);
 	gimmickController->AddGimmick(new FalseTrigger, moveExecutor);
 
@@ -696,7 +696,7 @@ int PuzzleScene1_4::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	lightExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(60.0f), 2000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
@@ -709,7 +709,7 @@ int PuzzleScene1_4::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	lightExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
@@ -722,7 +722,7 @@ int PuzzleScene1_4::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	lightExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(60.0f), 2000.0f, false);
 	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
@@ -867,7 +867,7 @@ int PuzzleScene1_5::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	lightExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(180.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
@@ -880,7 +880,7 @@ int PuzzleScene1_5::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	lightExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
@@ -893,7 +893,7 @@ int PuzzleScene1_5::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	lightExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(45.0f), 1000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
@@ -903,13 +903,6 @@ int PuzzleScene1_5::MapCreate(GameObjectManager &objManager)
 	objRadius = 40.0f;
 	lightObject = new LightObject(objCenter, objRadius);
 	objManager.Add(lightObject);
-
-	// 光のON/OFFのギミック
-	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
-	lightExecutor = new LightExecutor(
-		tempGimmickParam, lightObject, 3, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
-	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
 
 	// 光の自動移動ギミック
 	RouteData tempRoute(RouteOffMode::RouteOffMode_Stop, true, 403);
@@ -1010,9 +1003,17 @@ int PuzzleScene1_5::MapCreate(GameObjectManager &objManager)
 
 	// 自動移動のギミックを追加する
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	moveExecutor = new RouteMoveExecutor(tempGimmickParam, lightObject, tempRoute);
 	gimmickController->AddGimmick(new FalseTrigger, moveExecutor);
+
+	// 光のON/OFFのギミック
+	gimmickController = lightObject->GetGimmickController();
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
+	center2now = (firstPos - centerPos);
+	lightExecutor = new LightExecutor(
+		tempGimmickParam, lightObject, 3, 150, center2now.GetAngle(), MyFunctions::Deg2Rad(90.0f), 1000.0f, true);
+	gimmickController->AddGimmick(new FalseTrigger, lightExecutor);
 
 	// 
 	return 0;
@@ -1156,7 +1157,7 @@ int PuzzleScene1_6::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1301,7 +1302,7 @@ int PuzzleScene1_7::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(75.0f), 1000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1314,7 +1315,7 @@ int PuzzleScene1_7::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false, false);
 	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	baseExecutor = new LightExecutor(
@@ -1329,7 +1330,7 @@ int PuzzleScene1_7::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(75.0f), 1000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1503,7 +1504,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 
 	// 自動移動のギミックを追加する
 	gimmickController = wallObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(false, false, false);
 	buttonTrigger = new ButtonTrigger(ButtonTriggerMode::ButtonTriggerMode_OneLayer);
 	buttonTrigger->AddButton(buttonObject[0], 0);
 	buttonTrigger->AddButton(buttonObject[1], 0);
@@ -1518,7 +1519,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1531,7 +1532,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1544,7 +1545,7 @@ int PuzzleScene1_8::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 2, 150, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1696,7 +1697,7 @@ int PuzzleScene1_9::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 100, MyFunctions::Deg2Rad(0.0f), MyFunctions::Deg2Rad(60.0f), 30000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1842,7 +1843,7 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 0, 150, MyFunctions::Deg2Rad(270.0f), MyFunctions::Deg2Rad(90.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);
@@ -1855,7 +1856,7 @@ int PuzzleScene1_10::MapCreate(GameObjectManager &objManager)
 
 	// 光のON/OFFのギミック
 	gimmickController = lightObject->GetGimmickController();
-	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false);
+	tempGimmickParam = PuzzleGimmickActiveParam::Create(true, false, false);
 	baseExecutor = new LightExecutor(
 		tempGimmickParam, lightObject, 1, 150, MyFunctions::Deg2Rad(90.0f), MyFunctions::Deg2Rad(60.0f), 2000.0f, true);
 	gimmickController->AddGimmick(new FalseTrigger, baseExecutor);

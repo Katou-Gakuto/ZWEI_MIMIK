@@ -54,7 +54,7 @@ int LightObjectController::Create()
     body->WorldConnectMySelf();
 
     // 
-    return true;
+    return 0;
 }
 
 int LightObjectController::Initialize()

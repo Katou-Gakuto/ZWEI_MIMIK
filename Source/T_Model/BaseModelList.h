@@ -26,6 +26,9 @@ public:
     int Update();
     int Draw();
 
+    // 
+    int OnDrawFlag();
+
     int Add(BaseModel *model, BaseModelHandle &modelHandle);
 
     BaseModel *SearchModelNumber(const BaseModelHandle &modelHandle) const;
