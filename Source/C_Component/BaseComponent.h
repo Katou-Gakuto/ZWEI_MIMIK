@@ -14,6 +14,7 @@ typedef enum ComponentTagAndOrder : unsigned long
     // 最初にオブジェクトそのもの
     CTAO_PlayerController = 0,
     CTAO_GoalController,
+    CTAO_StarController,
     CTAO_WallController,
     CTAO_MirrorController,
     CTAO_LightController,

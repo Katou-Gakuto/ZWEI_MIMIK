@@ -8,8 +8,10 @@
 #include "../A_GameObject/GameObjectManager.h"
 #include "../A_GameObject/PlayerObject.h"
 #include "../A_GameObject/GoalObject.h"
+#include "../A_GameObject/StarObject.h"
 #include "../C_Component/Player.h"
 #include "../C_Component/GoalObjectController.h"
+#include "../C_Component/StarObjectController.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../E_Scene/BaseSceneManager.h"
@@ -34,6 +36,7 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mpGoalShadow(nullptr),
     mbPouse(false),
     mbGoal(false),
+    mlStar(),
     mbFailedLight(false),
     mbFailedShadow(false),
     mnPouseCursorPos(0),
@@ -41,6 +44,12 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mnFailedModeFrame(0),
     BaseScene(tag)
 {
+    // 
+    for (int i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        // 
+        this->mlStar[i] = nullptr;
+    }
 }
 
 BasePuzzleScene::~BasePuzzleScene()
@@ -112,6 +121,17 @@ int BasePuzzleScene::Initialize()
     this->mpPlayerShadow->InitPosition(initPosBox[1]);
     this->mpGoalLight->InitPosition(initPosBox[2]);
     this->mpGoalShadow->InitPosition(initPosBox[3]);
+
+    this->mlStar[0]->InitPosition(VECTOR2D(200.0f, 200.0f));
+    this->mlStar[1]->InitPosition(VECTOR2D(200.0f, 400.0f));
+    this->mlStar[2]->InitPosition(VECTOR2D(200.0f, 600.0f));
+
+    // 
+    for (uint8_t i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        // 
+        this->mlStar[i]->GetMyObject()->SetActiveFlag(true);
+    }
 
     // 
     this->mpGameObjectManager->Initialize();
@@ -535,10 +555,52 @@ void BasePuzzleScene::CreateAndAddMastObject()
     this->mpGoalShadow = (static_cast<GoalObject *>(currentObject))->GetGoalController();
 
     // 
+    currentObject = new StarObject(false, false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mlStar[0] = (static_cast<StarObject *>(currentObject))->GetStarController();
+
+    // 
+    currentObject = new StarObject(false, false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mlStar[1] = (static_cast<StarObject *>(currentObject))->GetStarController();
+
+    // 
+    currentObject = new StarObject(false, false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mlStar[2] = (static_cast<StarObject *>(currentObject))->GetStarController();
+
+    // 
     this->mpGameObjectManager->Add(this->mpPlayerLight->GetMyObject());
     this->mpGameObjectManager->Add(this->mpPlayerShadow->GetMyObject());
     this->mpGameObjectManager->Add(this->mpGoalLight->GetMyObject());
     this->mpGameObjectManager->Add(this->mpGoalShadow->GetMyObject());
+
+    for (int i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        this->mpGameObjectManager->Add(this->mlStar[i]->GetMyObject());
+    }
+}
+
+// 
+std::vector<uint8_t> BasePuzzleScene::GetClearStarBox() const
+{
+    // 
+    std::vector<uint8_t> temp;
+    for (uint8_t i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        // 
+        if (this->mlStar[i]->GetMyObject()->GetActiveFlag() == false)
+        {
+            // 
+            temp.push_back(i);
+        }
+    }
+
+    // 
+    return temp;
 }
 
 // 

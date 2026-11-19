@@ -10,6 +10,9 @@ class Player;
 class GoalObjectController;
 class VECTOR2D;
 class StageSelectScene;
+class StarObjectController;
+
+#define ZWEI_MIMIK_STAR_COUNT 3
 
 class BasePuzzleScene : public BaseScene
 {
@@ -91,6 +94,10 @@ private:
     // 
     GoalObjectController *mpGoalShadow;
 
+    // 
+    StarObjectController *mlStar[ZWEI_MIMIK_STAR_COUNT];
+
+    // 
 	StageSelectScene *mpStageSelectScene;
 
 	// É|Å[ÉYèÛë‘Ç©Ç«Ç§Ç©
@@ -122,6 +129,9 @@ private:
 
     // 
     void CreateAndAddMastObject();
+
+    // 
+    std::vector<uint8_t> GetClearStarBox() const;
 
     // 
     int PouseUpdate();
