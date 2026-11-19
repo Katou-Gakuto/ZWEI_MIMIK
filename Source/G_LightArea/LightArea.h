@@ -21,11 +21,45 @@ class Quadrangle2D;
 
 struct HIT_COLLISION_LINE
 {
+
     BaseCollision* HitCollision;      // 当たっているコリジョン
     BaseCollision* PreHitCollision;   // 前に当たっていたコリジョン
     BaseCollision* OtherCollision;    // 判定に使ったもう一方のコリジョン
     VECTOR2D LineStartPos;
     VECTOR2D LineEndPos;
+
+    float LightStartAlphaRange; // 開始地点のアルファ値
+    float LightEndAlphaRange;   // 終了地点のアルファ値
+
+    float LightIntensity;   // 光のラインが中央に近いほど1.0f
+
+    bool IsSetup;   // 補正するフラグ
+
+    HIT_COLLISION_LINE()
+    : HitCollision(nullptr)
+    , PreHitCollision(nullptr)
+    , OtherCollision(nullptr)
+    , LineStartPos(VECTOR2D::GetZero())
+    , LineEndPos(VECTOR2D::GetZero())
+    , LightStartAlphaRange(-1.0f)
+    , LightEndAlphaRange(-1.0f)
+    , LightIntensity(0)
+    , IsSetup(true)
+    {
+    }
+
+    HIT_COLLISION_LINE(BaseCollision* hitCollision, BaseCollision* preHitCollision, BaseCollision* otherCollision, VECTOR2D lineStartPos, VECTOR2D lineEndPos, float lightStartAlphaRange, float lightEndAlphaRange, float lightIntensity)
+    : HitCollision(hitCollision)
+    , PreHitCollision(preHitCollision)
+    , OtherCollision(otherCollision)
+    , LineStartPos(lineStartPos)
+    , LineEndPos(lineEndPos)
+    , LightStartAlphaRange(lightStartAlphaRange)
+    , LightEndAlphaRange(lightEndAlphaRange)
+    , LightIntensity(lightIntensity)
+    , IsSetup(true)
+    {
+    }
 };
 
 struct AREA_ROUTE_JUDGE_DATA
@@ -145,7 +179,7 @@ private:
     std::vector<LIGHT_EDGE_DATA> GetVisibleEdges(BaseCollision* collision, const VECTOR2D& viewPos1, const VECTOR2D* viewPos2 = nullptr);
 
     // 	2本のラインの間にある頂点まで描画用ラインを追加する
-    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, const VECTOR2D& startPos, const VECTOR2D& endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D>& vertexPositions, BaseCollision* hitCollision, BaseCollision* preHitCollision, BaseCollision* otherHitCollision, bool isEqualAngleFrontSet, std::vector<VECTOR2D>* excludeVertexPositions = nullptr);
+    bool AddDrawLineToVertexBetweenLines(std::vector<HIT_COLLISION_LINE>* addDrawHitCollisionLine, const VECTOR2D& startPos, const VECTOR2D& endPos, Quadrangle2D& tempQuadrangle, std::vector<VECTOR2D>& vertexPositions, BaseCollision* hitCollision, BaseCollision* preHitCollision, BaseCollision* otherHitCollision, bool isEqualAngleFrontSet, float startAlphaRange, float lightIntensity, std::vector<VECTOR2D>* excludeVertexPositions = nullptr);
 
     // 当たっている辺を求める
     LIGHT_EDGE_DATA GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
@@ -166,7 +200,10 @@ private:
     bool GetIntersectionPosition(const VECTOR2D& lineOneStart, const VECTOR2D& lineOneEnd, const VECTOR2D& lineTwoStart, const VECTOR2D& lineTwoEnd, VECTOR2D* intersectionPos);
 
     // 3角情報にして描画
-    void DrawHitCollisionLineData(const std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> &hitCollisionLineData);
+    void SettingDrawHitCollisionLineData(const std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> &hitCollisionLineData);
+
+    // ライトアルファ値補正
+    float SetupLightAlphaRange(float lightAlphaRange);
 private:
     // とりあえず用意しておこうか
     std::vector<LightLineNode *> mlLightFirstNode;
@@ -203,4 +240,6 @@ private:
 
     // 前の三角の配列数
     int mnPreLightAreaTriangleVertexIndexCount;
+
+    const float LIGHT_POWER;
 };

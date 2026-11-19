@@ -435,21 +435,22 @@ void LightAreaManager::LightDraw()
     }
 
     // åıï`âÊ
-    for (int i = 0; i < mnLightScreenHandle.size(); ++i)
-    {
-        SetDrawScreen(mnLightScreenHandle[i].FilpScreenHandle);
-        for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
-        {
-            LightArea* lightArea = mlNode[lightAreaIndex];
-            if (lightArea->GetLightColor() == colorNumbers[i])
-            {
-                lightArea->DrawLightArea();
-            }
-        }
-    }
+    //for (int i = 0; i < mnLightScreenHandle.size(); ++i)
+    //{
+    //    SetDrawScreen(mnLightScreenHandle[i].FilpScreenHandle);
+    //    for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
+    //    {
+    //        LightArea* lightArea = mlNode[lightAreaIndex];
+    //        if (lightArea->GetLightColor() == colorNumbers[i])
+    //        {
+    //            lightArea->DrawLightArea();
+    //        }
+    //    }
+    //}
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {
         SetDrawScreen(mnLightScreenHandle[i].ScreenHandle);
+        SetDrawCustomBlendMode(TRUE, DX_BLEND_SRC_ALPHA, DX_BLEND_INV_SRC_ALPHA, DX_BLENDOP_ADD, DX_BLEND_ONE, DX_BLEND_ONE, DX_BLENDOP_MAX, 255);
         for (int lightAreaIndex = 0; lightAreaIndex < this->mnDeactivateStartIndex; ++lightAreaIndex)
         {
             LightArea* lightArea = mlNode[lightAreaIndex];
@@ -458,6 +459,7 @@ void LightAreaManager::LightDraw()
                 lightArea->DrawLightArea();
             }
         }
+        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
     }
 }
 
@@ -468,9 +470,9 @@ void LightAreaManager::EndLightDraw()
     // ï`âÊêÊñﬂÇ∑
     SetDrawScreen(DX_SCREEN_BACK);
 
-    FlipLightAreaScreen();
+    //FlipLightAreaScreen();
 
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 125);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * 0.99);
     for (int i = 0; i < mnLightScreenHandle.size(); ++i)
     {
         // ï`âÊëŒè€âÊëúÇâÊñ Ç¢Ç¡ÇœÇ¢Ç…ägëÂÇµÇƒï`âÊÇ∑ÇÈ
