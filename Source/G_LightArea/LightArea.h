@@ -35,6 +35,8 @@ struct HIT_COLLISION_LINE
 
     bool IsSetup;   // 補正するフラグ
 
+    unsigned int LightNodeId;   // ライトノードのID
+    
     HIT_COLLISION_LINE()
     : HitCollision(nullptr)
     , PreHitCollision(nullptr)
@@ -45,6 +47,7 @@ struct HIT_COLLISION_LINE
     , LightEndAlphaRange(-1.0f)
     , LightIntensity(0)
     , IsSetup(true)
+    , LightNodeId(0u)
     {
     }
 
@@ -58,6 +61,7 @@ struct HIT_COLLISION_LINE
     , LightEndAlphaRange(lightEndAlphaRange)
     , LightIntensity(lightIntensity)
     , IsSetup(true)
+    , LightNodeId(0u)
     {
     }
 };
@@ -165,7 +169,7 @@ public:
 
 private:
     // ライトエリアの描画情報設定処理
-    void SettingDrawLightAreaData(const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
+    bool SettingDrawLightAreaData(const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
 
     // 指定した2点を通る直線上に点があるかを判定
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
@@ -185,7 +189,7 @@ private:
     LIGHT_EDGE_DATA GettingHitCollisionEdge(const HIT_COLLISION_LINE& hitCollisionLine);
 
     // 延長した光を取得する
-    bool GettingExtendedLight(const HIT_COLLISION_LINE& extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
+    bool GettingExtendedLight(const HIT_COLLISION_LINE& extendedLightLine, const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight, const VECTOR2D& shiftVec);
 
     // 当たっている辺以外の辺まで光を延長する
     bool GettingExtendedLightToOtherEdge(const HIT_COLLISION_LINE& hitCollisionLine, HIT_COLLISION_LINE* setExtendedLight);
@@ -241,5 +245,16 @@ private:
     // 前の三角の配列数
     int mnPreLightAreaTriangleVertexIndexCount;
 
+    // ライトの強さ
     const float LIGHT_POWER;
+
+    // 追加したライン
+    std::vector<HIT_COLLISION_LINE> mstAddDrawHitCollisionLine;
+    
+    // 追加のライトラインノードの始まり
+    std::vector<LightLineNode *> mlAddLightFirstNode;
+    // 追加のライトラインノードのアングル
+    std::vector<float> mlAddLineAngleBox;
+    // 追加ライトノードの始まりの数
+    unsigned int munAddLightLineCount;
 };

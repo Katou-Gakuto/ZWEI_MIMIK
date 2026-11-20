@@ -9,14 +9,16 @@
 #include "Master.h"
 
 // コンストラクタ
-LightLineNode::LightLineNode(void *parent) :
+LightLineNode::LightLineNode(void *parent, VECTOR2D* startPosPtr) :
     mpParentObject(parent),
     mvEndPos(),
     mpHitCollision(nullptr),
     mnHitParam(-1),
     mbNext(false),
     mpPrev(nullptr),
-    mpNext(nullptr)
+    mpNext(nullptr),
+    mvStartPosPtr(startPosPtr),
+    munNodeId(0u)
 {
 }
 
@@ -38,9 +40,10 @@ LightLineNode::~LightLineNode()
 }
 
 // 初期化(シーン開始時)
-void LightLineNode::SetParent(void *parent)
+void LightLineNode::SetParent(void *parent, VECTOR2D* startPosPtr)
 {
     this->mpParentObject = parent;
+    this->mvStartPosPtr = startPosPtr;
 }
 
 // 自身の光の終了地点を計算し、設定する関数
@@ -220,6 +223,11 @@ const VECTOR2D &LightLineNode::GetMyStartPos() const
 // このライトの根元地点を返す関数
 const VECTOR2D &LightLineNode::GetListStartPos() const
 {
+    // TODO:_ 継承してそっちでこれにする
+    if (mvStartPosPtr != nullptr)
+    {
+        return *mvStartPosPtr;
+    }
     // 
     GameObject2D *light = reinterpret_cast<GameObject2D *>(this->mpParentObject);
 
@@ -276,7 +284,7 @@ bool LightLineNode::AccessNext(LightLineNode **out)
     if (this->mpNext == nullptr)
     {
         // 
-        LightLineNode *newNode = new LightLineNode(this->mpParentObject);
+        LightLineNode *newNode = new LightLineNode(this->mpParentObject, mvStartPosPtr);
 
         // 
         newNode->mpPrev = this;

@@ -11,13 +11,13 @@ class LightLineNode
 {
 public:
     // コンストラクタ
-    LightLineNode(void *parent);
+    LightLineNode(void *parent, VECTOR2D* startPosPtr = nullptr);
 
     // デストラクタ
     ~LightLineNode();
 
     // ペアレント設定
-    void SetParent(void *parent);
+    void SetParent(void *parent, VECTOR2D* startPosPtr = nullptr);
 
     // 自身の光の終了地点を計算し、設定する関数
     // 次のノードにつながる場合はtrueを返す
@@ -58,6 +58,11 @@ public:
     // 当たっているコリジョン取得
     inline BaseCollision *GetHitCollision() const { return mpHitCollision; }
 
+    // ノードID取得
+    inline const unsigned int& GetNodeId() const { return munNodeId; }
+    // ノードID設定
+    inline void SetNodeId(const unsigned int& nodeId) { munNodeId = nodeId; }
+
 private:
     // 
     void *mpParentObject;
@@ -79,4 +84,10 @@ private:
 
     // ひとつ後の光
     LightLineNode *mpNext;
+
+    // ノードの開始場所(オブジェクトを使わないときに使用)
+    VECTOR2D *mvStartPosPtr;
+
+    // ノードを個別で識別するためのID
+    unsigned int munNodeId;
 };
