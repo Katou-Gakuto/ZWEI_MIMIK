@@ -421,6 +421,22 @@ void KeyState::SetKey_ShadowGame()
 					GetKey_Controller(CONTROLLER_KEY_TYPE::Y, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
 				}
 				);
+			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::L,
+				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
+				{
+					GetWordKey_Board(KEY_BOARD_WORD::L) && !GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::L, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::LT, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
+				}
+				);
+			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::R,
+				KEY_PLAYER_NUMBER::PLAYER_NUMBER_1,
+				{
+					GetWordKey_Board(KEY_BOARD_WORD::R) && !GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::R, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::RT, CONTROLLER_KEY_NUMBER::CONTROLLER_1),
+				}
+				);
 		}
 
 		// à⁄ìÆ ÉvÉåÉCÉÑÅ[2
@@ -500,6 +516,22 @@ void KeyState::SetKey_ShadowGame()
 				{
 					GetWordKey_Board(KEY_BOARD_WORD::Y) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
 					GetKey_Controller(CONTROLLER_KEY_TYPE::Y, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
+				}
+				);
+			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::L,
+				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
+				{
+					GetWordKey_Board(KEY_BOARD_WORD::L) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::L, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::LT, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
+				}
+				);
+			SetOneFlag_Shadow(KEY_SHADOW_GAME_TYPE::R,
+				KEY_PLAYER_NUMBER::PLAYER_NUMBER_2,
+				{
+					GetWordKey_Board(KEY_BOARD_WORD::R) && GetSpecialKey_Board(KEY_BOARD_SPECIAL::SHIFT_LEFT_AND_RIGHT),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::R, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
+					GetKey_Controller(CONTROLLER_KEY_TYPE::RT, CONTROLLER_KEY_NUMBER::CONTROLLER_2),
 				}
 				);
 		}

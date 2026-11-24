@@ -19,6 +19,9 @@ enum class KEY_SHADOW_GAME_TYPE
 	Y,
 	MOVE,	// 移動
 
+	L,
+	R,
+
 	TEST_1,// テスト用1
 
 
