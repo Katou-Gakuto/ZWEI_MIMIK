@@ -553,8 +553,8 @@ int Player::TryHoldSwing()
     }
 
     // 
-    bool clockwise = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::Y, this->mnPlayerNum - 1);
-    bool counterClockwise = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::X, this->mnPlayerNum - 1);
+    bool clockwise = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::R, this->mnPlayerNum - 1);
+    bool counterClockwise = Master::mpKeyState->GetShadowGameKey(KEY_SHADOW_GAME_TYPE::L, this->mnPlayerNum - 1);
 
     // 
     if (!clockwise && !counterClockwise)

@@ -68,6 +68,7 @@ struct HIT_COLLISION_LINE
 
 struct AREA_ROUTE_JUDGE_DATA
 {
+    bool IsAddSet;
     int LightAreaRouteID;
     int PlusLightAreaRouteID;
 };
@@ -175,7 +176,7 @@ private:
     bool IsPointOnLine(const VECTOR2D& linePos1, const VECTOR2D& linePos2, const VECTOR2D& checkPos);
 
     // 光領域を描画用に調整する
-    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>* drawHitCollisionLine, const size_t& lineIndex, const int& drawHitCollisionLineIteratorPlusNumber, const std::vector<BaseCollision2D *> &objectCollBox, const std::vector<BaseCollision2D *> &mirrorCollBox);
+    int SetupLightAreaForDrawing(const std::vector<HIT_COLLISION_LINE>& hitCollisionLine, std::vector<HIT_COLLISION_LINE>* drawHitCollisionLine, const size_t& lineIndex, const int& drawHitCollisionLineIteratorPlusNumber, const std::vector<BaseCollision2D *> *objectCollBox = nullptr, const std::vector<BaseCollision2D *> *mirrorCollBox = nullptr);
 
     // 角を取得する
     std::vector<VECTOR2D> GetVertexPositions(BaseCollision* collision, const VECTOR2D& viewPos1, const VECTOR2D* viewPos2 = nullptr);
@@ -257,4 +258,7 @@ private:
     std::vector<float> mlAddLineAngleBox;
     // 追加ライトノードの始まりの数
     unsigned int munAddLightLineCount;
+
+    // 更新フラグ
+    bool mbIdLightNodeUpdate;
 };
