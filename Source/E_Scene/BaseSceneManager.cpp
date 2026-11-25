@@ -100,6 +100,20 @@ int BaseSceneManager::SceneClose()
     return result;
 }
 
+// シーン遷移(開ける時)のアニメーションが何フレームかかるのかを取得する関数
+uint32_t BaseSceneManager::GetSceneOpenAnimFrame() const
+{
+    // @加藤
+    return 0;
+}
+
+// シーン遷移(閉じる時)のアニメーションが何フレームかかるのかを取得する関数
+uint32_t BaseSceneManager::GetSceneCloseAnimFrame() const
+{
+    // @加藤
+    return 0;
+}
+/*
 // シーン遷移(開ける時)のアニメーションが終わったかを確認する関数
 bool BaseSceneManager::CheckSceneOpenEnd() const
 {
@@ -155,7 +169,7 @@ bool BaseSceneManager::CheckSceneCloseEnd() const
     // 
     return result;
 }
-
+*/
 // シーン遷移アニメーション初期化
 void BaseSceneManager::SceneTransitionInit()
 {
@@ -171,12 +185,17 @@ BaseSceneManager::BaseSceneManager() :
     mnResreveScene(SceneTag::ST_Max),
     mbFlag(),
     mbNowFinalize(false),
-    mbOpeningUpdate(false),
+    mbToClosingUpdate(false),
     mbClosingUpdate(false),
+    mbToOpeningUpdate(false),
+    mbOpeningUpdate(false),
     mnOpeningNumber(SOAN::SOAN_None),
     mnClosingNumber(SCAN::SCAN_None),
+    mnToOpeningFrame(0),
+    mnToClosingFrame(0),
     mnOpeningFrame(0),
     mnClosingFrame(0),
+    mnOpendWaitFrame(0),
     mlUniqueDataList(),
     mnBlackFadeHandle(-1),
     mstFadeCloseData(30),
@@ -280,95 +299,12 @@ int BaseSceneManager::Update()
     // 今回のシーンを取得する
     BaseScene *sceneNow = nullptr;
 
-    // シーンを変えるかを記憶しておくフラグ
-    if (this->mnChangeScene != SceneTag::ST_Max)
+    // 
+    if (this->CheckChanging())
     {
-        // 
-        sceneNow = this->SearchSceneTag(this->mnChangeScene);
-        BaseScene *sceneOld = this->SearchSceneTag(this->mnSceneNow);
-
-        // 
-        if (this->CheckSceneCloseEnd())
+        // Update()を呼ばない場合はそのまま関数を終了する
+        if (!this->UpdateChanging())
         {
-            // 
-            this->mnClosingFrame = 0;
-            this->mbClosingUpdate = false;
-
-            // 
-            this->mnSceneOld = this->mnSceneNow;
-            this->mnSceneNow = this->mnChangeScene;
-
-            // 
-            if (sceneOld != nullptr)
-            {
-                this->mbNowFinalize = true;
-                sceneOld->BaseFinalize();
-                this->mbNowFinalize = false;
-            }
-
-            // 
-            sceneNow->BaseInitialize();
-
-            // 
-            if (!this->CheckSceneOpenEnd())
-            {
-                // 
-                if (this->mbOpeningUpdate)
-                {
-                    // 
-                    sceneNow->Update();
-                }
-
-                // 
-                this->mnOpeningFrame++;
-
-                // 
-                return 0;
-            }
-        }
-
-        // シーン遷移が完了したかで処理を変える
-        if (this->CheckSceneOpenEnd())
-        {
-            // 
-            this->mnOpeningFrame = 0;
-            this->mbOpeningUpdate = false;
-
-            // 
-            this->mnClosingNumber = SCAN::SCAN_None;
-            this->mnOpeningNumber = SOAN::SOAN_None;
-
-            // 
-            this->mnChangeScene = SceneTag::ST_Max;
-        }
-        else
-        {
-            // 
-            if (this->mnOpeningFrame == 0)
-            {
-                // 
-                if (this->mbClosingUpdate)
-                {
-                    // 
-                    sceneOld->Update();
-                }
-
-                // 
-                this->mnClosingFrame++;
-            }
-            else
-            {
-                // 
-                if (this->mbOpeningUpdate)
-                {
-                    // 
-                    sceneNow->Update();
-                }
-
-                // 
-                this->mnOpeningFrame++;
-            }
-
             // 
             return 0;
         }
@@ -506,55 +442,273 @@ SceneTag BaseSceneManager::GetSneceOld() const
 
 void BaseSceneManager::ChangeScene(
     SceneTag nextSceneTag,
+    uint32_t toCloseStartFlame,
+    bool toCloseUpdate,
     SceneCloseAnimNumber closeAnim,
     bool closingUpdate,
+    uint32_t toOpenStartFlame,
+    bool toOpenUpdate,
     SceneOpenAnimNumber openAnim,
-    bool openingUpdate)
+    bool openingUpdate,
+    uint32_t opendWaitFlame)
 {
     // 
-    if (this->mnClosingFrame == 0 &&
-        this->mnOpeningFrame == 0)
+    if (!this->CheckChanging())
     {
         this->mnChangeScene = nextSceneTag;
+        this->mnToClosingFrame = toCloseStartFlame;
+        this->mbToClosingUpdate = toCloseUpdate;
         this->mnClosingNumber = closeAnim;
         this->mbClosingUpdate = closingUpdate;
+        this->mnToOpeningFrame = toOpenStartFlame;
+        this->mbToOpeningUpdate = toOpenUpdate;
         this->mnOpeningNumber = openAnim;
         this->mbOpeningUpdate = openingUpdate;
-    }
+        this->mnOpendWaitFrame = opendWaitFlame;
 
-    SceneTransitionInit();
+        // 
+        this->mnClosingFrame = this->GetSceneCloseAnimFrame();
+
+        // 
+        this->mnOpeningFrame = this->GetSceneOpenAnimFrame();
+
+        // 
+        this->mnSceneChangeAnimPhase = SCAP::SCAP_ToClose;
+
+        // 
+        SceneTransitionInit();
+    }
 }
 
 void BaseSceneManager::ChangeSceneMySelf()
 {
     // 
-    if (this->mnClosingFrame == 0 &&
-        this->mnOpeningFrame == 0)
+    if (!this->CheckChanging())
     {
+        // 
         this->mnChangeScene = this->mnResreveScene;
 
+        // 
+        this->mnClosingFrame = this->GetSceneCloseAnimFrame();
+
+        // 
+        this->mnOpeningFrame = this->GetSceneOpenAnimFrame();
+
+        // 
+        this->mnSceneChangeAnimPhase = SCAP::SCAP_ToClose;
+
+        // 
         SceneTransitionInit();
     }
 }
 
 void BaseSceneManager::SetResreveScene(
     SceneTag nextSceneTag,
+    uint32_t toCloseStartFlame,
+    bool toCloseUpdate,
     SceneCloseAnimNumber closeAnim,
     bool closingUpdate,
+    uint32_t toOpenStartFlame,
+    bool toOpenUpdate,
     SceneOpenAnimNumber openAnim,
-    bool openingUpdate)
+    bool openingUpdate,
+    uint32_t opendWaitFlame)
 {
     this->mnResreveScene = nextSceneTag;
+    this->mnToClosingFrame = toCloseStartFlame;
+    this->mbToClosingUpdate = toCloseUpdate;
     this->mnClosingNumber = closeAnim;
     this->mbClosingUpdate = closingUpdate;
+    this->mnToOpeningFrame = toOpenStartFlame;
+    this->mbToOpeningUpdate = toOpenUpdate;
     this->mnOpeningNumber = openAnim;
     this->mbOpeningUpdate = openingUpdate;
+    this->mnOpendWaitFrame = opendWaitFlame;
 }
 
 // 指定したシーンが現在のシーンか確認する
 bool BaseSceneManager::CheckNowScene(SceneTag thisScene)
 {
     return mnSceneNow == thisScene;
+}
+
+// 返り値は着目シーンのUpdate()を行うかどうか
+bool BaseSceneManager::UpdateChanging()
+{
+    // 今回のシーンを取得する
+    BaseScene *sceneNow = this->SearchSceneTag(this->mnChangeScene);
+    BaseScene *sceneOld = this->SearchSceneTag(this->mnSceneNow);
+
+    // 
+    if (this->mnSceneChangeAnimPhase == SCAP::SCAP_ToClose)
+    {
+        // 
+        if (this->mnToClosingFrame == 0)
+        {
+            // 
+            this->mnSceneChangeAnimPhase = SCAP::SCAP_Closing;
+        }
+        else
+        {
+            // 
+            this->mnToClosingFrame--;
+
+            // 
+            return this->mbToClosingUpdate;
+        }
+    }
+
+    // 
+    if (this->mnSceneChangeAnimPhase == SCAP::SCAP_Closing)
+    {
+        // 
+        if (this->mnClosingFrame == 0)
+        {
+            // 
+            this->mnClosingFrame = 0;
+            this->mbClosingUpdate = false;
+
+            // 
+            this->mnSceneOld = this->mnSceneNow;
+            this->mnSceneNow = this->mnChangeScene;
+
+            // 
+            if (sceneOld != nullptr)
+            {
+                this->mbNowFinalize = true;
+                sceneOld->BaseFinalize();
+                this->mbNowFinalize = false;
+            }
+
+            // 
+            sceneNow->BaseInitialize();
+
+            // 
+            this->mnClosingNumber = SCAN::SCAN_None;
+
+            // 
+            this->mnSceneChangeAnimPhase = SCAP::SCAP_ToOpen;
+        }
+        else
+        {
+            // 
+            this->mnClosingFrame--;
+
+            // 
+            return this->mbClosingUpdate;
+        }
+    }
+
+    // 
+    if (this->mnSceneChangeAnimPhase == SCAP::SCAP_ToOpen)
+    {
+        // 
+        if (this->mnToOpeningFrame == 0)
+        {
+            // 
+            this->mnSceneChangeAnimPhase = SCAP::SCAP_Opening;
+        }
+        else
+        {
+            // 
+            this->mnToOpeningFrame--;
+
+            // 
+            return this->mbToOpeningUpdate;
+        }
+    }
+
+    // 
+    if (this->mnSceneChangeAnimPhase == SCAP::SCAP_Opening)
+    {
+        // 
+        if (this->mnOpeningFrame == 0)
+        {
+            // 
+            this->mnSceneChangeAnimPhase = SCAP::SCAP_OpenedWait;
+
+            // 
+            this->mbOpeningUpdate = false;
+
+            // 
+            this->mnOpeningNumber = SOAN::SOAN_None;
+        }
+        else
+        {
+            // 
+            this->mnOpeningFrame--;
+
+            // 
+            return this->mbOpeningUpdate;
+        }
+    }
+
+    // 
+    if (this->mnSceneChangeAnimPhase == SCAP::SCAP_OpenedWait)
+    {
+        // 
+        if (this->mnOpendWaitFrame == 0)
+        {
+            // 
+            this->mnSceneChangeAnimPhase = SCAP::SCAP_End;
+        }
+        else
+        {
+            // 
+            this->mnOpendWaitFrame--;
+
+            // 
+            return false;
+        }
+    }
+
+    // 
+    this->mnChangeScene = SceneTag::ST_Max;
+
+    // 
+    return true;
+}
+
+// 
+bool BaseSceneManager::CheckChanging() const
+{
+    // 
+    return this->mnChangeScene != SceneTag::ST_Max;
+}
+
+// 
+bool BaseSceneManager::CheckToClose() const
+{
+    // 
+    return this->mnSceneChangeAnimPhase == SCAP::SCAP_ToClose;
+}
+
+// 
+bool BaseSceneManager::CheckClosing() const
+{
+    // 
+    return this->mnSceneChangeAnimPhase == SCAP::SCAP_Closing;
+}
+
+// 
+bool BaseSceneManager::CheckToOpen() const
+{
+    // 
+    return this->mnSceneChangeAnimPhase == SCAP::SCAP_ToOpen;
+}
+
+// 
+bool BaseSceneManager::CheckOpening() const
+{
+    // 
+    return this->mnSceneChangeAnimPhase == SCAP::SCAP_Opening;
+}
+
+// 
+bool BaseSceneManager::CheckOpendWait() const
+{
+    // 
+    return this->mnSceneChangeAnimPhase == SCAP::SCAP_OpenedWait;
 }
 
 void *BaseSceneManager::GetCSD(CSDN number)

@@ -168,7 +168,13 @@ int OptionScene::UpdateModeSelect()
         else // タイトルに戻る
         {
             // ここをBaseSceneManagerのSearchSceneOldで前のシーンに戻るようにする
-            Master::mpBaseSceneManager->ChangeScene(Master::mpBaseSceneManager->GetSneceOld(), SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                Master::mpBaseSceneManager->GetSneceOld(),
+                0, false,
+                SCAN::SCAN_None, false,
+                0, false,
+                SOAN_None, false,
+                0);
 
             // 
             this->OnResetFlag();
@@ -359,7 +365,13 @@ int OptionScene::UpdateModeSelect()
             if (sceneMove)
             {
                 // ここをBaseSceneManagerのSearchSceneOldで前のシーンに戻るようにする
-                Master::mpBaseSceneManager->ChangeScene(Master::mpBaseSceneManager->GetSneceOld(), SCAN::SCAN_None, false, SOAN_None, false);
+                Master::mpBaseSceneManager->ChangeScene(
+                    Master::mpBaseSceneManager->GetSneceOld(),
+                    0, false,
+                    SCAN::SCAN_None, false,
+                    0, false,
+                    SOAN::SOAN_None, false,
+                    0);
 
                 // 
                 this->OnResetFlag();

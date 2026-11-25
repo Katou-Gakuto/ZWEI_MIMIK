@@ -614,21 +614,51 @@ int BasePuzzleScene::PouseUpdate()
         switch (this->mnPouseCursorPos)
         {
         case PouseMenu::PouseMenu_Option:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option, SCAN::SCAN_None, false, SOAN_None, false);
-            Master::mpBaseSceneManager->SetResreveScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_Option,
+                0, false,
+                SCAN::SCAN_None, false,
+                0, false,
+                SOAN::SOAN_None, false,
+                0);
+            Master::mpBaseSceneManager->SetResreveScene(
+                this->GetTag(),
+                0, false,
+                SCAN::SCAN_None, false,
+                0, false,
+                SOAN::SOAN_None, false,
+                0);
             break;
         case PouseMenu::PouseMenu_Retry:
-            Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                this->GetTag(),
+                0, false,
+                SCAN::SCAN_CurtainDown, false,
+                0, false,
+                SOAN_CurtainUp, false,
+                0);
             this->OnResetFlag();
             Master::mpSoundManager->StopBGM();
             break;
         case PouseMenu::PouseMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_StageSelect,
+                0, false,
+                SCAN::SCAN_CurtainDown, false,
+                0, false,
+                SOAN_CurtainUp, false,
+                0);
             this->OnResetFlag();
             Master::mpSoundManager->StopBGM();
             break;
         case PouseMenu::PouseMenu_Title:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_Title,
+                0, false,
+                SCAN::SCAN_CurtainDown, false,
+                0, false,
+                SOAN_CurtainUp, false,
+                0);
             this->OnResetFlag();
 			Master::mpSoundManager->StopBGM();
             break;
@@ -803,13 +833,25 @@ int BasePuzzleScene::ResultUpdate()
             {
             case ResultMenu::ResultMenu_NextStage:
                 temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag()) + 1;
-                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+                Master::mpBaseSceneManager->ChangeScene(
+                    BasePuzzleScene::StageNum2SceneTag(temp),
+                    0, false,
+                    SCAN::SCAN_CurtainDown, false,
+                    0, false,
+                    SOAN_CurtainUp, false,
+                    0);
                 Master::mnLastPlayStageNum = temp;
                 this->OnResetFlag();
                 mpStageSelectScene->NextCurrentStage();
                 break;
             case ResultMenu::ResultMenu_StageSelect:
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+                Master::mpBaseSceneManager->ChangeScene(
+                    SceneTag::ST_StageSelect,
+                    0, false,
+                    SCAN::SCAN_CurtainDown, false,
+                    0, false,
+                    SOAN::SOAN_CurtainUp, false,
+                    0);
                 this->OnResetFlag();
                 break;
             default:
@@ -949,7 +991,13 @@ int BasePuzzleScene::FailedUpdate()
     if (sceneCloseStart == this->mnFailedModeFrame)
     {
         // ‹­§RETRY
-        Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+        Master::mpBaseSceneManager->ChangeScene(
+            this->GetTag(),
+            0, false,
+            SCAN::SCAN_None, false,
+            0, false,
+            SOAN::SOAN_None, false,
+            0);
         this->OnResetFlag();
     }
 

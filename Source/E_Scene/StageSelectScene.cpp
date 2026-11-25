@@ -190,7 +190,13 @@ int StageSelectScene::Update()
         if (moveTestScene)
         {
             // 
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Test, SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_Test,
+                0, false,
+                SCAN::SCAN_None, false,
+                0, false,
+                SOAN_None, false,
+                0);
         }
         else
         {
@@ -198,7 +204,13 @@ int StageSelectScene::Update()
             if(mnCurrentStage <= mnUnlockStageCount - 1)
             {
                 // 選択したステージのシーンに遷移する
-                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+                Master::mpBaseSceneManager->ChangeScene(
+                    BasePuzzleScene::StageNum2SceneTag(this->mnCurrentStage),
+                    0, false,
+                    SCAN::SCAN_CurtainDown, false,
+                    0, false,
+                    SOAN_CurtainUp, false,
+                    0);
                 Master::mpSoundManager->StopBGM();
 
                 // 
@@ -220,7 +232,13 @@ int StageSelectScene::Update()
         Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::B, 1))
     {
         // 
-        Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+        Master::mpBaseSceneManager->ChangeScene(
+            SceneTag::ST_Title,
+            0, false,
+            SCAN::SCAN_CurtainDown, false,
+            0, false,
+            SOAN_CurtainUp, false,
+            0);
 		Master::mpSoundManager->StopBGM();
         // 
         this->OnResetFlag();
