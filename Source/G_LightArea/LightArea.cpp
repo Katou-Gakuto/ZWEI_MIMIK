@@ -20,12 +20,6 @@
 #include "LightAreaManager.h"
 #include "DrawSystem.h"
 
-#include "ImguiManager.h"
-static int DrawSelectNumber = 1;
-static int DrawSelectNumber1 = -1;
-static int DrawSelectNumber2 = -1;
-static int DrawSelectNumber3 = -1;
-
 // 
 LightArea::LightArea() :
     mlLightFirstNode(),
@@ -277,8 +271,6 @@ void LightArea::SetLightLineCount(uint32_t count)
 // 
 bool LightArea::CheckInArea(Point2D &targetPoint) const
 {
-    // TODO:_ ここで追加したやつも含めて判定
-
     // 
     if (this->mlLightFirstNode.empty())
     {
@@ -302,7 +294,7 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
     // 
     CollisionCheckResult2D checkResult = GetCollisionCheckResult2DZero();
 
-    // 
+    // 通常の三角形判定
     for (size_t i = 0; i < count - 1; i++)
     {
         // 
@@ -330,6 +322,7 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
         return true;
     }
 
+    // 終点から始点への三角形判定
     if (this->mbFinal2Start)
     {
         // 
@@ -369,7 +362,7 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
     // 
     bool loopFlag = true;
 
-    // 
+    // 通常エリアの四角形判定
     for (size_t i = 0; i < count; i++)
     {
         // 
@@ -482,6 +475,167 @@ bool LightArea::CheckInArea(Point2D &targetPoint) const
         }
     }
 
+    if(result)
+    {
+        return true;
+    } 
+
+
+    // 追加
+    LightLineNode *addFirstCurrentCheckNode = nullptr;
+    LightLineNode *addFirstNextCheckNode = nullptr;
+    LightLineNode *addFirstCheckingNode = nullptr;
+    LightLineNode *addSecondCurrentCheckNode = nullptr;
+    LightLineNode *addSecondNextCheckNode = nullptr;
+    LightLineNode *addSecondCheckingNode = nullptr;
+    LightLineNode *addCurrentNode = nullptr;
+    LightLineNode *addNextNode = nullptr;
+
+    // 追加エリアの四角形判定
+    for (size_t i = 0; i < count; i++)
+    {
+        if (this->mbFinal2Start)
+        {
+            addFirstCurrentCheckNode = nodeBox[i];
+            addSecondCurrentCheckNode = nodeBox[(i + 1) % count];
+        }
+        else
+        {
+            if (count - 1 < (i + 1))
+            {
+                break;
+            }
+            addFirstCurrentCheckNode = nodeBox[i];
+            addSecondCurrentCheckNode = nodeBox[i + 1];
+        }
+
+        // addSecondCurrentCheckNodeに対応する追加ノードを検索
+        for (size_t addLightIndex = 0; addLightIndex < this->munAddLightLineCount; addLightIndex++)
+        {
+            addCurrentNode = this->mlAddLightFirstNode[addLightIndex];
+
+            if (addCurrentNode == nullptr)
+            {
+                continue;
+            }
+
+            if (addCurrentNode->GetNodeId() != addSecondCurrentCheckNode->GetNodeId())
+            {
+                continue;
+            }
+
+            addFirstCheckingNode = addFirstCurrentCheckNode;
+            addSecondCheckingNode = addSecondCurrentCheckNode;
+
+            while (addCurrentNode != nullptr)
+            {
+                if ((addFirstCurrentCheckNode == nullptr) && (addSecondCurrentCheckNode == nullptr))
+                {
+                    break;
+                }
+                else if (addSecondCurrentCheckNode == nullptr)
+                {
+                    // 1
+                    {
+                        tempQuad.SetShapeParameter(addFirstCurrentCheckNode->GetMyStartPos(), addCurrentNode->GetMyStartPos(), addFirstCurrentCheckNode->GetMyEndPos(), addCurrentNode->GetMyEndPos());
+
+                        checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempQuad);
+
+                        if (0 <= checkResult.mnResultParam)
+                        {
+                            result = true;
+                            break;
+                        }
+                        if (!addFirstCurrentCheckNode->AccessNext(&addFirstNextCheckNode))
+                        {
+                            addFirstNextCheckNode = nullptr;
+                        }
+                        addFirstCurrentCheckNode = addFirstNextCheckNode;
+                    }
+                }
+                else if (addFirstCurrentCheckNode == nullptr)
+                {
+                    // 2
+                    {
+                        tempQuad.SetShapeParameter(addSecondCurrentCheckNode->GetMyStartPos(), addCurrentNode->GetMyStartPos(), addSecondCurrentCheckNode->GetMyEndPos(), addCurrentNode->GetMyEndPos());
+
+                        checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempQuad);
+
+                        if (0 <= checkResult.mnResultParam)
+                        {
+                            result = true;
+                            break;
+                        }
+
+                        if (!addSecondCurrentCheckNode->AccessNext(&addSecondNextCheckNode))
+                        {
+                            addSecondNextCheckNode = nullptr;
+                        }
+                        addSecondCurrentCheckNode = addSecondNextCheckNode;
+                    }
+                }
+                else
+                {
+                    // 1
+                    {
+                        tempQuad.SetShapeParameter(addFirstCurrentCheckNode->GetMyStartPos(), addCurrentNode->GetMyStartPos(), addFirstCurrentCheckNode->GetMyEndPos(), addCurrentNode->GetMyEndPos());
+
+                        checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempQuad);
+
+                        if (0 <= checkResult.mnResultParam)
+                        {
+                            result = true;
+                            break;
+                        }
+                        if (!addFirstCurrentCheckNode->AccessNext(&addFirstNextCheckNode))
+                        {
+                            addFirstNextCheckNode = nullptr;
+                        }
+                        addFirstCurrentCheckNode = addFirstNextCheckNode;
+                    }
+
+                    // 2
+                    {
+                        tempQuad.SetShapeParameter(addSecondCurrentCheckNode->GetMyStartPos(), addCurrentNode->GetMyStartPos(), addSecondCurrentCheckNode->GetMyEndPos(), addCurrentNode->GetMyEndPos());
+
+                        checkResult = BaseCollision2DManager::CheckHitCollision2DToCollision2D(&targetPoint, &tempQuad);
+
+                        if (0 <= checkResult.mnResultParam)
+                        {
+                            result = true;
+                            break;
+                        }
+
+                        if (!addSecondCurrentCheckNode->AccessNext(&addSecondNextCheckNode))
+                        {
+                            addSecondNextCheckNode = nullptr;
+                        }
+                        addSecondCurrentCheckNode = addSecondNextCheckNode;
+                    }
+                }
+
+                if (!addCurrentNode->AccessNext(&addNextNode))
+                {
+                    break;
+                }
+                addCurrentNode = addNextNode;
+            }
+
+            addFirstCurrentCheckNode = addFirstCheckingNode;
+            addSecondCurrentCheckNode = addSecondCheckingNode;
+
+            if (result)
+            {
+                break;
+            }
+        }
+        
+        if (result)
+        {
+            break;
+        }
+    }
+
     // 
     return result;
 }
@@ -519,74 +673,6 @@ void LightArea::DrawLightArea()
     if (this->mbOffLight)
     {
         return;
-    }
-
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            0,
-            2,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    Master::mpImguiManager->AddDrawImgui(
-        IMGUI_VARIABLE_CONTROL::GetImguiData(
-            {
-                &DrawSelectNumber1
-            },
-            1.0f,
-            1.0f,
-            1.0f,
-            -1,
-            100,
-            "NONE_",
-            "%d",
-            0,
-            IMGUI_TYPE::SLIDER1
-        )
-    );
-    if (DrawSelectNumber == 2)
-    {
-        Master::mpImguiManager->AddDrawImgui(
-            IMGUI_VARIABLE_CONTROL::GetImguiData(
-                {
-                    &DrawSelectNumber2
-                },
-                1.0f,
-                1.0f,
-                1.0f,
-                -1,
-                100,
-                "NONE_",
-                "%d",
-                0,
-                IMGUI_TYPE::SLIDER1
-            )
-        );
-        Master::mpImguiManager->AddDrawImgui(
-            IMGUI_VARIABLE_CONTROL::GetImguiData(
-                {
-                    &DrawSelectNumber3
-                },
-                1.0f,
-                1.0f,
-                1.0f,
-                -1,
-                100,
-                "NONE_",
-                "%d",
-                0,
-                IMGUI_TYPE::SLIDER1
-            )
-        );
     }
 
     if (mbIdLightNodeUpdate)
@@ -647,77 +733,10 @@ void LightArea::DrawLightArea()
 
         // 描画内容をポリゴン用に設定
         SettingDrawHitCollisionLineData(drawHitCollisionLine);
-
-        switch (DrawSelectNumber)
-        {
-        case 0:
-        {
-            // 設定した3角を全部描画
-            DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, munLightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE, true); 
-        }
-            break;
-        case 1:
-        {
-            for (uint32_t i = 0; i < this->munAddLightLineCount; ++i)
-            {
-                if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 != i))
-                {
-                    continue;
-                }
-                currentNode = this->mlAddLightFirstNode[i];
-
-                if (currentNode == nullptr)
-                {
-                    continue;
-                }
-                while (true)
-                {
-                    DRAW_SYSTEM::DrawLine(currentNode->GetMyStartPos(), currentNode->GetMyEndPos(), 0xff0000 + (i * 5));
-
-                    // 次のノードがあるか確認
-                    if (!currentNode->AccessNext(&nextNode))
-                    {
-                        break;
-                    }
-
-                    // 次のノード設定
-                    currentNode = nextNode;
-                }
-            }
-        }
-            break;
-        case 2:
-        {
-            for (int i = 0; i < drawHitCollisionLine.size(); ++i)
-            {
-                if ((DrawSelectNumber1 != -1) && (DrawSelectNumber1 != i))
-                {
-                    continue;
-                }
-                for (int l = 0; l < drawHitCollisionLine[i].size(); ++l)
-                {
-                    if ((DrawSelectNumber2 != -1) && (DrawSelectNumber2 != l))
-                    {
-                        continue;
-                    }
-                    for (int iterator = 0; iterator < drawHitCollisionLine[i][l].size(); ++iterator)
-                    {
-                        auto& hitCollisionLineIterator = drawHitCollisionLine[i][l][iterator];
-                        if ((DrawSelectNumber3 != -1) && (DrawSelectNumber3 != iterator))
-                        {
-                            continue;
-                        }
-                        DRAW_SYSTEM::DrawLine(hitCollisionLineIterator.LineStartPos, hitCollisionLineIterator.LineEndPos, 0x00f0ff);
-                    }
-                }
-            }
-        }
-            break;
-        }
     }
     
     // 設定した3角を全部描画
-    //DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, munLightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE, true); 
+    DRAW_SYSTEM::DrawPolygon(mstLightAreaTriangleVertex, munLightAreaTriangleSize / 3, Master::mpLightManager->GetLightAreaGraphHandle(), TRUE, true); 
 
     mbIdLightNodeUpdate = false;
 }
@@ -744,7 +763,6 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
     AREA_ROUTE_JUDGE_DATA areaRouteJudge;
 
     // 追加ノード用変数
-    unsigned int addLightLineCount = 0;
     LightLineNode* addCurrentNode;
     LightLineNode* addNextNode;
     HIT_COLLISION_LINE addHitCollisionLine;
@@ -807,9 +825,13 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
             hitCollisionLine.IsSetup = true;
             hitCollisionLine.LightNodeId = currentNode->GetNodeId();
 
-            while (this->munAddLightLineCount > addLightLineCount)
+            for (size_t addLightIndex = 0; addLightIndex < this->munAddLightLineCount; ++addLightIndex)
             {
-                addCurrentNode = this->mlAddLightFirstNode[addLightLineCount];
+                addCurrentNode = this->mlAddLightFirstNode[addLightIndex];
+                if (addCurrentNode == nullptr)
+                {
+                    continue;
+                }
                 if (addCurrentNode->GetNodeId() == currentNode->GetNodeId())
                 {
                     int addLoopCount = 0;
@@ -818,7 +840,6 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
                     addHitCollisionLine = hitCollisionLine;
                     while (true)
                     {
-                        // INPROGRESS:_ 加藤 なぜか描画用に追加されていない(1ループ目は上手くいくけどその次がだめ)
                         // 処理
                         {
                             addHitCollisionLine.HitCollision = addCurrentNode->GetHitCollision();
@@ -867,11 +888,6 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
 
                         ++addLoopCount;
                     }
-                    ++addLightLineCount;
-                }
-                else
-                {
-                    break;
                 }
             }
 
@@ -992,66 +1008,13 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
             VECTOR2D preNodeStartPos = currentNode->GetMyStartPos();
             VECTOR2D preNodeEndPos = currentNode->GetMyStartPos();
 
+            // 前の当たり判定
+            BaseCollision* preHitCollision = nullptr;
+
             // アルファ値保存
             {
                 hitCollisionLine.LightStartAlphaRange = ((preNodeStartPos - currentNode->GetMyStartPos()).Magnitude() / LIGHT_POWER);
                 hitCollisionLine.LightEndAlphaRange = ((preNodeEndPos - currentNode->GetMyEndPos()).Magnitude() / LIGHT_POWER);
-            }
-
-            // 前の当たり判定
-            BaseCollision* preHitCollision = nullptr;
-
-            while (this->munAddLightLineCount > addLightLineCount)
-            {
-                int addLoopCount = 0;
-                addCurrentNode = this->mlAddLightFirstNode[addLightLineCount];
-                if (addCurrentNode->GetNodeId() == currentNode->GetNodeId())
-                {
-                    while (true)
-                    {
-                        // 処理
-                        {
-                            addHitCollisionLine = hitCollisionLine;
-                            addHitCollisionLine.HitCollision = addCurrentNode->GetHitCollision();
-                            addHitCollisionLine.LineStartPos = addCurrentNode->GetMyStartPos();
-                            addHitCollisionLine.LineEndPos = addCurrentNode->GetMyEndPos();
-                            addHitCollisionLine.LightStartAlphaRange;
-                            addHitCollisionLine.LightEndAlphaRange;
-                            addHitCollisionLine.LightIntensity + hitCollisionLine.LightIntensity;
-
-                            // このループ数最初の判定なら追加だけして次へ
-                            if (hitCollisionLineData.size() <= (loopCount + addLoopCount))
-                            {
-                                // 情報を追加
-                                hitCollisionLineData.push_back({{addHitCollisionLine}});
-
-                                areaRouteJudge.LightAreaRouteID += areaRouteJudge.PlusLightAreaRouteID;
-                                // 追加IDナンバーがないから0を代入
-                                areaRouteJudge.PlusLightAreaRouteID = 0;
-                                areaRuteJudgeDatas.push_back({{areaRouteJudge}});
-                            }
-                            else
-                            {
-                                hitCollisionLineData[loopCount + addLoopCount][hitCollisionLineData[loopCount].size() - 1].push_back(addHitCollisionLine);
-                            }
-                        }
-                        // 次のノードがあるか確認
-                        if (!addCurrentNode->AccessNext(&addNextNode))
-                        {
-                            break;
-                        }
-
-                        // 次のノード設定
-                        addCurrentNode = addNextNode;
-
-                        ++addLoopCount;
-                    }
-                    ++addLightLineCount;
-                }
-                else
-                {
-                    break;
-                }
             }
 
             while (true)
@@ -1062,7 +1025,75 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
                 hitCollisionLine.LineEndPos = currentNode->GetMyEndPos();
                 hitCollisionLine.PreHitCollision = preHitCollision;
                 hitCollisionLine.OtherCollision = nullptr;
-                hitCollisionLine.LightNodeId = currentNode->GetNodeId(); 
+                hitCollisionLine.LightNodeId = currentNode->GetNodeId();
+
+                preHitCollision = currentNode->GetHitCollision();                    
+
+                for (size_t addLightIndex = 0; addLightIndex < this->munAddLightLineCount; ++addLightIndex)
+                {
+                    addCurrentNode = this->mlAddLightFirstNode[addLightIndex];
+                    if (addCurrentNode == nullptr)
+                    {
+                        continue;
+                    }
+                    if (addCurrentNode->GetNodeId() == currentNode->GetNodeId())
+                    {
+                        int addLoopCount = 0;
+                        VECTOR2D preAddNodeStartPos = preNodeStartPos;
+                        VECTOR2D preAddNodeEndPos = preNodeEndPos;
+                        addHitCollisionLine = hitCollisionLine;
+                        while (true)
+                        {
+                            // 処理
+                            {
+                                addHitCollisionLine.HitCollision = addCurrentNode->GetHitCollision();
+                                addHitCollisionLine.LineStartPos = addCurrentNode->GetMyStartPos();
+                                addHitCollisionLine.LineEndPos = addCurrentNode->GetMyEndPos();
+                                addHitCollisionLine.LightStartAlphaRange += ((preAddNodeStartPos - addCurrentNode->GetMyStartPos()).Magnitude() / LIGHT_POWER);
+                                addHitCollisionLine.LightEndAlphaRange += ((preAddNodeEndPos - addCurrentNode->GetMyEndPos()).Magnitude() / LIGHT_POWER);
+                                areaRouteJudge.IsAddSet = true;
+                                const int loopIndex = loopCount + addLoopCount;
+
+                                // このループ数最初の判定なら追加だけして次へ
+                                if (hitCollisionLineData.size() <= loopIndex)
+                                {
+                                    // 情報を追加
+                                    hitCollisionLineData.push_back({{addHitCollisionLine}});
+
+                                    areaRouteJudge.LightAreaRouteID += areaRouteJudge.PlusLightAreaRouteID;
+                                    // 追加IDナンバーがないから0を代入
+                                    areaRouteJudge.PlusLightAreaRouteID = 0;
+                                    areaRuteJudgeDatas.push_back({{areaRouteJudge}});
+                                }
+                                else
+                                {
+
+                                    const int lightAreaIndex = static_cast<int>(hitCollisionLineData[loopIndex].size()) - 1;
+
+                                    // 当たり判定線を追加
+                                    hitCollisionLineData[loopIndex][lightAreaIndex].push_back(addHitCollisionLine);
+
+                                    // 対応するルート判定情報を追加
+                                    areaRuteJudgeDatas[loopIndex][lightAreaIndex].push_back(areaRouteJudge);
+                                }
+                            }
+                            // 次のノードがあるか確認
+                            if (!addCurrentNode->AccessNext(&addNextNode))
+                            {
+                                break;
+                            }
+
+                            // 前回の追加ノードのポジションとして取得
+                            preAddNodeStartPos = addCurrentNode->GetMyStartPos();
+                            preAddNodeEndPos = addCurrentNode->GetMyEndPos();
+
+                            // 次のノード設定
+                            addCurrentNode = addNextNode;
+
+                            ++addLoopCount;
+                        }
+                    }
+                }
 
                 // アルファ値更新
                 {
@@ -1070,7 +1101,6 @@ std::vector<std::vector<std::vector<HIT_COLLISION_LINE>>> LightArea::DrawLingAre
                     hitCollisionLine.LightEndAlphaRange += ((preNodeEndPos - currentNode->GetMyEndPos()).Magnitude() / LIGHT_POWER);
                 }
 
-                preHitCollision = currentNode->GetHitCollision();
 
                 // このループ数最初の判定なら追加だけして次へ
                 if (hitCollisionLineData.size() <= loopCount)
