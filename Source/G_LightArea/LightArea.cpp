@@ -2534,6 +2534,7 @@ void LightArea::SettingDrawHitCollisionLineData(const std::vector<std::vector<st
     }
     
     // OŠpŒ`‚ğ“ü—Í‚·‚éî•ñ‚Ì”‚ğ‘ª’è
+    mnPreLightAreaTriangleVertexIndexCount = munLightAreaTriangleSize;
     munLightAreaTriangleSize = 0;
     for (int i = 0; i < hitCollisionLineData.size(); ++i)
     {
@@ -2550,7 +2551,7 @@ void LightArea::SettingDrawHitCollisionLineData(const std::vector<std::vector<st
 
     munLightAreaTriangleSize *= 6;/*ˆê‚Â‚Ì4Šp‚Å6ŒÂ’¸“_‚ğ“o˜^‚·‚é*/
 
-    //if (mnPreLightAreaTriangleVertexIndexCount != munLightAreaTriangleSize)
+    if (mnPreLightAreaTriangleVertexIndexCount != munLightAreaTriangleSize)
     {
         // ’†‚É‰½‚©“ü‚Á‚Ä‚¢‚é‚È‚çÁ‚µ‚ÄV‚µ‚­ƒƒ‚ƒŠ‚ğ—pˆÓ‚·‚é
         if (mstLightAreaTriangleVertex != nullptr)
@@ -2558,7 +2559,7 @@ void LightArea::SettingDrawHitCollisionLineData(const std::vector<std::vector<st
             free(mstLightAreaTriangleVertex);
         }
         mstLightAreaTriangleVertex = static_cast<VERTEX2D*>(malloc(sizeof(VERTEX2D) * munLightAreaTriangleSize));
-        //mnPreLightAreaTriangleVertexIndexCount = munLightAreaTriangleSize;
+        mnPreLightAreaTriangleVertexIndexCount = munLightAreaTriangleSize;
     }
 
     // lŠp‚ğOŠp‚Åİ’è
