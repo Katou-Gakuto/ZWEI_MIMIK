@@ -122,6 +122,11 @@ void DxLibDataManager::OnActivate()
 // ウィンドウプロシージャの定義
 LRESULT WINAPI DxLibDataManagerWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    if (Master::mpDxLibDataManager == nullptr)
+    {
+        return 0;
+    }
+
     if (!Master::mpDxLibDataManager->GetInitializedFlag())
     {
         return 0;

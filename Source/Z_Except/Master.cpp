@@ -131,13 +131,21 @@ int Master::Finalize()
 
     // íœ
     delete mpImguiManager;
+    mpImguiManager = nullptr;
     delete mpBaseSceneManager;
+    mpBaseSceneManager = nullptr;
     delete mpEndManager;
+    mpEndManager = nullptr;
     delete mpTimeManager;
+    mpTimeManager = nullptr;
 	delete mpResourceManager;
+    mpResourceManager = nullptr;
 	delete mpSoundManager;
+    mpSoundManager = nullptr;
     delete mpKeyState;
+    mpKeyState = nullptr;
     delete mpDxLibDataManager;
+    mpDxLibDataManager = nullptr;
 
     return 0;
 }
