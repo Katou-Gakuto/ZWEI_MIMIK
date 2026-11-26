@@ -257,6 +257,29 @@ int BaseSceneManager::Initialize()
     // 
     this->SearchSceneNow()->BaseInitialize();
 
+    // ピクセルシェーダーを使うための初期化
+
+    //インデックスの設定
+    g_Index[0] = 0;
+    g_Index[1] = 1;
+    g_Index[2] = 2;
+    g_Index[3] = 1;
+    g_Index[4] = 3;
+    g_Index[5] = 2;
+
+    // ピクセルシェーダーを読み込む
+    g_PixelShader = LoadPixelShader("SimplePS.cso");
+    g_PostPixelShader = LoadPixelShader("PostPS.cso");
+
+    //オフスクリーンバッファの作成
+    g_Offscreen = MakeScreen(1920, 1080, FALSE);
+
+    //定数バッファを作ってハンドルを保存する
+    g_lightconstbuff = CreateShaderConstantBuffer(sizeof(LightPos));
+
+    //定数バッファの3スロットにg_lightconstbuffをセットする
+    SetShaderConstantBuffer(g_lightconstbuff, DX_SHADERTYPE_PIXEL, 3);
+
     return 0;
 }
 
@@ -382,12 +405,30 @@ int BaseSceneManager::Update()
         sceneNow->Update();
     }
 
+    
+    // シェーダーの光源座標更新
+    g_lightpos.pos = VGet(980.0f, 540.0f, 0.0f);
+    // // シェーダー用定数バッファハンドルの定数バッファのアドレスを取得する
+    LightPos *pBuff = (LightPos *)GetBufferShaderConstantBuffer(g_lightconstbuff);
+    pBuff->pos.x = g_lightpos.pos.x;
+    pBuff->pos.y = g_lightpos.pos.y;
+    pBuff->pos.z = 0.0f;
+    pBuff->temp = 0.0f;
+
+    // シェーダー用定数バッファハンドルの定数バッファへの変更を適用する
+    UpdateShaderConstantBuffer(g_lightconstbuff);
+    SetShaderConstantBuffer(g_lightconstbuff, DX_SHADERTYPE_PIXEL, 3);
+
+
     // 処理の結果を返す
     return 0;
 }
 
 int BaseSceneManager::Draw()
 {
+
+
+
     // 
     BaseScene *sceneNow = this->SearchSceneTag(this->mnSceneNow);
     if (sceneNow != nullptr)
@@ -402,6 +443,14 @@ int BaseSceneManager::Draw()
         // 
         sceneNow->Draw();
     }
+
+    // レンダリングターゲットをバックバッファに設定
+    SetDrawScreen(DX_SCREEN_BACK);
+    SetUsePixelShader(g_PixelShader);
+    // ポストエフェクト用ピクセルシェーダーをセット
+    SetUsePixelShader(g_PostPixelShader);
+    // バックバッファへポリゴンを描画
+    DrawPS(0.0f, 0.0f, 1000.0f, 500.0f, g_Offscreen);
 
     // 
     if (this->mnChangeScene != SceneTag::ST_Max)
@@ -418,6 +467,8 @@ int BaseSceneManager::Draw()
             this->SceneOpen();
         }
     }
+
+
 
     return 0;
 }

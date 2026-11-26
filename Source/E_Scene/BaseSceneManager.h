@@ -3,6 +3,7 @@
 #include "BaseScene.h"
 #include "../Y_Tool/CreateFlag.h"
 #include "../Y_Tool/VoidList.h"
+#include "DXLib.h"
 
 #include "FadeData.h"
 
@@ -46,6 +47,54 @@ private:
     uint32_t mnOpeningFrame;
     uint32_t mnClosingFrame;
     VoidList mlUniqueDataList;
+
+
+    VERTEX2DSHADER g_Vertex[4]; //頂点配列
+    unsigned short g_Index[6];  //インデックス
+    int g_Offscreen = -1;       //オフスクリーンバッファ用ハンドル
+    int g_PixelShader = -1;     //ピクセルシェーダー用ハンドル
+    int g_PostPixelShader = -1; //ポストエフェクト用ピクセルシェーダー用ハンドル
+
+    //ライトの座標
+    //構造隊を作るときの注意点（16バイト単位にしなくてはならない）
+    struct LightPos
+    {
+        VECTOR pos;
+		float temp;// 16バイト単位にするための空の変数
+    };
+
+    LightPos g_lightpos;
+    int g_lightconstbuff;
+
+
+    VERTEX2DSHADER SetVertex2D(float x, float y, float u, float v)
+    {
+        VERTEX2DSHADER vt;
+
+        vt.pos = VGet(x, y, 0.0f);
+        vt.u = u;
+        vt.v = v;
+        vt.su = u;
+        vt.sv = v;
+        vt.rhw = 1.0f;
+        vt.dif = GetColorU8(255, 255, 255, 255);
+        vt.spc = GetColorU8(0, 0, 0, 0);
+
+        return vt;
+    }
+    // 2Dポリゴンを描画する関数
+    void DrawPS(float x, float y, float width, float height, int graphhandle)
+    {
+        SetUseTextureToShader(0, graphhandle);
+
+        g_Vertex[0] = SetVertex2D(x, y, 0.0f, 0.0f);
+        g_Vertex[1] = SetVertex2D(x + width, y, 1.0f, 0.0f);
+        g_Vertex[2] = SetVertex2D(x, y + height, 0.0f, 1.0f);
+        g_Vertex[3] = SetVertex2D(x + width, y + height, 1.0f, 1.0f);
+
+        DrawPolygonIndexed2DToShader(g_Vertex, 4, g_Index, 2);
+    }
+
 
     // フェード用画像ハンドル
     int mnBlackFadeHandle;

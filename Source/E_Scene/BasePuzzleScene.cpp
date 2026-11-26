@@ -744,7 +744,7 @@ int BasePuzzleScene::ResultUpdate()
                 Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
                 Master::mnLastPlayStageNum = temp;
                 this->OnResetFlag();
-                mpStageSelectScene->NextCurrentStage();
+				Master::mpSoundManager->StopBGM();
                 break;
             case ResultMenu::ResultMenu_StageSelect:
                 Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);

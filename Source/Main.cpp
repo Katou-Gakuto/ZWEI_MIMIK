@@ -126,7 +126,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			Master::mpKeyState->Update();
 
 			// 
-			Master::mpBaseSceneManager->Update();
+				Master::mpBaseSceneManager->Update();
 			Master::mpResourceManager->Update();
 
 

@@ -415,6 +415,13 @@
     <Media Include="Resource\Sound\audiostock_TitleBGM.mp3" />
     <Media Include="Resource\Sound\Cursor.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\PostPS.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ps_post</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
