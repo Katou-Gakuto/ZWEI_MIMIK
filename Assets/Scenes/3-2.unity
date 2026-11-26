@@ -2160,9 +2160,13 @@ MonoBehaviour:
     OutPutDatas:
       MyPos: {x: 0, y: 0.04}
       MySize: {x: 16, y: 0.5}
+  - TargetObject: {fileID: 1125541329}
+    OutPutDatas:
+      MyPos: {x: -4.97, y: 4.93}
+      MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1387793187}
     OutPutDatas:
-      MyPos: {x: -3, y: 0.25}
+      MyPos: {x: -2, y: 0.25}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1573928133}
     OutPutDatas:
@@ -2174,11 +2178,11 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 4850470}
     OutPutDatas:
-      MyPos: {x: -6, y: -4.5}
+      MyPos: {x: -3, y: -4.5}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1226946300}
     OutPutDatas:
-      MyPos: {x: 0, y: -4.5}
+      MyPos: {x: 2.01, y: -4.5}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 232025833}
     OutPutDatas:
@@ -2186,27 +2190,27 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 488557888}
     OutPutDatas:
-      MyPos: {x: -3, y: 3}
+      MyPos: {x: -5, y: 4}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 211693987}
     OutPutDatas:
-      MyPos: {x: 2, y: 3}
+      MyPos: {x: -5, y: 1}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 345810463}
     OutPutDatas:
-      MyPos: {x: -5, y: -3}
+      MyPos: {x: -6, y: -1}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 666570653}
     OutPutDatas:
-      MyPos: {x: 0, y: -3}
+      MyPos: {x: -6, y: -4}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1881916375}
     OutPutDatas:
-      MyPos: {x: -6, y: -3}
+      MyPos: {x: -5, y: 2.5}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 445163293}
     OutPutDatas:
-      MyPos: {x: -6, y: 3}
+      MyPos: {x: -6, y: -2.5}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 916513402}
     OutPutDatas:

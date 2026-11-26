@@ -1,0 +1,9 @@
+MOVING_BLOCK
+BlockName=MovingBlock_2
+BodyName=BlockBody
+StartPosition=-2,0,0.75
+EndPosition=-2,0,-4
+BodyLocalPosition=0,0,0
+BodyLocalScale=0.5,1,1.5
+Speed=1
+LoopType=往復移動

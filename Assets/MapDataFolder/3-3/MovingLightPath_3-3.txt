@@ -1,0 +1,9 @@
+MOVING_LIGHT
+LightName=Light_Center
+PivotPosition=8.7,0,-0.13
+LocalPosition=-2.842171E-14,0.5,-1.50000024
+BaseRotationY=90
+StartAngle=-45
+EndAngle=45
+Speed=30
+LoopType=往復移動

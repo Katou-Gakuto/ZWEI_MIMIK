@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 165490748}
   m_Layer: 0
   m_Name: Mirrors
-  m_TagString: Untagged
+  m_TagString: Mirror
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -993,7 +993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FileOutPutNameMode: 0
   SetMapObjectTrigger: 0
-  SetMapObjectTriggerCount: 2
+  SetMapObjectTriggerCount: 1
   UIFlag: 0
   FileOutputProcessMode: 2
   FileOutputProcess2DPosMode: 0
@@ -1024,36 +1024,52 @@ MonoBehaviour:
       MySize: {x: 0.5, y: 10}
   - TargetObject: {fileID: 1532673347}
     OutPutDatas:
-      MyPos: {x: 0, y: -2}
-      MySize: {x: 8, y: 0.5}
+      MyPos: {x: -5.7, y: -1}
+      MySize: {x: 4, y: 0.5}
   - TargetObject: {fileID: 1884469531}
     OutPutDatas:
-      MyPos: {x: -5.5, y: 4.7}
+      MyPos: {x: 4, y: 4.7}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 1282361476}
+    OutPutDatas:
+      MyPos: {x: -0.04, y: 4.7}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 1782142447}
+    OutPutDatas:
+      MyPos: {x: -6, y: -5}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 1889924111}
+    OutPutDatas:
+      MyPos: {x: -5.6, y: 0.45}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 174696000}
+    OutPutDatas:
+      MyPos: {x: -6.03, y: -2.82}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1176515585}
     OutPutDatas:
-      MyPos: {x: -5.5, y: 3}
+      MyPos: {x: 4.56, y: 2.09}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 535495605}
     OutPutDatas:
-      MyPos: {x: 0, y: -3}
+      MyPos: {x: -6, y: 3}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 794462008}
     OutPutDatas:
-      MyPos: {x: 6, y: 1.5}
+      MyPos: {x: 6, y: -2}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 938263940}
     OutPutDatas:
-      MyPos: {x: 0, y: -1}
+      MyPos: {x: 6, y: 2}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 165490746}
+    OutPutDatas:
+      MyPos: {x: 0, y: 0}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 28553809}
     OutPutDatas:
-      MyPos: {x: -5.49, y: 1}
-      MySize: {x: 2, y: 0.15}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: 5.5, y: 4}
-      MySize: {x: 2, y: 0.15}
+      MyPos: {x: -3.7, y: 1}
+      MySize: {x: 3, y: 0.15}
   ExtractionProcessMode: 2
   OutPutObjectNames: []
   OutPutTags:
@@ -1231,11 +1247,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightSource: {fileID: 1884469532}
-  mirror1: {fileID: 28553810}
-  mirror2: {fileID: 0}
+  mirrors: []
   goal: {fileID: 794462009}
   pathColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   rayLength: 15
+  hitTolerance: 0.5
 --- !u!4 &754591463
 Transform:
   m_ObjectHideFlags: 0

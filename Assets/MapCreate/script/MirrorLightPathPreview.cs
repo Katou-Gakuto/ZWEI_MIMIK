@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -7,9 +8,8 @@ public class MirrorLightPathPreview : MonoBehaviour
     [Header("光源")]
     public Transform lightSource;
 
-    [Header("反射する鏡")]
-    public Transform mirror1;
-    public Transform mirror2;
+    [Header("反射する鏡（反射順に登録）")]
+    public List<Transform> mirrors = new List<Transform>();
 
     [Header("光の到達地点")]
     public Transform goal;
@@ -18,10 +18,16 @@ public class MirrorLightPathPreview : MonoBehaviour
     public Color pathColor = Color.yellow;
     public float rayLength = 15f;
 
+    [Header("反射判定設定")]
+    public float hitTolerance = 0.5f;
+
     private void OnDrawGizmos()
     {
-        // 光源と鏡①は必須
-        if (lightSource == null || mirror1 == null)
+        // 光源と最低1枚の鏡が必要
+        if (lightSource == null ||
+            mirrors == null ||
+            mirrors.Count == 0 ||
+            mirrors[0] == null)
         {
             return;
         }
@@ -32,75 +38,103 @@ public class MirrorLightPathPreview : MonoBehaviour
         Vector3 offset = Vector3.up * 0.6f;
 
         Vector3 start = lightSource.position + offset;
-        Vector3 hit1 = mirror1.position + offset;
 
-        // 光源から鏡①への入射方向
-        Vector3 incoming1 = hit1 - start;
+        // 最初の鏡の位置
+        Vector3 firstHit = mirrors[0].position + offset;
 
-        if (incoming1.sqrMagnitude < 0.000001f)
+        // 光源から最初の鏡への入射方向
+        Vector3 incoming = firstHit - start;
+
+        if (incoming.sqrMagnitude < 0.000001f)
         {
             return;
         }
 
-        incoming1.Normalize();
+        incoming.Normalize();
 
-        // 鏡①の面に垂直な方向
-        Vector3 normal1 = mirror1.forward;
+        // 光源から最初の鏡まで描画
+        Gizmos.DrawLine(start, firstHit);
 
-        // 鏡①で反射した方向
-        Vector3 reflected1 =
-            Vector3.Reflect(incoming1, normal1).normalized;
+        // 現在の反射位置
+        Vector3 currentHit = firstHit;
 
-        // 光源から鏡①
-        Gizmos.DrawLine(start, hit1);
-
-        // 鏡①の反射光
-        Gizmos.DrawRay(
-            hit1,
-            reflected1 * rayLength
-        );
-
-        Gizmos.DrawSphere(hit1, 0.15f);
-
-        // 鏡が1枚ならここで終了
-        if (mirror2 == null)
+        // 登録された鏡を順番に処理
+        for (int i = 0; i < mirrors.Count; i++)
         {
-            return;
-        }
+            Transform currentMirror = mirrors[i];
 
-        // 以下は従来の鏡2枚の処理
-        Vector3 hit2 = mirror2.position + offset;
-        Vector3 toMirror2 = hit2 - hit1;
+            // 未設定の鏡があれば処理終了
+            if (currentMirror == null)
+            {
+                break;
+            }
 
-        float distance =
-            Vector3.Cross(reflected1, toMirror2).magnitude;
+            // 鏡の面に垂直な方向
+            Vector3 normal = currentMirror.forward;
 
-        // 鏡②が反射光の進行方向にあるか確認
-        bool isForward =
-            Vector3.Dot(reflected1, toMirror2) > 0f;
+            // 反射方向を計算
+            Vector3 reflected =
+                Vector3.Reflect(incoming, normal).normalized;
 
-        // 鏡②の近くを光が通る場合
-        if (distance < 0.5f && isForward)
-        {
-            Vector3 incoming2 = reflected1;
-            Vector3 normal2 = mirror2.forward;
+            // 反射地点を表示
+            Gizmos.DrawSphere(currentHit, 0.15f);
 
-            Vector3 reflected2 =
-                Vector3.Reflect(
-                    incoming2,
-                    normal2
-                ).normalized;
-
-            // 鏡①から鏡②
-            Gizmos.DrawLine(hit1, hit2);
-
-            // 鏡②からの反射光
+            // 反射光を表示
             Gizmos.DrawRay(
-                hit2,
-                reflected2 * rayLength
+                currentHit,
+                reflected * rayLength
             );
 
-            Gizmos.DrawSphere(hit2, 0.15f);
+            // 最後の鏡なら処理終了
+            if (i + 1 >= mirrors.Count)
+            {
+                break;
+            }
+
+            // 次の鏡を取得
+            Transform nextMirror = mirrors[i + 1];
+
+            if (nextMirror == null)
+            {
+                break;
+            }
+
+            // 次の鏡の位置
+            Vector3 nextHit = nextMirror.position + offset;
+
+            Vector3 toNextMirror = nextHit - currentHit;
+
+            // 反射光と次の鏡との距離
+            float distance =
+                Vector3.Cross(
+                    reflected,
+                    toNextMirror
+                ).magnitude;
+
+            // 次の鏡が反射光の進行方向にあるか
+            bool isForward =
+                Vector3.Dot(
+                    reflected,
+                    toNextMirror
+                ) > 0f;
+
+            // 次の鏡に反射光が届くか判定
+            if (distance < hitTolerance && isForward)
+            {
+                // 現在の鏡から次の鏡まで描画
+                Gizmos.DrawLine(currentHit, nextHit);
+
+                // 次の鏡の入射方向を更新
+                incoming = reflected;
+
+                // 反射位置を更新
+                currentHit = nextHit;
+            }
+            else
+            {
+                // 次の鏡に光が届かなければ終了
+                break;
+            }
         }
     }
 }

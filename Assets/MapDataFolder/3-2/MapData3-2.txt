@@ -1,0 +1,84 @@
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacle_Upper
+pos(x, y): (960.0f, 535.68f)
+size(x, y):(1861.818f, 54.0f)
+
+Light_0
+pos(x, y): (381.6728f, 7.560019f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_1
+pos(x, y): (727.2728f, 513.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_2
+pos(x, y): (1192.727f, 513.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_3
+pos(x, y): (1658.182f, 513.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_4
+pos(x, y): (610.9091f, 1026.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_5
+pos(x, y): (1193.891f, 1026.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_6
+pos(x, y): (1658.182f, 1026.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_1
+pos(x, y): (378.1818f, 108.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_2
+pos(x, y): (378.1818f, 432.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_3
+pos(x, y): (261.8182f, 648.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_4
+pos(x, y): (261.8182f, 972.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteSpawn
+pos(x, y): (378.1818f, 270.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (261.8182f, 810.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (1658.182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1658.182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+

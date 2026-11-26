@@ -1,0 +1,120 @@
+Floor
+pos(x, y): (718.9122f, 119.9728f)
+size(x, y):(116.3636f, 108.0f)
+
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Walls
+pos(x, y): (718.9122f, 119.9728f)
+size(x, y):(116.3636f, 108.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacles
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Obstacle_Left
+pos(x, y): (287.4182f, 540.0f)
+size(x, y):(465.4546f, 54.0f)
+
+Obstacle_Center(動かせる)
+pos(x, y): (1192.727f, 583.2f)
+size(x, y):(58.18182f, 324.0f)
+
+Obstacle_Right1
+pos(x, y): (1309.091f, 108.0f)
+size(x, y):(58.18182f, 216.0f)
+
+Obstacle_Right2
+pos(x, y): (1570.909f, 237.6f)
+size(x, y):(581.8182f, 54.0f)
+
+Light_Left(固定)
+pos(x, y): (5.818204f, 218.16f)
+size(x, y):(116.3636f, 108.0f)
+angle:90.0f
+
+Light_Right(動かせる)
+pos(x, y): (913.4546f, 442.8f)
+size(x, y):(116.3636f, 108.0f)
+angle:180.0f
+
+MovingLight
+pos(x, y): (1972.364f, 554.04f)
+size(x, y):(116.3636f, 108.0f)
+angle:90.0f
+
+LightPath_1
+pos(x, y): (1448.727f, 554.04f)
+size(x, y):(116.3636f, 108.0f)
+
+Path_Start
+pos(x, y): (2061.964f, 529.2f)
+size(x, y):(116.3636f, 108.0f)
+
+Path_Center
+pos(x, y): (1903.709f, 436.32f)
+size(x, y):(116.3636f, 108.0f)
+
+Path_End
+pos(x, y): (1655.854f, 521.64f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_Center
+pos(x, y): (1797.818f, 554.04f)
+size(x, y):(116.3636f, 108.0f)
+angle:180.0f
+
+Switches
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WarpSwitch_Red_1
+pos(x, y): (1658.182f, 972.0f)
+size(x, y):(93.0909f, 86.39999f)
+
+WarpSwitch_Red_2
+pos(x, y): (1774.546f, 108.0f)
+size(x, y):(93.0909f, 86.39999f)
+
+PlayerSpawns
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteSpawn
+pos(x, y): (261.8182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (261.8182f, 756.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Goals
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (261.8182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1483.636f, 108.0f)
+size(x, y):(116.3636f, 108.0f)
+

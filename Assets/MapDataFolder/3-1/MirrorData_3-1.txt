@@ -1,0 +1,8 @@
+MIRROR_DATA
+MirrorCount=1
+
+MirrorName=Mirror_1
+Position=-3.7,0.5,1
+RotationY=90
+Scale=3.000001,1,0.150000036
+Rotatable=true

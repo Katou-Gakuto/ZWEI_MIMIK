@@ -1,0 +1,3 @@
+Cube
+angle:90.5f angleRange:20.0f
+

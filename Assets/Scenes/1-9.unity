@@ -373,11 +373,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightSource: {fileID: 1933567296}
-  mirror1: {fileID: 719442421}
-  mirror2: {fileID: 1835685024}
+  mirrors:
+  - {fileID: 719442421}
+  - {fileID: 1835685024}
   goal: {fileID: 109505788}
   pathColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   rayLength: 15
+  hitTolerance: 0.5
 --- !u!1 &513032620
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,7 +674,7 @@ MonoBehaviour:
   SetMapObjectTrigger: 0
   SetMapObjectTriggerCount: 2
   UIFlag: 0
-  FileOutputProcessMode: 1
+  FileOutputProcessMode: 2
   FileOutputProcess2DPosMode: 0
   FileOutputProcess2DSizeMode: 0
   OutPutMagnificationPos: {x: 1, y: 1}

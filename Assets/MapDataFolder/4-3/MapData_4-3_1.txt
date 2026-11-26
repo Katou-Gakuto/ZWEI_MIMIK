@@ -1,0 +1,68 @@
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacle_1
+pos(x, y): (494.5455f, 756.0f)
+size(x, y):(58.18182f, 338.04f)
+
+Light_Left
+pos(x, y): (261.8182f, 0.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteSpawn
+pos(x, y): (267.6364f, 275.4f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (261.8182f, 756.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (1658.182f, 864.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1658.182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Mirror_1
+pos(x, y): (286.2545f, 432.0f)
+size(x, y):(465.4546f, 16.2f)
+
+Mirror_2
+pos(x, y): (683.0546f, 108.0f)
+size(x, y):(465.4546f, 16.2f)
+
+Mirror_3
+pos(x, y): (727.2728f, 540.0f)
+size(x, y):(465.4546f, 16.2f)
+
+Mirror_4
+pos(x, y): (1134.546f, 324.0f)
+size(x, y):(465.4546f, 16.2f)
+
+Mirror_5
+pos(x, y): (1134.546f, 972.0f)
+size(x, y):(465.4546f, 16.2f)
+
+Mirror_6
+pos(x, y): (1600.0f, 648.0f)
+size(x, y):(465.4546f, 16.2f)
+

@@ -1,0 +1,196 @@
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacle_Upper
+pos(x, y): (960.0f, 345.6f)
+size(x, y):(1861.818f, 54.0f)
+
+Obstacle_Lower
+pos(x, y): (960.0f, 756.0f)
+size(x, y):(1861.818f, 54.0f)
+
+Obstacle_Vertical1
+pos(x, y): (378.1818f, 540.0f)
+size(x, y):(93.09091f, 1080.0f)
+
+Obstacle_Vertical2
+pos(x, y): (960.0f, 171.72f)
+size(x, y):(93.09091f, 324.0f)
+
+Obstacle_Vertical3
+pos(x, y): (960.0f, 929.88f)
+size(x, y):(93.09091f, 324.0f)
+
+Obstacle_Vertical4
+pos(x, y): (1541.818f, 540.0f)
+size(x, y):(93.09091f, 1080.0f)
+
+Light_1
+pos(x, y): (165.2364f, 17.27998f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_2
+pos(x, y): (680.7273f, 5.400021f)
+size(x, y):(116.3636f, 108.0f)
+
+Light_3
+pos(x, y): (1252.073f, 17.27998f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (1252.073f, 17.27998f)
+size(x, y):(58.18182f, 54.0f)
+
+Light_4
+pos(x, y): (382.8364f, 528.12f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (382.8364f, 528.12f)
+size(x, y):(58.18182f, 54.0f)
+
+Light_5
+pos(x, y): (1252.073f, 767.88f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (1252.073f, 767.88f)
+size(x, y):(58.18182f, 54.0f)
+
+Light_6
+pos(x, y): (1755.927f, 768.96f)
+size(x, y):(116.3636f, 108.0f)
+
+LightPreview
+pos(x, y): (1755.927f, 768.96f)
+size(x, y):(58.18182f, 54.0f)
+
+Switch_1
+pos(x, y): (678.4f, 108.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_2
+pos(x, y): (1741.964f, 99.36001f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_3
+pos(x, y): (534.1091f, 941.76f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_4
+pos(x, y): (750.5455f, 937.44f)
+size(x, y):(116.3636f, 108.0f)
+
+WarpSwitch_1-1
+pos(x, y): (145.4545f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_1-2
+pos(x, y): (552.7273f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_2-1
+pos(x, y): (843.6364f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_2-2
+pos(x, y): (552.7273f, 540.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_3-1
+pos(x, y): (1134.546f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_3-2
+pos(x, y): (1817.6f, 972.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_4-1
+pos(x, y): (1394.036f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_4-2
+pos(x, y): (1420.8f, 540.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_5-1
+pos(x, y): (1694.255f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_5-2
+pos(x, y): (168.7272f, 866.16f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_6-1
+pos(x, y): (1832.727f, 216.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_6-2
+pos(x, y): (1196.218f, 538.92f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_7-1
+pos(x, y): (173.3818f, 554.04f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_7-2
+pos(x, y): (1134.546f, 972.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_8-1
+pos(x, y): (821.5273f, 554.04f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_8-2
+pos(x, y): (644.6545f, 1017.36f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_9-1
+pos(x, y): (1750.109f, 627.48f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_9-2
+pos(x, y): (644.6545f, 858.6f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_10-1
+pos(x, y): (1367.273f, 972.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WarpSwitch_10-2
+pos(x, y): (1658.182f, 972.0f)
+size(x, y):(58.18182f, 54.0f)
+
+WhiteSpawn
+pos(x, y): (145.4545f, 108.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (145.4545f, 972.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (203.6364f, 486.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1716.364f, 486.0f)
+size(x, y):(116.3636f, 108.0f)
+

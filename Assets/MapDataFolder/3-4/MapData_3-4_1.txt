@@ -1,0 +1,128 @@
+Floor
+pos(x, y): (718.9122f, 119.9728f)
+size(x, y):(116.3636f, 108.0f)
+
+Floor
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(1861.818f, 1080.0f)
+
+Walls
+pos(x, y): (718.9122f, 119.9728f)
+size(x, y):(116.3636f, 108.0f)
+
+Wall_Top
+pos(x, y): (960.0f, 0.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Bottom
+pos(x, y): (960.0f, 1080.0f)
+size(x, y):(1920.0f, 54.0f)
+
+Wall_Left
+pos(x, y): (29.09091f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Wall_Right
+pos(x, y): (1890.909f, 540.0f)
+size(x, y):(58.18182f, 1080.0f)
+
+Obstacles
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Obstacle_Left
+pos(x, y): (296.7273f, 324.0f)
+size(x, y):(465.4546f, 54.0f)
+
+Obstacle_MoveLeft
+pos(x, y): (397.0327f, 555.12f)
+size(x, y):(640.0f, 54.0f)
+
+Obstacle_Center(動かせる)
+pos(x, y): (1321.891f, 164.16f)
+size(x, y):(58.18182f, 248.4f)
+
+Obstacle_Center(動かせる) (1)
+pos(x, y): (1321.891f, 437.4f)
+size(x, y):(58.18182f, 162.0f)
+
+Obstacle_Center(動かせる) (2)
+pos(x, y): (765.6727f, 950.4f)
+size(x, y):(58.18182f, 216.0f)
+
+Obstacle_Right1
+pos(x, y): (759.8546f, 704.16f)
+size(x, y):(58.18182f, 270.0f)
+
+Obstacle_Right1 (1)
+pos(x, y): (1349.818f, 940.68f)
+size(x, y):(58.18182f, 216.0f)
+
+Obstacle_Right2
+pos(x, y): (1570.909f, 324.0f)
+size(x, y):(581.8182f, 54.0f)
+
+Obstacle_Right2 (1)
+pos(x, y): (1134.546f, 550.8f)
+size(x, y):(814.5455f, 54.0f)
+
+Obstacle_Right2 (2)
+pos(x, y): (913.4546f, 810.0f)
+size(x, y):(349.0909f, 54.0f)
+
+Light_Left(固定)
+pos(x, y): (5.818204f, 130.68f)
+size(x, y):(116.3636f, 108.0f)
+angle:90.0f
+
+Light_Left(固定) (1)
+pos(x, y): (5.818204f, 452.52f)
+size(x, y):(116.3636f, 108.0f)
+angle:90.0f
+
+Light_Left(固定) (2)
+pos(x, y): (5.818204f, 952.56f)
+size(x, y):(116.3636f, 108.0f)
+angle:90.0f
+
+Light_Right(動かせる)
+pos(x, y): (1573.236f, 799.2f)
+size(x, y):(116.3636f, 108.0f)
+angle:180.0f
+
+Switches
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Switch_Black
+pos(x, y): (1730.327f, 454.68f)
+size(x, y):(93.0909f, 86.39999f)
+
+Switch_White
+pos(x, y): (467.7818f, 456.84f)
+size(x, y):(93.0909f, 86.39999f)
+
+PlayerSpawns
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteSpawn
+pos(x, y): (261.8182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackSpawn
+pos(x, y): (1658.182f, 216.0f)
+size(x, y):(116.3636f, 108.0f)
+
+Goals
+pos(x, y): (960.0f, 540.0f)
+size(x, y):(116.3636f, 108.0f)
+
+WhiteGoal
+pos(x, y): (843.6364f, 702.0f)
+size(x, y):(116.3636f, 108.0f)
+
+BlackGoal
+pos(x, y): (1006.545f, 702.0f)
+size(x, y):(116.3636f, 108.0f)
+

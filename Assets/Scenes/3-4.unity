@@ -2610,7 +2610,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FileOutPutNameMode: 0
   SetMapObjectTrigger: 0
-  SetMapObjectTriggerCount: 2
+  SetMapObjectTriggerCount: 1
   UIFlag: 0
   FileOutputProcessMode: 2
   FileOutputProcess2DPosMode: 0
@@ -2651,54 +2651,74 @@ MonoBehaviour:
     OutPutDatas:
       MyPos: {x: 0, y: 0}
       MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 2049829808}
-    OutPutDatas:
-      MyPos: {x: 0, y: 0}
-      MySize: {x: 4, y: 0.5}
   - TargetObject: {fileID: 1104304878}
     OutPutDatas:
-      MyPos: {x: -5.5, y: 0}
+      MyPos: {x: -5.7, y: 2}
       MySize: {x: 4, y: 0.5}
+  - TargetObject: {fileID: 786736388}
+    OutPutDatas:
+      MyPos: {x: -4.838, y: -0.14}
+      MySize: {x: 5.5, y: 0.5}
+  - TargetObject: {fileID: 1256782182}
+    OutPutDatas:
+      MyPos: {x: 3.11, y: 3.48}
+      MySize: {x: 0.5, y: 2.3}
+  - TargetObject: {fileID: 2049634850}
+    OutPutDatas:
+      MyPos: {x: 3.11, y: 0.95}
+      MySize: {x: 0.5, y: 1.5}
+  - TargetObject: {fileID: 2037225470}
+    OutPutDatas:
+      MyPos: {x: -1.67, y: -3.8}
+      MySize: {x: 0.5, y: 2}
+  - TargetObject: {fileID: 2049829808}
+    OutPutDatas:
+      MyPos: {x: -1.72, y: -1.52}
+      MySize: {x: 0.5, y: 2.5}
+  - TargetObject: {fileID: 1897436339}
+    OutPutDatas:
+      MyPos: {x: 3.35, y: -3.71}
+      MySize: {x: 0.5, y: 2}
   - TargetObject: {fileID: 18091168}
     OutPutDatas:
-      MyPos: {x: 5.5, y: 0}
-      MySize: {x: 4, y: 0.5}
+      MyPos: {x: 5.25, y: 2}
+      MySize: {x: 5, y: 0.5}
+  - TargetObject: {fileID: 993022685}
+    OutPutDatas:
+      MyPos: {x: 1.5, y: -0.1}
+      MySize: {x: 7, y: 0.5}
+  - TargetObject: {fileID: 510471244}
+    OutPutDatas:
+      MyPos: {x: -0.4, y: -2.5}
+      MySize: {x: 3, y: 0.5}
   - TargetObject: {fileID: 161114731}
     OutPutDatas:
-      MyPos: {x: -6, y: 4.5}
+      MyPos: {x: -8.2, y: 3.79}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 964053475}
+    OutPutDatas:
+      MyPos: {x: -8.2, y: 0.81}
+      MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 1988769487}
+    OutPutDatas:
+      MyPos: {x: -8.2, y: -3.82}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 531107748}
     OutPutDatas:
-      MyPos: {x: 6, y: 4.5}
-      MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: 0, y: 4.5}
-      MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: 0, y: 3}
-      MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: 0, y: 0}
-      MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: -1.061, y: 3.439}
-      MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: 0, y: 3}
-      MySize: {x: 1, y: 1}
-  - TargetObject: {fileID: 0}
-    OutPutDatas:
-      MyPos: {x: 1.061, y: 3.439}
+      MyPos: {x: 5.27, y: -2.4}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1171030456}
     OutPutDatas:
       MyPos: {x: 0, y: 0}
       MySize: {x: 1, y: 1}
+  - TargetObject: {fileID: 1294665719}
+    OutPutDatas:
+      MyPos: {x: 6.62, y: 0.79}
+      MySize: {x: 0.79999995, y: 0.79999995}
+  - TargetObject: {fileID: 712289567}
+    OutPutDatas:
+      MyPos: {x: -4.23, y: 0.77}
+      MySize: {x: 0.79999995, y: 0.79999995}
   - TargetObject: {fileID: 990959483}
     OutPutDatas:
       MyPos: {x: 0, y: 0}
@@ -2709,7 +2729,7 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 437558257}
     OutPutDatas:
-      MyPos: {x: -6, y: -2}
+      MyPos: {x: 6, y: 3}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1035494226}
     OutPutDatas:
@@ -2717,11 +2737,11 @@ MonoBehaviour:
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 2089851752}
     OutPutDatas:
-      MyPos: {x: 6, y: 3}
+      MyPos: {x: -1, y: -1.5}
       MySize: {x: 1, y: 1}
   - TargetObject: {fileID: 1705478454}
     OutPutDatas:
-      MyPos: {x: 6, y: -3}
+      MyPos: {x: 0.4, y: -1.5}
       MySize: {x: 1, y: 1}
   ExtractionProcessMode: 2
   OutPutObjectNames: []
