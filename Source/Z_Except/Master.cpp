@@ -85,6 +85,8 @@ int Master::DxInitPreInitialize()
     mpDxLibDataManager = new DxLibDataManager(VECTOR2D(screenWidth, screenHeight));
     mpDxLibDataManager->DxInitPreInitialize();
 
+
+
     return 0;
 }
 

@@ -65,6 +65,9 @@
     <Filter Include="リソース ファイル\Sound">
       <UniqueIdentifier>{521fae31-8db9-472c-bf3a-390be9ed37b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{c6c57e62-c177-4b3a-bd9b-9836a5b76c75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\A_GameObject\GameObject.cpp">
@@ -909,5 +912,10 @@
     <Media Include="Resource\Sound\Cursor.wav">
       <Filter>リソース ファイル\Sound</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\PostPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,6 @@
 
 // 
 StageSelectScene::StageSelectScene() :
-    mnCurrentStage(0),
     mnUnlockStageCount(10),
     mdMoveData(),
     StageNum(0),
@@ -48,8 +47,7 @@ int StageSelectScene::Create()
     mnCurrentStage = 0;
     OldCurrentStage = 0;
 
-    // 
-    this->mnCurrentStage = Master::mnLastPlayStageNum;
+
 
     for (StageNum = 0; StageNum < StageMax; StageNum++)
     {
@@ -151,6 +149,43 @@ int StageSelectScene::Initialize()
     // 
     LightColor = 0xFFF2CC;
     Master::mpSoundManager->PlayBGM("Resource/Sound/audiostock_Select_BGM.mp3");
+    // 
+    this->mnCurrentStage = Master::mnLastPlayStageNum; 
+    
+	// 前回までのステージと今回のステージが違う場合は、ステージを移動させる
+    if (OldCurrentStage != mnCurrentStage)
+    {
+        for (int i = 0; i < mnCurrentStage - OldCurrentStage; i++)
+        {
+            for (StageNum = 0; StageNum < StageMax; StageNum++)
+            {
+                CubeStage[StageNum] += 1;
+                // 超えたら戻す
+                if (CubeStage[StageNum] > StageMax - 1)
+                {
+                    CubeStage[StageNum] -= StageMax;
+                }
+                else if (CubeStage[StageNum] < 0)
+                {
+                    CubeStage[StageNum] += StageMax;
+                }
+
+            }
+
+            for (StageNum = 0; StageNum < StageMax; StageNum++)
+            {
+                if (StageNum == CubeStage[(StageMax / 2) - 1])
+                {
+                    CubeX[StageNum] = Interval * ((StageMax / 2) - 1);
+                }
+                else
+                {
+                    CubeX[StageNum] -= Interval;
+                }
+            }
+        }
+    }
+
     return 0;
 }
 
@@ -165,22 +200,7 @@ int StageSelectScene::Finalize()
 int StageSelectScene::Update()
 {
 
-    if (OldCurrentStage != mnCurrentStage)
-    {
-        for (StageNum = 0; StageNum < StageMax; StageNum++)
-        {
-            if (StageNum == CubeStage[(StageMax / 2) - 1])
-            {
-                //CubeSize[StageNum] = 150 - (70 * ((StageMax / 2) - 1));
-                CubeX[StageNum] = Interval * ((StageMax / 2) - 1);
-            }
-            else
-            {
-                //CubeSize[StageNum] += 7;
-                CubeX[StageNum] -= Interval;
-            }
-        }
-    }
+    
 
     // 
     if (Master::mpKeyState->GetShadowGameKeyDown(KEY_SHADOW_GAME_TYPE::A, 0) ||

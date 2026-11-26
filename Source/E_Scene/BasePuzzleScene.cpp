@@ -842,7 +842,7 @@ int BasePuzzleScene::ResultUpdate()
                     0);
                 Master::mnLastPlayStageNum = temp;
                 this->OnResetFlag();
-                mpStageSelectScene->NextCurrentStage();
+				Master::mpSoundManager->StopBGM();
                 break;
             case ResultMenu::ResultMenu_StageSelect:
                 Master::mpBaseSceneManager->ChangeScene(
