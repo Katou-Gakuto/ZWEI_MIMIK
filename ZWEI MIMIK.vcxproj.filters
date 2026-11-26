@@ -421,6 +421,12 @@
     <ClCompile Include="Source\H_Katou\DebugLogs\PerformanceTimer.cpp">
       <Filter>Source\H_Katou\DebugLogs</Filter>
     </ClCompile>
+    <ClCompile Include="Source\A_GameObject\StarObject.cpp">
+      <Filter>Source\A_GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Component\StarObjectController.cpp">
+      <Filter>Source\C_Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\A_GameObject\GameObject.h">
@@ -818,6 +824,12 @@
     </ClInclude>
     <ClInclude Include="Source\H_Katou\DebugLogs\PerformanceTimer.h">
       <Filter>Source\H_Katou\DebugLogs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\A_GameObject\StarObject.h">
+      <Filter>Source\A_GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Component\StarObjectController.h">
+      <Filter>Source\C_Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
