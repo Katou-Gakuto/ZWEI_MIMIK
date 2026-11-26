@@ -40,7 +40,14 @@ int CreditScene::Update()
 	if (Back)
 	{
 		// ƒ^ƒCƒgƒ‹‚É–ß‚é
-		Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_None, false, SOAN_None, false);
+		Master::mpBaseSceneManager->ChangeScene(
+			SceneTag::ST_Title,
+			0, false,
+			SCAN::SCAN_None, false,
+			0, false,
+			SOAN_None, false,
+			0);
+
 		// 
 		this->OnResetFlag();
 	}

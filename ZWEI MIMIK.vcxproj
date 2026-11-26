@@ -141,6 +141,7 @@
     <ClCompile Include="Source\A_GameObject\LightObject.cpp" />
     <ClCompile Include="Source\A_GameObject\MirrorObject.cpp" />
     <ClCompile Include="Source\A_GameObject\PlayerObject.cpp" />
+    <ClCompile Include="Source\A_GameObject\StarObject.cpp" />
     <ClCompile Include="Source\A_GameObject\TeleportObject.cpp" />
     <ClCompile Include="Source\A_GameObject\WallObject.cpp" />
     <ClCompile Include="Source\B_BehaviorTree\BehaviorAccessData.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Source\C_Component\LightObjectController.cpp" />
     <ClCompile Include="Source\C_Component\Player.cpp" />
     <ClCompile Include="Source\C_Component\MirrorObjectController.cpp" />
+    <ClCompile Include="Source\C_Component\StarObjectController.cpp" />
     <ClCompile Include="Source\C_Component\TeleportObjectController.cpp" />
     <ClCompile Include="Source\C_Component\WallObjectController.cpp" />
     <ClCompile Include="Source\E_Scene\BaseScene.cpp" />
@@ -262,6 +264,7 @@
     <ClInclude Include="Source\A_GameObject\LightObject.h" />
     <ClInclude Include="Source\A_GameObject\MirrorObject.h" />
     <ClInclude Include="Source\A_GameObject\PlayerObject.h" />
+    <ClInclude Include="Source\A_GameObject\StarObject.h" />
     <ClInclude Include="Source\A_GameObject\TeleportObject.h" />
     <ClInclude Include="Source\A_GameObject\WallObject.h" />
     <ClInclude Include="Source\B_BehaviorTree\BehaviorAccessData.h" />
@@ -278,6 +281,7 @@
     <ClInclude Include="Source\C_Component\LightObjectController.h" />
     <ClInclude Include="Source\C_Component\Player.h" />
     <ClInclude Include="Source\C_Component\MirrorObjectController.h" />
+    <ClInclude Include="Source\C_Component\StarObjectController.h" />
     <ClInclude Include="Source\C_Component\TeleportObjectController.h" />
     <ClInclude Include="Source\C_Component\WallObjectController.h" />
     <ClInclude Include="Source\E_Scene\BaseScene.h" />

@@ -9,6 +9,7 @@ enum GameObjectTag : unsigned long
 {
     GOT_Player = 0,
     GOT_Goal,
+    GOT_Star,
     GOT_Wall,
     GOT_Mirror,
     GOT_Light,

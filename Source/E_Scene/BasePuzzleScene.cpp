@@ -8,8 +8,10 @@
 #include "../A_GameObject/GameObjectManager.h"
 #include "../A_GameObject/PlayerObject.h"
 #include "../A_GameObject/GoalObject.h"
+#include "../A_GameObject/StarObject.h"
 #include "../C_Component/Player.h"
 #include "../C_Component/GoalObjectController.h"
+#include "../C_Component/StarObjectController.h"
 #include "../G_LightArea/LightAreaManager.h"
 #include "../S_Collision/BaseCollision2DManager.h"
 #include "../E_Scene/BaseSceneManager.h"
@@ -34,6 +36,7 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mpGoalShadow(nullptr),
     mbPouse(false),
     mbGoal(false),
+    mlStar(),
     mbFailedLight(false),
     mbFailedShadow(false),
     mnPouseCursorPos(0),
@@ -41,6 +44,12 @@ BasePuzzleScene::BasePuzzleScene(SceneTag tag) :
     mnFailedModeFrame(0),
     BaseScene(tag)
 {
+    // 
+    for (int i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        // 
+        this->mlStar[i] = nullptr;
+    }
 }
 
 BasePuzzleScene::~BasePuzzleScene()
@@ -112,6 +121,17 @@ int BasePuzzleScene::Initialize()
     this->mpPlayerShadow->InitPosition(initPosBox[1]);
     this->mpGoalLight->InitPosition(initPosBox[2]);
     this->mpGoalShadow->InitPosition(initPosBox[3]);
+
+    this->mlStar[0]->InitPosition(VECTOR2D(200.0f, 200.0f));
+    this->mlStar[1]->InitPosition(VECTOR2D(200.0f, 400.0f));
+    this->mlStar[2]->InitPosition(VECTOR2D(200.0f, 600.0f));
+
+    // 
+    for (uint8_t i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        // 
+        this->mlStar[i]->GetMyObject()->SetActiveFlag(true);
+    }
 
     // 
     this->mpGameObjectManager->Initialize();
@@ -535,10 +555,52 @@ void BasePuzzleScene::CreateAndAddMastObject()
     this->mpGoalShadow = (static_cast<GoalObject *>(currentObject))->GetGoalController();
 
     // 
+    currentObject = new StarObject(false, false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mlStar[0] = (static_cast<StarObject *>(currentObject))->GetStarController();
+
+    // 
+    currentObject = new StarObject(false, false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mlStar[1] = (static_cast<StarObject *>(currentObject))->GetStarController();
+
+    // 
+    currentObject = new StarObject(false, false);
+    currentObject->Initialize();
+    currentObject->Finalize();
+    this->mlStar[2] = (static_cast<StarObject *>(currentObject))->GetStarController();
+
+    // 
     this->mpGameObjectManager->Add(this->mpPlayerLight->GetMyObject());
     this->mpGameObjectManager->Add(this->mpPlayerShadow->GetMyObject());
     this->mpGameObjectManager->Add(this->mpGoalLight->GetMyObject());
     this->mpGameObjectManager->Add(this->mpGoalShadow->GetMyObject());
+
+    for (int i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        this->mpGameObjectManager->Add(this->mlStar[i]->GetMyObject());
+    }
+}
+
+// 
+std::vector<uint8_t> BasePuzzleScene::GetClearStarBox() const
+{
+    // 
+    std::vector<uint8_t> temp;
+    for (uint8_t i = 0; i < ZWEI_MIMIK_STAR_COUNT; i++)
+    {
+        // 
+        if (this->mlStar[i]->GetMyObject()->GetActiveFlag() == false)
+        {
+            // 
+            temp.push_back(i);
+        }
+    }
+
+    // 
+    return temp;
 }
 
 // 
@@ -552,21 +614,51 @@ int BasePuzzleScene::PouseUpdate()
         switch (this->mnPouseCursorPos)
         {
         case PouseMenu::PouseMenu_Option:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Option, SCAN::SCAN_None, false, SOAN_None, false);
-            Master::mpBaseSceneManager->SetResreveScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_Option,
+                0, false,
+                SCAN::SCAN_None, false,
+                0, false,
+                SOAN::SOAN_None, false,
+                0);
+            Master::mpBaseSceneManager->SetResreveScene(
+                this->GetTag(),
+                0, false,
+                SCAN::SCAN_None, false,
+                0, false,
+                SOAN::SOAN_None, false,
+                0);
             break;
         case PouseMenu::PouseMenu_Retry:
-            Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                this->GetTag(),
+                0, false,
+                SCAN::SCAN_CurtainDown, false,
+                0, false,
+                SOAN_CurtainUp, false,
+                0);
             this->OnResetFlag();
             Master::mpSoundManager->StopBGM();
             break;
         case PouseMenu::PouseMenu_StageSelect:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_StageSelect,
+                0, false,
+                SCAN::SCAN_CurtainDown, false,
+                0, false,
+                SOAN_CurtainUp, false,
+                0);
             this->OnResetFlag();
             Master::mpSoundManager->StopBGM();
             break;
         case PouseMenu::PouseMenu_Title:
-            Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_Title, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+            Master::mpBaseSceneManager->ChangeScene(
+                SceneTag::ST_Title,
+                0, false,
+                SCAN::SCAN_CurtainDown, false,
+                0, false,
+                SOAN_CurtainUp, false,
+                0);
             this->OnResetFlag();
 			Master::mpSoundManager->StopBGM();
             break;
@@ -741,13 +833,25 @@ int BasePuzzleScene::ResultUpdate()
             {
             case ResultMenu::ResultMenu_NextStage:
                 temp = BasePuzzleScene::SceneTag2StageNum(this->GetTag()) + 1;
-                Master::mpBaseSceneManager->ChangeScene(BasePuzzleScene::StageNum2SceneTag(temp), SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+                Master::mpBaseSceneManager->ChangeScene(
+                    BasePuzzleScene::StageNum2SceneTag(temp),
+                    0, false,
+                    SCAN::SCAN_CurtainDown, false,
+                    0, false,
+                    SOAN_CurtainUp, false,
+                    0);
                 Master::mnLastPlayStageNum = temp;
                 this->OnResetFlag();
                 mpStageSelectScene->NextCurrentStage();
                 break;
             case ResultMenu::ResultMenu_StageSelect:
-                Master::mpBaseSceneManager->ChangeScene(SceneTag::ST_StageSelect, SCAN::SCAN_CurtainDown, false, SOAN_CurtainUp, false);
+                Master::mpBaseSceneManager->ChangeScene(
+                    SceneTag::ST_StageSelect,
+                    0, false,
+                    SCAN::SCAN_CurtainDown, false,
+                    0, false,
+                    SOAN::SOAN_CurtainUp, false,
+                    0);
                 this->OnResetFlag();
                 break;
             default:
@@ -887,7 +991,13 @@ int BasePuzzleScene::FailedUpdate()
     if (sceneCloseStart == this->mnFailedModeFrame)
     {
         // ‹­§RETRY
-        Master::mpBaseSceneManager->ChangeScene(this->GetTag(), SCAN::SCAN_None, false, SOAN_None, false);
+        Master::mpBaseSceneManager->ChangeScene(
+            this->GetTag(),
+            0, false,
+            SCAN::SCAN_None, false,
+            0, false,
+            SOAN::SOAN_None, false,
+            0);
         this->OnResetFlag();
     }
 
