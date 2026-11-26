@@ -62,6 +62,8 @@ private:
     uint32_t mnToClosingFrame;
     uint32_t mnOpeningFrame;
     uint32_t mnClosingFrame;
+    float mfOpeningAnimationFrame;
+    float mfClosingAnimationFrame;
     uint32_t mnOpendWaitFrame;
     VoidList mlUniqueDataList;
 
@@ -116,10 +118,10 @@ private:
     // フェード用画像ハンドル
     int mnBlackFadeHandle;
 
-    // フェードを開けるときの情報
-    FadeData mstFadeOpenData;
-    // フェードを閉じるときの情報
-    FadeData mstFadeCloseData;
+    // // フェードを開けるときの情報
+    // FadeData mstFadeOpenData;
+    // // フェードを閉じるときの情報
+    // FadeData mstFadeCloseData;
 
     BaseScene *SearchSceneTag(SceneTag tag);
 
@@ -134,9 +136,6 @@ private:
 
     // シーン遷移(閉じる時)のアニメーションが何フレームかかるのかを取得する関数
     uint32_t GetSceneCloseAnimFrame() const;
-
-    // シーン遷移アニメーション初期化
-    void SceneTransitionInit();
 
 public:
     BaseSceneManager();

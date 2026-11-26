@@ -26,12 +26,15 @@ namespace DRAW_SYSTEM
 
     static VECTOR2D ScaleFactor;
 
+    static DxLib::VERTEX2D BoxVertex[6/*三角二つ分*/];
+
     // ステージの大きさ設定
     void SetStazeSize(VECTOR2D* stageSize);
 
     // 画像描画
     void DrawImage(VECTOR2D pos, VECTOR2D size, int handle);
-    void DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handle, int TransFlag);
+    void DrawImage(VECTOR2D pos, VECTOR2D size, float graphSizeRate, double angle, int handle, int TransFlag);
+    void DrawImage(VECTOR2D pos, VECTOR2D size, VECTOR2D graphSize, double angle, int handle, int TransFlag);
     void DrawImage(VECTOR2D pos1, VECTOR2D pos2, VECTOR2D pos3, VECTOR2D pos4, int handle, int flag = TRUE);
 
     // フェード用画像描画処理

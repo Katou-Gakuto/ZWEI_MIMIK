@@ -38,11 +38,11 @@ public:
 	void SettingNewDisplaySize(VECTOR2D newDisplaySize);
 
 	// ディスプレイのサイズ取得(内部のサイズはGetStartDisplaySize()で取得したサイズを基準にしているので、実際の描画サイズはGetNowDisplaySize()で取得してください)
-	inline VECTOR2D GetNowDisplaySize() const { return mstDisplaySize; }
+	inline const VECTOR2D& GetNowDisplaySize() const { return mstDisplaySize; }
 	// 開始時ディスプレイのサイズ取得
-	inline VECTOR2D GetStartDisplaySize() const { return START_DISPLAY_SIZE; }
+	inline const VECTOR2D& GetStartDisplaySize() const { return START_DISPLAY_SIZE; }
 	// 世界のサイズ取得
-	inline VECTOR2D GetWorldSize() const { return mstWorldSize; }
+	inline const VECTOR2D& GetWorldSize() const { return mstWorldSize; }
 
 	/*----------------------------------*/
 	/*【ウィンドウプロシージャ使用関数】*/

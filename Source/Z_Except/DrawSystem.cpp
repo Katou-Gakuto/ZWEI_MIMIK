@@ -27,23 +27,23 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, int handle)
 }
 
 // 画像描画
-void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handle, int TransFlag)
+void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, float graphSizeRate, double angle, int handle, int TransFlag)
 {
     // 画像中心をワールド座標として扱う
-    double cx = pos.GetX();
-    double cy = pos.GetY();
+    float cx = pos.GetX();
+    float cy = pos.GetY();
 
     // サイズから幅・高さを取得
-    double halfW = size.GetX();
-    double halfH = size.GetY();
+    float halfW = size.GetX();
+    float halfH = size.GetY();
 
     // 回転角度（ラジアン）
-    double cosA = cos(angle);
-    double sinA = sin(angle);
+    float cosA = cos(angle);
+    float sinA = sin(angle);
 
     // 各頂点のローカル座標
-    double localX[] = { -halfW, halfW, halfW, -halfW };
-    double localY[] = { -halfH, -halfH, halfH, halfH };
+    float localX[] = { -halfW, halfW, halfW, -halfW };
+    float localY[] = { -halfH, -halfH, halfH, halfH };
 
     // ワールド座標の頂点
     VECTOR2D worldVertex[4];
@@ -56,52 +56,161 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, double angle, int handl
         );
     }
 
-    // 最後にワールド座標から画面座標へ変換
+    // ワールド座標から画面座標へ変換
     for (int i = 0; i < 4; i++)
     {
         worldVertex[i] = WorldSizeToDisplaySize(worldVertex[i]);
     }
+
+    
+    // polygonに設定
+    {
+        // 共通設定
+        for (int i = 0; i < 6; ++i)
+        {
+            BoxVertex[i].rhw = 1.0f;
+            BoxVertex[i].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
+        }
+
+        static constexpr int WORLD_LEFT_UP = 0;
+        static constexpr int WORLD_RIGHT_UP = 1;
+        static constexpr int WORLD_RIGHT_DOWN = 2;
+        static constexpr int WORLD_LEFT_DOWN = 3;
+
+        
+        static constexpr int BOX_LEFT_UP_ONE = 0;
+        static constexpr int BOX_RIGHT_UP = 1;
+        static constexpr int BOX_RIGHT_DOWN_ONE = 2;
+        static constexpr int BOX_LEFT_UP_TWO = 3;
+        static constexpr int BOX_RIGHT_DOWN_TWO = 4;
+        static constexpr int BOX_LEFT_DOWN = 5;
+// TODO:_ 隅田に質問
+// (0x009090);
+// (0x00ffff);
+//         BoxVertex[BOX_LEFT_UP_ONE].dif = GetColorU8(0x00, 0x90, 0x90, 0xff);
+//         BoxVertex[BOX_RIGHT_UP].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
+//         BoxVertex[BOX_RIGHT_DOWN_ONE].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
+
+//         BoxVertex[BOX_LEFT_UP_TWO].dif = GetColorU8(0x00, 0x90, 0x90, 0xff);
+//         BoxVertex[BOX_RIGHT_DOWN_TWO].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
+//         BoxVertex[BOX_LEFT_DOWN].dif = GetColorU8(0x00, 0x90, 0x90, 0xff);
+
+        BoxVertex[BOX_LEFT_UP_ONE].pos       = VGet(worldVertex[WORLD_LEFT_UP].GetX(),    worldVertex[WORLD_LEFT_UP].GetY(), 0.0f);
+        BoxVertex[BOX_RIGHT_UP].pos          = VGet(worldVertex[WORLD_RIGHT_UP].GetX(),   worldVertex[WORLD_RIGHT_UP].GetY(), 0.0f);
+        BoxVertex[BOX_RIGHT_DOWN_ONE].pos    = VGet(worldVertex[WORLD_RIGHT_DOWN].GetX(), worldVertex[WORLD_RIGHT_DOWN].GetY(), 0.0f);
+
+        BoxVertex[BOX_LEFT_UP_TWO].pos       = VGet(worldVertex[WORLD_LEFT_UP].GetX(),    worldVertex[WORLD_LEFT_UP].GetY(), 0.0f);
+        BoxVertex[BOX_RIGHT_DOWN_TWO].pos    = VGet(worldVertex[WORLD_RIGHT_DOWN].GetX(), worldVertex[WORLD_RIGHT_DOWN].GetY(), 0.0f);
+        BoxVertex[BOX_LEFT_DOWN].pos         = VGet(worldVertex[WORLD_LEFT_DOWN].GetX(),  worldVertex[WORLD_LEFT_DOWN].GetY(), 0.0f);
+
+        int graphSizeX;
+        int graphSizeY;
+        if (GetGraphSize(handle, &graphSizeX, &graphSizeY) == -1)
+        {
+            return;
+        }
+
+        const VECTOR2D boxUV = VECTOR2D(size.GetX() / ((float)graphSizeX * graphSizeRate), size.GetY() / ((float)graphSizeY * graphSizeRate));
+
+        BoxVertex[BOX_LEFT_UP_ONE].u    = BoxVertex[BOX_LEFT_UP_TWO].u      = 0.0f;
+        BoxVertex[BOX_LEFT_UP_ONE].v    = BoxVertex[BOX_LEFT_UP_TWO].v      = 0.0f;
+        BoxVertex[BOX_RIGHT_UP].u                                           = boxUV.GetX();
+        BoxVertex[BOX_RIGHT_UP].v                                           = 0.0f;
+        BoxVertex[BOX_RIGHT_DOWN_ONE].u = BoxVertex[BOX_RIGHT_DOWN_TWO].u   = boxUV.GetX();
+        BoxVertex[BOX_RIGHT_DOWN_ONE].v = BoxVertex[BOX_RIGHT_DOWN_TWO].v   = boxUV.GetY();
+        BoxVertex[BOX_LEFT_DOWN].u                                          = 0.0f;
+        BoxVertex[BOX_LEFT_DOWN].v                                          = boxUV.GetY();
+    }
     
     // 自由変形描画
-    DxLib::DrawModiGraph(worldVertex[0].GetX(), worldVertex[0].GetY(), worldVertex[1].GetX(), worldVertex[1].GetY(), worldVertex[2].GetX(), worldVertex[2].GetY(), worldVertex[3].GetX(), worldVertex[3].GetY(), handle, TransFlag);
+    SetTextureAddressMode(DX_TEXADDRESS_WRAP);
+    DxLib::DrawPolygon2D(BoxVertex, 2, handle, TransFlag);
+    SetTextureAddressMode(DX_TEXADDRESS_CLAMP);
+}
 
-    //// ワールド座標から画面座標へ変換
-    //pos = WorldSizeToDisplaySize(pos);
+// 画像描画
+void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, VECTOR2D graphSize, double angle, int handle, int TransFlag)
+{
+    // 画像中心をワールド座標として扱う
+    float cx = pos.GetX();
+    float cy = pos.GetY();
 
-    //// 画像サイズ取得
-    //int width, height;
-    //DxLib::GetGraphSize(handle, &width, &height);
+    // サイズから幅・高さを取得
+    float halfW = size.GetX();
+    float halfH = size.GetY();
 
-    //// 拡大後の半サイズ
-    //double halfW = width * exRate.GetX() * 0.5;
-    //double halfH = height * exRate.GetY() * 0.5;
+    // 回転角度（ラジアン）
+    float cosA = cos(angle);
+    float sinA = sin(angle);
 
-    //// 回転角度
-    //double cosA = cos(angle);
-    //double sinA = sin(angle);
+    // 各頂点のローカル座標
+    float localX[] = { -halfW, halfW, halfW, -halfW };
+    float localY[] = { -halfH, -halfH, halfH, halfH };
 
-    //// 画像中心を pos とする
-    //double cx = pos.GetX();
-    //double cy = pos.GetY();
+    // ワールド座標の頂点
+    VECTOR2D worldVertex[4];
 
-    //// 各頂点のローカル座標
-    //double localX[] = { -halfW, halfW, halfW, -halfW };
-    //double localY[] = { -halfH, -halfH, halfH, halfH };
+    for (int i = 0; i < 4; i++)
+    {
+        worldVertex[i] = VECTOR2D(
+            cx + localX[i] * cosA - localY[i] * sinA,
+            cy + localX[i] * sinA + localY[i] * cosA
+        );
+    }
 
-    //int x[4], y[4];
+    // ワールド座標から画面座標へ変換
+    for (int i = 0; i < 4; i++)
+    {
+        worldVertex[i] = WorldSizeToDisplaySize(worldVertex[i]);
+    }
 
-    //// 回転・拡大縮小して各頂点の座標を計算
-    //for (int i = 0; i < 4; i++)
-    //{
-    //    x[i] = static_cast<int>(
-    //        cx + localX[i] * cosA - localY[i] * sinA);
+    
+    // polygonに設定
+    {
+        // 共通設定
+        for (int i = 0; i < 6; ++i)
+        {
+            BoxVertex[i].rhw = 1.0f;
+            BoxVertex[i].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
+        }
 
-    //    y[i] = static_cast<int>(
-    //        cy + localX[i] * sinA + localY[i] * cosA);
-    //}
+        static constexpr int WORLD_LEFT_UP = 0;
+        static constexpr int WORLD_RIGHT_UP = 1;
+        static constexpr int WORLD_RIGHT_DOWN = 2;
+        static constexpr int WORLD_LEFT_DOWN = 3;
 
-    //// 自由変形描画
-    //DxLib::DrawModiGraph(x[0], y[0], x[1], y[1], x[2], y[2], x[3], y[3], handle, TransFlag);
+        
+        static constexpr int BOX_LEFT_UP_ONE = 0;
+        static constexpr int BOX_RIGHT_UP = 1;
+        static constexpr int BOX_RIGHT_DOWN_ONE = 2;
+        static constexpr int BOX_LEFT_UP_TWO = 3;
+        static constexpr int BOX_RIGHT_DOWN_TWO = 4;
+        static constexpr int BOX_LEFT_DOWN = 5;
+
+        BoxVertex[BOX_LEFT_UP_ONE].pos       = VGet(worldVertex[WORLD_LEFT_UP].GetX(),    worldVertex[WORLD_LEFT_UP].GetY(), 0.0f);
+        BoxVertex[BOX_RIGHT_UP].pos          = VGet(worldVertex[WORLD_RIGHT_UP].GetX(),   worldVertex[WORLD_RIGHT_UP].GetY(), 0.0f);
+        BoxVertex[BOX_RIGHT_DOWN_ONE].pos    = VGet(worldVertex[WORLD_RIGHT_DOWN].GetX(), worldVertex[WORLD_RIGHT_DOWN].GetY(), 0.0f);
+
+        BoxVertex[BOX_LEFT_UP_TWO].pos       = VGet(worldVertex[WORLD_LEFT_UP].GetX(),    worldVertex[WORLD_LEFT_UP].GetY(), 0.0f);
+        BoxVertex[BOX_RIGHT_DOWN_TWO].pos    = VGet(worldVertex[WORLD_RIGHT_DOWN].GetX(), worldVertex[WORLD_RIGHT_DOWN].GetY(), 0.0f);
+        BoxVertex[BOX_LEFT_DOWN].pos         = VGet(worldVertex[WORLD_LEFT_DOWN].GetX(),  worldVertex[WORLD_LEFT_DOWN].GetY(), 0.0f);
+
+        const VECTOR2D boxUV = VECTOR2D(size.GetX() / graphSize.GetX(), size.GetY() / graphSize.GetY());
+
+        BoxVertex[BOX_LEFT_UP_ONE].u    = BoxVertex[BOX_LEFT_UP_TWO].u      = 0.0f;
+        BoxVertex[BOX_LEFT_UP_ONE].v    = BoxVertex[BOX_LEFT_UP_TWO].v      = 0.0f;
+        BoxVertex[BOX_RIGHT_UP].u                                           = boxUV.GetX();
+        BoxVertex[BOX_RIGHT_UP].v                                           = 0.0f;
+        BoxVertex[BOX_RIGHT_DOWN_ONE].u = BoxVertex[BOX_RIGHT_DOWN_TWO].u   = boxUV.GetX();
+        BoxVertex[BOX_RIGHT_DOWN_ONE].v = BoxVertex[BOX_RIGHT_DOWN_TWO].v   = boxUV.GetY();
+        BoxVertex[BOX_LEFT_DOWN].u                                          = 0.0f;
+        BoxVertex[BOX_LEFT_DOWN].v                                          = boxUV.GetY();
+    }
+    
+    // 自由変形描画
+    SetTextureAddressMode(DX_TEXADDRESS_WRAP);
+    DxLib::DrawPolygon2D(BoxVertex, 2, handle, TransFlag);
+    SetTextureAddressMode(DX_TEXADDRESS_CLAMP);
 }
 
 // 画像描画

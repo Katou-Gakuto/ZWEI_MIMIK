@@ -113,7 +113,11 @@ int Master::Initialize()
     mpLightManager->Initilize();
 
     // imguiマネージャー
+#ifdef DEBUG_KATOU
+    mpImguiManager = new ImguiManager(true);
+#else
     mpImguiManager = new ImguiManager(false);// 使うかどうかのフラグ
+#endif
     mpImguiManager->Initilize();
 
     // ラストに初期化して

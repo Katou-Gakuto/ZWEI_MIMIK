@@ -48,14 +48,8 @@ int BaseSceneManager::SceneOpen()
     case SOAN::SOAN_CurtainUp:
     {
         // 幕が下がっていくがっていく処理
-        mstFadeOpenData.elapsedFrame += 1;
-        VECTOR2D displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
-        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY() * (mstFadeOpenData.elapsedFrame / mstFadeOpenData.endFrame)));
-
-        if (mstFadeOpenData.elapsedFrame >= mstFadeOpenData.endFrame)
-        {
-            mstFadeOpenData.IsFade = false;
-        }
+        const VECTOR2D& displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
+        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY() * (1.0f - (this->mnOpeningFrame * this->mfOpeningAnimationFrame))));
     }
         break;
     default:
@@ -81,14 +75,8 @@ int BaseSceneManager::SceneClose()
     case SCAN::SCAN_CurtainDown:
     {
         // 幕が上がっていく処理
-        mstFadeCloseData.elapsedFrame += 1;
-        VECTOR2D displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
-        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY()* (1.0f - (mstFadeCloseData.elapsedFrame / mstFadeCloseData.endFrame))));
-
-        if (mstFadeCloseData.elapsedFrame >= mstFadeCloseData.endFrame)
-        {
-            mstFadeCloseData.IsFade = false;
-        }
+        const VECTOR2D& displaySize =  Master::mpDxLibDataManager->GetStartDisplaySize();
+        DRAW_SYSTEM::DrawFadeImage(DRAW_SYSTEM::DRAW_FADE_TYPE_CURTAIN, mnBlackFadeHandle, VECTOR2D(0, -displaySize.GetY() * (this->mnClosingFrame * this->mfClosingAnimationFrame)));
     }
         break;
     default:
@@ -103,14 +91,22 @@ int BaseSceneManager::SceneClose()
 // シーン遷移(開ける時)のアニメーションが何フレームかかるのかを取得する関数
 uint32_t BaseSceneManager::GetSceneOpenAnimFrame() const
 {
-    // @加藤
+    switch (this->mnOpeningNumber)
+    {
+    case SOAN::SOAN_CurtainUp:
+        return 30;
+    }
     return 0;
 }
 
 // シーン遷移(閉じる時)のアニメーションが何フレームかかるのかを取得する関数
 uint32_t BaseSceneManager::GetSceneCloseAnimFrame() const
 {
-    // @加藤
+    switch (this->mnClosingNumber)
+    {
+    case SCAN::SCAN_CurtainDown:
+        return 30;
+    }
     return 0;
 }
 /*
@@ -170,12 +166,6 @@ bool BaseSceneManager::CheckSceneCloseEnd() const
     return result;
 }
 */
-// シーン遷移アニメーション初期化
-void BaseSceneManager::SceneTransitionInit()
-{
-    mstFadeOpenData.Init(this->mnOpeningNumber);
-    mstFadeCloseData.Init(this->mnClosingNumber);
-}
 
 BaseSceneManager::BaseSceneManager() :
     mpSceneBox(),
@@ -193,13 +183,13 @@ BaseSceneManager::BaseSceneManager() :
     mnClosingNumber(SCAN::SCAN_None),
     mnToOpeningFrame(0),
     mnToClosingFrame(0),
+    mfOpeningAnimationFrame(0.0f),
+    mfClosingAnimationFrame(0.0f),
     mnOpeningFrame(0),
     mnClosingFrame(0),
     mnOpendWaitFrame(0),
     mlUniqueDataList(),
-    mnBlackFadeHandle(-1),
-    mstFadeCloseData(30),
-    mstFadeOpenData(30)
+    mnBlackFadeHandle(-1)
 {
     for (unsigned char i = 0; i < SceneTag::ST_Max; i++)
     {
@@ -392,15 +382,24 @@ int BaseSceneManager::Draw()
     if (this->mnChangeScene != SceneTag::ST_Max)
     {
         // 
-        if (this->mnOpeningFrame == 0)
+        if (this->mnSceneChangeAnimPhase == SCAP::SCAP_Closing)
         {
             // 
             this->SceneClose();
+
+            // 
+            return 0;
         }
-        else
+
+        // 
+        if (this->mnSceneChangeAnimPhase == SCAP::SCAP_ToOpen ||
+            this->mnSceneChangeAnimPhase == SCAP::SCAP_Opening)
         {
             // 
             this->SceneOpen();
+
+            // 
+            return 0;
         }
     }
 
@@ -519,15 +518,28 @@ void BaseSceneManager::ChangeScene(
 
         // 
         this->mnClosingFrame = this->GetSceneCloseAnimFrame();
+        if (this->mnClosingFrame != 0)
+        {
+            this->mfClosingAnimationFrame = 1.0f / (float)this->GetSceneCloseAnimFrame();
+        }
+        else
+        {
+            this->mfClosingAnimationFrame = 0;
+        }
 
         // 
         this->mnOpeningFrame = this->GetSceneOpenAnimFrame();
+        if (this->mnOpeningFrame != 0)
+        {
+            this->mfOpeningAnimationFrame = 1.0f / (float)this->GetSceneOpenAnimFrame();
+        }
+        else
+        {
+            this->mfOpeningAnimationFrame = 0;
+        }
 
         // 
         this->mnSceneChangeAnimPhase = SCAP::SCAP_ToClose;
-
-        // 
-        SceneTransitionInit();
     }
 }
 
@@ -541,15 +553,28 @@ void BaseSceneManager::ChangeSceneMySelf()
 
         // 
         this->mnClosingFrame = this->GetSceneCloseAnimFrame();
+        if (this->mnClosingFrame != 0)
+        {
+            this->mfClosingAnimationFrame = 1.0f / (float)this->GetSceneCloseAnimFrame();
+        }
+        else
+        {
+            this->mfClosingAnimationFrame = 0;
+        }
 
         // 
         this->mnOpeningFrame = this->GetSceneOpenAnimFrame();
+        if (this->mnOpeningFrame != 0)
+        {
+            this->mfOpeningAnimationFrame = 1.0f / (float)this->GetSceneOpenAnimFrame();
+        }
+        else
+        {
+            this->mfOpeningAnimationFrame = 0;
+        }
 
         // 
         this->mnSceneChangeAnimPhase = SCAP::SCAP_ToClose;
-
-        // 
-        SceneTransitionInit();
     }
 }
 

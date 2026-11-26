@@ -34,6 +34,7 @@ int DXModelRotaObj::Draw()
 
 	DRAW_SYSTEM::DrawImage(pos,
 		Zoom,
+		0.5f, //VECTOR2D(256, 256) * 0.5f,
 		RotaAngle,
 		GraphHandle,true); 
 	
