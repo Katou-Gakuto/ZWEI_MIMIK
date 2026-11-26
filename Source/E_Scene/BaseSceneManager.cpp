@@ -385,8 +385,8 @@ int BaseSceneManager::Draw()
     SetUsePixelShader(g_PixelShader);
     // ポストエフェクト用ピクセルシェーダーをセット
     SetUsePixelShader(g_PostPixelShader);
-    // バックバッファへポリゴンを描画
-    DrawPS(0.0f, 0.0f, 1000.0f, 500.0f, g_Offscreen);
+    //// バックバッファへポリゴンを描画
+    //DrawPS(0.0f, 0.0f, 1000.0f, 500.0f, g_Offscreen);
 
     // 
     if (this->mnChangeScene != SceneTag::ST_Max)
