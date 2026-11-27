@@ -4,7 +4,7 @@
 #include "../Z_Except/ResourceManager.h"
 #include "DrawSystem.h"
 
-DXModelRotaObj::DXModelRotaObj(GameObject *myObject) : BaseModel(myObject, ModelType_Model2D, static_cast<ScreenNumber>(0))
+DXModelRotaObj::DXModelRotaObj(GameObject *myObject) : BaseModel(myObject, ModelType_Model2D, static_cast<ScreenNumber>(0)), mvGraphLoopSize(VECTOR2D::GetZero())
 {
 	GraphHandle = -1;
 }
@@ -30,11 +30,17 @@ int DXModelRotaObj::Draw()
 	float rota = model->GetRotation();
 	RotaAngle = rota;
 
+	// ŒJ‚è•Ô‚µ•`‰æ‚·‚é”ÍˆÍ‚Ì‘å‚«‚³‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢‚È‚çƒTƒCƒY‚Åİ’è‚·‚é
+	if (mvGraphLoopSize == VECTOR2D::GetZero())
+	{
+		mvGraphLoopSize = Zoom;
+	}
+
 	// ‰ñ“]•`‰æ
 
 	DRAW_SYSTEM::DrawImage(pos,
 		Zoom,
-		0.5f, //VECTOR2D(256, 256) * 0.5f,
+		mvGraphLoopSize,
 		RotaAngle,
 		GraphHandle,true); 
 	

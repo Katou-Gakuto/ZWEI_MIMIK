@@ -6,6 +6,9 @@
 #include "CreditScene.h"
 #include "StageSelectScene.h"
 #include "PuzzleScene1.h"
+#include "PuzzleScene2.h"
+#include "PuzzleScene3.h"
+#include "PuzzleScene4.h"
 #include "TestScene.h"
 
 #include "../A_GameObject/GameObjectManager.h"
@@ -241,6 +244,21 @@ int BaseSceneManager::Create()
         this->mpSceneBox[SceneTag::ST_Puzzle1_8] = new PuzzleScene1_8();
         this->mpSceneBox[SceneTag::ST_Puzzle1_9] = new PuzzleScene1_9();
         this->mpSceneBox[SceneTag::ST_Puzzle1_10] = new PuzzleScene1_10();
+
+        this->mpSceneBox[SceneTag::ST_Puzzle2_1] = new PuzzleScene2_1();
+        this->mpSceneBox[SceneTag::ST_Puzzle2_2] = new PuzzleScene2_2();
+        this->mpSceneBox[SceneTag::ST_Puzzle2_3] = new PuzzleScene2_3();
+        this->mpSceneBox[SceneTag::ST_Puzzle2_4] = new PuzzleScene2_4();
+
+        this->mpSceneBox[SceneTag::ST_Puzzle3_1] = new PuzzleScene3_1();
+        this->mpSceneBox[SceneTag::ST_Puzzle3_2] = new PuzzleScene3_2();
+        this->mpSceneBox[SceneTag::ST_Puzzle3_3] = new PuzzleScene3_3();
+        this->mpSceneBox[SceneTag::ST_Puzzle3_4] = new PuzzleScene3_4();
+
+        this->mpSceneBox[SceneTag::ST_Puzzle4_1] = new PuzzleScene4_1();
+        this->mpSceneBox[SceneTag::ST_Puzzle4_2] = new PuzzleScene4_2();
+        this->mpSceneBox[SceneTag::ST_Puzzle4_3] = new PuzzleScene4_3();
+        this->mpSceneBox[SceneTag::ST_Puzzle4_4] = new PuzzleScene4_4();
 
         this->mpSceneBox[SceneTag::ST_Test] = new TestScene();
 

@@ -84,17 +84,7 @@ void DRAW_SYSTEM::DrawImage(VECTOR2D pos, VECTOR2D size, float graphSizeRate, do
         static constexpr int BOX_LEFT_UP_TWO = 3;
         static constexpr int BOX_RIGHT_DOWN_TWO = 4;
         static constexpr int BOX_LEFT_DOWN = 5;
-// TODO:_ ‹÷“c‚ÉŽ¿–â
-// (0x009090);
-// (0x00ffff);
-//         BoxVertex[BOX_LEFT_UP_ONE].dif = GetColorU8(0x00, 0x90, 0x90, 0xff);
-//         BoxVertex[BOX_RIGHT_UP].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
-//         BoxVertex[BOX_RIGHT_DOWN_ONE].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
-
-//         BoxVertex[BOX_LEFT_UP_TWO].dif = GetColorU8(0x00, 0x90, 0x90, 0xff);
-//         BoxVertex[BOX_RIGHT_DOWN_TWO].dif = GetColorU8(0xff, 0xff, 0xff, 0xff);
-//         BoxVertex[BOX_LEFT_DOWN].dif = GetColorU8(0x00, 0x90, 0x90, 0xff);
-
+        
         BoxVertex[BOX_LEFT_UP_ONE].pos       = VGet(worldVertex[WORLD_LEFT_UP].GetX(),    worldVertex[WORLD_LEFT_UP].GetY(), 0.0f);
         BoxVertex[BOX_RIGHT_UP].pos          = VGet(worldVertex[WORLD_RIGHT_UP].GetX(),   worldVertex[WORLD_RIGHT_UP].GetY(), 0.0f);
         BoxVertex[BOX_RIGHT_DOWN_ONE].pos    = VGet(worldVertex[WORLD_RIGHT_DOWN].GetX(), worldVertex[WORLD_RIGHT_DOWN].GetY(), 0.0f);

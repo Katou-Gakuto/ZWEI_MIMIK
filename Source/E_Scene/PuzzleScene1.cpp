@@ -40,9 +40,6 @@ PuzzleScene1_1::~PuzzleScene1_1()
 // 
 int PuzzleScene1_1::MapCreate(GameObjectManager &objManager)
 {
-	// 
-	Master::mpLightManager->ResizeArea(1);
-
 	VECTOR2D objCenter;
 	VECTOR2D blockSize;
 	float objRadius = 0.0f;
@@ -159,7 +156,7 @@ void PuzzleScene1_1::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_1::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
-	lightsColor.push_back(0xffff00);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -383,6 +380,11 @@ void PuzzleScene1_2::GetMapSize(VECTOR2D &mapSize) const
 void PuzzleScene1_2::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
 	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -563,6 +565,9 @@ void PuzzleScene1_3::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_3::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -772,6 +777,9 @@ void PuzzleScene1_4::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_4::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -1060,6 +1068,10 @@ void PuzzleScene1_5::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_5::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -1207,6 +1219,7 @@ void PuzzleScene1_6::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_6::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -1380,6 +1393,9 @@ void PuzzleScene1_7::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_7::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -1595,6 +1611,9 @@ void PuzzleScene1_8::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_8::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -1747,7 +1766,7 @@ void PuzzleScene1_9::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_9::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
-	lightsColor.push_back(0xffff00);
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -1936,6 +1955,8 @@ void PuzzleScene1_10::GetMapSize(VECTOR2D &mapSize) const
 // ライト達の光取得
 void PuzzleScene1_10::GetLightsColor(std::vector<uint32_t>& lightsColor) const
 {
+	lightsColor.push_back(0xff0000);
+	lightsColor.push_back(0xff0000);
 }
 
 // 

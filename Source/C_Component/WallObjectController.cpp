@@ -43,6 +43,7 @@ int WallObjectController::Create()
     //obj->SetRotation(180.0f);
     DXModelRotaObj* myModel = new DXModelRotaObj(obj);
     myModel->SetObjModel("Resource/wall.png", this->mvBlockSizeInit);
+    myModel->SetGraphLoopSize(VECTOR2D(255, 255) * 0.5f);
     if (obj->AddModel(myModel, this->mdModel) != 0)
     {
         // 

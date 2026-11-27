@@ -48,11 +48,25 @@ void PuzzleScene3_1::GetMastObjectsInitPos(
     VECTOR2D &goalLightPos,
     VECTOR2D &goalShadowPos) const
 {
+	playerLightPos =  VECTOR2D(1490.618f, 314.28f);
+
+    playerShadowPos = VECTOR2D(261.8182f, 216.0f);
+
+    goalLightPos =    VECTOR2D(1658.182f, 756.0f);
+    
+	goalShadowPos =   VECTOR2D(1658.182f, 324.0f);
 }
 
 // 
 void PuzzleScene3_1::GetMapSize(VECTOR2D &mapSize) const
 {
+	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene3_1::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -86,11 +100,25 @@ void PuzzleScene3_2::GetMastObjectsInitPos(
     VECTOR2D &goalLightPos,
     VECTOR2D &goalShadowPos) const
 {
+	playerLightPos =  VECTOR2D(378.1818f, 270.0f);
+
+    playerShadowPos = VECTOR2D(261.8182f, 810.0f);
+
+    goalLightPos =    VECTOR2D(1658.182f, 864.0f);
+    
+	goalShadowPos =   VECTOR2D(1658.182f, 216.0f);
 }
 
 // 
 void PuzzleScene3_2::GetMapSize(VECTOR2D &mapSize) const
 {
+	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene3_2::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -124,11 +152,25 @@ void PuzzleScene3_3::GetMastObjectsInitPos(
     VECTOR2D &goalLightPos,
     VECTOR2D &goalShadowPos) const
 {
+	playerLightPos =  VECTOR2D(261.8182f, 216.0f);
+
+    playerShadowPos = VECTOR2D(261.8182f, 756.0f);
+
+    goalLightPos =    VECTOR2D(261.8182f, 864.0f);
+    
+	goalShadowPos =   VECTOR2D(1483.636f, 108.0f);
 }
 
 // 
 void PuzzleScene3_3::GetMapSize(VECTOR2D &mapSize) const
 {
+	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene3_3::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xff0000);
 }
 
 // 
@@ -162,11 +204,25 @@ void PuzzleScene3_4::GetMastObjectsInitPos(
     VECTOR2D &goalLightPos,
     VECTOR2D &goalShadowPos) const
 {
+	playerLightPos =  VECTOR2D(261.8182f, 216.0f);
+
+    playerShadowPos = VECTOR2D(1658.182f, 216.0f);
+
+    goalLightPos =    VECTOR2D(843.6364f, 702.0f);
+    
+	goalShadowPos =   VECTOR2D(1006.545f, 702.0f);
 }
 
 // 
 void PuzzleScene3_4::GetMapSize(VECTOR2D &mapSize) const
 {
+	mapSize.SetXY(1920.0f, 1080.0f);
+}
+
+// ライト達の光取得
+void PuzzleScene3_4::GetLightsColor(std::vector<uint32_t>& lightsColor) const
+{
+	lightsColor.push_back(0xff0000);
 }
 
 // 
